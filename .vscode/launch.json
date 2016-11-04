@@ -1,0 +1,57 @@
+{
+	"version": "0.1.0",
+	"configurations": [
+		{
+			"name": "Launch All",
+			"type": "composite",
+			"request": "launch",
+			"configurationNames": [
+				"Launch Extension",
+				"debug-debugger"
+			]
+		},
+		{
+			"name": "Launch Extension",
+			"type": "extensionHost",
+			"request": "launch",
+			// path to VSCode executable
+			"runtimeExecutable": "${execPath}",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceRoot}"
+			],
+			"stopOnEntry": false,
+			"sourceMaps": true,
+			"outDir": "${workspaceRoot}/out",
+			"preLaunchTask": "npm"
+		},
+		{
+			"name": "Launch Tests",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			// the workspace path should be GOPATH
+			"args": [
+				"--extensionDevelopmentPath=${workspaceRoot}",
+				"--extensionTestsPath=${workspaceRoot}/out/test",
+				"env.GOPATH"
+			],
+			"stopOnEntry": false,
+			"sourceMaps": true,
+			"outDir": "${workspaceRoot}/out",
+			"preLaunchTask": "npm"
+		},
+		{
+			"name": "debug-debugger",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/out/src/serverAdapter/ECLDebug.js",
+			"stopOnEntry": false,
+			"args": [
+				"--server=4711"
+			],
+			"sourceMaps": true,
+			"cwd": "${workspaceRoot}",
+			"outDir": "${workspaceRoot}/out/src/serverAdapter"
+		}
+	]
+}

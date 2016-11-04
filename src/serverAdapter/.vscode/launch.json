@@ -1,0 +1,15 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "debug-debugger",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/../../out/src/serverAdapter/ECLDebug.js",
+			"stopOnEntry": false,
+			"args": [ "--server=4711" ],
+			"sourceMaps": true,
+			"outDir": "${workspaceRoot}/../../out/src/serverAdapter"
+		}
+	]
+}

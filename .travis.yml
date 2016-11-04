@@ -1,0 +1,39 @@
+language: go
+
+go:
+  - 1.5
+  - 1.6
+  - 1.7
+
+sudo: false
+
+os:
+  - osx
+  - linux
+
+before_install:
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then
+      export CXX="g++-4.9" CC="gcc-4.9" DISPLAY=:99.0;
+      sh -e /etc/init.d/xvfb start;
+      sleep 3;
+    fi
+
+install:
+  - npm install
+  - npm run vscode:prepublish
+  - go get -u -v github.com/nsf/gocode
+  - go get -u -v github.com/rogpeppe/godef
+  - if [[ "$(go version)" =~ "go version go1.5" ]]; then echo cannot get golint; else go get -u -v github.com/golang/lint/golint; fi
+  - go get -u -v github.com/lukehoban/go-outline
+  - go get -u -v sourcegraph.com/sqs/goreturns
+  - go get -u -v golang.org/x/tools/cmd/gorename
+  - go get -u -v github.com/tpng/gopkgs
+  - go get -u -v github.com/newhook/go-symbols
+  - go get -u -v golang.org/x/tools/cmd/guru
+  - go get -u -v github.com/alecthomas/gometalinter
+  - go get -u -v github.com/cweill/gotests/...
+  - GO15VENDOREXPERIMENT=1 gometalinter --install
+
+script:
+  - npm run lint
+  - npm test --silent
