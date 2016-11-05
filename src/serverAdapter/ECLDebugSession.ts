@@ -273,24 +273,46 @@ export class ECLDebugSession extends DebugSession {
 	protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): void {
 		log('StackTraceRequest');
 		let stackFrames: StackFrame[] = [];
+		log('StackTraceRequest1');
 		if (this.workunit.isDebugging()) {
+			log('StackTraceRequest2');
 			this.workunit.debugGraph().then((graph) => {
+				log('StackTraceRequest3');
 				const debugState = this.workunit.debugStateObj();
+				log('StackTraceRequest3a');
 				if (debugState.edgeId) {
 					this.createStackTrace(graph, 'edge', debugState.edgeId, debugState, stackFrames);
+					log('StackTraceRequest3b');
 				} else if (debugState.nodeId) {
 					this.createStackTrace(graph, 'vertex', debugState.nodeId, debugState, stackFrames);
+					log('StackTraceRequest3c');
 				} else if (debugState.graphId) {
 					this.createStackTrace(graph, 'subgraph', debugState.graphId, debugState, stackFrames);
+					log('StackTraceRequest3d');
 				} else {
 					this.createStackTrace(graph, 'workunit', this.workunit.wuid, debugState, stackFrames);
+					log('StackTraceRequest3e');
 				}
+				log('StackTraceRequest4');
+				response.body = {
+					stackFrames: stackFrames
+				};
+				this.sendResponse(response);
+			}).catch(e => {
+				log('StackTraceRequest5');
 				response.body = {
 					stackFrames: stackFrames
 				};
 				this.sendResponse(response);
 			});
+		} else {
+			log('StackTraceRequest6');
+			response.body = {
+				stackFrames: stackFrames
+			};
+			this.sendResponse(response);
 		}
+		log('StackTraceRequest7');
 	}
 
 	protected scopesRequest(response: DebugProtocol.ScopesResponse, args: DebugProtocol.ScopesArguments): void {
@@ -400,28 +422,23 @@ export class ECLDebugSession extends DebugSession {
 	protected nextRequest(response: DebugProtocol.NextResponse): void {
 		log('NextRequest');
 		const debugState = this.workunit.debugStateObj();
-		this.workunit.debugStep('').then(debugResponse => {
-			this.wuMonitor.refresh();
-		});
-		/*
-	if (debugState.edgeId) {
-		this.workunit.debugStep('edge').then(debugResponse => {
-			this.wuMonitor.refresh();
-		});
-	} else if (debugState.nodeId) {
-		this.workunit.debugStep('node').then(debugResponse => {
-			this.wuMonitor.refresh();
-		});
-	} else if (debugState.graphId) {
-		this.workunit.debugStep('graph').then(debugResponse => {
-			this.wuMonitor.refresh();
-		});
-	} else {
-		this.workunit.debugContinue().then(debugResponse => {
-			this.wuMonitor.refresh();
-		});
-	}
-	*/
+		if (debugState.edgeId) {
+			this.workunit.debugStep('edge').then(() => {
+				this.wuMonitor.refresh();
+			});
+		} else if (debugState.nodeId) {
+			this.workunit.debugStep('edge').then(() => {
+				this.wuMonitor.refresh();
+			});
+		} else if (debugState.graphId) {
+			this.workunit.debugStep('graph').then(() => {
+				this.wuMonitor.refresh();
+			});
+		} else {
+			this.workunit.debugContinue().then(() => {
+				this.wuMonitor.refresh();
+			});
+		}
 		this.sendResponse(response);
 		log('NextResponse');
 	}
@@ -430,19 +447,19 @@ export class ECLDebugSession extends DebugSession {
 		log('StepInRequest');
 		const debugState = this.workunit.debugStateObj();
 		if (debugState.edgeId) {
-			this.workunit.debugStep('edge').then(debugResponse => {
+			this.workunit.debugStep('edge').then(() => {
 				this.wuMonitor.refresh();
 			});
 		} else if (debugState.nodeId) {
-			this.workunit.debugStep('edge').then(debugResponse => {
+			this.workunit.debugStep('edge').then(() => {
 				this.wuMonitor.refresh();
 			});
 		} else if (debugState.graphId) {
-			this.workunit.debugStep('edge').then(debugResponse => {
+			this.workunit.debugStep('edge').then(() => {
 				this.wuMonitor.refresh();
 			});
 		} else {
-			this.workunit.debugStep('graph').then(debugResponse => {
+			this.workunit.debugStep('graph').then(() => {
 				this.wuMonitor.refresh();
 			});
 		}
@@ -454,19 +471,19 @@ export class ECLDebugSession extends DebugSession {
 		log('StepOutRequest');
 		const debugState = this.workunit.debugStateObj();
 		if (debugState.edgeId) {
-			this.workunit.debugStep('graph').then(debugResponse => {
+			this.workunit.debugStep('graph').then(() => {
 				this.wuMonitor.refresh();
 			});
 		} else if (debugState.nodeId) {
-			this.workunit.debugStep('graph').then(debugResponse => {
+			this.workunit.debugStep('graph').then(() => {
 				this.wuMonitor.refresh();
 			});
 		} else if (debugState.graphId) {
-			this.workunit.debugStep('graph').then(debugResponse => {
+			this.workunit.debugStep('graph').then(() => {
 				this.wuMonitor.refresh();
 			});
 		} else {
-			this.workunit.debugContinue().then(debugResponse => {
+			this.workunit.debugContinue().then(() => {
 				this.wuMonitor.refresh();
 			});
 		}
@@ -476,6 +493,7 @@ export class ECLDebugSession extends DebugSession {
 
 	protected pauseRequest(response: DebugProtocol.PauseResponse): void {
 		log('PauseRequest');
+		this._prevDebugSequence = 'pauseRequest';
 		this.workunit.debugPause().then(debugResponse => {
 			this.wuMonitor.refresh();
 		});

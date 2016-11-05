@@ -126,10 +126,9 @@ export class ECLWorkunit {
 		if (!this.isDebugging()) {
 			return Promise.resolve({});
 		}
-		return this.connection.WUCDebug(this.wuid, command, opts)
-			.catch((e) => {
-				console.log(e);
-			});
+		return this.connection.WUCDebug(this.wuid, command, opts).catch((e) => {
+			console.log(e);
+		});
 	}
 
 	debugStatus() {
@@ -155,10 +154,10 @@ export class ECLWorkunit {
 		}).then(rootNode => rootNode ? rootNode.$ : null);
 	}
 
-	debugStep(mode) {
+	debugStep(mode): Promise<void> {
 		return this.debug('step', {
 			mode: mode
-		}).then(rootNode => rootNode.$);
+		});
 	}
 
 	debugPause() {

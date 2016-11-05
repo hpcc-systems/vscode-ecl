@@ -234,7 +234,7 @@ export function createGraph(id, graphs) {
 			edge.source = graph.allVertices.get(edge.sourceID);
 			edge.target = graph.allVertices.get(edge.targetID);
 			edge.source.outEdges.push(edge);
-			edge.source.inEdges.push(edge);
+			edge.target.inEdges.push(edge);
 		} catch (e) { }
 	});
 	return graph;
