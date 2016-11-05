@@ -1,10 +1,11 @@
 import { DebugProtocol } from 'vscode-debugprotocol';
 import {
-	DebugSession, Breakpoint, Thread, StackFrame, Scope, Handles, Source,
+	DebugSession, Breakpoint, Thread, StackFrame, Scope, Handles, Variable, Source,
 	InitializedEvent, TerminatedEvent, StoppedEvent, OutputEvent
 } from 'vscode-debugadapter';
 import { locateClientTools, locateAllClientTools } from './clientTools';
 import { createECLWorkunit, ECLWorkunit, ECLWorkunitMonitor, WUAction } from './esp/ECLWorkunit';
+import { Graph, GraphItem } from './esp/ESPGraph';
 import os = require('os');
 
 require('console-stamp')(console);
@@ -35,6 +36,24 @@ function logError(msg?: any, ...args) {
 	}
 }
 
+class WUStack {
+	graphItem: GraphItem;
+
+	constructor(graphItem: GraphItem) {
+		this.graphItem = graphItem;
+	}
+}
+
+class WUScope {
+	stack: WUStack;
+	type: string;
+
+	constructor(stack: WUStack, type: string) {
+		this.stack = stack;
+		this.type = type;
+	}
+}
+
 export class ECLDebugSession extends DebugSession {
 	workunit: ECLWorkunit;
 	wuMonitor: ECLWorkunitMonitor;
@@ -45,7 +64,8 @@ export class ECLDebugSession extends DebugSession {
 	//  Breakpoints  ---
 	private _breakpointId = 1000;
 	private _breakPoints = new Map<string, DebugProtocol.Breakpoint[]>();
-	private _variableHandles = new Handles<string>();
+	private _stackFrameHandles = new Handles<WUStack>();
+	private _variableHandles = new Handles<WUScope>();
 
 	private _prevDebugSequence: string;
 
@@ -200,18 +220,18 @@ export class ECLDebugSession extends DebugSession {
 		log('ThreadsRequest');
 		let threads = [];
 		threads.push(new Thread(0, 'main'));
-
 		response.body = {
 			threads: threads
 		};
 		this.sendResponse(response);
 	}
 
-	protected pushStackFrame(stackFrames: StackFrame[], id: string, def?: any): void {
+	protected pushStackFrame(stackFrames: StackFrame[], graphItem: GraphItem, def?: any): void {
+		let id: number = this._stackFrameHandles.create(new WUStack(graphItem));
 		if (def) {
-			stackFrames.push(new StackFrame(stackFrames.length, id, new Source('builder', def.file), def.line, def.col));
+			stackFrames.push(new StackFrame(id, graphItem.id, new Source('builder', def.file), def.line, def.col));
 		} else {
-			stackFrames.push(new StackFrame(stackFrames.length, id));
+			stackFrames.push(new StackFrame(id, graphItem.id));
 		}
 	}
 
@@ -219,12 +239,12 @@ export class ECLDebugSession extends DebugSession {
 		switch (type) {
 			case 'edge':
 				let edge = graph.allEdges.get(id);
-				this.pushStackFrame(stackFrames, id, edge.getNearestDefinition());
+				this.pushStackFrame(stackFrames, edge, edge.getNearestDefinition());
 				this.createStackTrace(graph, 'vertex', edge.sourceID, debugState, stackFrames);
 				break;
 			case 'vertex':
 				let vertex = graph.allVertices.get(id);
-				this.pushStackFrame(stackFrames, id, vertex.getNearestDefinition());
+				this.pushStackFrame(stackFrames, vertex, vertex.getNearestDefinition());
 				if (vertex.parent) {
 					this.createStackTrace(graph, 'subgraph', vertex.parent.id, debugState, stackFrames);
 				} else {
@@ -234,7 +254,7 @@ export class ECLDebugSession extends DebugSession {
 			case 'subgraph':
 				let subgraph = graph.allSubgraphs.get(id);
 				if (subgraph) {
-					this.pushStackFrame(stackFrames, id, subgraph.getNearestDefinition(debugState.state === 'graph end' || debugState.state === 'finished'));
+					this.pushStackFrame(stackFrames, subgraph, subgraph.getNearestDefinition(debugState.state === 'graph end' || debugState.state === 'finished'));
 					if (subgraph.parent) {
 						this.createStackTrace(graph, 'subgraph', subgraph.parent.id, debugState, stackFrames);
 					} else {
@@ -245,7 +265,7 @@ export class ECLDebugSession extends DebugSession {
 				}
 				break;
 			case 'workunit':
-				stackFrames.push(new StackFrame(stackFrames.length, id, new Source('builder', this.launchRequestArgs.file), debugState.state === 'finished' ? Number.MAX_SAFE_INTEGER : 0));
+				this.pushStackFrame(stackFrames, graph, { file: this.launchRequestArgs.file, col: debugState.state === 'finished' ? Number.MAX_SAFE_INTEGER : 0 });
 				break;
 		}
 	}
@@ -275,12 +295,28 @@ export class ECLDebugSession extends DebugSession {
 
 	protected scopesRequest(response: DebugProtocol.ScopesResponse, args: DebugProtocol.ScopesArguments): void {
 		log('ScopesRequest');
-		const frameReference = args.frameId;
+		const stackFrameScope: WUStack = this._stackFrameHandles.get(args.frameId);
+
 		let scopes: Scope[] = [];
-		switch (frameReference) {
-			case 0:
-				scopes.push(new Scope('Workunit', this._variableHandles.create('workunit_' + frameReference), false));
-				scopes.push(new Scope('Server breakpoints', this._variableHandles.create('server_bp_' + frameReference), true));
+		const debugState = this.workunit.debugStateObj();
+		switch (stackFrameScope.graphItem.type()) {
+			case 'Edge':
+				scopes.push(new Scope('Local', this._variableHandles.create(new WUScope(stackFrameScope, 'local')), false));
+				scopes.push(new Scope('Results', this._variableHandles.create(new WUScope(stackFrameScope, 'results')), true));
+				break;
+			case 'Vertex':
+				scopes.push(new Scope('Local', this._variableHandles.create(new WUScope(stackFrameScope, 'local')), false));
+				scopes.push(new Scope('Out Edges', this._variableHandles.create(new WUScope(stackFrameScope, 'outedges')), false));
+				break;
+			case 'Subgraph':
+				scopes.push(new Scope('Local', this._variableHandles.create(new WUScope(stackFrameScope, 'local')), false));
+				scopes.push(new Scope('Subgraphs', this._variableHandles.create(new WUScope(stackFrameScope, 'subgraphs')), false));
+				scopes.push(new Scope('Vertices', this._variableHandles.create(new WUScope(stackFrameScope, 'vertices')), false));
+				break;
+			case 'Graph':
+				scopes.push(new Scope('Local', this._variableHandles.create(new WUScope(stackFrameScope, 'workunit')), false));
+				scopes.push(new Scope('Graphs', this._variableHandles.create(new WUScope(stackFrameScope, 'subgraphs')), false));
+				scopes.push(new Scope('Debug', this._variableHandles.create(new WUScope(stackFrameScope, 'breakpoints')), true));
 				break;
 		}
 		response.body = {
@@ -292,34 +328,24 @@ export class ECLDebugSession extends DebugSession {
 
 	protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void {
 		log('VariablesRequest');
-		let id = this._variableHandles.get(args.variablesReference);
-		switch (id) {
-			case 'workunit_0':
-				let variables = [];
+		let wuScope = this._variableHandles.get(args.variablesReference);
+		let variables = [];
+		switch (wuScope.type) {
+			case 'local':
+				wuScope.stack.graphItem.attrs.forEach((value, key) => {
+					variables.push(new Variable(key, value));
+				});
+				break;
+			case 'workunit':
 				let state = this.workunit.stateObj();
 				for (let key in state) {
-					variables.push({
-						name: key,
-						type: typeof state[key],
-						value: '' + state[key],
-						variablesReference: 0
-					});
+					variables.push(new Variable(key, state[key]));
 				}
-				response.body = {
-					variables: variables
-				};
-				this.sendResponse(response);
-				log('VariablesResponse');
-				return;
-			case 'server_bp_0':
+				break;
+			case 'breakpoints':
 				this.workunit.debugBreakpointList().then((breakpoints) => {
 					let variables = breakpoints.map((breakpoint) => {
-						return {
-							name: breakpoint.action + '_' + breakpoint.idx,
-							type: breakpoint.mode,
-							value: breakpoint.id,
-							variablesReference: 0
-						};
+						return new Variable(breakpoint.action + '_' + breakpoint.idx, breakpoint.id);
 					});
 					response.body = {
 						variables: variables
@@ -328,10 +354,38 @@ export class ECLDebugSession extends DebugSession {
 					log('VariablesResponse');
 				});
 				return;
-			default:
-				this.sendResponse(response);
-				log('VariablesResponse');
+			case 'results':
+				this.workunit.debugPrint(wuScope.stack.graphItem.id, 0, 10).then((results) => {
+					let variables = results.map((result, idx) => {
+						let summary = [];
+						let values: any = {};
+						for (let key in result) {
+							if (key !== '$') {
+								values[key] = result[key][0];
+								summary.push(result[key][0]);
+							}
+
+						}
+						return new Variable('Row_' + idx, JSON.stringify(summary), this._variableHandles.create(new WUScope(new WUStack(values), 'rows')));
+					});
+					response.body = {
+						variables: variables
+					};
+					this.sendResponse(response);
+					log('VariablesResponse');
+				});
+				return;
+			case 'rows':
+				for (let key in wuScope.stack.graphItem) {
+					variables.push(new Variable(key, wuScope.stack.graphItem[key]));
+				}
+				break;
 		}
+		response.body = {
+			variables: variables
+		};
+		this.sendResponse(response);
+		log('VariablesResponse');
 	}
 
 	protected continueRequest(response: DebugProtocol.ContinueResponse): void {

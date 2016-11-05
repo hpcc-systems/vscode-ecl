@@ -1,6 +1,6 @@
 const ATTR_DEFINITION = 'definition';
 
-class GraphItem {
+export class GraphItem {
 	parent: Subgraph;
 	id: string;
 	attrs: Map<string, string>;
@@ -8,6 +8,10 @@ class GraphItem {
 		this.parent = parent;
 		this.id = id;
 		this.attrs = attrs;
+	}
+
+	type() {
+		return this.constructor.name;
 	}
 
 	hasECLDefinition() {
@@ -72,7 +76,7 @@ class Subgraph extends GraphItem {
 		}
 		if (backwards) {
 			for (let i = this.vertices.length - 1; i >= 0; --i) {
-				let vertex = this.vertices[i] 
+				let vertex = this.vertices[i]
 				if (this.vertices[i].hasECLDefinition()) {
 					return this.vertices[i].getECLDefinition();
 				}
@@ -122,8 +126,8 @@ export class Graph extends Subgraph {
 	allVertices = new Map<string, Vertex>();
 	allEdges = new Map<string, Edge>();
 
-	constructor() {
-		super(null, 'root', new Map<string, string>());
+	constructor(id: string) {
+		super(null, id, new Map<string, string>());
 	}
 
 	breakpointLocations(path?) {
@@ -193,8 +197,8 @@ function flattenAtt(atts = []) {
 	return retVal;
 }
 
-export function createGraph(graphs) {
-	let graph = new Graph();
+export function createGraph(id, graphs) {
+	let graph = new Graph(id);
 	let stack: Array<Subgraph> = [graph];
 	walkXmlJson(graphs, (key, childNode, _stack) => {
 		let top = stack[stack.length - 1];
@@ -227,11 +231,11 @@ export function createGraph(graphs) {
 	});
 	graph.allEdges.forEach(edge => {
 		try {
-		edge.source = graph.allVertices.get(edge.sourceID);
-		edge.target = graph.allVertices.get(edge.targetID);
-		edge.source.outEdges.push(edge);
-		edge.source.inEdges.push(edge);
-		} catch(e) {}
+			edge.source = graph.allVertices.get(edge.sourceID);
+			edge.target = graph.allVertices.get(edge.targetID);
+			edge.source.outEdges.push(edge);
+			edge.source.inEdges.push(edge);
+		} catch (e) { }
 	});
 	return graph;
 }

@@ -127,9 +127,9 @@ export class ECLWorkunit {
 			return Promise.resolve({});
 		}
 		return this.connection.WUCDebug(this.wuid, command, opts)
-		.catch((e) => {
-			console.log(e);
-		});
+			.catch((e) => {
+				console.log(e);
+			});
 	}
 
 	debugStatus() {
@@ -197,11 +197,12 @@ export class ECLWorkunit {
 	}
 
 	debugGraph(): Promise<Graph> {
-		if (this._debugAllGraph) {
+		if (this._debugState._prevGraphSequenceNum === this._debugState.graphSequenceNum) {
 			return Promise.resolve(this._debugAllGraph);
 		}
-		return this.debug('graph', {name: 'all'}).then((response: any) => {
-			this._debugAllGraph = createGraph(response.Query[0].Graph);
+		return this.debug('graph', { name: 'all' }).then((response: any) => {
+			this._debugState._prevGraphSequenceNum = this._debugState.graphSequenceNum;
+			this._debugAllGraph = createGraph(this.wuid, response.Query[0].Graph);
 			return this._debugAllGraph;
 		});
 	}
@@ -209,6 +210,16 @@ export class ECLWorkunit {
 	debugBreakpointValid(path) {
 		return this.debugGraph().then((graph) => {
 			return graph.breakpointLocations(path);
+		});
+	}
+
+	debugPrint(edgeID: string, startRow: number = 0, numRows: number = 10) {
+		return this.debug('print', {
+			edgeID: edgeID,
+			startRow: startRow,
+			numRows: numRows
+		}).then((response: any) => {
+			return response.Row;
 		});
 	}
 
@@ -295,7 +306,7 @@ export function createECLWorkunit(protocol: string, hostname: string, port: numb
 	return createECLWorkunit2(wsWorkunits, queryText, action, resultLimits, debug);
 }
 
-export function createECLWorkunit2(connection:  WsWorkunitsConnection, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100, debug: boolean = false) {
+export function createECLWorkunit2(connection: WsWorkunitsConnection, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100, debug: boolean = false) {
 	return connection.wuCreateAndUpdate(queryText, resultLimits, debug).then((workunit) => {
 		return new ECLWorkunit(connection, workunit.Wuid, action, debug);
 	});
