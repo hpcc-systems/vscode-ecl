@@ -301,8 +301,8 @@ export class ECLDebugSession extends DebugSession {
 		const debugState = this.workunit.debugStateObj();
 		switch (stackFrameScope.graphItem.type()) {
 			case 'Edge':
+				scopes.push(new Scope('Results', this._variableHandles.create(new WUScope(stackFrameScope, 'results')), false));
 				scopes.push(new Scope('Local', this._variableHandles.create(new WUScope(stackFrameScope, 'local')), false));
-				scopes.push(new Scope('Results', this._variableHandles.create(new WUScope(stackFrameScope, 'results')), true));
 				break;
 			case 'Vertex':
 				scopes.push(new Scope('Local', this._variableHandles.create(new WUScope(stackFrameScope, 'local')), false));
@@ -400,23 +400,28 @@ export class ECLDebugSession extends DebugSession {
 	protected nextRequest(response: DebugProtocol.NextResponse): void {
 		log('NextRequest');
 		const debugState = this.workunit.debugStateObj();
-		if (debugState.edgeId) {
-			this.workunit.debugStep('edge').then(debugResponse => {
-				this.wuMonitor.refresh();
-			});
-		} else if (debugState.nodeId) {
-			this.workunit.debugStep('node').then(debugResponse => {
-				this.wuMonitor.refresh();
-			});
-		} else if (debugState.graphId) {
-			this.workunit.debugStep('graph').then(debugResponse => {
-				this.wuMonitor.refresh();
-			});
-		} else {
-			this.workunit.debugContinue().then(debugResponse => {
-				this.wuMonitor.refresh();
-			});
-		}
+		this.workunit.debugStep('').then(debugResponse => {
+			this.wuMonitor.refresh();
+		});
+		/*
+	if (debugState.edgeId) {
+		this.workunit.debugStep('edge').then(debugResponse => {
+			this.wuMonitor.refresh();
+		});
+	} else if (debugState.nodeId) {
+		this.workunit.debugStep('node').then(debugResponse => {
+			this.wuMonitor.refresh();
+		});
+	} else if (debugState.graphId) {
+		this.workunit.debugStep('graph').then(debugResponse => {
+			this.wuMonitor.refresh();
+		});
+	} else {
+		this.workunit.debugContinue().then(debugResponse => {
+			this.wuMonitor.refresh();
+		});
+	}
+	*/
 		this.sendResponse(response);
 		log('NextResponse');
 	}

@@ -219,7 +219,10 @@ export class ECLWorkunit {
 			startRow: startRow,
 			numRows: numRows
 		}).then((response: any) => {
-			return response.Row;
+			if (response && response.Row) {
+				return response.Row;
+			}
+			return [];
 		});
 	}
 
