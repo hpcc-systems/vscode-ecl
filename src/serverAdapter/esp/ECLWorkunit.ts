@@ -25,7 +25,7 @@ export class ECLWorkunit {
 
 	private _debugState: any = {
 		sequence: 0,
-		State: 'Unknown'
+		state: 'unknown'
 	};
 
 	_debugAllGraph: any;
@@ -119,7 +119,7 @@ export class ECLWorkunit {
 	}
 
 	debugState() {
-		return this._debugState.State;
+		return this._debugState.state;
 	}
 
 	debug(command, opts?): Promise<any> {
@@ -138,6 +138,10 @@ export class ECLWorkunit {
 		return this.debug('status').then(rootNode => {
 			rootNode = rootNode || {
 				$: { state: 'unknown' }
+			};
+			this._debugState = {
+				sequence: this._debugState.sequence,
+				state: this._debugState.state
 			};
 			for (let key in rootNode.$) {
 				if (rootNode.$[key]) {
@@ -225,12 +229,17 @@ export class ECLWorkunit {
 		});
 	}
 
-	monitor(callback) {
+	monitor(callback): IWorkunitMonitor {
 		return new ECLWorkunitMonitor(this, callback);
 	}
 }
 
-export class ECLWorkunitMonitor {
+export interface IWorkunitMonitor {
+	refresh(thenDispose?: boolean): Promise<void>;
+	dispose(): void;
+}
+
+class ECLWorkunitMonitor implements IWorkunitMonitor {
 	workunit: ECLWorkunit;
 	callback;
 	disposeFlag = false;
@@ -259,7 +268,7 @@ export class ECLWorkunitMonitor {
 		return Promise.all([
 			this.workunit.query(),
 			this.workunit.debugStatus()
-		]).then(([wuStatusResponse, wuDebugResponse]) => {
+		]).then(() => {
 			this.disposeFlag = thenDispose;
 			this.callback(this.workunit.stateObj(), this.workunit.debugStateObj());
 			if (!thenDispose) {
