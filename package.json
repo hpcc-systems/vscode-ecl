@@ -1,5 +1,5 @@
 {
-  "name": "ECL",
+  "name": "vscode-ecl",
   "version": "0.0.1",
   "publisher": "hpcc-systems",
   "description": "ECL language support for Visual Studio Code",
@@ -43,6 +43,7 @@
     "typescript": "~2.0.7",
     "vscode": "~1.0.3",
     "tslint": "~3.15.1",
+    "mocha": "^2.3.3",
     "@types/node": "^6.0.40",
     "@types/mocha": "^2.2.32"
   },
@@ -120,30 +121,17 @@
         "runtime": "node",
         "initialConfigurations": [
           {
-            "name": "Submit-hthor",
+            "name": "Debug-hthor",
             "type": "ecl",
             "request": "launch",
-            "mode": "submit",
+            "mode": "debug",
             "workspace": "${workspaceRoot}",
-            "file": "${file}",
+            "program": "${file}",
             "serverAddress": "192.168.3.22",
             "port": 8010,
             "targetCluster": "hthor",
             "buildFlags": [],
-            "includeFolders": []
-          },
-          {
-            "name": "Compile",
-            "type": "ecl",
-            "request": "launch",
-            "mode": "compile",
-            "workspace": "${workspaceRoot}",
-            "file": "${file}",
-            "serverAddress": "192.168.3.22",
-            "port": 8010,
-            "targetCluster": "hthor",
-            "buildFlags": [],
-            "includeFolders": []
+            "includeFolders": "${config.ecl.includeFolders}"
           }
         ],
         "configurationAttributes": {
@@ -165,9 +153,7 @@
                 "description": "Workspace relative path to the program folder (or any file within that folder) when in 'debug' or 'test' mode, and to the pre-built binary file to debug in 'exec' mode.",
                 "default": "${workspaceRoot}"
               },
-              "file": {
-                "type": "string",
-                "description": "Currently active file.",
+              "program": {
                 "default": "${file}"
               },
               "serverAddress": {
@@ -199,12 +185,9 @@
                 "default": false
               },
               "includeFolders": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "default": [],
-                "description": "External folders used by IMPORT"
+                "type": "string",
+                "description": "External folders used by IMPORT",
+                "default": "${config.ecl.includeFolders}"
               }
             }
           }

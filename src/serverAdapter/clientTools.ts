@@ -178,7 +178,7 @@ export class ClientTools {
 
 	createWU(filename) {
 		let eclccPath = this.exe('eclcc');
-		let tmpName = tmp.tmpNameSync({prefix: 'eclcc-wu-tmp', postfix: ''});
+		let tmpName = tmp.tmpNameSync({ prefix: 'eclcc-wu-tmp', postfix: '' });
 		let args = ['-o' + tmpName, '-wu'];
 		args = args.concat(this.includeFolders.map(includePath => {
 			let tmp = path.normalize(includePath);
@@ -234,6 +234,7 @@ export class ClientTools {
 
 	private execFile(cmd: string, args: string[], cwd: string, toolName: string, notFoundError?: string) {
 		return new Promise((resolve, reject) => {
+			console.log(`${cmd} ${args.join(' ')}`);
 			let child = cp.spawn(cmd, args, { cwd: cwd });
 			let stdOut = '';
 			let stdErr = '';

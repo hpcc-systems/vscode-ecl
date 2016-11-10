@@ -213,7 +213,12 @@ export class WsWorkunitsConnection extends ESPConnection {
 				throw new Error(debugResponse.postErrorsMessage());
 			}
 			if (debugResponse.hasExceptions()) {
-				throw new Error(debugResponse.exceptionsMessage());
+				return {
+					$: {
+						sequence: undefined,
+						state: 'exception'
+					}
+				};
 			}
 			return debugResponse.content();
 		});

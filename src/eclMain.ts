@@ -34,8 +34,6 @@ export function activate(ctx: vscode.ExtensionContext): void {
 	vscode.window.onDidChangeActiveTextEditor(showHideStatus, null, ctx.subscriptions);
 	// vscode.window.onDidChangeActiveTextEditor(getCodeCoverage, null, ctx.subscriptions);
 
-	startBuildOnSaveWatcher(ctx.subscriptions);
-
 	ctx.subscriptions.push(vscode.commands.registerCommand('ecl.checkSyntax', () => {
 		let eclConfig = vscode.workspace.getConfiguration('ecl');
 		vscode.window.activeTextEditor.document.save();
@@ -102,28 +100,4 @@ function runBuilds(document: vscode.TextDocument, goConfig: vscode.WorkspaceConf
 	}).catch(err => {
 		vscode.window.showInformationMessage('Error: ' + err);
 	});
-}
-
-function startBuildOnSaveWatcher(subscriptions: vscode.Disposable[]) {
-	//  (VSCode.go)
-	// TODO: This is really ugly.  I'm not sure we can do better until
-	// Code supports a pre-save event where we can do the formatting before
-	// the file is written to disk.
-	let ignoreNextSave = new WeakSet<vscode.TextDocument>();
-
-	vscode.workspace.onDidSaveTextDocument(document => {
-		if (document.languageId !== 'ecl' || ignoreNextSave.has(document)) {
-			return;
-		}
-		let eclConfig = vscode.workspace.getConfiguration('ecl');
-		let textEditor = vscode.window.activeTextEditor;
-		let formatPromise: PromiseLike<void> = Promise.resolve();
-		if (eclConfig['formatOnSave'] && textEditor.document === document) {
-			//  TODO
-		}
-		formatPromise.then(() => {
-			runBuilds(document, eclConfig);
-		});
-	}, null, subscriptions);
-
 }

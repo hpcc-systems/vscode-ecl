@@ -7,7 +7,7 @@
 			"request": "launch",
 			"configurationNames": [
 				"Launch Extension",
-				"debug-debugger"
+				"Launch Server Adapter"
 			]
 		},
 		{
@@ -41,7 +41,7 @@
 			"preLaunchTask": "npm"
 		},
 		{
-			"name": "debug-debugger",
+			"name": "Launch Server Adapter",
 			"type": "node",
 			"request": "launch",
 			"program": "${workspaceRoot}/out/src/serverAdapter/ECLDebug.js",

@@ -1,7 +1,7 @@
 import { DebugProtocol } from 'vscode-debugprotocol';
 import {
 	DebugSession, Breakpoint, Thread, StackFrame, Scope, Handles, Variable, Source,
-	InitializedEvent, TerminatedEvent, StoppedEvent, ContinuedEvent, OutputEvent
+	InitializedEvent, TerminatedEvent, ThreadEvent, ContinuedEvent, StoppedEvent, OutputEvent
 } from 'vscode-debugadapter';
 import { locateClientTools, locateAllClientTools } from './clientTools';
 import { createECLWorkunit, ECLWorkunit, IWorkunitMonitor, WUAction } from './esp/ECLWorkunit';
@@ -22,13 +22,13 @@ class NullMonitor implements IWorkunitMonitor {
 // This interface should always match the schema found in `package.json`.
 export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
 	mode?: string;
+	program: string;
 	workspace: string;
-	file: string;
 	serverAddress?: string;
 	port?: number;
 	targetCluster: string;
 	buildFlags?: string[];
-	includeFolders?: string[];
+	includeFolders?: string;
 }
 
 // Note: Only turn this on when debugging the serverAdapter.
@@ -87,7 +87,6 @@ export class ECLDebugSession extends DebugSession {
 
 	protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
 		log('InitializeRequest');
-		/*
 		response.body.supportsConditionalBreakpoints = false;
 		response.body.supportsHitConditionalBreakpoints = false;
 		response.body.supportsFunctionBreakpoints = false;
@@ -99,7 +98,6 @@ export class ECLDebugSession extends DebugSession {
 		response.body.supportsStepInTargetsRequest = false;
 		response.body.supportsGotoTargetsRequest = false;
 		response.body.supportsCompletionsRequest = false;
-		*/
 		response.body.supportsConfigurationDoneRequest = true;
 
 		this.sendResponse(response);
@@ -111,9 +109,9 @@ export class ECLDebugSession extends DebugSession {
 		this.launchRequestArgs = args;
 
 		this.sendEvent(new OutputEvent('Locating Client Tools.' + os.EOL));
-		locateClientTools('', this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders).then(clientTools => {
+		locateClientTools('', this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders.split(',')).then(clientTools => {
 			this.sendEvent(new OutputEvent('Generating archive.' + os.EOL));
-			return clientTools.createArchive(this.launchRequestArgs.file);
+			return clientTools.createArchive(this.launchRequestArgs.program);
 		}).then((archive) => {
 			this.sendEvent(new OutputEvent('Creating workuinit.' + os.EOL));
 			return createECLWorkunit('http:', this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, WUAction.Run, 100, !args.noDebug);
@@ -127,6 +125,8 @@ export class ECLDebugSession extends DebugSession {
 		}).then(() => {
 			this.sendEvent(new InitializedEvent());
 			log('InitializeEvent');
+			this.sendEvent(new ThreadEvent('main', 0));
+			log('ThreadEvent');
 		}).catch((e) => {
 			this.sendEvent(new OutputEvent(`Launch failed - ${e}${os.EOL}`));
 			this.sendEvent(new TerminatedEvent());
@@ -179,6 +179,7 @@ export class ECLDebugSession extends DebugSession {
 					case 'graph end':
 					case 'edge':
 					case 'node':
+					case 'exception':
 						log('StoppedEvent');
 						this.sendEvent(new StoppedEvent(debugState.state, 0));
 						break;
@@ -281,7 +282,7 @@ export class ECLDebugSession extends DebugSession {
 				}
 				break;
 			case 'workunit':
-				this.pushStackFrame(stackFrames, graph, { file: this.launchRequestArgs.file, col: debugState.state === 'finished' ? Number.MAX_SAFE_INTEGER : 0 });
+				this.pushStackFrame(stackFrames, graph, { file: this.launchRequestArgs.program, col: debugState.state === 'finished' ? Number.MAX_SAFE_INTEGER : 0 });
 				break;
 		}
 	}
@@ -505,7 +506,6 @@ export class ECLDebugSession extends DebugSession {
 		this.workunit.debugPause().then(debugResponse => {
 			this.wuMonitor.refresh();
 		});
-		this.sendEvent(new StoppedEvent('user paused', 0));
 		this.sendResponse(response);
 		log('PauseResponse');
 	}
