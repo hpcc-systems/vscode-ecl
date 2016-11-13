@@ -41,8 +41,6 @@ export interface ISource {
 const _knownKeys = {};
 const _inspect = false;
 function inspect(obj, _id) {
-	/*
-	*/
 	if (_inspect) {
 		for (let key in obj) {
 			const id = `${_id}.${key}`;
@@ -123,11 +121,12 @@ function parseSources(sources = []): ISource[] {
 }
 
 export function parseMetaXML(metaXML) {
+	let retVal = [];
 	let parser = new xml2js.Parser();
 	parser.parseString(metaXML, (err, result) => {
 		if (result && result.Meta && result.Meta.Source) {
-			return parseSources(result.Meta.Source);
+			retVal = parseSources(result.Meta.Source);
 		}
 	});
-	return [];
+	return retVal;
 }
