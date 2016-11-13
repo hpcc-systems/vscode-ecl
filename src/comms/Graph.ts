@@ -76,9 +76,9 @@ class Subgraph extends GraphItem {
 		}
 		if (backwards) {
 			for (let i = this.vertices.length - 1; i >= 0; --i) {
-				let vertex = this.vertices[i]
-				if (this.vertices[i].hasECLDefinition()) {
-					return this.vertices[i].getECLDefinition();
+				let vertex = this.vertices[i];
+				if (vertex.hasECLDefinition()) {
+					return vertex.getECLDefinition();
 				}
 			}
 		}

@@ -3,9 +3,9 @@ import {
 	DebugSession, Breakpoint, Thread, StackFrame, Scope, Handles, Variable, Source,
 	InitializedEvent, TerminatedEvent, ThreadEvent, ContinuedEvent, StoppedEvent, OutputEvent
 } from 'vscode-debugadapter';
-import { locateClientTools, locateAllClientTools } from './clientTools';
-import { createECLWorkunit, ECLWorkunit, IWorkunitMonitor, WUAction } from './esp/ECLWorkunit';
-import { GraphItem } from './esp/ESPGraph';
+import { locateClientTools, locateAllClientTools } from '../files/clientTools';
+import { createECLWorkunit, ECLWorkunit, IWorkunitMonitor, WUAction } from '../comms/ECLWorkunit';
+import { GraphItem } from '../comms/Graph';
 import os = require('os');
 
 require('console-stamp')(console);

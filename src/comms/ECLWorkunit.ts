@@ -1,5 +1,5 @@
 import { WsWorkunitsConnection } from './WsWorkunits';
-import { createGraph, Graph } from './ESPGraph';
+import { createGraph, Graph } from './Graph';
 
 export enum WUAction {
 	Unknown = 0,

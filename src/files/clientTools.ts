@@ -1,9 +1,10 @@
-'use strict';
+import { parseMetaXML } from './ECLMeta';
+import { attachECLWorkspace } from './ECLWorkspace';
 
-import fs = require('fs');
-import path = require('path');
-import os = require('os');
-import cp = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+const cp = require('child_process');
 const semver = require('semver');
 const tmp = require('tmp');
 const xml2js = require('xml2js');
@@ -13,8 +14,8 @@ interface IExecFile {
 	stdout: string;
 }
 
-export interface ICheckResult {
-	file: string;
+export interface IECLError {
+	filePath: string;
 	line: number;
 	col: number;
 	msg: string;
@@ -107,7 +108,7 @@ export class ClientTools {
 	constructor(rootPath: string, cwd?: string, includeFolders?: string[]) {
 		this.rootPath = rootPath;
 		this.binPath = path.join(this.rootPath, 'bin');
-		this.cwd = cwd || this.binPath;
+		this.cwd = path.normalize(cwd || this.binPath);
 		this.includeFolders = includeFolders || [];
 	}
 
@@ -207,26 +208,30 @@ export class ClientTools {
 		});
 	}
 
-	syntaxCheck(filename) {
+	syntaxCheck(filePath: string) {
 		let eclccPath = this.exe('eclcc');
-		let args = ['-syntax'];
+		let args = ['-syntax', '-M'];
 		args = args.concat(this.includeFolders.map(includePath => {
-			let tmp = path.normalize(includePath);
-			return '-I' + tmp;
+			return '-I' + path.normalize(includePath);
 		}));
-		return this.execFile(eclccPath, args.concat([filename]), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
-			let retVal: ICheckResult[] = [];
+		return this.execFile(eclccPath, args.concat([filePath]), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
+			let retVal: IECLError[] = [];
 			if (response && response.stderr && response.stderr.length) {
-				response.stderr.split(os.EOL).map(line => {
+				response.stderr.split(os.EOL).forEach(line => {
 					let match = /([a-z]:\\(?:[-\w\.\d]+\\)*(?:[-\w\.\d]+)?|(?:\/[\w\.\-]+)+)\((\d*),(\d*)\): (error|warning|info) C(\d*): (.*)/.exec(line);
 					if (match) {
-						let [_, file, row, _col, severity, code, _msg] = match;
+						let [_, filePath, row, _col, severity, code, _msg] = match;
 						let line: number = +row;
 						let col: number = +_col;
 						let msg = code + ':  ' + _msg;
-						retVal.push({ file, line, col, msg, severity });
+						retVal.push({ filePath, line, col, msg, severity });
 					}
 				});
+			}
+			if (response && response.stdout && response.stdout.length) {
+				const eclWorkspace = attachECLWorkspace(this.cwd);
+				const sourcesMeta = parseMetaXML(response.stdout);
+				eclWorkspace.updateMeta(sourcesMeta, this.includeFolders);
 			}
 			return retVal;
 		});

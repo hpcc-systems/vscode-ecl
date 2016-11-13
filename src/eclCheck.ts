@@ -1,11 +1,10 @@
 'use strict';
 
 import vscode = require('vscode');
-import { locateClientTools, ICheckResult } from './serverAdapter/clientTools';
-import { getCoverage } from './eclCover';
+import { locateClientTools, IECLError } from './files/clientTools';
 import { outputChannel } from './eclStatus';
 
-export function check(filename: string, eclConfig: vscode.WorkspaceConfiguration): Promise<ICheckResult[]> {
+export function check(filename: string, eclConfig: vscode.WorkspaceConfiguration): Promise<IECLError[]> {
 	outputChannel.clear();
 	return locateClientTools('', vscode.workspace.rootPath, eclConfig['includeFolders']).then((clientTools) => {
 		let runningToolsPromises = [];
@@ -16,10 +15,6 @@ export function check(filename: string, eclConfig: vscode.WorkspaceConfiguration
 
 		if (!!eclConfig['syntaxCheckOnSave']) {
 			runningToolsPromises.push(clientTools.syntaxCheck(filename));
-		}
-
-		if (!!eclConfig['coverOnSave']) {
-			runningToolsPromises.push(getCoverage(filename));
 		}
 
 		return Promise.all(runningToolsPromises).then(resultSets => [].concat.apply([], resultSets));
