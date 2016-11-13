@@ -1,9 +1,11 @@
 'use strict';
 
-import vscode = require('vscode');
+import { ECL_MODE } from './eclMode';
 import { check } from './eclCheck';
+import { ECLDefinitionProvider } from './eclDeclaration';
 import { showHideStatus } from './eclStatus';
 import { eclWatchUri, ECLWatchTextDocumentContentProvider } from './ECLWatch';
+import vscode = require('vscode');
 
 /*
 import { workspace, Disposable, ExtensionContext } from 'vscode';
@@ -16,7 +18,7 @@ export function activate(ctx: vscode.ExtensionContext): void {
 
 	// ctx.subscriptions.push(vscode.languages.registerHoverProvider(ECL_MODE, new ECLHoverProvider()));
 	// ctx.subscriptions.push(vscode.languages.registerCompletionItemProvider(ECL_MODE, new ECLCompletionItemProvider(), '.', '\"'));
-	// ctx.subscriptions.push(vscode.languages.registerDefinitionProvider(ECL_MODE, new ECLDefinitionProvider()));
+	ctx.subscriptions.push(vscode.languages.registerDefinitionProvider(ECL_MODE, new ECLDefinitionProvider()));
 	// ctx.subscriptions.push(vscode.languages.registerReferenceProvider(ECL_MODE, new ECLReferenceProvider()));
 	// ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(ECL_MODE, new ECLDocumentFormattingEditProvider()));
 	// ctx.subscriptions.push(vscode.languages.registerDocumentSymbolProvider(ECL_MODE, new ECLDocumentSymbolProvider()));
