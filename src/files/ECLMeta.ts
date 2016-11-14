@@ -17,7 +17,7 @@ export interface IField {
 	type: string;
 }
 
-export interface IDefinition {
+export class IDefinition {
 	id: string;
 	name: string;
 	start: number;
@@ -32,10 +32,31 @@ export interface IDefinition {
 	fields?: IField[];
 }
 
+export function defMatch(defs: IDefinition[], qualifiedID: string) {
+	const qualifiedIDParts = qualifiedID.split('.');
+	const top = qualifiedIDParts.shift();
+	let retVal = defs.find(def => {
+		if (def.name === top) {
+			return true;
+		}
+		return false;
+	});
+	if (retVal && retVal.definitions.length && qualifiedIDParts.length) {
+		return defMatch(retVal.definitions, qualifiedIDParts.join('.'));
+	}
+	return retVal;
+}
+
+
 export interface ISource {
 	filePath: string;
 	imports: IImport[];
 	defiitions: IDefinition[];
+}
+
+export interface ECLDefinitionInformtation {
+	filePath: string;
+	definition: IDefinition;
 }
 
 const _knownKeys = {};
@@ -97,7 +118,7 @@ function parseDefinitions(definitions = [], parentID = ''): IDefinition[] {
 			start: definition.$.start,
 			body: definition.$.body,
 			end: definition.$.end,
-			line: definition.$.line,
+			line: definition.$.line - 1,
 			type: definition.$.type,
 			exported: !!definition.$.exported,
 			shared: !!definition.$.shared,

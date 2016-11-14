@@ -30,7 +30,7 @@ export class ECLFile {
 		this._definitions = [];
 	}
 
-	imports(_: IImport[]): any {
+	imports(_?: IImport[]): any {
 		if (!arguments.length) return this._imports;
 		this._imports = _;
 		_.forEach(imp => {
@@ -39,7 +39,7 @@ export class ECLFile {
 		return this;
 	}
 
-	definitions(_: IDefinition[]): any {
+	definitions(_?: IDefinition[]): any {
 		if (!arguments.length) return this._definitions;
 		this._definitions = _;
 		_.forEach(def => {
