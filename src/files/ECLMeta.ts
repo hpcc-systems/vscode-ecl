@@ -8,6 +8,16 @@ export interface IImport {
 	line: number;
 }
 
+export function importMatch(imps: IImport[], qualifiedID: string) {
+	let retVal = imps.find(imp => {
+		if (imp.name === qualifiedID) {
+			return true;
+		}
+		return false;
+	});
+	return retVal;
+}
+
 export interface IAttr {
 	name: string;
 }
@@ -17,7 +27,7 @@ export interface IField {
 	type: string;
 }
 
-export class IDefinition {
+export interface IDefinition {
 	id: string;
 	name: string;
 	start: number;
@@ -32,7 +42,7 @@ export class IDefinition {
 	fields?: IField[];
 }
 
-export function defMatch(defs: IDefinition[], qualifiedID: string) {
+export function defMatch(defs: IDefinition[] = [], qualifiedID: string) {
 	const qualifiedIDParts = qualifiedID.split('.');
 	const top = qualifiedIDParts.shift();
 	let retVal = defs.find(def => {
@@ -47,16 +57,18 @@ export function defMatch(defs: IDefinition[], qualifiedID: string) {
 	return retVal;
 }
 
-
 export interface ISource {
 	filePath: string;
 	imports: IImport[];
-	defiitions: IDefinition[];
+	definitions: IDefinition[];
 }
 
-export interface ECLDefinitionInformtation {
+export interface ECLDefinitionLocation {
 	filePath: string;
-	definition: IDefinition;
+	line: number;
+	charPos: number;
+	definition?: IDefinition;
+	source?: ISource;
 }
 
 const _knownKeys = {};
@@ -136,7 +148,7 @@ function parseSources(sources = []): ISource[] {
 		return <ISource>{
 			filePath: source.$.sourcePath,
 			imports: parseImports(source.Import),
-			defiitions: parseDefinitions(source.Definition)
+			definitions: parseDefinitions(source.Definition)
 		};
 	});
 }
@@ -150,4 +162,17 @@ export function parseMetaXML(metaXML) {
 		}
 	});
 	return retVal;
+}
+
+function isQualifiedIDChar(lineText: string, charPos: number) {
+	if (charPos < 0) return false;
+	let testChar = lineText.charAt(charPos);
+	return /[a-zA-Z\d_\.]/.test(testChar);
+}
+
+export function qualifiedIDBoundary(lineText: string, charPos: number, reverse: boolean) {
+	while (isQualifiedIDChar(lineText, charPos)) {
+		charPos += reverse ? -1 : 1;
+	}
+	return charPos + (reverse ? 1 : -1);
 }

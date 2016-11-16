@@ -1,11 +1,11 @@
-import { IImport, IDefinition } from './ECLMeta';
+import { ISource, IImport, IDefinition } from './ECLMeta';
 
 const path = require('path');
 
 export class ECLFile {
 	readonly filePath: string;
-	private _imports: IImport[];
-	private _definitions: IDefinition[];
+	private _imports: IImport[] = [];
+	private _definitions: IDefinition[] = [];
 
 	constructor(filePath) {
 		this.filePath = filePath;
@@ -49,6 +49,36 @@ export class ECLFile {
 			});
 		});
 		return this;
+	}
+
+	private _defAt(defs: IDefinition[], charOffset: number, stack: IDefinition[]) {
+		for (let i = 0; i < defs.length; ++i) {
+			const def = defs[i];
+			let retVal = this._defAt(def.definitions, charOffset, stack);
+			if (retVal) {
+				stack.push(def);
+				return;
+			}
+			if (charOffset >= def.start && charOffset <= def.end) {
+				stack.push(def);
+				return;
+			}
+		}
+	}
+
+	definitionStackAt(charOffset: number): IDefinition[] {
+		const retVal = [];
+		this._defAt(this.definitions(), charOffset, retVal);
+		retVal.push(this.toISource());
+		return retVal;
+	}
+
+	toISource(): ISource {
+		return {
+			filePath: this.filePath,
+			imports: this.imports(),
+			definitions: this.definitions()
+		};
 	}
 }
 

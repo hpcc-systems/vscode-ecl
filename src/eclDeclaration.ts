@@ -1,32 +1,20 @@
 import { attachECLWorkspace } from './files/ECLWorkspace';
-import { ECLDefinitionInformtation } from './files/ECLMeta'
+import { qualifiedIDBoundary, ECLDefinitionLocation } from './files/ECLMeta'
 
 import vscode = require('vscode');
 
-function isQualifiedIDChar(document: vscode.TextDocument, line: number, charPos: number) {
-	if (charPos < 0) return false;
-	let testChar = document.getText(new vscode.Range(line, charPos, line, charPos + 1));
-	return /[a-zA-Z_\.]/.test(testChar);
-}
-
-function qualifiedIDBoundary(doc: vscode.TextDocument, line: number, charPos: number, reverse: boolean) {
-	while (isQualifiedIDChar(doc, line, charPos)) {
-		charPos += reverse ? -1 : 1;
-	}
-	return charPos + (reverse ? 1 : -1);
-}
-
-export function definitionLocation(document: vscode.TextDocument, position: vscode.Position, includeDocs = true): Promise<ECLDefinitionInformtation> {
-	return new Promise<ECLDefinitionInformtation>((resolve, reject) => {
+export function definitionLocation(document: vscode.TextDocument, position: vscode.Position, includeDocs = true): Promise<ECLDefinitionLocation> {
+	return new Promise<ECLDefinitionLocation>((resolve, reject) => {
 		let wordAtPosition = document.getWordRangeAtPosition(position);
 		if (wordAtPosition) {
-			const eclWorkspace = attachECLWorkspace();
 			const line = wordAtPosition.start.line;
-			const origCharPos = wordAtPosition.start.character;
-			const startCharPos = qualifiedIDBoundary(document, line, origCharPos - 1, true);
-			const endCharPos = qualifiedIDBoundary(document, line, origCharPos + 1, false);
-			const qualifiedID = document.getText(new vscode.Range(line, startCharPos, line, endCharPos + 1));
-			resolve(eclWorkspace.locateQualifiedID(document.fileName, qualifiedID, origCharPos - startCharPos));
+			const lineText = document.lineAt(line).text;
+			const startCharPos = qualifiedIDBoundary(lineText, wordAtPosition.start.character - 1, true);
+			const endCharPos = qualifiedIDBoundary(lineText, wordAtPosition.end.character, false);
+			const qualifiedID = lineText.substring(startCharPos, endCharPos + 1);
+
+			const eclWorkspace = attachECLWorkspace();
+			resolve(eclWorkspace.locateQualifiedID(document.fileName, qualifiedID, document.offsetAt(position)));
 		}
 		resolve(null);
 	});
@@ -38,7 +26,7 @@ export class ECLDefinitionProvider implements vscode.DefinitionProvider {
 		return definitionLocation(document, position, false).then(definitionInfo => {
 			if (definitionInfo === null) return null;
 			let definitionResource = vscode.Uri.file(definitionInfo.filePath);
-			let pos = new vscode.Position(definitionInfo.definition.line, 0);
+			let pos = new vscode.Position(definitionInfo.line, definitionInfo.charPos);
 			return new vscode.Location(definitionResource, pos);
 		});
 	}
