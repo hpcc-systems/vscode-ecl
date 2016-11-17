@@ -261,14 +261,23 @@ export class Workspace {
 						if (qualifiedID === imp.ref.toLowerCase()) {
 							// bestSource = eclFile.toISource();
 						}
-						if (qualifiedID === imp.name || qualifiedID.indexOf(imp.name + '.') === 0) {
+						if (!retVal && qualifiedID === imp.name && this._sourceByID.has(imp.ref)) {
+							// bestSource = eclFile.toISource();
+							const importFile = this._sourceByID.get(imp.ref);
+							retVal = this.resolveQualifiedID(importFile.sourcePath, qualifiedID, charOffset);
+							if (!retVal) {
+								const impRefParts = imp.ref.split('.');
+								retVal = this.resolveQualifiedID(importFile.sourcePath, impRefParts[impRefParts.length - 1], charOffset);
+							}
+						}
+						if (!retVal && qualifiedID.indexOf(imp.name + '.') === 0) {
 							// bestSource = eclFile.toISource();
 							const impRefParts = imp.ref.split('.');
 							const partialID = impRefParts[impRefParts.length - 1] + '.' + qualifiedID.substring(imp.name.length + 1);
 							retVal = this.resolveQualifiedID(eclFile.sourcePath, partialID, charOffset);
 						}
 					}
-					return retVal !== null;
+					return !!retVal;
 				});
 				if (!retVal && bestSource) {
 					retVal = this.resolveQualifiedID(bestSource.sourcePath, qualifiedID, charOffset);

@@ -52,9 +52,9 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 			const metaWorkspace = attachWorkspace();
 			const eclDef = metaWorkspace.resolvePartialID(document.fileName, partialID, document.offsetAt(position));
 			if (eclDef) {
-				eclDef.suggestions().map(suggestion => {
+				resolve(eclDef.suggestions().map(suggestion => {
 					return new vscode.CompletionItem(suggestion.name, this.vscodeKindFromECLType(suggestion.type));
-				});
+				}));
 			} else {
 				resolve(null);
 			}
