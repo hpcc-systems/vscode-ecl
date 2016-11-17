@@ -1,5 +1,4 @@
-import { parseMetaXML } from './ECLMeta';
-import { attachECLWorkspace } from './ECLWorkspace';
+import { attachWorkspace } from './ECLMeta';
 
 const fs = require('fs');
 const path = require('path');
@@ -229,9 +228,8 @@ export class ClientTools {
 				});
 			}
 			if (response && response.stdout && response.stdout.length) {
-				const eclWorkspace = attachECLWorkspace(this.cwd);
-				const sourcesMeta = parseMetaXML(response.stdout);
-				eclWorkspace.updateMeta(sourcesMeta, this.includeFolders);
+				const metaWorkspace = attachWorkspace(this.cwd);
+				metaWorkspace.parseMetaXML(response.stdout);
 			}
 			return retVal;
 		});

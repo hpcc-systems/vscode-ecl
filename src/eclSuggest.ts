@@ -1,22 +1,5 @@
 import vscode = require('vscode');
-import { qualifiedIDBoundary } from './files/ECLMeta';
-import { attachECLWorkspace } from './files/ECLWorkspace';
-
-function vscodeKindFromECLCodeClass(kind: string): vscode.CompletionItemKind {
-	switch (kind) {
-		case 'const':
-		case 'package':
-		case 'type':
-			return vscode.CompletionItemKind.Keyword;
-		case 'func':
-			return vscode.CompletionItemKind.Function;
-		case 'var':
-			return vscode.CompletionItemKind.Field;
-		case 'import':
-			return vscode.CompletionItemKind.Module;
-	}
-	return vscode.CompletionItemKind.Property; // TODO@EG additional mappings needed?
-}
+import { attachWorkspace, qualifiedIDBoundary } from './files/ECLMeta';
 
 interface ECLCodeSuggestion {
 	class: string;
@@ -30,9 +13,6 @@ interface PackageInfo {
 }
 
 export class ECLCompletionItemProvider implements vscode.CompletionItemProvider {
-
-	private gocodeConfigurationComplete = false;
-	private pkgsList: PackageInfo[] = [];
 
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Thenable<vscode.CompletionItem[]> {
 		return this.provideCompletionItemsInternal(document, position, token, vscode.workspace.getConfiguration('ecl'));
@@ -59,8 +39,8 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 			const startCharPos = qualifiedIDBoundary(lineText, position.character - 1, true);
 			const partialID = lineText.substring(startCharPos, position.character + 1);
 
-			const eclWorkspace = attachECLWorkspace();
-			const eclDef = eclWorkspace.locatePartialID(document.fileName, partialID, document.offsetAt(position));
+			const metaWorkspace = attachWorkspace();
+			const eclDef = metaWorkspace.locatePartialID(document.fileName, partialID, document.offsetAt(position));
 			if (eclDef) {
 				if (eclDef.definition) {
 					resolve(eclDef.definition.definitions.map(def => {
@@ -76,7 +56,6 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 			} else {
 				resolve(null);
 			}
-			//resolve(eclWorkspace.suggestPartialID(document.fileName, partialID));
 		});
 	}
 

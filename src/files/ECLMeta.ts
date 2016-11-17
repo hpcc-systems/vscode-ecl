@@ -1,14 +1,24 @@
+const vscode = require('vscode');
+const path = require('path');
 const xml2js = require('xml2js');
 
-export interface IImport {
-	name: string;
-	ref: string;
-	start: number;
-	end: number;
-	line: number;
+const _knownKeys = {};
+const _inspect = true;
+function inspect(obj, _id, known) {
+	if (_inspect) {
+		for (let key in obj) {
+			const id = `${_id}.${key}`;
+			if (key !== '$' && known[key] === undefined && known[key.toLowerCase() + 's'] === undefined) {
+				console.log(id);
+			}
+		}
+		if (obj.$) {
+			inspect(obj.$, _id + '.$', known);
+		}
+	}
 }
 
-export function importMatch(imps: IImport[], qualifiedID: string) {
+export function importMatch(imps: Import[], qualifiedID: string) {
 	let retVal = imps.find(imp => {
 		if (imp.name === qualifiedID) {
 			return true;
@@ -18,150 +28,322 @@ export function importMatch(imps: IImport[], qualifiedID: string) {
 	return retVal;
 }
 
-export interface IAttr {
+export class Attr {
 	name: string;
-}
 
-export interface IField {
-	name: string;
-	type: string;
-}
-
-export interface IDefinition {
-	id: string;
-	name: string;
-	start: number;
-	body: number;
-	end: number;
-	line: number;
-	type: string;
-	exported: boolean;
-	shared: boolean;
-	attrs?: IAttr[];
-	definitions?: IDefinition[];
-	fields?: IField[];
-}
-
-export function defMatch(defs: IDefinition[] = [], qualifiedID: string) {
-	const qualifiedIDParts = qualifiedID.split('.');
-	const top = qualifiedIDParts.shift();
-	let retVal = defs.find(def => {
-		if (def.name === top) {
-			return true;
-		}
-		return false;
-	});
-	if (retVal && retVal.definitions.length && qualifiedIDParts.length) {
-		return defMatch(retVal.definitions, qualifiedIDParts.join('.'));
+	constructor(xmlAttr) {
+		this.name = xmlAttr.$.name;
 	}
-	return retVal;
 }
 
-export interface ISource {
-	filePath: string;
-	imports: IImport[];
-	definitions: IDefinition[];
+export class Field {
+	name: string;
+	type: string;
+
+	constructor(xmlField) {
+		this.name = xmlField.$.name;
+		this.type = xmlField.$.type;
+	}
 }
 
 export interface ECLDefinitionLocation {
 	filePath: string;
 	line: number;
 	charPos: number;
-	definition?: IDefinition;
-	source?: ISource;
+	definition?: Definition;
+	source?: Source;
 }
 
-const _knownKeys = {};
-const _inspect = false;
-function inspect(obj, _id) {
-	if (_inspect) {
-		for (let key in obj) {
-			const id = `${_id}.${key}`;
-			if (!_knownKeys[id]) {
-				_knownKeys[id] = true;
-				console.log(id);
+export class ECLScope {
+	sourcePath: string;
+	line: number;
+	definitions: Definition[];
+
+	constructor(sourcePath, line, xmlDefinitions) {
+		this.sourcePath = sourcePath;
+		this.line = line;
+		this.definitions = this.parseDefinitions(xmlDefinitions);
+	}
+
+	private parseDefinitions(definitions = [], parentID = ''): Definition[] {
+		return definitions.map(definition => {
+			const retVal = new Definition(this.sourcePath, definition);
+			inspect(definition, 'definition', retVal);
+			return retVal;
+		});
+	}
+
+	private _defMatch(defs: Definition[] = [], qualifiedID: string) {
+		const qualifiedIDParts = qualifiedID.split('.');
+		const top = qualifiedIDParts.shift();
+		let retVal = defs.find(def => {
+			if (def.name === top) {
+				return true;
 			}
+			return false;
+		});
+		if (retVal && retVal.definitions.length && qualifiedIDParts.length) {
+			return this._defMatch(retVal.definitions, qualifiedIDParts.join('.'));
 		}
-		if (obj.$) {
-			inspect(obj.$, _id + '.$');
-		}
+		return retVal;
+	}
+
+	defMatch(qualifiedID: string) {
+		return this._defMatch(this.definitions, qualifiedID);
 	}
 }
 
-function parseAttrs(attrs = []): IAttr[] {
-	return attrs.map(attr => {
-		inspect(attr, 'attr');
-		return <IAttr>{
-			name: attr.$.name
-		};
-	});
+export class Definition extends ECLScope {
+	name: string;
+	start: number;
+	body: number;
+	end: number;
+	type: string;
+	exported: boolean;
+	shared: boolean;
+	attrs?: Attr[];
+	fields?: Field[];
+
+	constructor(sourcePath, xmlDefinition) {
+		super(sourcePath, xmlDefinition.$.line - 1, xmlDefinition.Definition);
+		this.name = xmlDefinition.$.name;
+		this.start = xmlDefinition.$.start;
+		this.body = xmlDefinition.$.body;
+		this.end = xmlDefinition.$.end;
+		this.type = xmlDefinition.$.type;
+		this.exported = !!xmlDefinition.$.exported;
+		this.shared = !!xmlDefinition.$.shared;
+		this.attrs = this.parseAttrs(xmlDefinition.Attr);
+		this.fields = this.parseFields(xmlDefinition.Field);
+	}
+
+	parseAttrs(attrs = []): Attr[] {
+		return attrs.map(attr => {
+			const retVal = new Attr(attr);
+			inspect(attr, 'attr', retVal);
+			return retVal;
+		});
+	}
+
+	parseFields(fields = []): Field[] {
+		return fields.map(field => {
+			const retVal = new Field(field);
+			inspect(field, 'field', retVal);
+			return retVal;
+		});
+	}
 }
 
-function parseFields(fields = []): IField[] {
-	return fields.map(field => {
-		inspect(field, 'field');
-		return <IField>{
-			name: field.$.name,
-			type: field.$.type
-		};
-	});
+export class Import {
+	name: string;
+	ref: string;
+	start: number;
+	end: number;
+	line: number;
+
+	constructor(xmlImport) {
+		this.name = xmlImport.$.name;
+		this.ref = xmlImport.$.ref;
+		this.start = xmlImport.$.start;
+		this.end = xmlImport.$.end;
+		this.line = xmlImport.$.line;
+	}
 }
 
-function parseImports(imports = [], parentID = ''): IImport[] {
-	return imports.map(imp => {
-		inspect(imp, 'import');
-		return <IImport>{
-			name: imp.$.name,
-			ref: imp.$.ref,
-			start: imp.$.start,
-			end: imp.$.end,
-			line: imp.$.line
-		};
-	});
-}
+export class Source extends ECLScope {
+	name: string;
+	imports: Import[];
 
-function parseDefinitions(definitions = [], parentID = ''): IDefinition[] {
-	return definitions.map(definition => {
-		inspect(definition, 'definition');
-		const id = parentID ? parentID + '.' + definition.$.name : definition.$.name;
-		return <IDefinition>{
-			id: id,
-			name: definition.$.name,
-			start: definition.$.start,
-			body: definition.$.body,
-			end: definition.$.end,
-			line: definition.$.line - 1,
-			type: definition.$.type,
-			exported: !!definition.$.exported,
-			shared: !!definition.$.shared,
-			attrs: parseAttrs(definition.Attr),
-			definitions: parseDefinitions(definition.Definition, id),
-			fields: parseFields(definition.Field)
-		};
+	constructor(xmlSource) {
+		super(xmlSource.$.sourcePath, 0, xmlSource.Definition);
+		this.name = xmlSource.$.name;
+		this.imports = this.parseImports(xmlSource.Import);
+	}
 
-	});
-}
+	private parseImports(imports = []): Import[] {
+		return imports.map(imp => {
+			const retVal = new Import(imp);
+			inspect(imp, 'import', retVal);
+			return retVal;
+		});
+	}
 
-function parseSources(sources = []): ISource[] {
-	return sources.map(source => {
-		inspect(source, 'source');
-		return <ISource>{
-			filePath: source.$.sourcePath,
-			imports: parseImports(source.Import),
-			definitions: parseDefinitions(source.Definition)
-		};
-	});
-}
-
-export function parseMetaXML(metaXML) {
-	let retVal = [];
-	let parser = new xml2js.Parser();
-	parser.parseString(metaXML, (err, result) => {
-		if (result && result.Meta && result.Meta.Source) {
-			retVal = parseSources(result.Meta.Source);
+	private _defAt(defs: Definition[], charOffset: number, stack: Definition[]) {
+		for (let i = 0; i < defs.length; ++i) {
+			const def = defs[i];
+			let retVal = this._defAt(def.definitions, charOffset, stack);
+			if (retVal) {
+				stack.push(def);
+				return;
+			}
+			if (charOffset >= def.start && charOffset <= def.end) {
+				stack.push(def);
+				return;
+			}
 		}
-	});
-	return retVal;
+	}
+
+	scopeStackAt(charOffset: number): ECLScope[] {
+		const retVal = [];
+		this._defAt(this.definitions, charOffset, retVal);
+		retVal.push(this);
+		return retVal;
+	}
+}
+
+export class Workspace {
+	_workspacePath;
+	_sourceByID = new Map<string, Source>();
+	_sourceByPath = new Map<string, Source>();
+
+	constructor(workspacePath) {
+		this._workspacePath = workspacePath;
+	}
+
+	parseSources(sources = []) {
+		return sources.map(_source => {
+			const source = new Source(_source);
+			inspect(_source, 'source', source);
+			this._sourceByID.set(source.name, source);
+			this._sourceByPath.set(source.sourcePath, source);
+		});
+	}
+
+	parseMetaXML(metaXML) {
+		let retVal = [];
+		let parser = new xml2js.Parser();
+		parser.parseString(metaXML, (err, result) => {
+			if (result && result.Meta && result.Meta.Source) {
+				this.parseSources(result.Meta.Source);
+			}
+		});
+		return retVal;
+	}
+
+	resolveQualifiedID(filePath: string, qualifiedID: string, charOffset: number): ECLScope {
+		qualifiedID = qualifiedID.toLowerCase();
+		let retVal = null;
+		if (this._sourceByPath.has(filePath)) {
+			const eclSource = this._sourceByPath.get(filePath);
+			let defs = eclSource.scopeStackAt(charOffset);
+			defs.some(_def => {
+				let def = _def.defMatch(qualifiedID);
+				if (def) {
+					retVal = <ECLDefinitionLocation>{
+						filePath: eclSource.sourcePath,
+						line: def.line,
+						charPos: 0,
+						definition: def
+					};
+				}
+				return !!retVal;
+			});
+			if (!retVal) {
+				const imports = eclSource.imports;
+				let bestSource: Source;
+				imports.some(imp => {
+					if (this._sourceByID.has(imp.ref)) {
+						const eclFile = this._sourceByID.get(imp.ref);
+						if (qualifiedID === imp.ref.toLowerCase()) {
+							// bestSource = eclFile.toISource();
+						}
+						if (qualifiedID === imp.name || qualifiedID.indexOf(imp.name + '.') === 0) {
+							// bestSource = eclFile.toISource();
+							const impRefParts = imp.ref.split('.');
+							const partialID = impRefParts[impRefParts.length - 1] + '.' + qualifiedID.substring(imp.name.length + 1);
+							retVal = this.locateQualifiedID(eclFile.sourcePath, partialID, charOffset);
+						}
+					}
+					return retVal !== null;
+				});
+				if (!retVal && bestSource) {
+					retVal = this.locateQualifiedID(bestSource.sourcePath, qualifiedID, charOffset);
+					if (!retVal) {
+						retVal = <ECLDefinitionLocation>{
+							filePath: bestSource.sourcePath,
+							line: 0,
+							charPos: 0,
+							source: bestSource
+						};
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+
+	locateQualifiedID(filePath: string, qualifiedID: string, charOffset: number): ECLDefinitionLocation {
+		qualifiedID = qualifiedID.toLowerCase();
+		let retVal = null;
+		if (this._sourceByPath.has(filePath)) {
+			const eclSource = this._sourceByPath.get(filePath);
+			let defs = eclSource.scopeStackAt(charOffset);
+			defs.some(_def => {
+				let def = _def.defMatch(qualifiedID);
+				if (def) {
+					retVal = <ECLDefinitionLocation>{
+						filePath: eclSource.sourcePath,
+						line: def.line,
+						charPos: 0,
+						definition: def
+					};
+				}
+				return !!retVal;
+			});
+			if (!retVal) {
+				const imports = eclSource.imports;
+				let bestSource: Source;
+				imports.some(imp => {
+					if (this._sourceByID.has(imp.ref)) {
+						const eclFile = this._sourceByID.get(imp.ref);
+						if (qualifiedID === imp.ref.toLowerCase()) {
+							// bestSource = eclFile.toISource();
+						}
+						if (qualifiedID === imp.name || qualifiedID.indexOf(imp.name + '.') === 0) {
+							// bestSource = eclFile.toISource();
+							const impRefParts = imp.ref.split('.');
+							const partialID = impRefParts[impRefParts.length - 1] + '.' + qualifiedID.substring(imp.name.length + 1);
+							retVal = this.locateQualifiedID(eclFile.sourcePath, partialID, charOffset);
+						}
+					}
+					return retVal !== null;
+				});
+				if (!retVal && bestSource) {
+					retVal = this.locateQualifiedID(bestSource.sourcePath, qualifiedID, charOffset);
+					if (!retVal) {
+						retVal = <ECLDefinitionLocation>{
+							filePath: bestSource.sourcePath,
+							line: 0,
+							charPos: 0,
+							source: bestSource
+						};
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+
+	locatePartialID(filePath: string, partialID: string, charOffset: number): ECLDefinitionLocation {
+		partialID = partialID.toLowerCase();
+		if (this._sourceByPath.has(filePath)) {
+			const partialIDParts = partialID.split('.');
+			partialIDParts.pop();
+			const partialIDQualifier = partialIDParts.length === 1 ? partialIDParts[0] : partialIDParts.join('.');
+			return this.locateQualifiedID(filePath, partialIDQualifier, charOffset);
+		}
+		return null;
+	}
+
+}
+
+const workspaceCache = new Map<string, Workspace>();
+export function attachWorkspace(_workspacePath = vscode.workspace.rootPath): Workspace {
+	const workspacePath = path.normalize(_workspacePath);
+	if (!workspaceCache.has(workspacePath)) {
+		workspaceCache.set(workspacePath, new Workspace(workspacePath));
+	}
+	return workspaceCache.get(workspacePath);
 }
 
 function isQualifiedIDChar(lineText: string, charPos: number) {
@@ -176,3 +358,4 @@ export function qualifiedIDBoundary(lineText: string, charPos: number, reverse: 
 	}
 	return charPos + (reverse ? 1 : -1);
 }
+
