@@ -54,12 +54,22 @@ export interface ECLDefinitionLocation {
 	source?: Source;
 }
 
+export interface ISuggestion {
+	name: string;
+	type: string;
+}
+
 export class ECLScope {
+	name: string;
+	type: string;
 	sourcePath: string;
 	line: number;
 	definitions: Definition[];
 
-	constructor(sourcePath, line, xmlDefinitions) {
+	constructor(name, type, sourcePath, line: number, xmlDefinitions) {
+		this.name = name;
+		this.type = type;
+		console.log(type);
 		this.sourcePath = sourcePath;
 		this.line = line;
 		this.definitions = this.parseDefinitions(xmlDefinitions);
@@ -73,7 +83,7 @@ export class ECLScope {
 		});
 	}
 
-	private _defMatch(defs: Definition[] = [], qualifiedID: string) {
+	private _resolve(defs: Definition[] = [], qualifiedID: string) {
 		const qualifiedIDParts = qualifiedID.split('.');
 		const top = qualifiedIDParts.shift();
 		let retVal = defs.find(def => {
@@ -83,41 +93,46 @@ export class ECLScope {
 			return false;
 		});
 		if (retVal && retVal.definitions.length && qualifiedIDParts.length) {
-			return this._defMatch(retVal.definitions, qualifiedIDParts.join('.'));
+			return this._resolve(retVal.definitions, qualifiedIDParts.join('.'));
 		}
 		return retVal;
 	}
 
-	defMatch(qualifiedID: string) {
-		return this._defMatch(this.definitions, qualifiedID);
+	resolve(qualifiedID: string) {
+		return this._resolve(this.definitions, qualifiedID);
+	}
+
+	suggestions(): ISuggestion[] {
+		return this.definitions.map(def => {
+			return {
+				name: def.name,
+				type: this.type
+			};
+		});
 	}
 }
 
 export class Definition extends ECLScope {
-	name: string;
 	start: number;
 	body: number;
 	end: number;
-	type: string;
 	exported: boolean;
 	shared: boolean;
 	attrs?: Attr[];
 	fields?: Field[];
 
 	constructor(sourcePath, xmlDefinition) {
-		super(sourcePath, xmlDefinition.$.line - 1, xmlDefinition.Definition);
-		this.name = xmlDefinition.$.name;
+		super(xmlDefinition.$.name, xmlDefinition.$.type, sourcePath, xmlDefinition.$.line - 1, xmlDefinition.Definition);
 		this.start = xmlDefinition.$.start;
 		this.body = xmlDefinition.$.body;
 		this.end = xmlDefinition.$.end;
-		this.type = xmlDefinition.$.type;
 		this.exported = !!xmlDefinition.$.exported;
 		this.shared = !!xmlDefinition.$.shared;
 		this.attrs = this.parseAttrs(xmlDefinition.Attr);
 		this.fields = this.parseFields(xmlDefinition.Field);
 	}
 
-	parseAttrs(attrs = []): Attr[] {
+	private parseAttrs(attrs = []): Attr[] {
 		return attrs.map(attr => {
 			const retVal = new Attr(attr);
 			inspect(attr, 'attr', retVal);
@@ -125,12 +140,21 @@ export class Definition extends ECLScope {
 		});
 	}
 
-	parseFields(fields = []): Field[] {
+	private parseFields(fields = []): Field[] {
 		return fields.map(field => {
 			const retVal = new Field(field);
 			inspect(field, 'field', retVal);
 			return retVal;
 		});
+	}
+
+	suggestions() {
+		return super.suggestions().concat(this.fields.map(field => {
+			return {
+				name: field.name,
+				type: field.type
+			};
+		}));
 	}
 }
 
@@ -151,12 +175,10 @@ export class Import {
 }
 
 export class Source extends ECLScope {
-	name: string;
 	imports: Import[];
 
 	constructor(xmlSource) {
-		super(xmlSource.$.sourcePath, 0, xmlSource.Definition);
-		this.name = xmlSource.$.name;
+		super(xmlSource.$.name, 'source', xmlSource.$.sourcePath, 0, xmlSource.Definition);
 		this.imports = this.parseImports(xmlSource.Import);
 	}
 
@@ -222,20 +244,12 @@ export class Workspace {
 
 	resolveQualifiedID(filePath: string, qualifiedID: string, charOffset: number): ECLScope {
 		qualifiedID = qualifiedID.toLowerCase();
-		let retVal = null;
+		let retVal: ECLScope = null;
 		if (this._sourceByPath.has(filePath)) {
 			const eclSource = this._sourceByPath.get(filePath);
-			let defs = eclSource.scopeStackAt(charOffset);
-			defs.some(_def => {
-				let def = _def.defMatch(qualifiedID);
-				if (def) {
-					retVal = <ECLDefinitionLocation>{
-						filePath: eclSource.sourcePath,
-						line: def.line,
-						charPos: 0,
-						definition: def
-					};
-				}
+			let scopes = eclSource.scopeStackAt(charOffset);
+			scopes.some(scope => {
+				retVal = scope.resolve(qualifiedID);
 				return !!retVal;
 			});
 			if (!retVal) {
@@ -251,86 +265,90 @@ export class Workspace {
 							// bestSource = eclFile.toISource();
 							const impRefParts = imp.ref.split('.');
 							const partialID = impRefParts[impRefParts.length - 1] + '.' + qualifiedID.substring(imp.name.length + 1);
-							retVal = this.locateQualifiedID(eclFile.sourcePath, partialID, charOffset);
+							retVal = this.resolveQualifiedID(eclFile.sourcePath, partialID, charOffset);
 						}
 					}
 					return retVal !== null;
 				});
 				if (!retVal && bestSource) {
-					retVal = this.locateQualifiedID(bestSource.sourcePath, qualifiedID, charOffset);
-					if (!retVal) {
-						retVal = <ECLDefinitionLocation>{
-							filePath: bestSource.sourcePath,
-							line: 0,
-							charPos: 0,
-							source: bestSource
-						};
-					}
+					retVal = this.resolveQualifiedID(bestSource.sourcePath, qualifiedID, charOffset);
 				}
 			}
 		}
 		return retVal;
 	}
 
-	locateQualifiedID(filePath: string, qualifiedID: string, charOffset: number): ECLDefinitionLocation {
-		qualifiedID = qualifiedID.toLowerCase();
-		let retVal = null;
-		if (this._sourceByPath.has(filePath)) {
-			const eclSource = this._sourceByPath.get(filePath);
-			let defs = eclSource.scopeStackAt(charOffset);
-			defs.some(_def => {
-				let def = _def.defMatch(qualifiedID);
-				if (def) {
-					retVal = <ECLDefinitionLocation>{
-						filePath: eclSource.sourcePath,
-						line: def.line,
-						charPos: 0,
-						definition: def
-					};
-				}
-				return !!retVal;
-			});
-			if (!retVal) {
-				const imports = eclSource.imports;
-				let bestSource: Source;
-				imports.some(imp => {
-					if (this._sourceByID.has(imp.ref)) {
-						const eclFile = this._sourceByID.get(imp.ref);
-						if (qualifiedID === imp.ref.toLowerCase()) {
-							// bestSource = eclFile.toISource();
-						}
-						if (qualifiedID === imp.name || qualifiedID.indexOf(imp.name + '.') === 0) {
-							// bestSource = eclFile.toISource();
-							const impRefParts = imp.ref.split('.');
-							const partialID = impRefParts[impRefParts.length - 1] + '.' + qualifiedID.substring(imp.name.length + 1);
-							retVal = this.locateQualifiedID(eclFile.sourcePath, partialID, charOffset);
-						}
-					}
-					return retVal !== null;
-				});
-				if (!retVal && bestSource) {
-					retVal = this.locateQualifiedID(bestSource.sourcePath, qualifiedID, charOffset);
-					if (!retVal) {
-						retVal = <ECLDefinitionLocation>{
-							filePath: bestSource.sourcePath,
-							line: 0,
-							charPos: 0,
-							source: bestSource
-						};
-					}
-				}
-			}
-		}
-		return retVal;
-	}
-
-	locatePartialID(filePath: string, partialID: string, charOffset: number): ECLDefinitionLocation {
+	resolvePartialID(filePath: string, partialID: string, charOffset: number): ECLScope {
 		partialID = partialID.toLowerCase();
 		if (this._sourceByPath.has(filePath)) {
 			const partialIDParts = partialID.split('.');
 			partialIDParts.pop();
 			const partialIDQualifier = partialIDParts.length === 1 ? partialIDParts[0] : partialIDParts.join('.');
-			return this.locateQualifiedID(filePath, partialIDQualifier, charOffset);
+			return this.resolveQualifiedID(filePath, partialIDQualifier, charOffset);
+		}
+		return null;
+	}
+
+
+	locateQualifiedIDXXX(filePath: string, qualifiedID: string, charOffset: number): ECLDefinitionLocation {
+		qualifiedID = qualifiedID.toLowerCase();
+		let retVal = null;
+		if (this._sourceByPath.has(filePath)) {
+			const eclSource = this._sourceByPath.get(filePath);
+			let scopes = eclSource.scopeStackAt(charOffset);
+			scopes.some(scope => {
+				let def = scope.resolve(qualifiedID);
+				if (def) {
+					retVal = <ECLDefinitionLocation>{
+						filePath: eclSource.sourcePath,
+						line: def.line,
+						charPos: 0,
+						definition: def
+					};
+				}
+				return !!retVal;
+			});
+			if (!retVal) {
+				const imports = eclSource.imports;
+				let bestSource: Source;
+				imports.some(imp => {
+					if (this._sourceByID.has(imp.ref)) {
+						const eclFile = this._sourceByID.get(imp.ref);
+						if (qualifiedID === imp.ref.toLowerCase()) {
+							// bestSource = eclFile.toISource();
+						}
+						if (qualifiedID === imp.name || qualifiedID.indexOf(imp.name + '.') === 0) {
+							// bestSource = eclFile.toISource();
+							const impRefParts = imp.ref.split('.');
+							const partialID = impRefParts[impRefParts.length - 1] + '.' + qualifiedID.substring(imp.name.length + 1);
+							retVal = this.locateQualifiedIDXXX(eclFile.sourcePath, partialID, charOffset);
+						}
+					}
+					return retVal !== null;
+				});
+				if (!retVal && bestSource) {
+					retVal = this.locateQualifiedIDXXX(bestSource.sourcePath, qualifiedID, charOffset);
+					if (!retVal) {
+						retVal = <ECLDefinitionLocation>{
+							filePath: bestSource.sourcePath,
+							line: 0,
+							charPos: 0,
+							source: bestSource
+						};
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+
+	locatePartialIDXXX(filePath: string, partialID: string, charOffset: number): ECLDefinitionLocation {
+		partialID = partialID.toLowerCase();
+		if (this._sourceByPath.has(filePath)) {
+			const partialIDParts = partialID.split('.');
+			partialIDParts.pop();
+			const partialIDQualifier = partialIDParts.length === 1 ? partialIDParts[0] : partialIDParts.join('.');
+			return this.locateQualifiedIDXXX(filePath, partialIDQualifier, charOffset);
 		}
 		return null;
 	}

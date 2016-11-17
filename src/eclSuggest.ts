@@ -18,6 +18,16 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 		return this.provideCompletionItemsInternal(document, position, token, vscode.workspace.getConfiguration('ecl'));
 	}
 
+	private vscodeKindFromECLType(type: string): vscode.CompletionItemKind {
+		switch (type) {
+			case 'record':
+				return vscode.CompletionItemKind.Module;
+			case 'source':
+				return vscode.CompletionItemKind.File;
+		}
+		return vscode.CompletionItemKind.Variable;
+	}
+
 	public provideCompletionItemsInternal(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, config: vscode.WorkspaceConfiguration): Thenable<vscode.CompletionItem[]> {
 		return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
 			let lineText = document.lineAt(position.line).text;
@@ -40,23 +50,14 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 			const partialID = lineText.substring(startCharPos, position.character + 1);
 
 			const metaWorkspace = attachWorkspace();
-			const eclDef = metaWorkspace.locatePartialID(document.fileName, partialID, document.offsetAt(position));
+			const eclDef = metaWorkspace.resolvePartialID(document.fileName, partialID, document.offsetAt(position));
 			if (eclDef) {
-				if (eclDef.definition) {
-					resolve(eclDef.definition.definitions.map(def => {
-						return new vscode.CompletionItem(def.name);
-					}).concat(eclDef.definition.fields.map(field => {
-						return new vscode.CompletionItem(field.name);
-					})));
-				} else if (eclDef.source) {
-					resolve(eclDef.source.definitions.map(def => {
-						return new vscode.CompletionItem(def.name);
-					}));
-				}
+				eclDef.suggestions().map(suggestion => {
+					return new vscode.CompletionItem(suggestion.name, this.vscodeKindFromECLType(suggestion.type));
+				});
 			} else {
 				resolve(null);
 			}
 		});
 	}
-
 }
