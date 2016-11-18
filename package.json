@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "publisher": "GordonSmith",
     "description": "ECL language support for Visual Studio Code",
     "author": {
