@@ -62,14 +62,19 @@ export class ECLScope {
 	type: string;
 	sourcePath: string;
 	line: number;
+	start: number;
+	body: number;
+	end: number;
 	definitions: Definition[];
 
-	constructor(name, type, sourcePath, line: number, xmlDefinitions) {
+	constructor(name, type, sourcePath, xmlDefinitions, line: number = 1, start: number = 0, body: number = 0, end: number = Number.MAX_SAFE_INTEGER) {
 		this.name = name;
 		this.type = type;
-		console.log(type);
 		this.sourcePath = sourcePath;
-		this.line = line;
+		this.line = +line - 1;
+		this.start = +start;
+		this.body = +body;
+		this.end = +end;
 		this.definitions = this.parseDefinitions(xmlDefinitions);
 	}
 
@@ -79,6 +84,21 @@ export class ECLScope {
 			inspect(definition, 'definition', retVal);
 			return retVal;
 		});
+	}
+
+	contains(charOffset: number) {
+		return charOffset >= this.start && charOffset <= this.end;
+	}
+
+	scopeStackAt(charOffset: number): ECLScope[] {
+		let retVal = [];
+		if (this.contains(charOffset)) {
+			retVal.push(this);
+			this.definitions.forEach(def => {
+				retVal = def.scopeStackAt(charOffset).concat(retVal);
+			});
+		}
+		return retVal;
 	}
 
 	private _resolve(defs: Definition[] = [], qualifiedID: string) {
@@ -111,19 +131,13 @@ export class ECLScope {
 }
 
 export class Definition extends ECLScope {
-	start: number;
-	body: number;
-	end: number;
 	exported: boolean;
 	shared: boolean;
 	attrs?: Attr[];
 	fields?: Field[];
 
 	constructor(sourcePath, xmlDefinition) {
-		super(xmlDefinition.$.name, xmlDefinition.$.type, sourcePath, xmlDefinition.$.line - 1, xmlDefinition.Definition);
-		this.start = xmlDefinition.$.start;
-		this.body = xmlDefinition.$.body;
-		this.end = xmlDefinition.$.end;
+		super(xmlDefinition.$.name, xmlDefinition.$.type, sourcePath, xmlDefinition.Definition, xmlDefinition.$.line, xmlDefinition.$.start, xmlDefinition.$.body, xmlDefinition.$.end);
 		this.exported = !!xmlDefinition.$.exported;
 		this.shared = !!xmlDefinition.$.shared;
 		this.attrs = this.parseAttrs(xmlDefinition.Attr);
@@ -176,7 +190,7 @@ export class Source extends ECLScope {
 	imports: Import[];
 
 	constructor(xmlSource) {
-		super(xmlSource.$.name, 'source', xmlSource.$.sourcePath, 0, xmlSource.Definition);
+		super(xmlSource.$.name, 'source', xmlSource.$.sourcePath, xmlSource.Definition);
 		this.imports = this.parseImports(xmlSource.Import);
 	}
 
@@ -186,28 +200,6 @@ export class Source extends ECLScope {
 			inspect(imp, 'import', retVal);
 			return retVal;
 		});
-	}
-
-	private _defAt(defs: Definition[], charOffset: number, stack: Definition[]) {
-		for (let i = 0; i < defs.length; ++i) {
-			const def = defs[i];
-			let retVal = this._defAt(def.definitions, charOffset, stack);
-			if (retVal) {
-				stack.push(def);
-				return;
-			}
-			if (charOffset >= def.start && charOffset <= def.end) {
-				stack.push(def);
-				return;
-			}
-		}
-	}
-
-	scopeStackAt(charOffset: number): ECLScope[] {
-		const retVal = [];
-		this._defAt(this.definitions, charOffset, retVal);
-		retVal.push(this);
-		return retVal;
 	}
 }
 
