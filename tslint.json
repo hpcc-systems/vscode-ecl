@@ -14,7 +14,12 @@
 		"no-internal-module": true,
 		"no-trailing-whitespace": true,
 		"no-var-keyword": true,
-		"no-unused-variable": [true, {"ignore-pattern": "^_"}],
+		"no-unused-variable": [
+			true,
+			{
+				"ignore-pattern": "^_"
+			}
+		],
 		"one-line": [
 			true,
 			"check-open-brace",
@@ -24,7 +29,9 @@
 			true,
 			"single"
 		],
-		"semicolon": [true],
+		"semicolon": [
+			true
+		],
 		"triple-equals": [
 			true,
 			"allow-null-check"

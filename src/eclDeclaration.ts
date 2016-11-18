@@ -12,7 +12,7 @@ export function definitionLocation(document: vscode.TextDocument, position: vsco
 			const endCharPos = qualifiedIDBoundary(lineText, wordAtPosition.end.character, false);
 			const qualifiedID = lineText.substring(startCharPos, endCharPos + 1);
 
-			const metaWorkspace = attachWorkspace();
+			const metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
 			resolve(metaWorkspace.resolveQualifiedID(document.fileName, qualifiedID, document.offsetAt(position)));
 		}
 		resolve(null);

@@ -1,5 +1,4 @@
-import os = require('os');
-
+const os = require('os');
 const node_url = require('url');
 const request = require('request');
 const xml2js = require('xml2js');

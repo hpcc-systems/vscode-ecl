@@ -1,9 +1,7 @@
-const vscode = require('vscode');
 const path = require('path');
 const xml2js = require('xml2js');
 
-const _knownKeys = {};
-const _inspect = true;
+const _inspect = false;
 function inspect(obj, _id, known) {
 	if (_inspect) {
 		for (let key in obj) {
@@ -254,15 +252,12 @@ export class Workspace {
 			});
 			if (!retVal) {
 				const imports = eclSource.imports;
-				let bestSource: Source;
 				imports.some(imp => {
 					if (this._sourceByID.has(imp.ref)) {
 						const eclFile = this._sourceByID.get(imp.ref);
 						if (qualifiedID === imp.ref.toLowerCase()) {
-							// bestSource = eclFile.toISource();
 						}
 						if (!retVal && qualifiedID === imp.name && this._sourceByID.has(imp.ref)) {
-							// bestSource = eclFile.toISource();
 							const importFile = this._sourceByID.get(imp.ref);
 							retVal = this.resolveQualifiedID(importFile.sourcePath, qualifiedID, charOffset);
 							if (!retVal) {
@@ -271,7 +266,6 @@ export class Workspace {
 							}
 						}
 						if (!retVal && qualifiedID.indexOf(imp.name + '.') === 0) {
-							// bestSource = eclFile.toISource();
 							const impRefParts = imp.ref.split('.');
 							const partialID = impRefParts[impRefParts.length - 1] + '.' + qualifiedID.substring(imp.name.length + 1);
 							retVal = this.resolveQualifiedID(eclFile.sourcePath, partialID, charOffset);
@@ -279,9 +273,6 @@ export class Workspace {
 					}
 					return !!retVal;
 				});
-				if (!retVal && bestSource) {
-					retVal = this.resolveQualifiedID(bestSource.sourcePath, qualifiedID, charOffset);
-				}
 			}
 		}
 		return retVal;
@@ -297,75 +288,10 @@ export class Workspace {
 		}
 		return null;
 	}
-
-
-	locateQualifiedIDXXX(filePath: string, qualifiedID: string, charOffset: number): ECLDefinitionLocation {
-		qualifiedID = qualifiedID.toLowerCase();
-		let retVal = null;
-		if (this._sourceByPath.has(filePath)) {
-			const eclSource = this._sourceByPath.get(filePath);
-			let scopes = eclSource.scopeStackAt(charOffset);
-			scopes.some(scope => {
-				let def = scope.resolve(qualifiedID);
-				if (def) {
-					retVal = <ECLDefinitionLocation>{
-						filePath: eclSource.sourcePath,
-						line: def.line,
-						charPos: 0,
-						definition: def
-					};
-				}
-				return !!retVal;
-			});
-			if (!retVal) {
-				const imports = eclSource.imports;
-				let bestSource: Source;
-				imports.some(imp => {
-					if (this._sourceByID.has(imp.ref)) {
-						const eclFile = this._sourceByID.get(imp.ref);
-						if (qualifiedID === imp.ref.toLowerCase()) {
-							// bestSource = eclFile.toISource();
-						}
-						if (qualifiedID === imp.name || qualifiedID.indexOf(imp.name + '.') === 0) {
-							// bestSource = eclFile.toISource();
-							const impRefParts = imp.ref.split('.');
-							const partialID = impRefParts[impRefParts.length - 1] + '.' + qualifiedID.substring(imp.name.length + 1);
-							retVal = this.locateQualifiedIDXXX(eclFile.sourcePath, partialID, charOffset);
-						}
-					}
-					return retVal !== null;
-				});
-				if (!retVal && bestSource) {
-					retVal = this.locateQualifiedIDXXX(bestSource.sourcePath, qualifiedID, charOffset);
-					if (!retVal) {
-						retVal = <ECLDefinitionLocation>{
-							filePath: bestSource.sourcePath,
-							line: 0,
-							charPos: 0,
-							source: bestSource
-						};
-					}
-				}
-			}
-		}
-		return retVal;
-	}
-
-	locatePartialIDXXX(filePath: string, partialID: string, charOffset: number): ECLDefinitionLocation {
-		partialID = partialID.toLowerCase();
-		if (this._sourceByPath.has(filePath)) {
-			const partialIDParts = partialID.split('.');
-			partialIDParts.pop();
-			const partialIDQualifier = partialIDParts.length === 1 ? partialIDParts[0] : partialIDParts.join('.');
-			return this.locateQualifiedIDXXX(filePath, partialIDQualifier, charOffset);
-		}
-		return null;
-	}
-
 }
 
 const workspaceCache = new Map<string, Workspace>();
-export function attachWorkspace(_workspacePath = vscode.workspace.rootPath): Workspace {
+export function attachWorkspace(_workspacePath: string): Workspace {
 	const workspacePath = path.normalize(_workspacePath);
 	if (!workspaceCache.has(workspacePath)) {
 		workspaceCache.set(workspacePath, new Workspace(workspacePath));

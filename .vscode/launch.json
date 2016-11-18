@@ -25,6 +25,19 @@
 			"preLaunchTask": "npm"
 		},
 		{
+			"name": "Launch Server Adapter",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/out/src/debugger/ECLDebug.js",
+			"stopOnEntry": false,
+			"args": [
+				"--server=4711"
+			],
+			"sourceMaps": true,
+			"cwd": "${workspaceRoot}",
+			"outDir": "${workspaceRoot}/out/src/debugger"
+		},
+		{
 			"name": "Launch Tests",
 			"type": "extensionHost",
 			"request": "launch",
@@ -39,19 +52,6 @@
 			"sourceMaps": true,
 			"outDir": "${workspaceRoot}/out",
 			"preLaunchTask": "npm"
-		},
-		{
-			"name": "Launch Server Adapter",
-			"type": "node",
-			"request": "launch",
-			"program": "${workspaceRoot}/out/src/serverAdapter/ECLDebug.js",
-			"stopOnEntry": false,
-			"args": [
-				"--server=4711"
-			],
-			"sourceMaps": true,
-			"cwd": "${workspaceRoot}",
-			"outDir": "${workspaceRoot}/out/src/serverAdapter"
 		}
 	]
 }

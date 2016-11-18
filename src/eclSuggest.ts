@@ -49,7 +49,7 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 			const startCharPos = qualifiedIDBoundary(lineText, position.character - 1, true);
 			const partialID = lineText.substring(startCharPos, position.character + 1);
 
-			const metaWorkspace = attachWorkspace();
+			const metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
 			const eclDef = metaWorkspace.resolvePartialID(document.fileName, partialID, document.offsetAt(position));
 			if (eclDef) {
 				resolve(eclDef.suggestions().map(suggestion => {
