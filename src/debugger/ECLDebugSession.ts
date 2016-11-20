@@ -4,7 +4,8 @@ import {
 	InitializedEvent, TerminatedEvent, ThreadEvent, ContinuedEvent, StoppedEvent, OutputEvent
 } from 'vscode-debugadapter';
 import { locateClientTools, locateAllClientTools } from '../files/clientTools';
-import { createECLWorkunit, ECLWorkunit, IWorkunitMonitor, WUAction } from '../comms/ECLWorkunit';
+import { WUAction } from '../comms/WsWorkunits';
+import { createECLWorkunit, ECLWorkunit, IWorkunitMonitor } from '../comms/ECLWorkunit';
 import { GraphItem } from '../comms/Graph';
 import os = require('os');
 
@@ -107,14 +108,26 @@ export class ECLDebugSession extends DebugSession {
 	protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
 		log('launchRequest:  ' + JSON.stringify(args));
 		this.launchRequestArgs = args;
-
+		let action: WUAction;
+		switch (args.mode) {
+			case 'compile':
+				action = WUAction.Compile;
+				break;
+			case 'debug':
+				action = WUAction.Debug;
+				break;
+			case 'submit':
+			default:
+				action = WUAction.Run;
+				break;
+		}
 		this.sendEvent(new OutputEvent('Locating Client Tools.' + os.EOL));
 		locateClientTools('', this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders.split(',')).then(clientTools => {
 			this.sendEvent(new OutputEvent('Generating archive.' + os.EOL));
 			return clientTools.createArchive(this.launchRequestArgs.program);
 		}).then((archive) => {
 			this.sendEvent(new OutputEvent('Creating workuinit.' + os.EOL));
-			return createECLWorkunit('http:', this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, WUAction.Run, 100, !args.noDebug);
+			return createECLWorkunit('http:', this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, action, 100);
 		}).then(workunit => {
 			this.workunit = workunit;
 			this.sendEvent(new OutputEvent('Submitting workuinit:  ' + workunit.wuid + os.EOL));

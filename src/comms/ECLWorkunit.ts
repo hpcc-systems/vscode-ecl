@@ -1,17 +1,5 @@
-import { WsWorkunitsConnection } from './WsWorkunits';
+import { WsWorkunitsConnection, WUAction } from './WsWorkunits';
 import { createGraph, Graph } from './Graph';
-
-export enum WUAction {
-	Unknown = 0,
-	Compile,
-	Check,
-	Run,
-	ExecuteExisting,
-	Pause,
-	PauseNow,
-	Resume,
-	__size
-};
 
 export class ECLWorkunit {
 	protected connection: WsWorkunitsConnection;
@@ -30,11 +18,15 @@ export class ECLWorkunit {
 
 	_debugAllGraph: any;
 
-	constructor(connection: WsWorkunitsConnection, wuid: string, submitAction: WUAction = WUAction.Run, debugMode = false) {
+	constructor(connection: WsWorkunitsConnection, wuid: string, submitAction: WUAction = WUAction.Run) {
 		this.connection = connection;
 		this.wuid = wuid;
-		this.debugMode = debugMode;
 		this.submitAction = submitAction;
+		this.debugMode = false;
+		if (submitAction === WUAction.Debug) {
+			this.submitAction = WUAction.Run;
+			this.debugMode = true;
+		}
 	}
 
 	query() {
@@ -312,13 +304,13 @@ class ECLWorkunitMonitor implements IWorkunitMonitor {
 	}
 }
 
-export function createECLWorkunit(protocol: string, hostname: string, port: number, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100, debug: boolean = false) {
+export function createECLWorkunit(protocol: string, hostname: string, port: number, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100) {
 	let wsWorkunits = new WsWorkunitsConnection(protocol, hostname, port);
-	return createECLWorkunit2(wsWorkunits, queryText, action, resultLimits, debug);
+	return createECLWorkunit2(wsWorkunits, queryText, action, resultLimits);
 }
 
-export function createECLWorkunit2(connection: WsWorkunitsConnection, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100, debug: boolean = false) {
-	return connection.wuCreateAndUpdate(queryText, resultLimits, debug).then((workunit) => {
-		return new ECLWorkunit(connection, workunit.Wuid, action, debug);
+export function createECLWorkunit2(connection: WsWorkunitsConnection, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100) {
+	return connection.wuCreateAndUpdate(action, queryText, resultLimits).then((workunit) => {
+		return new ECLWorkunit(connection, workunit.Wuid, action);
 	});
 }

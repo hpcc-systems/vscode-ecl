@@ -121,13 +121,13 @@
                 "runtime": "node",
                 "initialConfigurations": [
                     {
-                        "name": "Debug-hthor",
+                        "name": "localhost-hthor",
                         "type": "ecl",
                         "request": "launch",
-                        "mode": "debug",
+                        "mode": "submit",
                         "workspace": "${workspaceRoot}",
                         "program": "${file}",
-                        "serverAddress": "192.168.3.22",
+                        "serverAddress": "localhost",
                         "port": 8010,
                         "targetCluster": "hthor",
                         "buildFlags": [],

@@ -3,6 +3,19 @@ const node_url = require('url');
 const request = require('request');
 const xml2js = require('xml2js');
 
+export enum WUAction {
+	Unknown = 0,
+	Compile,
+	Check,
+	Run,
+	ExecuteExisting,
+	Pause,
+	PauseNow,
+	Resume,
+	Debug,
+	__size
+};
+
 class ESPPostResponse {
 	protected action: string;
 	protected form: Object;
@@ -127,25 +140,50 @@ export class WsWorkunitsConnection extends ESPConnection {
 		super(protocol, hostname, port);
 	}
 
-	wuCreateAndUpdate(queryText, resultLimits: number = 100, debug: boolean = false) {
-		let form: any = {
-			QueryText: queryText,
-			ResultLimit: resultLimits
-		};
-		if (debug) {
-			form['DebugValues.DebugValue.0.Name'] = 'Debug';
-			form['DebugValues.DebugValue.0.Value'] = 1;
-			form['DebugValues.DebugValue.itemcount'] = 1;
-		}
-		return this.post('WUCreateAndUpdate', form).then((response) => {
-			return response.Workunit;
-		});
-	}
-
 	WUQuery(wuid: string) {
 		return this.post('WUQuery', {
 			Wuid: wuid
 		}).then(response => response.Workunits.ECLWorkunit[0]);
+	}
+
+	private objToESPArray(id: string, obj: any, request: any) {
+		let count = 0;
+		for (let key in obj) {
+			request[`${id}s.${id}.${count}.Name`] = key;
+			request[`${id}s.${id}.${count}.Value`] = obj[key];
+			++count;
+		}
+		request[`${id}s.${id}.itemcount`] = count;
+	}
+
+	private WUUpdateRequest(wuid: string, request: any, appValues: any, debugValues: any) {
+		if (wuid) {
+			request.Wuid = wuid;
+		}
+		this.objToESPArray('ApplicationValue', appValues, request);
+		this.objToESPArray('DebugValue', debugValues, request);
+		return request;
+	}
+
+	wuCreateAndUpdate(action: WUAction, queryText, resultLimits: number = 100, debug: boolean = false) {
+		let request: any = {
+			QueryText: queryText,
+			ResultLimit: resultLimits,
+			Action: action
+		};
+		return this.WUCreateAndUpdate(request, {}, { Debug: debug });
+	}
+
+	WUCreateAndUpdate(request: any, appValues: any = {}, debugValues: any = {}) {
+		return this.post('WUCreateAndUpdate', this.WUUpdateRequest(null, request, appValues, debugValues)).then((response) => {
+			return response.Workunit;
+		});
+	}
+
+	WUUpdate(wuid: string, request: any, appValues: any, debugValues: any) {
+		return this.post('WUUpdate', this.WUUpdateRequest(wuid, request, appValues, debugValues)).then((response) => {
+			return response.Workunit;
+		});
 	}
 
 	WUSubmit(wuid: string, cluster: string) {
