@@ -227,7 +227,8 @@ export class ECLWorkunit {
 }
 
 export interface IWorkunitMonitor {
-	refresh(thenDispose?: boolean): Promise<void>;
+	refresh(): Promise<void>;
+	refresh2(): Promise<void>;
 	dispose(): void;
 }
 
@@ -255,17 +256,21 @@ class ECLWorkunitMonitor implements IWorkunitMonitor {
 		this.timeoutCount = 0;
 	}
 
-	refresh(thenDispose?: boolean): Promise<void> {
-		clearTimeout(this.timeoutHandle);
+	refresh() {
 		return Promise.all([
 			this.workunit.query(),
 			this.workunit.debugStatus()
 		]).then(() => {
-			this.disposeFlag = thenDispose;
 			this.callback(this.workunit.stateObj(), this.workunit.debugStateObj());
-			if (!thenDispose) {
-				this.doMonitor();
-			}
+		});
+	}
+
+	refresh2() {
+		return Promise.all([
+			this.workunit.query(),
+			this.workunit.debugStatus()
+		]).then(() => {
+			this.callback(this.workunit.stateObj(), this.workunit.debugStateObj());
 		});
 	}
 
@@ -276,12 +281,13 @@ class ECLWorkunitMonitor implements IWorkunitMonitor {
 				return;
 			}
 
-			this.refresh().then((response) => {
+			this.refresh().then(() => {
 				if (this.disposeFlag || this.workunit.isComplete()) {
 					this.reset();
 					return;
 				}
 				this.incrementTimoutCount();
+				this.doMonitor();
 			});
 		}, this.timeoutDuration);
 	}
@@ -304,8 +310,8 @@ class ECLWorkunitMonitor implements IWorkunitMonitor {
 	}
 }
 
-export function createECLWorkunit(protocol: string, hostname: string, port: number, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100) {
-	let wsWorkunits = new WsWorkunitsConnection(protocol, hostname, port);
+export function createECLWorkunit(protocol: string, hostname: string, port: number, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100, user: string, pw: string) {
+	let wsWorkunits = new WsWorkunitsConnection(protocol, hostname, port, user, pw);
 	return createECLWorkunit2(wsWorkunits, queryText, action, resultLimits);
 }
 

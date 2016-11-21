@@ -16,6 +16,10 @@ class NullMonitor implements IWorkunitMonitor {
 		return Promise.resolve();
 	}
 
+	refresh2(thenDispose?: boolean): Promise<void> {
+		return Promise.resolve();
+	}
+
 	dispose(): void {
 	}
 }
@@ -30,6 +34,9 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
 	targetCluster: string;
 	buildFlags?: string[];
 	includeFolders?: string;
+	resultLimit: number;
+	user: string;
+	password: string;
 }
 
 // Note: Only turn this on when debugging the serverAdapter.
@@ -126,11 +133,11 @@ export class ECLDebugSession extends DebugSession {
 			this.sendEvent(new OutputEvent('Generating archive.' + os.EOL));
 			return clientTools.createArchive(this.launchRequestArgs.program);
 		}).then((archive) => {
-			this.sendEvent(new OutputEvent('Creating workuinit.' + os.EOL));
-			return createECLWorkunit('http:', this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, action, 100);
+			this.sendEvent(new OutputEvent('Creating workunit.' + os.EOL));
+			return createECLWorkunit('http:', this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, action, this.launchRequestArgs.resultLimit, this.launchRequestArgs.user, this.launchRequestArgs.password);
 		}).then(workunit => {
 			this.workunit = workunit;
-			this.sendEvent(new OutputEvent('Submitting workuinit:  ' + workunit.wuid + os.EOL));
+			this.sendEvent(new OutputEvent('Submitting workunit:  ' + workunit.wuid + os.EOL));
 			return workunit.submit(this.launchRequestArgs.targetCluster);
 		}).then(() => {
 			this.sendEvent(new OutputEvent('Submitted:  http://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.wuid + os.EOL));
@@ -150,15 +157,23 @@ export class ECLDebugSession extends DebugSession {
 		log('launchResponse');
 	}
 
-	protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
-		log('DisconnectRequest');
-		this.workunit.debugQuit().then(() => {
+	private disconnectWorkunit() {
+		if (this.workunit.isComplete()) {
+			return Promise.resolve();
+		}
+		return this.workunit.debugQuit().then(() => {
 			return this.workunit.abort();
 		}).then(() => {
-			return this.wuMonitor.refresh(true);
-		}).then(() => {
-			throw ('done');
-		}).catch((e) => {
+			return this.wuMonitor.refresh();
+		}).catch(e => {
+			console.log(`Error disconnecting workunit`);
+		});
+	}
+
+	protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
+		log('DisconnectRequest');
+		this.disconnectWorkunit().then(() => {
+			this.wuMonitor.dispose();
 			this.wuMonitor = new NullMonitor();
 			this.sendEvent(new OutputEvent(`Monitoring end:  ${this.workunit.wuid}${os.EOL}`));
 			delete this.workunit;

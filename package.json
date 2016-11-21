@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "publisher": "GordonSmith",
     "description": "ECL language support for Visual Studio Code",
     "author": {
@@ -131,7 +131,10 @@
                         "port": 8010,
                         "targetCluster": "hthor",
                         "buildFlags": [],
-                        "includeFolders": "${config.ecl.includeFolders}"
+                        "includeFolders": "${config.ecl.includeFolders}",
+                        "resultLimit": 100,
+                        "user": "",
+                        "password": ""
                     }
                 ],
                 "configurationAttributes": {
@@ -188,6 +191,21 @@
                                 "type": "string",
                                 "description": "External folders used by IMPORT",
                                 "default": "${config.ecl.includeFolders}"
+                            },
+                            "resultLimit": {
+                                "type": "number",
+                                "description": "Max result limit for workunit results",
+                                "default": 100
+                            },
+                            "user": {
+                                "type": "string",
+                                "description": "User ID",
+                                "default": ""
+                            },
+                            "password": {
+                                "type": "string",
+                                "description": "User password",
+                                "default": ""
                             }
                         }
                     }

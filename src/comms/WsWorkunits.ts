@@ -102,9 +102,13 @@ class WUCDebugResponse extends ESPPostResponse {
 
 class ESPConnection {
 	protected urlObject;
+	user: string;
+	pw: string;
 
-	constructor(protocol: string, hostname: string, port: number) {
+	constructor(protocol: string, hostname: string, port: number, user: string, pw: string) {
 		this.href(protocol + '//' + hostname + ':' + port + '/WsWorkunits');
+		this.user = user;
+		this.pw = pw;
 	}
 
 	href(_?: string) {
@@ -117,6 +121,11 @@ class ESPConnection {
 		return new Promise<ESPPostResponse>((resolve, reject) => {
 			request.post({
 				uri: this.href() + '/' + action + '.json',
+				'auth': {
+					'user': this.user,
+					'pass': this.pw,
+					'sendImmediately': true
+				},
 				json: true,
 				form: form
 			}, (error, response, body) => {
@@ -136,8 +145,8 @@ class ESPConnection {
 
 export class WsWorkunitsConnection extends ESPConnection {
 
-	constructor(protocol: string, hostname: string, port: number) {
-		super(protocol, hostname, port);
+	constructor(protocol: string, hostname: string, port: number, user: string, pw: string) {
+		super(protocol, hostname, port, user, pw);
 	}
 
 	WUQuery(wuid: string) {
