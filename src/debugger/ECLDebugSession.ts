@@ -32,8 +32,9 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
 	serverAddress?: string;
 	port?: number;
 	targetCluster: string;
-	buildFlags?: string[];
-	includeFolders?: string;
+	eclccArgs?: string[];
+	includeFolders: string;
+	legacyMode: string;
 	resultLimit: number;
 	user: string;
 	password: string;
@@ -114,6 +115,9 @@ export class ECLDebugSession extends DebugSession {
 
 	protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
 		log('launchRequest:  ' + JSON.stringify(args));
+		let includeFolders = args.includeFolders ? args.includeFolders.split(',') : [];
+		let legacyMode = args.legacyMode === 'true' ? true : false;
+
 		this.launchRequestArgs = args;
 		let action: WUAction;
 		switch (args.mode) {
@@ -129,7 +133,7 @@ export class ECLDebugSession extends DebugSession {
 				break;
 		}
 		this.sendEvent(new OutputEvent('Locating Client Tools.' + os.EOL));
-		locateClientTools('', this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders.split(',')).then(clientTools => {
+		locateClientTools('', this.launchRequestArgs.workspace, includeFolders, legacyMode).then(clientTools => {
 			this.sendEvent(new OutputEvent('Generating archive.' + os.EOL));
 			return clientTools.createArchive(this.launchRequestArgs.program);
 		}).then((archive) => {

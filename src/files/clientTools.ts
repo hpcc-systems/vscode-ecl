@@ -101,18 +101,22 @@ export class ClientTools {
 	protected binPath: string;
 	protected cwd: string;
 	protected includeFolders: string[];
+	protected _legacyMode: boolean;
+	protected _args: string[];
 	protected _versionPrefix: string;
 	protected _version: string;
 
-	constructor(rootPath: string, cwd?: string, includeFolders?: string[]) {
+	constructor(rootPath: string, cwd?: string, includeFolders: string[] = [], legacyMode: boolean = false, args: string[] = []) {
 		this.rootPath = rootPath;
 		this.binPath = path.join(this.rootPath, 'bin');
 		this.cwd = path.normalize(cwd || this.binPath);
-		this.includeFolders = includeFolders || [];
+		this.includeFolders = includeFolders;
+		this._legacyMode = legacyMode;
+		this._args = args;
 	}
 
-	clone(cwd?: string, includeFolders?: string[]) {
-		return new ClientTools(this.rootPath, cwd, includeFolders);
+	clone(cwd?: string, includeFolders?: string[], legacyMode: boolean = false, args: string[] = []) {
+		return new ClientTools(this.rootPath, cwd, includeFolders, legacyMode, args);
 	}
 
 	exists(filePath: string) {
@@ -123,7 +127,7 @@ export class ClientTools {
 		return false;
 	}
 
-	exe(binName: string): string {
+	exePath(binName: string): string {
 		return path.join(this.binPath, correctBinname(binName));
 	}
 
@@ -131,12 +135,22 @@ export class ClientTools {
 		return this.exists(path.join(this.binPath, correctBinname(binName)));
 	}
 
+	args(additionalItems: string[] = []): string[] {
+		let retVal: string[] = [...this._args];
+		if (this._legacyMode) {
+			retVal.push('-legacy');
+		}
+		return retVal.concat(this.includeFolders.map(includePath => {
+			return '-I' + path.normalize(includePath);
+		})).concat(additionalItems);
+	}
+
 	version() {
 		if (this._version) {
 			return Promise.resolve(this._version);
 		}
-		let eclccPath = this.exe('eclcc');
-		return this.execFile(eclccPath, ['--version'], this.binPath, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
+		let eclccPath = this.exePath('eclcc');
+		return this.execFile(eclccPath, this.args(['--version']), this.binPath, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
 			if (response && response.stdout && response.stdout.length) {
 				let versions = response.stdout.split(' ');
 				if (versions.length > 1) {
@@ -177,14 +191,10 @@ export class ClientTools {
 	}
 
 	createWU(filename) {
-		let eclccPath = this.exe('eclcc');
+		let eclccPath = this.exePath('eclcc');
 		let tmpName = tmp.tmpNameSync({ prefix: 'eclcc-wu-tmp', postfix: '' });
-		let args = ['-o' + tmpName, '-wu'];
-		args = args.concat(this.includeFolders.map(includePath => {
-			let tmp = path.normalize(includePath);
-			return '-I' + tmp;
-		}));
-		return this.execFile(eclccPath, args.concat([filename]), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
+		let args = ['-o' + tmpName, '-wu'].concat([filename]);
+		return this.execFile(eclccPath, this.args(args), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
 			let xmlPath = path.normalize(tmpName + '.xml');
 			let contentPromise = this.exists(xmlPath) ? this.loadXMLDoc(xmlPath, true) : Promise.resolve({});
 			return contentPromise.then((content) => {
@@ -194,13 +204,9 @@ export class ClientTools {
 	}
 
 	createArchive(filename: string) {
-		let eclccPath = this.exe('eclcc');
-		let args = ['-E'];
-		args = args.concat(this.includeFolders.map(includePath => {
-			let tmp = path.normalize(includePath);
-			return '-I' + tmp;
-		}));
-		return this.execFile(eclccPath, args.concat([filename]), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
+		let eclccPath = this.exePath('eclcc');
+		let args = ['-E'].concat([filename]);
+		return this.execFile(eclccPath, this.args(args), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
 			if (response && response.stderr && response.stderr.length) {
 			}
 			return response.stdout;
@@ -208,12 +214,9 @@ export class ClientTools {
 	}
 
 	syntaxCheck(filePath: string) {
-		let eclccPath = this.exe('eclcc');
-		let args = ['-syntax', '-M'];
-		args = args.concat(this.includeFolders.map(includePath => {
-			return '-I' + path.normalize(includePath);
-		}));
-		return this.execFile(eclccPath, args.concat([filePath]), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
+		let eclccPath = this.exePath('eclcc');
+		let args = ['-syntax', '-M'].concat([filePath]);
+		return this.execFile(eclccPath, this.args(args), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {
 			let retVal: IECLError[] = [];
 			if (response && response.stderr && response.stderr.length) {
 				response.stderr.split(os.EOL).forEach(line => {
@@ -312,9 +315,9 @@ export function locateAllClientTools() {
 	});
 }
 
-export function locateClientTools(version: string = '', cwd?: string, includeFolders?: string[]) {
+export function locateClientTools(version: string, cwd: string, includeFolders: string[], legacyMode: boolean) {
 	return locateAllClientTools().then((allClientToolsCache) => {
 		//  TODO find best match  ---
-		return allClientToolsCache[0].clone(cwd, includeFolders);
+		return allClientToolsCache[0].clone(cwd, includeFolders, legacyMode);
 	});
 }

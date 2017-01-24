@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.5",
+    "version": "0.0.7",
     "publisher": "GordonSmith",
     "description": "ECL language support for Visual Studio Code",
     "author": {
@@ -117,26 +117,8 @@
                         "ecl"
                     ]
                 },
-                "program": "./out/src/serverAdapter/ECLDebug.js",
+                "program": "./out/src/debugger/ECLDebug.js",
                 "runtime": "node",
-                "initialConfigurations": [
-                    {
-                        "name": "localhost-hthor",
-                        "type": "ecl",
-                        "request": "launch",
-                        "mode": "submit",
-                        "workspace": "${workspaceRoot}",
-                        "program": "${file}",
-                        "serverAddress": "localhost",
-                        "port": 8010,
-                        "targetCluster": "hthor",
-                        "buildFlags": [],
-                        "includeFolders": "${config.ecl.includeFolders}",
-                        "resultLimit": 100,
-                        "user": "",
-                        "password": ""
-                    }
-                ],
                 "configurationAttributes": {
                     "launch": {
                         "required": [
@@ -148,7 +130,11 @@
                         "properties": {
                             "mode": {
                                 "type": "string",
-                                "description": "One of 'submit', 'compile', debug'.",
+                                "enum": [
+                                    "submit",
+                                    "compile",
+                                    "debug"
+                                ],
                                 "default": "submit"
                             },
                             "workspace": {
@@ -174,23 +160,23 @@
                                 "description": "Target cluster.",
                                 "default": "hthor"
                             },
-                            "buildFlags": {
+                            "eclccArgs": {
                                 "type": "array",
-                                "description": "Build flags, to be passed to the eclcc compiler.",
                                 "items": {
                                     "type": "string"
                                 },
+                                "description": "Build flags, to be passed to the eclcc compiler.",
                                 "default": []
-                            },
-                            "legacyMode": {
-                                "type": "boolean",
-                                "description": "Legacy Mode.",
-                                "default": false
                             },
                             "includeFolders": {
                                 "type": "string",
                                 "description": "External folders used by IMPORT",
                                 "default": "${config.ecl.includeFolders}"
+                            },
+                            "legacyMode": {
+                                "type": "string",
+                                "description": "Legacy Mode.",
+                                "default": "${config.ecl.legacyMode}"
                             },
                             "resultLimit": {
                                 "type": "number",
@@ -209,7 +195,49 @@
                             }
                         }
                     }
-                }
+                },
+                "initialConfigurations": [
+                    {
+                        "name": "localhost-hthor",
+                        "type": "ecl",
+                        "request": "launch",
+                        "mode": "submit",
+                        "workspace": "${workspaceRoot}",
+                        "program": "${file}",
+                        "serverAddress": "localhost",
+                        "port": 8010,
+                        "targetCluster": "hthor",
+                        "eclccArgs": [],
+                        "includeFolders": "${config.ecl.includeFolders}",
+                        "legacyMode": "${config.ecl.legacyMode}",
+                        "resultLimit": 100,
+                        "user": "",
+                        "password": ""
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "ECL:  localhost-hthor",
+                        "description": "A new configuration to submit ECL to localhost, hthor.",
+                        "body": {
+                            "name": "localhost-hthor-submit",
+                            "type": "ecl",
+                            "request": "launch",
+                            "mode": "submit",
+                            "workspace": "^\"\\${workspaceRoot}\"",
+                            "program": "${file}",
+                            "serverAddress": "localhost",
+                            "port": 8010,
+                            "targetCluster": "hthor",
+                            "eclccArgs": [],
+                            "includeFolders": "^\"\\${config.ecl.includeFolders}\"",
+                            "legacyMode": "^\"\\${config.ecl.legacyMode}\"",
+                            "resultLimit": 100,
+                            "user": "",
+                            "password": ""
+                        }
+                    }
+                ]
             }
         ],
         "configuration": {
@@ -228,6 +256,11 @@
                     },
                     "default": [],
                     "description": "External folders use by IMPORT"
+                },
+                "ecl.legacyMode": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Add '-legacy' arguement to eclcc."
                 },
                 "ecl.defaultServer": {
                     "type": "string",

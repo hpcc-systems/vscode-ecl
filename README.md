@@ -41,7 +41,7 @@ Submitting or debugging ECL using VS-Code requires specificying the target envir
 	"serverAddress": "192.168.3.22",
 	"port": 8010,
 	"targetCluster": "hthor",
-	"buildFlags": [],
+	"eclccArgs": [],
 	"includeFolders": "${config.ecl.includeFolders}"
 }
 ```

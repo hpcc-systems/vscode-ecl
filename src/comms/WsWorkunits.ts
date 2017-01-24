@@ -174,7 +174,12 @@ export class WsWorkunitsConnection extends ESPConnection {
 		return request;
 	}
 
-	wuCreateAndUpdate(action: WUAction, queryText, resultLimits: number = 100, debug: boolean = false) {
+	wuCreateAndUpdate(action: WUAction, queryText, resultLimits: number = 100) {
+		let debug = false;
+		if (action === WUAction.Debug) {
+			action = WUAction.Run;
+			debug = true;
+		}
 		let request: any = {
 			QueryText: queryText,
 			ResultLimit: resultLimits,
