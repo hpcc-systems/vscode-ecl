@@ -124,7 +124,9 @@
                         "required": [
                             "workspace",
                             "serverAddress",
+                            "protocol",
                             "port",
+                            "rejectUnauthorized",
                             "targetCluster"
                         ],
                         "properties": {
@@ -150,10 +152,20 @@
                                 "description": "Server IP/Domain address.",
                                 "default": "127.0.0.1"
                             },
+                            "protocol": {
+                                "type": "string",
+                                "description": "Server protocol (http or https).",
+                                "default": "http"
+                            },
                             "port": {
                                 "type": "number",
                                 "description": "The WsWorkunits port.",
                                 "default": 8010
+                            },
+                            "rejectUnauthorized": {
+                                "type": "boolean",
+                                "description": "Reject unauthorized calls e.g. SSL certificate errors.",
+                                "default": true
                             },
                             "targetCluster": {
                                 "type": "string",
@@ -204,8 +216,10 @@
                         "mode": "submit",
                         "workspace": "${workspaceRoot}",
                         "program": "${file}",
+                        "protocol": "http",
                         "serverAddress": "localhost",
                         "port": 8010,
+                        "rejectUnauthorized": true,
                         "targetCluster": "hthor",
                         "eclccArgs": [],
                         "includeFolders": "${config.ecl.includeFolders}",
@@ -226,8 +240,10 @@
                             "mode": "submit",
                             "workspace": "^\"\\${workspaceRoot}\"",
                             "program": "${file}",
+                            "protocol": "http",
                             "serverAddress": "localhost",
                             "port": 8010,
+                            "rejectUnauthorized": true,
                             "targetCluster": "hthor",
                             "eclccArgs": [],
                             "includeFolders": "^\"\\${config.ecl.includeFolders}\"",

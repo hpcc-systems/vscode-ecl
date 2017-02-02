@@ -38,8 +38,10 @@ Submitting or debugging ECL using VS-Code requires specificying the target envir
 	"mode": "submit",
 	"workspace": "${workspaceRoot}",
 	"program": "${file}",
+    "protocol": "http",
 	"serverAddress": "192.168.3.22",
 	"port": 8010,
+	"rejectUnauthorized": false,
 	"targetCluster": "hthor",
 	"eclccArgs": [],
 	"includeFolders": "${config.ecl.includeFolders}"

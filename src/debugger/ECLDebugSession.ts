@@ -29,8 +29,10 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
 	mode?: string;
 	program: string;
 	workspace: string;
+	protocol: string;
 	serverAddress?: string;
 	port?: number;
+	rejectUnauthorized: boolean;
 	targetCluster: string;
 	eclccArgs?: string[];
 	includeFolders: string;
@@ -138,14 +140,14 @@ export class ECLDebugSession extends DebugSession {
 			return clientTools.createArchive(this.launchRequestArgs.program);
 		}).then((archive) => {
 			this.sendEvent(new OutputEvent('Creating workunit.' + os.EOL));
-			return createECLWorkunit('http:', this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, action, this.launchRequestArgs.resultLimit, this.launchRequestArgs.user, this.launchRequestArgs.password);
+			return createECLWorkunit(this.launchRequestArgs.protocol + ':', this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, action, this.launchRequestArgs.resultLimit, this.launchRequestArgs.user, this.launchRequestArgs.password, this.launchRequestArgs.rejectUnauthorized);
 		}).then(workunit => {
 			this.workunit = workunit;
 			this.sendEvent(new OutputEvent('Submitting workunit:  ' + workunit.wuid + os.EOL));
 			return workunit.submit(this.launchRequestArgs.targetCluster);
 		}).then(() => {
-			this.sendEvent(new OutputEvent('Submitted:  http://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.wuid + os.EOL));
-			console.log('Submitted:  [xxx](http://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.wuid + ')' + os.EOL);
+			this.sendEvent(new OutputEvent('Submitted:  ' + this.launchRequestArgs.protocol + '://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.wuid + os.EOL));
+			console.log('Submitted:  [xxx](' + this.launchRequestArgs.protocol + '://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.wuid + ')' + os.EOL);
 		}).then(() => {
 			this.sendEvent(new InitializedEvent());
 			log('InitializeEvent');
