@@ -104,11 +104,13 @@ class ESPConnection {
 	protected urlObject;
 	user: string;
 	pw: string;
+	rejectUnauthorized: boolean;
 
-	constructor(protocol: string, hostname: string, port: number, user: string, pw: string) {
+	constructor(protocol: string, hostname: string, port: number, user: string, pw: string, rejectUnauthorized: boolean) {
 		this.href(protocol + '//' + hostname + ':' + port + '/WsWorkunits');
 		this.user = user;
 		this.pw = pw;
+		this.rejectUnauthorized = rejectUnauthorized;
 	}
 
 	href(_?: string) {
@@ -127,7 +129,8 @@ class ESPConnection {
 					'sendImmediately': true
 				},
 				json: true,
-				form: form
+				form: form,
+				rejectUnauthorized: this.rejectUnauthorized
 			}, (error, response, body) => {
 				resolve(new ESPPostResponse(action, form, error, response, body));
 			});
@@ -145,8 +148,8 @@ class ESPConnection {
 
 export class WsWorkunitsConnection extends ESPConnection {
 
-	constructor(protocol: string, hostname: string, port: number, user: string, pw: string) {
-		super(protocol, hostname, port, user, pw);
+	constructor(protocol: string, hostname: string, port: number, user: string, pw: string, rejectUnauthorized: boolean) {
+		super(protocol, hostname, port, user, pw, rejectUnauthorized);
 	}
 
 	WUQuery(wuid: string) {
