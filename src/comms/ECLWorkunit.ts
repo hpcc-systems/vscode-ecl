@@ -310,7 +310,7 @@ class ECLWorkunitMonitor implements IWorkunitMonitor {
 	}
 }
 
-export function createECLWorkunit(protocol: string, hostname: string, port: number, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100, user: string, pw: string, rejectUnauthorized: boolean) {
+export function createECLWorkunit(protocol: string, hostname: string, port: number, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100, user: string, pw: string, rejectUnauthorized: boolean = false) {
 	let wsWorkunits = new WsWorkunitsConnection(protocol, hostname, port, user, pw, rejectUnauthorized);
 	return createECLWorkunit2(wsWorkunits, queryText, action, resultLimits);
 }

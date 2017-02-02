@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "publisher": "GordonSmith",
     "description": "ECL language support for Visual Studio Code",
     "author": {
@@ -126,7 +126,6 @@
                             "serverAddress",
                             "protocol",
                             "port",
-                            "rejectUnauthorized",
                             "targetCluster"
                         ],
                         "properties": {
@@ -155,6 +154,10 @@
                             "protocol": {
                                 "type": "string",
                                 "description": "Server protocol (http or https).",
+                                "enum": [
+                                    "http",
+                                    "https"
+                                ],
                                 "default": "http"
                             },
                             "port": {
@@ -165,7 +168,7 @@
                             "rejectUnauthorized": {
                                 "type": "boolean",
                                 "description": "Reject unauthorized calls e.g. SSL certificate errors.",
-                                "default": true
+                                "default": false
                             },
                             "targetCluster": {
                                 "type": "string",
@@ -219,7 +222,7 @@
                         "protocol": "http",
                         "serverAddress": "localhost",
                         "port": 8010,
-                        "rejectUnauthorized": true,
+                        "rejectUnauthorized": false,
                         "targetCluster": "hthor",
                         "eclccArgs": [],
                         "includeFolders": "${config.ecl.includeFolders}",
@@ -243,7 +246,7 @@
                             "protocol": "http",
                             "serverAddress": "localhost",
                             "port": 8010,
-                            "rejectUnauthorized": true,
+                            "rejectUnauthorized": false,
                             "targetCluster": "hthor",
                             "eclccArgs": [],
                             "includeFolders": "^\"\\${config.ecl.includeFolders}\"",

@@ -32,7 +32,7 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
 	protocol: string;
 	serverAddress?: string;
 	port?: number;
-	rejectUnauthorized: boolean;
+	rejectUnauthorized?: boolean;
 	targetCluster: string;
 	eclccArgs?: string[];
 	includeFolders: string;
