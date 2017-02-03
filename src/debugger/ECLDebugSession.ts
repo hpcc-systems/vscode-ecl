@@ -25,18 +25,38 @@ class NullMonitor implements IWorkunitMonitor {
 }
 
 // This interface should always match the schema found in `package.json`.
+export type LaunchMode = "submit" | "compile" | "debug";
+export type LaunchProtocol = "http" | "https";
+export type LaunchLegacyMode = "true" | "false";
 export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
-	mode?: string;
+	mode: LaunchMode;
 	program: string;
 	workspace: string;
-	protocol: string;
-	serverAddress?: string;
-	port?: number;
-	rejectUnauthorized?: boolean;
+	protocol: LaunchProtocol;
+	serverAddress: string;
+	port: number;
+	rejectUnauthorized: boolean;
 	targetCluster: string;
-	eclccArgs?: string[];
+	eclccArgs: string;
 	includeFolders: string;
-	legacyMode: string;
+	legacyMode: LaunchLegacyMode;
+	resultLimit: number;
+	user: string;
+	password: string;
+}
+
+export interface LaunchRequestArgumentsEx extends DebugProtocol.LaunchRequestArguments {
+	mode: WUAction;
+	program: string;
+	workspace: string;
+	protocol: LaunchProtocol;
+	serverAddress: string;
+	port: number;
+	rejectUnauthorized: boolean;
+	targetCluster: string;
+	eclccArgs: string[];
+	includeFolders: string[];
+	legacyMode: boolean;
 	resultLimit: number;
 	user: string;
 	password: string;
@@ -79,7 +99,7 @@ class WUScope {
 export class ECLDebugSession extends DebugSession {
 	workunit: ECLWorkunit;
 	wuMonitor: IWorkunitMonitor;
-	launchRequestArgs: LaunchRequestArguments;
+	launchRequestArgs: LaunchRequestArgumentsEx;
 
 	private prevMonitorMessage: string;
 
@@ -117,30 +137,42 @@ export class ECLDebugSession extends DebugSession {
 
 	protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
 		log('launchRequest:  ' + JSON.stringify(args));
-		let includeFolders = args.includeFolders ? args.includeFolders.split(',') : [];
-		let legacyMode = args.legacyMode === 'true' ? true : false;
-
-		this.launchRequestArgs = args;
-		let action: WUAction;
+		let _action: WUAction;
 		switch (args.mode) {
 			case 'compile':
-				action = WUAction.Compile;
+				_action = WUAction.Compile;
 				break;
 			case 'debug':
-				action = WUAction.Debug;
+				_action = WUAction.Debug;
 				break;
 			case 'submit':
 			default:
-				action = WUAction.Run;
+				_action = WUAction.Run;
 				break;
 		}
+		this.launchRequestArgs = {
+			mode: _action,
+			program: args.program,
+			workspace: args.workspace,
+			protocol: args.protocol || "http",
+			serverAddress: args.serverAddress,
+			port: args.port,
+			rejectUnauthorized: args.rejectUnauthorized || false,
+			targetCluster: args.targetCluster,
+			eclccArgs: args.eclccArgs ? args.eclccArgs.split(',') : [],
+			includeFolders: args.includeFolders ? args.includeFolders.split(',') : [],
+			legacyMode: args.legacyMode === 'true' ? true : false,
+			resultLimit: args.resultLimit || 100,
+			user: args.user || "",
+			password: args.password || ""
+		};
 		this.sendEvent(new OutputEvent('Locating Client Tools.' + os.EOL));
-		locateClientTools('', this.launchRequestArgs.workspace, includeFolders, legacyMode).then(clientTools => {
+		locateClientTools('', this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders, this.launchRequestArgs.legacyMode).then(clientTools => {
 			this.sendEvent(new OutputEvent('Generating archive.' + os.EOL));
 			return clientTools.createArchive(this.launchRequestArgs.program);
 		}).then((archive) => {
 			this.sendEvent(new OutputEvent('Creating workunit.' + os.EOL));
-			return createECLWorkunit(this.launchRequestArgs.protocol + ':', this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, action, this.launchRequestArgs.resultLimit, this.launchRequestArgs.user, this.launchRequestArgs.password, this.launchRequestArgs.rejectUnauthorized);
+			return createECLWorkunit(this.launchRequestArgs.protocol, this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, this.launchRequestArgs.mode, this.launchRequestArgs.resultLimit, this.launchRequestArgs.user, this.launchRequestArgs.password, this.launchRequestArgs.rejectUnauthorized);
 		}).then(workunit => {
 			this.workunit = workunit;
 			this.sendEvent(new OutputEvent('Submitting workunit:  ' + workunit.wuid + os.EOL));

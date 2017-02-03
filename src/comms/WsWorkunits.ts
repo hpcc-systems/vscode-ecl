@@ -106,8 +106,8 @@ class ESPConnection {
 	pw: string;
 	rejectUnauthorized: boolean;
 
-	constructor(protocol: string, hostname: string, port: number, user: string, pw: string, rejectUnauthorized: boolean = false) {
-		this.href(protocol + '//' + hostname + ':' + port + '/WsWorkunits');
+	constructor(protocol: string, hostname: string, port: number, user: string, pw: string, rejectUnauthorized: boolean) {
+		this.href(protocol + '://' + hostname + ':' + port + '/WsWorkunits');
 		this.user = user;
 		this.pw = pw;
 		this.rejectUnauthorized = rejectUnauthorized;
@@ -148,7 +148,7 @@ class ESPConnection {
 
 export class WsWorkunitsConnection extends ESPConnection {
 
-	constructor(protocol: string, hostname: string, port: number, user: string, pw: string, rejectUnauthorized: boolean = false) {
+	constructor(protocol: string, hostname: string, port: number, user: string, pw: string, rejectUnauthorized: boolean) {
 		super(protocol, hostname, port, user, pw, rejectUnauthorized);
 	}
 
