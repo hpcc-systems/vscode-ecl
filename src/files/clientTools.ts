@@ -203,7 +203,7 @@ export class ClientTools {
 		});
 	}
 
-	createArchive(filename: string) {
+	createArchive(filename: string): Promise<string> {
 		let eclccPath = this.exePath('eclcc');
 		let args = ['-E'].concat([filename]);
 		return this.execFile(eclccPath, this.args(args), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {

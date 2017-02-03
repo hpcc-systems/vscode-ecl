@@ -1,7 +1,7 @@
 // Place your settings in this file to overwrite default and user settings.
 {
 	"files.exclude": {
-		"out": true,
+		"out": false,
 		"typings": false
 	},
 	"search.exclude": {
@@ -9,6 +9,5 @@
 		"**/bower_components": true,
 		"out/": true
 	},
-	"editor.insertSpaces": false,
-	"typescript.tsdk": "./node_modules/typescript/lib"
+	"editor.insertSpaces": false
 }

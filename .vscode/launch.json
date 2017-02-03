@@ -19,9 +19,11 @@
 			"args": [
 				"--extensionDevelopmentPath=${workspaceRoot}"
 			],
+			"outFiles": [
+				"${workspaceRoot}/out/**/*.js"
+			],
 			"stopOnEntry": false,
 			"sourceMaps": true,
-			"outDir": "${workspaceRoot}/out",
 			"preLaunchTask": "npm"
 		},
 		{
@@ -33,9 +35,11 @@
 			"args": [
 				"--server=4711"
 			],
+			"outFiles": [
+				"${workspaceRoot}/out/src/debugger/**/*.js"
+			],
 			"sourceMaps": true,
-			"cwd": "${workspaceRoot}",
-			"outDir": "${workspaceRoot}/out/src/debugger"
+			"cwd": "${workspaceRoot}"
 		},
 		{
 			"name": "Launch Tests",

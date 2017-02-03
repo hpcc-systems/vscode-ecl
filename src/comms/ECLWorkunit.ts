@@ -315,7 +315,7 @@ export function createECLWorkunit(protocol: string, hostname: string, port: numb
 	return createECLWorkunit2(wsWorkunits, queryText, action, resultLimits);
 }
 
-export function createECLWorkunit2(connection: WsWorkunitsConnection, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100) {
+export function createECLWorkunit2(connection: WsWorkunitsConnection, queryText: string, action: WUAction = WUAction.Run, resultLimits: number = 100): Promise<ECLWorkunit> {
 	return connection.wuCreateAndUpdate(action, queryText, resultLimits).then((workunit) => {
 		return new ECLWorkunit(connection, workunit.Wuid, action);
 	});
