@@ -29,8 +29,11 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 	}
 
 	public provideCompletionItemsInternal(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, config: vscode.WorkspaceConfiguration): Thenable<vscode.CompletionItem[]> {
+
 		return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
+
 			let lineText = document.lineAt(position.line).text;
+
 			let lineTillCurrentPosition = lineText.substr(0, position.character);
 
 			if (lineText.match(/^\s*\/\//)) {
@@ -51,10 +54,13 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 
 			const metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
 			const eclDef = metaWorkspace.resolvePartialID(document.fileName, partialID, document.offsetAt(position));
+
 			if (eclDef) {
+
 				resolve(eclDef.suggestions().map(suggestion => {
 					return new vscode.CompletionItem(suggestion.name, this.vscodeKindFromECLType(suggestion.type));
 				}));
+
 			} else {
 				resolve(null);
 			}

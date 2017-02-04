@@ -1,160 +1,117 @@
 {
 	".source.ecl": {
-		"single import": {
+		"import": {
 			"prefix": "im",
-			"body": "import \"${1:package}\""
+			"body": "IMPORT ${1:module};",
+			"description": "Import a module"
 		},
-		"multiple imports": {
-			"prefix": "ims",
-			"body": "import (\n\t\"${1:package}\"\n)"
+		"import with alias": {
+			"prefix": "imas",
+			"body": "IMPORT ${1:module} AS ${2:alias};",
+			"description": "Import a module using an alias"
 		},
-		"single constant": {
-			"prefix": "co",
-			"body": "const ${1:name} = ${2:value}"
+		"enum": {
+			"prefix": "en",
+			"body": "ENUM(${2:type}, Unknown = 0, ${3:name});"
 		},
-		"multiple constants": {
-			"prefix": "cos",
-			"body": "const (\n\t${1:name} = ${2:value}\n)"
+		"dataset": {
+			"prefix": "ds",
+			"body": "DATASET([${1:item}], ${2:record});"
 		},
-		"type interface declaration": {
-			"prefix": "tyi",
-			"body": "type ${1:name} interface {\n\t$0\n}"
+		"output": {
+			
 		},
-		"type struct declaration": {
-			"prefix": "tys",
-			"body": "type ${1:name} struct {\n\t$0\n}"
+		"record": {
+			"prefix": "rec",
+			"body": [
+				"RECORD",
+				"	${1:type} ${2:name}",
+				"END;"]
+			
 		},
-		"package main and main function": {
-			"prefix": "pkgm",
-			"body": "package main\n\nfunc main() {\n\t$0\n}"
+		"transform": {
+			"prefix": "transform",
+			"body": [
+				"TRANSFORM",
+				"	SELF := ${1:arg}",
+				"END;"
+			]
 		},
-		"function declaration": {
-			"prefix": "func",
-			"body": "func $1($2) $3 {\n\t$0\n}"
+		"inline transform": {
+			"prefix": "inline transform",
+			"body": "TRANSFORM(${1:type}, SELF := LEFT)"
 		},
-		"variable declaration": {
-			"prefix": "var",
-			"body": "var ${1:name} ${2:type}"
+		"macro": {
+			"prefix": "macro",
+			"body": [
+				"MACRO",
+				"	// TODO:",
+				"ENDMACRO;"
+			]
 		},
-		"switch statement": {
-			"prefix": "switch",
-			"body": "switch ${1:expression} {\ncase ${2:condition}:\n\t$0\n}"
+		"project": {
+			"prefix": "project",
+			"body": "PROJECT(${1:recordSet}, ${2:record})"
 		},
-		"case clause": {
-			"prefix": "cs",
-			"body": "case ${1:condition}:$0"
+		"join": {
+			"prefix": "jo",
+			"body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition});"
 		},
-		"for statement": {
-			"prefix": "for",
-			"body": "for ${1:index} := 0; $1 < ${2:count}; $1${3:++} {\n\t$0\n}"
+		"join transform": {
+			"prefix": "jot",
+			"body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition}, ${4:transform});"
 		},
-		"for range statement": {
-			"prefix": "forr",
-			"body": "for ${1:var} := range ${2:var} {\n\t$0\n}"
-		},
-		"channel declaration": {
-			"prefix": "ch",
-			"body": "chan ${1:type}"
-		},
-		"map declaration": {
-			"prefix": "map",
-			"body": "map[${1:type}]${2:type}"
-		},
-		"empty interface": {
-			"prefix": "in",
-			"body": "interface{}"
-		},
-		"if statement": {
+		"if": {
 			"prefix": "if",
-			"body": "if ${1:condition} {\n\t$0\n}"
+			"body": [
+				"IF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
+			]
 		},
-		"else branch": {
-			"prefix": "el",
-			"body": "else {\n\t$0\n}"
+		"iff": {
+			"prefix": "iff",
+			"body": [
+				"IFF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
+			],
+			"description": "The IFF function performs the same functionality as IF, but ensures that an expression containing complex boolean logic is evaluated exactly as it appears."
 		},
-		"if else statement": {
-			"prefix": "ie",
-			"body": "if ${1:condition} {\n\t$2\n} else {\n\t$0\n}"
+		"map": {
+			"prefix": "map",
+			"body": [
+				"MAP(${1:firstValue} => ${2:firstReturn},",
+				"	 ${3:secondValue} => ${4:secondReturn},",
+				"	 ${5:elseReturn});"
+			],
+			"description": "The MAP function evaluates the list of expressions and returns the value associated with the first true expression. If none of them match, the elsevalue is returned. MAP may be thought of as an \"IF ... ELSIF ... ELSIF ... ELSE\" type of structure."
 		},
-		"if err != nil": {
-			"prefix": "iferr",
-			"body": "if err != nil {\n\t${1:return}\n}"
+		"case": {
+			"prefix": "case",
+			"body": [
+				"CASE(${1:expression},",
+				"	  ${2:v1} => ${3:r1},",
+				"     ${3:optionalElseReturn});"			  
+			],
+			"description": "The CASE function evaluates the expression and returns the value whose caseval matches the expression result. If none match, it returns the elsevalue."
 		},
-		"fmt.Println": {
-			"prefix": "fp",
-			"body": "fmt.Println(\"$1\")"
+		"choose": {
+			"prefix": "choose",
+			"body": "CHOOSE(${1:expression},${2:v1}, ${3:v2});",
+			"description": "The CHOOSE function evaluates the expression and returns the value parameter whose ordinal position in the list of parameters corresponds to the result of the expression. If none match, it returns the elsevalue. All values and the elsevalue must be of the same type."
 		},
-		"fmt.Printf": {
-			"prefix": "ff",
-			"body": "fmt.Printf(\"$1\", ${2:var})"
+		"set": {
+			"prefix": "set",
+			"body": "SET(${1:recordset}, ${2:fieldName})"
 		},
-		"log.Println": {
-			"prefix": "lp",
-			"body": "log.Println(\"$1\")"
+		"dedup": {
+			"prefix": "dedup",
+			"body": "DEDUP(${1:recordSet});"
 		},
-		"log.Printf": {
-			"prefix": "lf",
-			"body": "log.Printf(\"$1\", ${2:var})"
-		},
-		"log variable content": {
-			"prefix": "lv",
-			"body": "log.Printf(\"${1:var}: %#+v\\\\n\", ${1:var})"
-		},
-		"make(...)": {
-			"prefix": "make",
-			"body": "make(${1:type}, ${2:0})"
-		},
-		"new(...)": {
-			"prefix": "new",
-			"body": "new(${1:type})"
-		},
-		"panic(...)": {
-			"prefix": "pn",
-			"body": "panic(\"$0\")"
-		},
-		"http ResponseWriter *Request": {
-			"prefix": "wr",
-			"body": "${1:w} http.ResponseWriter, ${2:r} *http.Request"
-		},
-		"http.HandleFunc": {
-			"prefix": "hf",
-			"body": "${1:http}.HandleFunc(\"${2:/}\", ${3:handler})"
-		},
-		"http handler declaration": {
-			"prefix": "hand",
-			"body": "func $1(${2:w} http.ResponseWriter, ${3:r} *http.Request) {\n\t$0\n}"
-		},
-		"http.Redirect": {
-			"prefix": "rd",
-			"body": "http.Redirect(${1:w}, ${2:r}, \"${3:/}\", ${4:http.StatusFound})"
-		},
-		"http.Error": {
-			"prefix": "herr",
-			"body": "http.Error(${1:w}, ${2:err}.Error(), ${3:http.StatusInternalServerError})"
-		},
-		"http.ListenAndServe": {
-			"prefix": "las",
-			"body": "http.ListenAndServe(\"${1::8080}\", ${2:nil})"
-		},
-		"http.Serve": {
-			"prefix": "sv",
-			"body": "http.Serve(\"${1::8080}\", ${2:nil})"
-		},
-		"goroutine anonymous function": {
-			"prefix": "go",
-			"body": "go func($1) {\n\t$2\n}($0)"
-		},
-		"goroutine function": {
-			"prefix": "gf",
-			"body": "go ${1:func}($0)"
-		},
-		"defer statement": {
-			"prefix": "df",
-			"body": "defer ${1:func}($0)"
-		},
-		"test function": {
-			"prefix": "tf",
-			"body": "func Test$1(t *testing.T) {\n\t$0\n}"
+		"seqential": { 
+			"prefix": "seq",
+			"body": [
+				"SEQUENTIAL(${1:action1},",
+				"			${2:action2},",
+				"			${3:action3});"
+			]
 		}
 	}
 }

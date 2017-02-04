@@ -30,11 +30,19 @@
 		},
 		{
 			"name": "keyword.other.ecl",
-			"match":"\\b(?i:(all|any|as|from|atmost|before|beginc|best|between|case|const|counter|csv|descend|embed|encrypt|end|endc|endembed|endmacro|enum|except|exclusive|expire|export|extend|few|first|flat|full|function|functionmacro|group|heading|hole|ifblock|import|in|joined|keep|keyed|last|left|limit|load|local|locale|lookup|macro|many|maxcount|maxlength|min skew|module|interface|named|nocase|noroot|noscan|nosort|of|only|opt|outer|overwrite|packed|partition|penalty|physicallength|pipe|quote|record|repeat|return|right|rows|scan|self|separator|service|shared|skew|skip|sql|store|terminator|thor|threshold|token|transform|trim|type|unicodeorder|unsorted|validate|virtual|whole|wild|within|xml|xpath|after|cluster|compressed|compression|default|encoding|escape|fileposition|forward|grouped|inner|internal|linkcounted|literal|little_endian|lzw|mofn|multiple|namespace|nocase|notrim|noxpath|onfail|overwrite|prefetch|retry|right1|right2|rowset|xpath|scope|smart|soapaction|stable|timelimit|timeout|unordered|unstable|update|use|width|__compressed__))\\b"
+			"match":"\\b(?i:(and|or|in|not|all|any|as|from|atmost|before|beginc|best|between|case|const|counter|csv|descend|embed|encrypt|end|endc|endembed|endmacro|enum|except|exclusive|expire|export|extend|few|first|flat|full|function|functionmacro|group|heading|hole|ifblock|import|in|joined|keep|keyed|last|left|limit|load|local|locale|lookup|macro|many|maxcount|maxlength|min skew|module|interface|named|nocase|noroot|noscan|nosort|of|only|opt|outer|overwrite|packed|partition|penalty|physicallength|pipe|quote|record|repeat|return|right|rows|scan|self|separator|service|shared|skew|skip|sql|store|terminator|thor|threshold|token|transform|trim|type|unicodeorder|unsorted|validate|virtual|whole|wild|within|xml|xpath|after|cluster|compressed|compression|default|encoding|escape|fileposition|forward|grouped|inner|internal|linkcounted|literal|little_endian|lzw|mofn|multiple|namespace|nocase|notrim|noxpath|onfail|overwrite|prefetch|retry|right1|right2|rowset|xpath|scope|smart|soapaction|stable|timelimit|timeout|unordered|unstable|update|use|width|__compressed__))\\b"
 		},
 		{
 			"name": "entity.name.type.ecl",
 			"match": "\\b(?i)real(?-i)(4|8)\\b"
+		},
+		{
+			"name": "entity.name.type.ecl",
+			"match": "\\b(?i)(u?)decimal(\\d+?)\\b"
+		},
+		{
+			"name": "entity.name.type.ecl",
+			"match": "\\bU(?='.*')"
 		},
 		{
 			"name": "entity.name.type.ecl",
@@ -50,21 +58,21 @@
 		},
 		{
 			"name": "keyword.control.ecl",
-			"match":"\\b(?i:(checkpoint|deprecated|failcode|failmessage|failure|global|independent|onwarning|persist|priority|recovery|stored|success|wait|when))\\b"
+			"match":"\\b(?i:(import|as|checkpoint|deprecated|failcode|failmessage|failure|global|independent|onwarning|persist|priority|recovery|stored|success|wait|when))\\b"
 		},
 		{
 			"name": "keyword.operator.ecl",
-			"match":"\\b(?i:(:=|and|not|or))\\b"
+			"match":"\\b(?i:(:=|and|not|or|in))\\b"
 		}
 	],
 	"repository": {
 		"functions": {
-			"match": "\\b(?i:(abs|acos|aggregate|allnodes|apply|ascii|asin|asstring|atan|atan2|ave|case|catch|choose|choosen|choosesets|clustersize|combine|correlation|cos|cosh|count|covariance|cron|dataset|dedup|define|denormalize|dictionary|distribute|distributed|distribution|ebcdic|enth|error|evaluate|event|eventextra|eventname|exists|exp|failcode|failmessage|fetch|fromunicode|fromxml|getenv|getisvalid|global|graph|group|hash|hash32|hash64|hashcrc|hashmd5|having|httpcall|httpheader|if|iff|index|intformat|isvalid|iterate|join|keyunicode|length|library|limit|ln|local|log|loop|map|matched|matchlength|matchposition|matchtext|matchunicode|max|merge|mergejoin|min|nofold|nolocal|nonempty|normalize|parse|pipe|power|preload|process|project|pull|random|range|rank|ranked|realformat|recordof|regexfind|regexreplace|regroup|rejected|rollup|round|roundup|row|rowdiff|sample|set|sin|sinh|sizeof|soapcall|sort|sorted|sqrt|stepped|stored|sum|table|tan|tanh|thisnode|topn|tounicode|toxml|transfer|transform|trim|truncate|typeof|ungroup|unicodeorder|variance|which|workunit|xmldecode|xmlencode|xmltext|xmlunicode))\\b",
-			"name": "entity.name.function.ecl"
+			"name": "entity.name.function.ecl",
+			"match": "\\b(?i:(abs|acos|aggregate|allnodes|apply|ascii|asin|asstring|atan|atan2|ave|case|catch|choose|choosen|choosesets|clustersize|combine|correlation|cos|cosh|count|covariance|cron|dataset|dedup|define|denormalize|dictionary|distribute|distributed|distribution|ebcdic|enth|error|evaluate|event|eventextra|eventname|exists|exp|failcode|failmessage|fetch|fromunicode|fromxml|getenv|getisvalid|global|graph|group|hash|hash32|hash64|hashcrc|hashmd5|having|httpcall|httpheader|if|iff|index|intformat|isvalid|iterate|join|keyunicode|length|library|limit|ln|local|log|loop|map|matched|matchlength|matchposition|matchtext|matchunicode|max|merge|mergejoin|min|nofold|nolocal|nonempty|normalize|parse|pipe|power|preload|process|project|pull|random|range|rank|ranked|realformat|recordof|regexfind|regexreplace|regroup|rejected|rollup|round|roundup|row|rowdiff|sample|set|sin|sinh|sizeof|soapcall|sort|sorted|sqrt|stepped|stored|sum|table|tan|tanh|thisnode|topn|tounicode|toxml|transfer|transform|trim|truncate|typeof|ungroup|unicodeorder|variance|which|workunit|xmldecode|xmlencode|xmltext|xmlunicode))\\b"
 		},
 		"functions2": {
-			"match": "\\b(?i:(apply|assert|build|buildindex|evaluate|fail|keydiff|keypatch|loadxml|nothor|notify|output|parallel|sequential|soapcall|wait))\\b",
-			"name": "entity.name.function.ecl"
+			"name": "entity.name.function.ecl",
+			"match": "\\b(?i:(apply|assert|build|buildindex|evaluate|fail|keydiff|keypatch|loadxml|nothor|notify|output|parallel|sequential|soapcall|wait))\\b"
 		},
 		"expression": {
 			"name": "meta.expression.ecl",
@@ -108,7 +116,6 @@
 			"match": "(//).*$\\n?",
 			"name": "comment.line.ecl"
 		},
-
 		"string": {
 			"name": "string.ecl",
 			"patterns": [
@@ -131,7 +138,6 @@
 			"match": "\\\\(x\\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)",
 			"name": "constant.character.escape"
 		},
-
 		"literal": {
 			"name": "literal.ecl",
 			"patterns": [

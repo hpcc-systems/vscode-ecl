@@ -7,6 +7,7 @@ import { ECLDefinitionProvider } from './eclDeclaration';
 import { showHideStatus } from './eclStatus';
 import { eclWatchUri, ECLWatchTextDocumentContentProvider } from './ECLWatch';
 import vscode = require('vscode');
+import opn = require('opn');
 
 /*
 import { workspace, Disposable, ExtensionContext } from 'vscode';
@@ -17,6 +18,7 @@ let diagnosticCollection: vscode.DiagnosticCollection;
 
 export function activate(ctx: vscode.ExtensionContext): void {
 
+	let eclConfig = vscode.workspace.getConfiguration('ecl');
 	// ctx.subscriptions.push(vscode.languages.registerHoverProvider(ECL_MODE, new ECLHoverProvider()));
 	ctx.subscriptions.push(vscode.languages.registerCompletionItemProvider(ECL_MODE, new ECLCompletionItemProvider(), '.', '\"'));
 	ctx.subscriptions.push(vscode.languages.registerDefinitionProvider(ECL_MODE, new ECLDefinitionProvider()));
@@ -38,22 +40,29 @@ export function activate(ctx: vscode.ExtensionContext): void {
 	startBuildOnSaveWatcher(ctx.subscriptions);
 
 	ctx.subscriptions.push(vscode.commands.registerCommand('ecl.checkSyntax', () => {
-		let eclConfig = vscode.workspace.getConfiguration('ecl');
 		vscode.window.activeTextEditor.document.save();
 		runBuilds(vscode.window.activeTextEditor.document, eclConfig);
 	}));
 
+	ctx.subscriptions.push(vscode.commands.registerCommand('ecl.showAllDocumentation', () => {
+		opn('https://hpccsystems.com/download/documentation/all');
+	}));
+
+	ctx.subscriptions.push(vscode.commands.registerTextEditorCommand('ecl.searchTerm', (editor: vscode.TextEditor) => {
+		let range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
+		let searchTerm = editor.document.getText(range);
+		opn('https://hpccsystems.com/search/node/' + searchTerm);
+	}));
+
 	ctx.subscriptions.push(vscode.commands.registerCommand('ecl.showECLWatch', () => {
 		return vscode.commands.executeCommand('vscode.previewHtml', eclWatchUri, vscode.ViewColumn.Two, 'ECL Watch').then((success) => {
-
 		}, (reason) => {
 			vscode.window.showErrorMessage(reason);
 		});
 	}));
 
 	if (vscode.window.activeTextEditor) {
-		let goConfig = vscode.workspace.getConfiguration('ecl');
-		runBuilds(vscode.window.activeTextEditor.document, goConfig);
+		runBuilds(vscode.window.activeTextEditor.document, eclConfig);
 	}
 }
 

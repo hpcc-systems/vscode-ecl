@@ -17,7 +17,16 @@
         ["[", "]"],
         ["(", ")"],
         ["\"", "\""],
-        ["'", "'"]
+        ["'", "'"],
+
+        ["FUNCTION", "END;"],
+        ["MODULE", "END;"],
+        ["INTERFACE", "END;"],
+        ["TRANSFORM", "END;"],
+        ["RECORD", "END;"],
+        ["BEGINC++", "ENDC++;"],
+        ["MACRO", "ENDMACRO;"],
+        ["FUNCTIONMACRO", "ENDMACRO;"]
     ],
     // symbols that that can be used to surround a selection
     "surroundingPairs": [

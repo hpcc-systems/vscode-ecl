@@ -2,7 +2,7 @@
     "name": "ecl",
     "version": "0.0.9",
     "publisher": "GordonSmith",
-    "description": "ECL language support for Visual Studio Code",
+    "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
         "name": "HPCC Systems"
     },
@@ -37,7 +37,8 @@
         "semver": "~5.3.0",
         "request": "~2.78.0",
         "tmp": "~0.0.30",
-        "xml2js": "~0.4.17"
+        "xml2js": "~0.4.17",
+        "opn": "4.0.2"
     },
     "devDependencies": {
         "typescript": "~2.1.5",
@@ -66,7 +67,7 @@
                     "ECL",
                     "ecl"
                 ],
-                "configuration": "./language-configuration.json"
+                "configuration": "./ecl.configuration.json"
             }
         ],
         "grammars": [
@@ -92,9 +93,25 @@
                 "command": "ecl.showECLWatch",
                 "title": "ECL: Show Workunits",
                 "description": "Show workunits associated with current file."
+            },
+            {
+                "command": "ecl.showAllDocumentation",
+                "title": "ECL: Open documentation in default browser.",
+                "description": "Visit the main documentation on HPCC Systems."
+            },
+            {
+                "command": "ecl.searchTerm",
+                "title": "ECL: Search the currently selected term.",
+                "description": "Utilises the HPCC Search functionality on the website for documentation."
             }
         ],
         "keybindings": [
+            {
+                "command": "ecl.searchTerm",
+                "key": "f1",
+                "mac": "f1",
+                "when": "editorTextFocus"
+            },
             {
                 "command": "ecl.checkSyntax",
                 "key": "f7",
@@ -106,6 +123,11 @@
                 "key": "f8",
                 "mac": "f8",
                 "when": "editorTextFocus"
+            },
+            {
+                "command": "ecl.showAllDocumentation",
+                "key": "f12",
+                "mac": "f12"
             }
         ],
         "debuggers": [
