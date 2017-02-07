@@ -1,36 +1,15 @@
 {
-	"fileTypes": [
-		"ecl"
-	],
+	"scopeName": "source.ecl",
+	"uuid": "8AE6478E-6717-4D6B-A1B4-0CB197840137",
+	"fileTypes": ["ecl"],
 	"name": "ECL",
 	"patterns": [
 		{
 			"include": "#expression"
 		},
 		{
-			"match": "([A-Za-z_]+)\\s*(\\()",
-			"captures":
-			{
-				"1":
-				{
-					"patterns": [
-						{
-							"include": "#functions"
-						},
-						{
-							"include": "#functions2"
-						}
-					]
-				}
-			}
-		},
-		{
 			"name": "entity.name.type.ecl",
 			"match": "#\\b(?i)append|break|declare|demangle|end|for|getdatatype|if|inmodule|loop|mangle|onwarning|option|set|stored|uniquename|workunit(?-i)\\b"
-		},
-		{
-			"name": "keyword.other.ecl",
-			"match":"\\b(?i:(and|or|in|not|all|any|as|from|atmost|before|beginc|best|between|case|const|counter|csv|descend|embed|encrypt|end|endc|endembed|endmacro|enum|except|exclusive|expire|export|extend|few|first|flat|full|function|functionmacro|group|heading|hole|ifblock|import|in|joined|keep|keyed|last|left|limit|load|local|locale|lookup|macro|many|maxcount|maxlength|min skew|module|interface|named|nocase|noroot|noscan|nosort|of|only|opt|outer|overwrite|packed|partition|penalty|physicallength|pipe|quote|record|repeat|return|right|rows|scan|self|separator|service|shared|skew|skip|sql|store|terminator|thor|threshold|token|transform|trim|type|unicodeorder|unsorted|validate|virtual|whole|wild|within|xml|xpath|after|cluster|compressed|compression|default|encoding|escape|fileposition|forward|grouped|inner|internal|linkcounted|literal|little_endian|lzw|mofn|multiple|namespace|nocase|notrim|noxpath|onfail|overwrite|prefetch|retry|right1|right2|rowset|xpath|scope|smart|soapaction|stable|timelimit|timeout|unordered|unstable|update|use|width|__compressed__))\\b"
 		},
 		{
 			"name": "entity.name.type.ecl",
@@ -38,7 +17,7 @@
 		},
 		{
 			"name": "entity.name.type.ecl",
-			"match": "\\b(?i)(u?)decimal(\\d+?)\\b"
+			"match": "\\b(?i)(u?)decimal(\\d+(_\\d+)?)\\b"
 		},
 		{
 			"name": "entity.name.type.ecl",
@@ -57,12 +36,50 @@
 			"match":"\\b(?i:(ascii|big_endian|boolean|data|decimal|ebcdic|grouped|integer|linkcounted|pattern|qstring|real|record|rule|set of|streamed|string|token|udecimal|unicode|unsigned|varstring|varunicode))\\b"
 		},
 		{
+			"name": "entity.other.inherited-class.ecl",
+			"match": "(?i)[A-Za-z_]+(?!=\\bmodule\\()(?=\\))"
+		},
+		{
+			"name": "keyword.other.ecl",
+			"match":"\\b(?i:(and|or|in|not|all|any|as|from|atmost|before|beginc|best|between|case|const|counter|csv|descend|embed|encrypt|end|endc|endembed|endmacro|enum|except|exclusive|expire|export|extend|fail|few|first|flat|full|function|functionmacro|group|heading|hole|ifblock|import|in|joined|keep|keyed|last|left|limit|load|local|locale|lookup|macro|many|maxcount|maxlength|min skew|module|interface|named|nocase|noroot|noscan|nosort|of|only|opt|outer|overwrite|packed|partition|penalty|physicallength|pipe|quote|record|repeat|return|right|rows|scan|self|separator|service|shared|skew|skip|sql|store|terminator|thor|threshold|token|transform|trim|type|unicodeorder|unsorted|validate|virtual|whole|wild|within|xml|xpath|after|cluster|compressed|compression|default|encoding|escape|fileposition|forward|grouped|inner|internal|linkcounted|literal|little_endian|lzw|mofn|multiple|namespace|nocase|wnotrim|noxpath|onfail|overwrite|prefetch|retry|right1|right2|rowset|xpath|scope|smart|soapaction|stable|timelimit|timeout|unordered|unstable|update|use|width|__compressed__))\\b"
+		},
+		{
+			"name": "keyword.other.ecl",
+			"match": "\\b(?i:(module(?=\\(.*\\))))\\b"
+		},
+		{
 			"name": "keyword.control.ecl",
 			"match":"\\b(?i:(import|as|checkpoint|deprecated|failcode|failmessage|failure|global|independent|onwarning|persist|priority|recovery|stored|success|wait|when))\\b"
 		},
 		{
 			"name": "keyword.operator.ecl",
-			"match":"\\b(?i:(:=|and|not|or|in))\\b"
+			"match":"\\b(?i:(:=|and|not|or|in|>|<|<>|/|\\|+|-|=))\\b"
+		},
+		{
+			"name": "support.class.ecl",
+			"match": "\\b(?i:(std).(file|date|str|math|metaphone|metaphone3|uni|audit|blas|system.(debug|email|job|log|thorlib|util|workunit)))\\b"
+		},
+		{
+			"name": "markup.italic.ecl",
+			"match": ":="
+		},
+		{
+			"name": "entity.name.function.ecl",
+			"match": "([A-Za-z_]+)\\s*(\\()",
+			"captures":
+			{
+				"1":
+				{
+					"patterns": [
+						{
+							"include": "#functions"
+						},
+						{
+							"include": "#functions2"
+						}
+					]
+				}
+			}
 		}
 	],
 	"repository": {
@@ -136,7 +153,7 @@
 		},
 		"string-character-escape": {
 			"match": "\\\\(x\\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)",
-			"name": "constant.character.escape"
+			"name": "constant.character.escape.ecl"
 		},
 		"literal": {
 			"name": "literal.ecl",
@@ -165,7 +182,7 @@
 		},
 		"self-literal": {
 			"match": "\\b(?i:(self))\\b",
-			"name": "constant.language.this.ts"
+			"name": "constant.language.this.ecl"
 		},
 		"array-literal": {
 			"begin": "\\[",
@@ -187,7 +204,5 @@
 				}
 			]
 		}
-	},
-	"scopeName": "source.ecl",
-	"uuid": "8AE6478E-6717-4D6B-A1B4-0CB197840137"
+	}
 }

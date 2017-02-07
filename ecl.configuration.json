@@ -1,39 +1,78 @@
 {
-    "comments": {
-        // symbol used for single line comment. Remove this entry if your language does not support line comments
-        "lineComment": "//",
-        // symbols used for start and end a block comment. Remove this entry if your language does not support block comments
-        "blockComment": [ "/*", "*/" ]
-    },
-    // symbols used as brackets
-    "brackets": [
-        ["{", "}"],
-        ["[", "]"],
-        ["(", ")"]
-    ],
-    // symbols that are auto closed when typing
-    "autoClosingPairs": [
-        ["{", "}"],
-        ["[", "]"],
-        ["(", ")"],
-        ["\"", "\""],
-        ["'", "'"],
-
-        ["FUNCTION", "END;"],
-        ["MODULE", "END;"],
-        ["INTERFACE", "END;"],
-        ["TRANSFORM", "END;"],
-        ["RECORD", "END;"],
-        ["BEGINC++", "ENDC++;"],
-        ["MACRO", "ENDMACRO;"],
-        ["FUNCTIONMACRO", "ENDMACRO;"]
-    ],
-    // symbols that that can be used to surround a selection
-    "surroundingPairs": [
-        ["{", "}"],
-        ["[", "]"],
-        ["(", ")"],
-        ["\"", "\""],
-        ["'", "'"]
-    ]
+	"comments": {
+		// symbol used for single line comment. Remove this entry if your language does not support line comments
+		"lineComment": "//",
+		// symbols used for start and end a block comment. Remove this entry if your language does not support block comments
+		"blockComment": [ "/*", "*/" ]
+	},
+	// symbols used as brackets
+	"brackets": [
+		["{", "}"],
+		["[", "]"],
+		["(", ")"]
+	],
+	// symbols that are auto closed when typing
+	"autoClosingPairs": [
+		["{", "}"],
+		["[", "]"],
+		["(", ")"],
+		["\"", "\""],
+		["'", "'"],
+		["function", "end;"],
+		["module", "end;"],
+		["interface", "end;"],
+		["transform", "end;"],
+		["record", "end;"],
+		["beginc++", "endc++;"],
+		["macro", "endmacro;"],
+		["functionmacro", "endmacro;"],
+		["Function", "End;"],
+		["Module", "End;"],
+		["Interface", "End;"],
+		["Transform", "End;"],
+		["Record", "End;"],
+		["Beginc++", "Endc++;"],
+		["Macro", "Endmacro;"],
+		["Functionmacro", "Endmacro;"],
+		["FUNCTION", "END;"],
+		["MODULE", "END;"],
+		["INTERFACE", "END;"],
+		["TRANSFORM", "END;"],
+		["RECORD", "END;"],
+		["BEGINC++", "ENDC++;"],
+		["MACRO", "ENDMACRO;"],
+		["FUNCTIONMACRO", "ENDMACRO;"]
+	],
+	// symbols that that can be used to surround a selection
+	"surroundingPairs": [
+		["{", "}"],
+		["[", "]"],
+		["(", ")"],
+		["\"", "\""],
+		["'", "'"],
+		["function", "end;"],
+		["module", "end;"],
+		["interface", "end;"],
+		["transform", "end;"],
+		["record", "end;"],
+		["beginc++", "endc++;"],
+		["macro", "endmacro;"],
+		["functionmacro", "endmacro;"],
+		["Function", "End;"],
+		["Module", "End;"],
+		["Interface", "End;"],
+		["Transform", "End;"],
+		["Record", "End;"],
+		["Beginc++", "Endc++;"],
+		["Macro", "Endmacro;"],
+		["Functionmacro", "Endmacro;"],
+		["FUNCTION", "END;"],
+		["MODULE", "END;"],
+		["INTERFACE", "END;"],
+		["TRANSFORM", "END;"],
+		["RECORD", "END;"],
+		["BEGINC++", "ENDC++;"],
+		["MACRO", "ENDMACRO;"],
+		["FUNCTIONMACRO", "ENDMACRO;"]
+	]
 }
