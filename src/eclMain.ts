@@ -6,8 +6,8 @@ import { ECLCompletionItemProvider } from './eclSuggest';
 import { ECLDefinitionProvider } from './eclDeclaration';
 import { showHideStatus } from './eclStatus';
 import { eclWatchUri, ECLWatchTextDocumentContentProvider } from './ECLWatch';
-import vscode = require('vscode');
-import opn = require('opn');
+import * as vscode from 'vscode';
+import * as opn from 'opn';
 
 /*
 import { workspace, Disposable, ExtensionContext } from 'vscode';

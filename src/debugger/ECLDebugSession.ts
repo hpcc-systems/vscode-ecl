@@ -37,7 +37,7 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
 	port: number;
 	rejectUnauthorized: boolean;
 	targetCluster: string;
-	eclccArgs: string;
+	eclccArgs: string[];
 	includeFolders: string;
 	legacyMode: LaunchLegacyMode;
 	resultLimit: number;
@@ -159,7 +159,7 @@ export class ECLDebugSession extends DebugSession {
 			port: args.port,
 			rejectUnauthorized: args.rejectUnauthorized || false,
 			targetCluster: args.targetCluster,
-			eclccArgs: args.eclccArgs ? args.eclccArgs.split(',') : [],
+			eclccArgs: args.eclccArgs ? args.eclccArgs : [],
 			includeFolders: args.includeFolders ? args.includeFolders.split(',') : [],
 			legacyMode: args.legacyMode === 'true' ? true : false,
 			resultLimit: args.resultLimit || 100,
