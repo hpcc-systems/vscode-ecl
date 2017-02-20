@@ -1,69 +1,69 @@
-import vscode = require('vscode');
-import { attachWorkspace, qualifiedIDBoundary } from './files/ECLMeta';
+import vscode = require("vscode");
+import { attachWorkspace, qualifiedIDBoundary } from "./files/ECLMeta";
 
 interface ECLCodeSuggestion {
-	class: string;
-	name: string;
-	type: string;
+    class: string;
+    name: string;
+    type: string;
 }
 
 interface PackageInfo {
-	name: string;
-	path: string;
+    name: string;
+    path: string;
 }
 
 export class ECLCompletionItemProvider implements vscode.CompletionItemProvider {
 
-	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Thenable<vscode.CompletionItem[]> {
-		return this.provideCompletionItemsInternal(document, position, token, vscode.workspace.getConfiguration('ecl'));
-	}
+    public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Thenable<vscode.CompletionItem[]> {
+        return this.provideCompletionItemsInternal(document, position, token, vscode.workspace.getConfiguration("ecl"));
+    }
 
-	private vscodeKindFromECLType(type: string): vscode.CompletionItemKind {
-		switch (type) {
-			case 'record':
-				return vscode.CompletionItemKind.Module;
-			case 'source':
-				return vscode.CompletionItemKind.File;
-		}
-		return vscode.CompletionItemKind.Variable;
-	}
+    private vscodeKindFromECLType(type: string): vscode.CompletionItemKind {
+        switch (type) {
+            case "record":
+                return vscode.CompletionItemKind.Module;
+            case "source":
+                return vscode.CompletionItemKind.File;
+            default:
+        }
+        return vscode.CompletionItemKind.Variable;
+    }
 
-	public provideCompletionItemsInternal(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, config: vscode.WorkspaceConfiguration): Thenable<vscode.CompletionItem[]> {
+    public provideCompletionItemsInternal(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, config: vscode.WorkspaceConfiguration): Thenable<vscode.CompletionItem[]> {
 
-		return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
+        return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
 
-			let lineText = document.lineAt(position.line).text;
+            const lineText = document.lineAt(position.line).text;
 
-			let lineTillCurrentPosition = lineText.substr(0, position.character);
+            const lineTillCurrentPosition = lineText.substr(0, position.character);
 
-			if (lineText.match(/^\s*\/\//)) {
-				return resolve([]);
-			}
+            if (lineText.match(/^\s*\/\//)) {
+                return resolve([]);
+            }
 
-			// Count the number of double quotes in the line till current position. Ignore escaped double quotes
-			let quoteCnt = (lineTillCurrentPosition.match(/[^\\]\'/g) || []).length;
-			quoteCnt += lineTillCurrentPosition.startsWith('\'') ? 1 : 0;
-			let inString = (quoteCnt % 2 === 1);
+            // Count the number of double quotes in the line till current position. Ignore escaped double quotes
+            let quoteCnt = (lineTillCurrentPosition.match(/[^\\]\'/g) || []).length;
+            quoteCnt += lineTillCurrentPosition.startsWith("'") ? 1 : 0;
+            const inString = (quoteCnt % 2 === 1);
 
-			if (!inString && lineTillCurrentPosition.endsWith('\"')) {
-				return resolve([]);
-			}
+            if (!inString && lineTillCurrentPosition.endsWith('\"')) {
+                return resolve([]);
+            }
 
-			const startCharPos = qualifiedIDBoundary(lineText, position.character - 1, true);
-			const partialID = lineText.substring(startCharPos, position.character + 1);
+            const startCharPos = qualifiedIDBoundary(lineText, position.character - 1, true);
+            const partialID = lineText.substring(startCharPos, position.character + 1);
 
-			const metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
-			const eclDef = metaWorkspace.resolvePartialID(document.fileName, partialID, document.offsetAt(position));
+            const metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
+            const eclDef = metaWorkspace.resolvePartialID(document.fileName, partialID, document.offsetAt(position));
 
-			if (eclDef) {
+            if (eclDef) {
+                resolve(eclDef.suggestions().map((suggestion) => {
+                    return new vscode.CompletionItem(suggestion.name, this.vscodeKindFromECLType(suggestion.type));
+                }));
 
-				resolve(eclDef.suggestions().map(suggestion => {
-					return new vscode.CompletionItem(suggestion.name, this.vscodeKindFromECLType(suggestion.type));
-				}));
-
-			} else {
-				resolve(null);
-			}
-		});
-	}
+            } else {
+                resolve(null);
+            }
+        });
+    }
 }

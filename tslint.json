@@ -1,62 +1,75 @@
 {
-	"rules": {
-		"class-name": true,
-		"comment-format": [
-			true,
-			"check-space"
-		],
-		"indent": [
-			true,
-			"tabs"
-		],
-		"no-duplicate-variable": true,
-		"no-eval": true,
-		"no-internal-module": true,
-		"no-trailing-whitespace": true,
-		"no-var-keyword": true,
-		"no-unused-variable": [
-			true,
-			{
-				"ignore-pattern": "^_"
-			}
-		],
-		"one-line": [
-			true,
-			"check-open-brace",
-			"check-whitespace"
-		],
-		"quotemark": [
-			true,
-			"single"
-		],
-		"semicolon": [
-			true
-		],
-		"triple-equals": [
-			true,
-			"allow-null-check"
-		],
-		"typedef-whitespace": [
-			true,
-			{
-				"call-signature": "nospace",
-				"index-signature": "nospace",
-				"parameter": "nospace",
-				"property-declaration": "nospace",
-				"variable-declaration": "nospace"
-			}
-		],
-		"variable-name": [
-			true,
-			"ban-keywords"
-		],
-		"whitespace": [
-			true,
-			"check-branch",
-			"check-decl",
-			"check-operator",
-			"check-separator",
-			"check-type"
-		]
-	}
+    /*
+   * Possible values:
+   * - the name of a built-in config
+   * - the name of an NPM module which has a "main" file that exports a config object
+   * - a relative path to a JSON file
+   */
+    "extends": "tslint:recommended",
+    "rules": {
+        /*
+     * Any rules specified here will override those from the base config we are extending.
+     */
+        "prefer-for-of": true,
+        "member-access": false,
+        "variable-name": [
+            true,
+            "allow-leading-underscore",
+            "allow-pascal-case"
+        ],
+        "object-literal-sort-keys": false,
+        "trailing-comma": [
+            false,
+            {
+                "multiline": "always",
+                "singleline": "never"
+            }
+        ],
+        "curly": false,
+        "member-ordering": [
+            true
+        ],
+        "no-unused-variable": [
+            true
+        ],
+        "max-classes-per-file": [
+            false
+        ],
+        "no-empty": false,
+        "max-line-length": [
+            false
+        ],
+        "only-arrow-functions": [
+            false
+        ],
+        "no-namespace": [
+            false
+        ],
+        "interface-name": [
+            false
+        ],
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-module",
+            "check-separator",
+            "check-type"
+        ],
+        "prefer-const": true,
+        "no-string-literal": false
+    },
+    "jsRules": {
+        /*
+     * Any rules specified here will override those from the base config we are extending.
+     */
+        "curly": true
+    },
+    "rulesDirectory": [
+        /*
+     * A list of relative or absolute paths to directories that contain custom rules.
+     * See the Custom Rules documentation below for more details.
+     */
+    ]
 }

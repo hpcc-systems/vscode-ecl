@@ -213,7 +213,7 @@ export class ClientTools {
 		});
 	}
 
-	syntaxCheck(filePath: string) {
+	syntaxCheck(filePath: string): Promise<IECLError[]> {
 		let eclccPath = this.exePath('eclcc');
 		let args = ['-syntax', '-M'].concat([filePath]);
 		return this.execFile(eclccPath, this.args(args), this.cwd, 'eclcc', `Cannot find ${eclccPath}`).then((response: IExecFile) => {

@@ -1,63 +1,61 @@
 {
-	"version": "0.1.0",
-	"compounds": [
-		{
-			"name": "Launch All",
-			"configurations": [
-				"Launch Extension",
-				"Launch Server Adapter"
-			]
-		}
-	],
-	"configurations": [
-		{
-			"name": "Launch Extension",
-			"type": "extensionHost",
-			"request": "launch",
-			// path to VSCode executable
-			"runtimeExecutable": "${execPath}",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceRoot}"
-			],
-			"outFiles": [
-				"${workspaceRoot}/out/**/*.js"
-			],
-			"stopOnEntry": false,
-			"sourceMaps": true,
-			"preLaunchTask": "npm"
-		},
-		{
-			"name": "Launch Server Adapter",
-			"type": "node",
-			"request": "launch",
-			"program": "${workspaceRoot}/out/src/debugger/ECLDebug.js",
-			"stopOnEntry": false,
-			"args": [
-				"--server=4711"
-			],
-			"outFiles": [
-				"${workspaceRoot}/out/**/*.js"
-			],
-			"sourceMaps": true,
-			"cwd": "${workspaceRoot}"
-		},
-		{
-			"name": "Launch Tests",
-			"type": "extensionHost",
-			"request": "launch",
-			"runtimeExecutable": "${execPath}",
-			// the workspace path should be GOPATH
-			"args": [
-				"--extensionDevelopmentPath=${workspaceRoot}",
-				"--extensionTestsPath=${workspaceRoot}/out/test",
-				"env.GOPATH"
-			],
-			"stopOnEntry": false,
-			"sourceMaps": true,
-			"outFiles": [
-				"${workspaceRoot}/out/**/*.js"
-			],
-			"preLaunchTask": "npm"
-		}
-	]
+    "version": "0.1.0",
+    "compounds": [
+        {
+            "name": "Launch All",
+            "configurations": [
+                "Launch Extension",
+                "Launch Server Adapter"
+            ]
+        }
+    ],
+    "configurations": [
+        {
+            "name": "Launch Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            // path to VSCode executable
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceRoot}"
+            ],
+            "outFiles": [
+                "${workspaceRoot}/out/**/*.js"
+            ],
+            "stopOnEntry": false,
+            "sourceMaps": true
+        },
+        {
+            "name": "Launch Server Adapter",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/out/src/debugger/ECLDebug.js",
+            "stopOnEntry": false,
+            "args": [
+                "--server=4711"
+            ],
+            "outFiles": [
+                "${workspaceRoot}/out/**/*.js"
+            ],
+            "sourceMaps": true,
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Launch Tests",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            // the workspace path should be GOPATH
+            "args": [
+                "--extensionDevelopmentPath=${workspaceRoot}",
+                "--extensionTestsPath=${workspaceRoot}/out/test",
+                "env.GOPATH"
+            ],
+            "stopOnEntry": false,
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceRoot}/out/**/*.js"
+            ]
+        }
+    ]
 }
