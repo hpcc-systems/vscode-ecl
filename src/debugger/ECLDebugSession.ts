@@ -7,7 +7,8 @@ import { GraphItem, IEventListenerHandle, Workunit, WUAction, XGMMLGraph } from 
 import { locateAllClientTools, locateClientTools } from "../files/clientTools";
 import os = require("os");
 
-//import * as console from "console-stamp";
+require('console-stamp')(console);
+
 
 // This interface should always match the schema found in `package.json`.
 export type LaunchMode = "submit" | "compile" | "debug";
