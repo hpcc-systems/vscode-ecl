@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.19",
+    "version": "0.0.11",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
