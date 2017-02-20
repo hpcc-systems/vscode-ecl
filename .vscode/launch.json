@@ -36,7 +36,7 @@
 				"--server=4711"
 			],
 			"outFiles": [
-				"${workspaceRoot}/out/src/debugger/**/*.js"
+				"${workspaceRoot}/out/**/*.js"
 			],
 			"sourceMaps": true,
 			"cwd": "${workspaceRoot}"
@@ -54,7 +54,9 @@
 			],
 			"stopOnEntry": false,
 			"sourceMaps": true,
-			"outDir": "${workspaceRoot}/out",
+			"outFiles": [
+				"${workspaceRoot}/out/**/*.js"
+			],
 			"preLaunchTask": "npm"
 		}
 	]

@@ -4,25 +4,10 @@ import {
 	InitializedEvent, TerminatedEvent, ThreadEvent, ContinuedEvent, StoppedEvent, OutputEvent
 } from 'vscode-debugadapter';
 import { locateClientTools, locateAllClientTools } from '../files/clientTools';
-import { WUAction } from '../comms/WsWorkunits';
-import { createECLWorkunit, ECLWorkunit, IWorkunitMonitor } from '../comms/ECLWorkunit';
-import { GraphItem } from '../comms/Graph';
+import { Workunit, WUAction, IEventListenerHandle, XGMMLGraph, GraphItem } from "../../hpcc-platform-comms/src/index";
 import os = require('os');
 
 require('console-stamp')(console);
-
-class NullMonitor implements IWorkunitMonitor {
-	refresh(thenDispose?: boolean): Promise<void> {
-		return Promise.resolve();
-	}
-
-	refresh2(thenDispose?: boolean): Promise<void> {
-		return Promise.resolve();
-	}
-
-	dispose(): void {
-	}
-}
 
 // This interface should always match the schema found in `package.json`.
 export type LaunchMode = "submit" | "compile" | "debug";
@@ -97,8 +82,8 @@ class WUScope {
 }
 
 export class ECLDebugSession extends DebugSession {
-	workunit: ECLWorkunit;
-	wuMonitor: IWorkunitMonitor;
+	workunit: Workunit;
+	watchHandle: IEventListenerHandle;
 	launchRequestArgs: LaunchRequestArgumentsEx;
 
 	private prevMonitorMessage: string;
@@ -172,19 +157,23 @@ export class ECLDebugSession extends DebugSession {
 			return clientTools.createArchive(this.launchRequestArgs.program);
 		}).then((archive) => {
 			this.sendEvent(new OutputEvent('Creating workunit.' + os.EOL));
-			return createECLWorkunit(this.launchRequestArgs.protocol, this.launchRequestArgs.serverAddress, this.launchRequestArgs.port, archive, this.launchRequestArgs.mode, this.launchRequestArgs.resultLimit, this.launchRequestArgs.user, this.launchRequestArgs.password, this.launchRequestArgs.rejectUnauthorized);
+			return Workunit.create(`${this.launchRequestArgs.protocol}://${this.launchRequestArgs.serverAddress}:${this.launchRequestArgs.port}`).then((wu) => {
+				return wu.update({ QueryText: archive });
+			});
 		}).then(workunit => {
 			this.workunit = workunit;
-			this.sendEvent(new OutputEvent('Submitting workunit:  ' + workunit.wuid + os.EOL));
-			return workunit.submit(this.launchRequestArgs.targetCluster);
+			this.sendEvent(new OutputEvent('Submitting workunit:  ' + workunit.Wuid + os.EOL));
+			return workunit.submit(this.launchRequestArgs.targetCluster, this.launchRequestArgs.mode, this.launchRequestArgs.resultLimit);
 		}).then(() => {
-			this.sendEvent(new OutputEvent('Submitted:  ' + this.launchRequestArgs.protocol + '://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.wuid + os.EOL));
-			console.log('Submitted:  [xxx](' + this.launchRequestArgs.protocol + '://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.wuid + ')' + os.EOL);
+			this.sendEvent(new OutputEvent('Submitted:  ' + this.launchRequestArgs.protocol + '://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.Wuid + os.EOL));
+			console.log('Submitted:  [xxx](' + this.launchRequestArgs.protocol + '://' + this.launchRequestArgs.serverAddress + ':' + this.launchRequestArgs.port + '/?Widget=WUDetailsWidget&Wuid=' + this.workunit.Wuid + ')' + os.EOL);
 		}).then(() => {
-			this.sendEvent(new InitializedEvent());
-			log('InitializeEvent');
-			this.sendEvent(new ThreadEvent('main', 0));
-			log('ThreadEvent');
+			this.workunit.watchUntilRunning().then(() => {
+				this.sendEvent(new InitializedEvent());
+				log('InitializeEvent');
+				this.sendEvent(new ThreadEvent('main', 0));
+				log('ThreadEvent');
+			});
 		}).catch((e) => {
 			this.sendEvent(new OutputEvent(`Launch failed - ${e}${os.EOL}`));
 			this.sendEvent(new TerminatedEvent());
@@ -202,7 +191,7 @@ export class ECLDebugSession extends DebugSession {
 		return this.workunit.debugQuit().then(() => {
 			return this.workunit.abort();
 		}).then(() => {
-			return this.wuMonitor.refresh();
+			return this.workunit.refresh();
 		}).catch(e => {
 			console.log(`Error disconnecting workunit`);
 		});
@@ -211,9 +200,11 @@ export class ECLDebugSession extends DebugSession {
 	protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
 		log('DisconnectRequest');
 		this.disconnectWorkunit().then(() => {
-			this.wuMonitor.dispose();
-			this.wuMonitor = new NullMonitor();
-			this.sendEvent(new OutputEvent(`Monitoring end:  ${this.workunit.wuid}${os.EOL}`));
+			if (this.watchHandle) {
+				this.watchHandle.release();
+				delete this.watchHandle;
+			}
+			this.sendEvent(new OutputEvent(`Monitoring end:  ${this.workunit.Wuid}${os.EOL}`));
 			delete this.workunit;
 			log('DisconnectResponse');
 			super.disconnectRequest(response, args);
@@ -222,12 +213,13 @@ export class ECLDebugSession extends DebugSession {
 
 	protected configurationDoneRequest(response: DebugProtocol.ConfigurationDoneResponse, args: DebugProtocol.ConfigurationDoneArguments): void {
 		log('ConfigurationDoneRequest');
-		this.sendEvent(new OutputEvent(`Monitoring:  ${this.workunit.wuid}.${os.EOL}`));
-		this.wuMonitor = this.workunit.monitor((state, debugState) => {
+		this.sendEvent(new OutputEvent(`Monitoring:  ${this.workunit.Wuid}.${os.EOL}`));
+		this.watchHandle = this.workunit.watch((changes) => {
+			let debugState: any = this.workunit.DebugState;
 			let id = debugState.edgeId || debugState.nodeId || debugState.graphId;
 			id = id ? `(${id})` : '';
 			let debugMsg = this.workunit.isDebugging() ? `(${debugState.sequence}) - ${debugState.state}${id}` : '';
-			let monitorMsg = `${this.workunit.wuid}:  ${this.workunit.state()}${debugMsg}${os.EOL}`;
+			let monitorMsg = `${this.workunit.Wuid}:  ${this.workunit.State}${debugMsg}${os.EOL}`;
 			if (this.prevMonitorMessage !== monitorMsg) {
 				this.prevMonitorMessage = monitorMsg;
 				this.sendEvent(new OutputEvent(monitorMsg));
@@ -255,14 +247,14 @@ export class ECLDebugSession extends DebugSession {
 				}
 			}
 			log(`Debugging: ${debugState.state} - ${JSON.stringify(debugState)}${os.EOL}`);
-		});
+		}, true);
 		this.sendResponse(response);
 		log('ConfigurationDoneResponse');
 	}
 
 	protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
 		log('SetBreakPointsRequest');
-		if (this.workunit.debugMode) {
+		if (this.workunit.isDebugging()) {
 			const path = args.source.path;
 			this.workunit.debugDeleteAllBreakpoints().then(() => {
 				return this.workunit.debugBreakpointValid(path);
@@ -318,33 +310,33 @@ export class ECLDebugSession extends DebugSession {
 		}
 	}
 
-	protected createStackTrace(graph, type: string, id: string, debugState, stackFrames: StackFrame[]): void {
+	protected createStackTrace(graph: XGMMLGraph, type: string, id: string, debugState, stackFrames: StackFrame[]): void {
 		switch (type) {
 			case 'edge':
-				let edge = graph.allEdges.get(id);
+				let edge = graph.allEdges[id];
 				this.pushStackFrame(stackFrames, edge, edge.getNearestDefinition());
 				this.createStackTrace(graph, 'vertex', edge.sourceID, debugState, stackFrames);
 				break;
 			case 'vertex':
-				let vertex = graph.allVertices.get(id);
+				let vertex = graph.allVertices[id];
 				this.pushStackFrame(stackFrames, vertex, vertex.getNearestDefinition());
 				if (vertex.parent) {
 					this.createStackTrace(graph, 'subgraph', vertex.parent.id, debugState, stackFrames);
 				} else {
-					this.createStackTrace(graph, 'workunit', this.workunit.wuid, debugState, stackFrames);
+					this.createStackTrace(graph, 'workunit', this.workunit.Wuid, debugState, stackFrames);
 				}
 				break;
 			case 'subgraph':
-				let subgraph = graph.allSubgraphs.get(id);
+				let subgraph = graph.allSubgraphs[id];
 				if (subgraph) {
 					this.pushStackFrame(stackFrames, subgraph, subgraph.getNearestDefinition(debugState.state === 'graph end' || debugState.state === 'finished'));
 					if (subgraph.parent) {
 						this.createStackTrace(graph, 'subgraph', subgraph.parent.id, debugState, stackFrames);
 					} else {
-						this.createStackTrace(graph, 'workunit', this.workunit.wuid, debugState, stackFrames);
+						this.createStackTrace(graph, 'workunit', this.workunit.Wuid, debugState, stackFrames);
 					}
 				} else {
-					this.createStackTrace(graph, 'workunit', this.workunit.wuid, debugState, stackFrames);
+					this.createStackTrace(graph, 'workunit', this.workunit.Wuid, debugState, stackFrames);
 				}
 				break;
 			case 'workunit':
@@ -358,7 +350,7 @@ export class ECLDebugSession extends DebugSession {
 		let stackFrames: StackFrame[] = [];
 		if (this.workunit.isDebugging()) {
 			this.workunit.debugGraph().then((graph) => {
-				const debugState = this.workunit.debugStateObj();
+				const debugState: any = this.workunit.DebugState;
 				if (debugState.edgeId) {
 					this.createStackTrace(graph, 'edge', debugState.edgeId, debugState, stackFrames);
 				} else if (debugState.nodeId) {
@@ -366,7 +358,7 @@ export class ECLDebugSession extends DebugSession {
 				} else if (debugState.graphId) {
 					this.createStackTrace(graph, 'subgraph', debugState.graphId, debugState, stackFrames);
 				} else {
-					this.createStackTrace(graph, 'workunit', this.workunit.wuid, debugState, stackFrames);
+					this.createStackTrace(graph, 'workunit', this.workunit.Wuid, debugState, stackFrames);
 				}
 				log('StackTraceResponse');
 				response.body = {
@@ -394,7 +386,7 @@ export class ECLDebugSession extends DebugSession {
 		const stackFrameScope: WUStack = this._stackFrameHandles.get(args.frameId);
 
 		let scopes: Scope[] = [];
-		switch (stackFrameScope.graphItem.type()) {
+		switch (stackFrameScope.graphItem.className()) {
 			case 'Edge':
 				scopes.push(new Scope('Results', this._variableHandles.create(new WUScope(stackFrameScope, 'results')), false));
 				scopes.push(new Scope('Local', this._variableHandles.create(new WUScope(stackFrameScope, 'local')), false));
@@ -408,7 +400,7 @@ export class ECLDebugSession extends DebugSession {
 				scopes.push(new Scope('Subgraphs', this._variableHandles.create(new WUScope(stackFrameScope, 'subgraphs')), false));
 				scopes.push(new Scope('Vertices', this._variableHandles.create(new WUScope(stackFrameScope, 'vertices')), false));
 				break;
-			case 'Graph':
+			case 'XGMMLGraph':
 				scopes.push(new Scope('Local', this._variableHandles.create(new WUScope(stackFrameScope, 'workunit')), false));
 				scopes.push(new Scope('Graphs', this._variableHandles.create(new WUScope(stackFrameScope, 'subgraphs')), false));
 				scopes.push(new Scope('Debug', this._variableHandles.create(new WUScope(stackFrameScope, 'breakpoints')), true));
@@ -427,12 +419,12 @@ export class ECLDebugSession extends DebugSession {
 		let variables = [];
 		switch (wuScope.type) {
 			case 'local':
-				wuScope.stack.graphItem.attrs.forEach((value, key) => {
-					variables.push(new Variable(key, '' + value));
-				});
+				for (const key in wuScope.stack.graphItem.attrs) {
+					variables.push(new Variable(key, '' + wuScope.stack.graphItem.attrs[key]));
+				}
 				break;
 			case 'workunit':
-				let state = this.workunit.stateObj();
+				let state = this.workunit.properties;
 				for (let key in state) {
 					variables.push(new Variable(key, '' + state[key]));
 				}
@@ -446,6 +438,7 @@ export class ECLDebugSession extends DebugSession {
 						variables: variables
 					};
 					this.sendResponse(response);
+
 					log('VariablesResponse');
 				});
 				return;
@@ -455,11 +448,8 @@ export class ECLDebugSession extends DebugSession {
 						let summary = [];
 						let values: any = {};
 						for (let key in result) {
-							if (key !== '$') {
-								values[key] = result[key][0];
-								summary.push(result[key][0]);
-							}
-
+							values[key] = result[key];
+							summary.push(result[key]);
 						}
 						return new Variable('Row_' + idx, JSON.stringify(summary), this._variableHandles.create(new WUScope(new WUStack(values), 'rows')));
 					});
@@ -487,7 +477,7 @@ export class ECLDebugSession extends DebugSession {
 		log('ContinueRequest');
 		this.workunit.debugContinue().then(debugResponse => {
 			log('debugContinue.then');
-			this.wuMonitor.refresh();
+			this.workunit.refresh();
 		});
 		this.sendEvent(new ContinuedEvent(0));
 		this.sendResponse(response);
@@ -496,22 +486,22 @@ export class ECLDebugSession extends DebugSession {
 
 	protected nextRequest(response: DebugProtocol.NextResponse): void {
 		log('NextRequest');
-		const debugState = this.workunit.debugStateObj();
+		const debugState: any = this.workunit.DebugState;
 		if (debugState.edgeId) {
 			this.workunit.debugStep('edge').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else if (debugState.nodeId) {
 			this.workunit.debugStep('edge').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else if (debugState.graphId) {
 			this.workunit.debugStep('graph').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else {
 			this.workunit.debugContinue().then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		}
 		this.sendResponse(response);
@@ -520,22 +510,22 @@ export class ECLDebugSession extends DebugSession {
 
 	protected stepInRequest(response: DebugProtocol.StepInResponse): void {
 		log('StepInRequest');
-		const debugState = this.workunit.debugStateObj();
+		const debugState: any = this.workunit.DebugState;
 		if (debugState.edgeId) {
 			this.workunit.debugStep('edge').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else if (debugState.nodeId) {
 			this.workunit.debugStep('edge').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else if (debugState.graphId) {
 			this.workunit.debugStep('edge').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else {
 			this.workunit.debugStep('graph').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		}
 		this.sendResponse(response);
@@ -544,22 +534,22 @@ export class ECLDebugSession extends DebugSession {
 
 	protected stepOutRequest(response: DebugProtocol.StepOutResponse): void {
 		log('StepOutRequest');
-		const debugState = this.workunit.debugStateObj();
+		const debugState: any = this.workunit.DebugState;
 		if (debugState.edgeId) {
 			this.workunit.debugStep('graph').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else if (debugState.nodeId) {
 			this.workunit.debugStep('graph').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else if (debugState.graphId) {
 			this.workunit.debugStep('graph').then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		} else {
 			this.workunit.debugContinue().then(() => {
-				this.wuMonitor.refresh();
+				this.workunit.refresh();
 			});
 		}
 		this.sendResponse(response);
@@ -570,7 +560,7 @@ export class ECLDebugSession extends DebugSession {
 		log('PauseRequest');
 		this._prevDebugSequence = 'pauseRequest';
 		this.workunit.debugPause().then(debugResponse => {
-			this.wuMonitor.refresh();
+			this.workunit.refresh();
 		});
 		this.sendResponse(response);
 		log('PauseResponse');

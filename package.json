@@ -35,10 +35,10 @@
         "vscode-debugprotocol": "~1.14.0",
         "console-stamp": "~0.2.4",
         "semver": "~5.3.0",
-        "request": "~2.78.0",
         "tmp": "~0.0.30",
         "xml2js": "~0.4.17",
-        "opn": "4.0.2"
+        "opn": "4.0.2",
+        "xmldom": "~0.1.27"
     },
     "devDependencies": {
         "typescript": "~2.1.5",
