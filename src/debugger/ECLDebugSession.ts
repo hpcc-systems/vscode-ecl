@@ -3,7 +3,7 @@ import {
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
 } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { GraphItem, IEventListenerHandle, Workunit, WUAction, XGMMLGraph } from "../../hpcc-platform-comms/src/index";
+import { GraphItem, IEventListenerHandle, WsWorkunits, WsTopology, Workunit, WUAction, XGMMLGraph, XHRPostTransport } from "../../hpcc-platform-comms/src/index";
 import { locateAllClientTools, locateClientTools } from "../files/clientTools";
 import os = require("os");
 
@@ -23,6 +23,7 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
     port: number;
     rejectUnauthorized: boolean;
     targetCluster: string;
+    eclccPath: string;
     eclccArgs: string[];
     includeFolders: string;
     legacyMode: LaunchLegacyMode;
@@ -40,6 +41,7 @@ export interface LaunchRequestArgumentsEx extends DebugProtocol.LaunchRequestArg
     port: number;
     rejectUnauthorized: boolean;
     targetCluster: string;
+    eclccPath: string;
     eclccArgs: string[];
     includeFolders: string[];
     legacyMode: boolean;
@@ -145,6 +147,7 @@ export class ECLDebugSession extends DebugSession {
             port: args.port,
             rejectUnauthorized: args.rejectUnauthorized || false,
             targetCluster: args.targetCluster,
+            eclccPath: args.eclccPath ? args.eclccPath : "",
             eclccArgs: args.eclccArgs ? args.eclccArgs : [],
             includeFolders: args.includeFolders ? args.includeFolders.split(",") : [],
             legacyMode: args.legacyMode === "true" ? true : false,
@@ -153,16 +156,20 @@ export class ECLDebugSession extends DebugSession {
             password: args.password || ""
         };
         this.sendEvent(new OutputEvent("Locating Client Tools." + os.EOL));
-        locateClientTools("", this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders, this.launchRequestArgs.legacyMode).then((clientTools) => {
+        locateClientTools(this.launchRequestArgs.eclccPath, this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders, this.launchRequestArgs.legacyMode).then((clientTools) => {
             this.sendEvent(new OutputEvent("Generating archive." + os.EOL));
             return clientTools.createArchive(this.launchRequestArgs.program);
         }).then((archive) => {
             this.sendEvent(new OutputEvent("Creating workunit." + os.EOL));
-            return Workunit.create(`${this.launchRequestArgs.protocol}://${this.launchRequestArgs.serverAddress}:${this.launchRequestArgs.port}`, {
+            let transport = new XHRPostTransport(`${this.launchRequestArgs.protocol}://${this.launchRequestArgs.serverAddress}:${this.launchRequestArgs.port}`, this.launchRequestArgs.user, this.launchRequestArgs.password, this.launchRequestArgs.rejectUnauthorized);
+            let wuConn = new WsWorkunits(transport);
+            let topConn = new WsTopology(transport);
+            let opts = {
                 userID: this.launchRequestArgs.user,
                 userPW: this.launchRequestArgs.password,
                 rejectUnauthorized: this.launchRequestArgs.rejectUnauthorized
-            }).then((wu) => {
+            };
+            return Workunit.create(wuConn, topConn).then((wu) => {
                 return wu.update({ QueryText: archive });
             });
         }).then((workunit) => {
