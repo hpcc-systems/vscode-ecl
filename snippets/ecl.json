@@ -1,117 +1,115 @@
 {
-	".source.ecl": {
-		"import": {
-			"prefix": "im",
-			"body": "IMPORT ${1:module};",
-			"description": "Import a module"
-		},
-		"import with alias": {
-			"prefix": "imas",
-			"body": "IMPORT ${1:module} AS ${2:alias};",
-			"description": "Import a module using an alias"
-		},
-		"enum": {
-			"prefix": "en",
-			"body": "ENUM(${2:type}, Unknown = 0, ${3:name});"
-		},
-		"dataset": {
-			"prefix": "ds",
-			"body": "DATASET([${1:item}], ${2:record});"
-		},
-		"output": {
-			
-		},
-		"record": {
-			"prefix": "rec",
-			"body": [
-				"RECORD",
-				"	${1:type} ${2:name}",
-				"END;"]
-			
-		},
-		"transform": {
-			"prefix": "transform",
-			"body": [
-				"TRANSFORM",
-				"	SELF := ${1:arg}",
-				"END;"
-			]
-		},
-		"inline transform": {
-			"prefix": "inline transform",
-			"body": "TRANSFORM(${1:type}, SELF := LEFT)"
-		},
-		"macro": {
-			"prefix": "macro",
-			"body": [
-				"MACRO",
-				"	// TODO:",
-				"ENDMACRO;"
-			]
-		},
-		"project": {
-			"prefix": "project",
-			"body": "PROJECT(${1:recordSet}, ${2:record})"
-		},
-		"join": {
-			"prefix": "jo",
-			"body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition});"
-		},
-		"join transform": {
-			"prefix": "jot",
-			"body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition}, ${4:transform});"
-		},
-		"if": {
-			"prefix": "if",
-			"body": [
-				"IF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
-			]
-		},
-		"iff": {
-			"prefix": "iff",
-			"body": [
-				"IFF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
-			],
-			"description": "The IFF function performs the same functionality as IF, but ensures that an expression containing complex boolean logic is evaluated exactly as it appears."
-		},
-		"map": {
-			"prefix": "map",
-			"body": [
-				"MAP(${1:firstValue} => ${2:firstReturn},",
-				"	 ${3:secondValue} => ${4:secondReturn},",
-				"	 ${5:elseReturn});"
-			],
-			"description": "The MAP function evaluates the list of expressions and returns the value associated with the first true expression. If none of them match, the elsevalue is returned. MAP may be thought of as an \"IF ... ELSIF ... ELSIF ... ELSE\" type of structure."
-		},
-		"case": {
-			"prefix": "case",
-			"body": [
-				"CASE(${1:expression},",
-				"	  ${2:v1} => ${3:r1},",
-				"     ${3:optionalElseReturn});"			  
-			],
-			"description": "The CASE function evaluates the expression and returns the value whose caseval matches the expression result. If none match, it returns the elsevalue."
-		},
-		"choose": {
-			"prefix": "choose",
-			"body": "CHOOSE(${1:expression},${2:v1}, ${3:v2});",
-			"description": "The CHOOSE function evaluates the expression and returns the value parameter whose ordinal position in the list of parameters corresponds to the result of the expression. If none match, it returns the elsevalue. All values and the elsevalue must be of the same type."
-		},
-		"set": {
-			"prefix": "set",
-			"body": "SET(${1:recordset}, ${2:fieldName})"
-		},
-		"dedup": {
-			"prefix": "dedup",
-			"body": "DEDUP(${1:recordSet});"
-		},
-		"seqential": { 
-			"prefix": "seq",
-			"body": [
-				"SEQUENTIAL(${1:action1},",
-				"			${2:action2},",
-				"			${3:action3});"
-			]
-		}
-	}
+    ".source.ecl": {
+        "import": {
+            "prefix": "im",
+            "body": "IMPORT ${1:module};",
+            "description": "Import a module"
+        },
+        "import with alias": {
+            "prefix": "imas",
+            "body": "IMPORT ${1:module} AS ${2:alias};",
+            "description": "Import a module using an alias"
+        },
+        "enum": {
+            "prefix": "en",
+            "body": "ENUM(${2:type}, Unknown = 0, ${3:name});"
+        },
+        "dataset": {
+            "prefix": "ds",
+            "body": "DATASET([${1:item}], ${2:record});"
+        },
+        "output": {},
+        "Record Structure": {
+            "prefix": "record",
+            "body": [
+                "RECORD",
+                "	${1:type} ${2:name}",
+                "END;"
+            ]
+        },
+        "transform": {
+            "prefix": "transform",
+            "body": [
+                "TRANSFORM",
+                "	SELF := ${1:arg}",
+                "END;"
+            ]
+        },
+        "inline transform": {
+            "prefix": "inline transform",
+            "body": "TRANSFORM(${1:type}, SELF := LEFT)"
+        },
+        "macro": {
+            "prefix": "macro",
+            "body": [
+                "MACRO",
+                "	// TODO:",
+                "ENDMACRO;"
+            ]
+        },
+        "project": {
+            "prefix": "project",
+            "body": "PROJECT(${1:recordSet}, ${2:record})"
+        },
+        "join": {
+            "prefix": "jo",
+            "body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition});"
+        },
+        "join transform": {
+            "prefix": "jot",
+            "body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition}, ${4:transform});"
+        },
+        "if": {
+            "prefix": "if",
+            "body": [
+                "IF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
+            ]
+        },
+        "iff": {
+            "prefix": "iff",
+            "body": [
+                "IFF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
+            ],
+            "description": "The IFF function performs the same functionality as IF, but ensures that an expression containing complex boolean logic is evaluated exactly as it appears."
+        },
+        "map": {
+            "prefix": "map",
+            "body": [
+                "MAP(${1:firstValue} => ${2:firstReturn},",
+                "	 ${3:secondValue} => ${4:secondReturn},",
+                "	 ${5:elseReturn});"
+            ],
+            "description": "The MAP function evaluates the list of expressions and returns the value associated with the first true expression. If none of them match, the elsevalue is returned. MAP may be thought of as an \"IF ... ELSIF ... ELSIF ... ELSE\" type of structure."
+        },
+        "case": {
+            "prefix": "case",
+            "body": [
+                "CASE(${1:expression},",
+                "	  ${2:v1} => ${3:r1},",
+                "     ${3:optionalElseReturn});"
+            ],
+            "description": "The CASE function evaluates the expression and returns the value whose caseval matches the expression result. If none match, it returns the elsevalue."
+        },
+        "choose": {
+            "prefix": "choose",
+            "body": "CHOOSE(${1:expression},${2:v1}, ${3:v2});",
+            "description": "The CHOOSE function evaluates the expression and returns the value parameter whose ordinal position in the list of parameters corresponds to the result of the expression. If none match, it returns the elsevalue. All values and the elsevalue must be of the same type."
+        },
+        "set": {
+            "prefix": "set",
+            "body": "SET(${1:recordset}, ${2:fieldName})"
+        },
+        "dedup": {
+            "prefix": "dedup",
+            "body": "DEDUP(${1:recordSet});"
+        },
+        "seqential": {
+            "prefix": "seq",
+            "body": [
+                "SEQUENTIAL(${1:action1},",
+                "			${2:action2},",
+                "			${3:action3});"
+            ]
+        }
+    }
 }

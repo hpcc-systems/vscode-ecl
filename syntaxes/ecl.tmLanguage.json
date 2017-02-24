@@ -1,208 +1,204 @@
 {
-	"scopeName": "source.ecl",
-	"uuid": "8AE6478E-6717-4D6B-A1B4-0CB197840137",
-	"fileTypes": ["ecl"],
-	"name": "ECL",
-	"patterns": [
-		{
-			"include": "#expression"
-		},
-		{
-			"name": "entity.name.type.ecl",
-			"match": "#\\b(?i)append|break|declare|demangle|end|for|getdatatype|if|inmodule|loop|mangle|onwarning|option|set|stored|uniquename|workunit(?-i)\\b"
-		},
-		{
-			"name": "entity.name.type.ecl",
-			"match": "\\b(?i)real(?-i)(4|8)\\b"
-		},
-		{
-			"name": "entity.name.type.ecl",
-			"match": "\\b(?i)(u?)decimal(\\d+(_\\d+)?)\\b"
-		},
-		{
-			"name": "entity.name.type.ecl",
-			"match": "\\bU(?='.*')"
-		},
-		{
-			"name": "entity.name.type.ecl",
-			"match": "\\b(?i:(integer|unsigned))[1-8]\\b"
-		},
-		{
-			"name": "entity.name.type.ecl",
-			"match": "\\b(?i:(data|string|qstring|varstring|varunicode|unicode))\\d+\\b"
-		},
-		{
-			"name": "entity.name.type.ecl",
-			"match":"\\b(?i:(ascii|big_endian|boolean|data|decimal|ebcdic|grouped|integer|linkcounted|pattern|qstring|real|record|rule|set of|streamed|string|token|udecimal|unicode|unsigned|varstring|varunicode))\\b"
-		},
-		{
-			"name": "entity.other.inherited-class.ecl",
-			"match": "(?i)[A-Za-z_]+(?!=\\bmodule\\()(?=\\))"
-		},
-		{
-			"name": "keyword.other.ecl",
-			"match":"\\b(?i:(and|or|in|not|all|any|as|from|atmost|before|beginc|best|between|case|const|counter|csv|descend|embed|encrypt|end|endc|endembed|endmacro|enum|except|exclusive|expire|export|extend|fail|few|first|flat|full|function|functionmacro|group|heading|hole|ifblock|import|in|joined|keep|keyed|last|left|limit|load|local|locale|lookup|macro|many|maxcount|maxlength|min skew|module|interface|named|nocase|noroot|noscan|nosort|of|only|opt|outer|overwrite|packed|partition|penalty|physicallength|pipe|quote|record|repeat|return|right|rows|scan|self|separator|service|shared|skew|skip|sql|store|terminator|thor|threshold|token|transform|trim|type|unicodeorder|unsorted|validate|virtual|whole|wild|within|xml|xpath|after|cluster|compressed|compression|default|encoding|escape|fileposition|forward|grouped|inner|internal|linkcounted|literal|little_endian|lzw|mofn|multiple|namespace|nocase|wnotrim|noxpath|onfail|overwrite|prefetch|retry|right1|right2|rowset|xpath|scope|smart|soapaction|stable|timelimit|timeout|unordered|unstable|update|use|width|__compressed__))\\b"
-		},
-		{
-			"name": "keyword.other.ecl",
-			"match": "\\b(?i:(module(?=\\(.*\\))))\\b"
-		},
-		{
-			"name": "keyword.control.ecl",
-			"match":"\\b(?i:(import|as|checkpoint|deprecated|failcode|failmessage|failure|global|independent|onwarning|persist|priority|recovery|stored|success|wait|when))\\b"
-		},
-		{
-			"name": "keyword.operator.ecl",
-			"match":"\\b(?i:(:=|and|not|or|in|>|<|<>|/|\\|+|-|=))\\b"
-		},
-		{
-			"name": "support.class.ecl",
-			"match": "\\b(?i:(std).(file|date|str|math|metaphone|metaphone3|uni|audit|blas|system.(debug|email|job|log|thorlib|util|workunit)))\\b"
-		},
-		{
-			"name": "markup.italic.ecl",
-			"match": ":="
-		},
-		{
-			"name": "entity.name.function.ecl",
-			"match": "([A-Za-z_]+)\\s*(\\()",
-			"captures":
-			{
-				"1":
-				{
-					"patterns": [
-						{
-							"include": "#functions"
-						},
-						{
-							"include": "#functions2"
-						}
-					]
-				}
-			}
-		}
-	],
-	"repository": {
-		"functions": {
-			"name": "entity.name.function.ecl",
-			"match": "\\b(?i:(abs|acos|aggregate|allnodes|apply|ascii|asin|asstring|atan|atan2|ave|case|catch|choose|choosen|choosesets|clustersize|combine|correlation|cos|cosh|count|covariance|cron|dataset|dedup|define|denormalize|dictionary|distribute|distributed|distribution|ebcdic|enth|error|evaluate|event|eventextra|eventname|exists|exp|failcode|failmessage|fetch|fromunicode|fromxml|getenv|getisvalid|global|graph|group|hash|hash32|hash64|hashcrc|hashmd5|having|httpcall|httpheader|if|iff|index|intformat|isvalid|iterate|join|keyunicode|length|library|limit|ln|local|log|loop|map|matched|matchlength|matchposition|matchtext|matchunicode|max|merge|mergejoin|min|nofold|nolocal|nonempty|normalize|parse|pipe|power|preload|process|project|pull|random|range|rank|ranked|realformat|recordof|regexfind|regexreplace|regroup|rejected|rollup|round|roundup|row|rowdiff|sample|set|sin|sinh|sizeof|soapcall|sort|sorted|sqrt|stepped|stored|sum|table|tan|tanh|thisnode|topn|tounicode|toxml|transfer|transform|trim|truncate|typeof|ungroup|unicodeorder|variance|which|workunit|xmldecode|xmlencode|xmltext|xmlunicode))\\b"
-		},
-		"functions2": {
-			"name": "entity.name.function.ecl",
-			"match": "\\b(?i:(apply|assert|build|buildindex|evaluate|fail|keydiff|keypatch|loadxml|nothor|notify|output|parallel|sequential|soapcall|wait))\\b"
-		},
-		"expression": {
-			"name": "meta.expression.ecl",
-			"patterns": [
-				{
-					"include": "#comment"
-				},
-				{
-					"include": "#string"
-				},
-				{
-					"include": "#literal"
-				}
-			]
-		},
-		"comment": {
-			"name": "comment.ecl",
-			"patterns": [
-				{
-					"include": "#comment-block-doc"
-				},
-				{
-					"include": "#comment-block"
-				},
-				{
-					"include": "#comment-line"
-				}
-			]
-		},
-		"comment-block": {
-			"begin": "/\\*",
-			"end": "\\*/",
-			"name": "comment.block.ecl"
-		},
-		"comment-block-doc": {
-			"begin": "/\\*\\*(?!/)",
-			"end": "\\*/",
-			"name": "comment.block.documentation.ecl"
-		},
-		"comment-line": {
-			"match": "(//).*$\\n?",
-			"name": "comment.line.ecl"
-		},
-		"string": {
-			"name": "string.ecl",
-			"patterns": [
-				{
-					"include": "#qstring-single"
-				}
-			]
-		},
-		"qstring-single": {
-			"begin": "'",
-			"end": "\\'|(?:[^\\\\\\n]$)",
-			"name": "string.single.ecl",
-			"patterns": [
-				{
-					"include": "#string-character-escape"
-				}
-			]
-		},
-		"string-character-escape": {
-			"match": "\\\\(x\\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)",
-			"name": "constant.character.escape.ecl"
-		},
-		"literal": {
-			"name": "literal.ecl",
-			"patterns": [
-				{
-					"include": "#numeric-literal"
-				},
-				{
-					"include": "#boolean-literal"
-				},
-				{
-					"include": "#array-literal"
-				},
-				{
-					"include": "#self-literal"
-				}
-			]
-		},
-		"numeric-literal": {
-			"match": "\\b(?<=[^$])((0(x|X)[0-9a-fA-F]+)|(0(o|O)[0-7]+)|(0(b|B)(0|1)+)|(([0-9]+(\\.[0-9]+)?))([eE]([+-]?)[0-9]+(\\.[0-9]+)?)?)\\b",
-			"name": "constant.numeric.ecl"
-		},
-		"boolean-literal": {
-			"match": "\\b(?i:(false|true))\\b",
-			"name": "constant.language.boolean.ecl"
-		},
-		"self-literal": {
-			"match": "\\b(?i:(self))\\b",
-			"name": "constant.language.this.ecl"
-		},
-		"array-literal": {
-			"begin": "\\[",
-			"beginCaptures": {
-				"0": {
-					"name": "meta.brace.square.ecl"
-				}
-			},
-			"end": "\\]",
-			"endCaptures": {
-				"0": {
-					"name": "meta.brace.square.ecl"
-				}
-			},
-			"name": "meta.array.literal.ecl",
-			"patterns": [
-				{
-					"include": "#expression"
-				}
-			]
-		}
-	}
+    "scopeName": "source.ecl",
+    "uuid": "8AE6478E-6717-4D6B-A1B4-0CB197840137",
+    "fileTypes": [
+        "ecl"
+    ],
+    "name": "ECL",
+    "patterns": [
+        {
+            "include": "#expression"
+        },
+        {
+            "name": "entity.name.type.ecl",
+            "match": "#\\b(?i)append|break|declare|demangle|end|for|getdatatype|if|inmodule|loop|mangle|onwarning|option|set|stored|uniquename|workunit(?-i)\\b"
+        },
+        {
+            "name": "entity.name.type.ecl",
+            "match": "\\b(?i)real(?-i)(4|8)\\b"
+        },
+        {
+            "name": "entity.name.type.ecl",
+            "match": "\\b(?i)(u?)decimal(\\d+(_\\d+)?)\\b"
+        },
+        {
+            "name": "entity.name.type.ecl",
+            "match": "\\bU(?='.*')"
+        },
+        {
+            "name": "entity.name.type.ecl",
+            "match": "\\b(?i:(integer|unsigned))[1-8]\\b"
+        },
+        {
+            "name": "entity.name.type.ecl",
+            "match": "\\b(?i:(data|string|qstring|varstring|varunicode|unicode))\\d+\\b"
+        },
+        {
+            "name": "entity.name.type.ecl",
+            "match": "\\b(?i:(ascii|big_endian|boolean|data|decimal|ebcdic|grouped|integer|linkcounted|pattern|qstring|real|record|rule|set of|streamed|string|token|udecimal|unicode|unsigned|varstring|varunicode))\\b"
+        },
+        {
+            "name": "entity.other.inherited-class.ecl",
+            "match": "(?i)[A-Za-z_]+(?!=\\bmodule\\()(?=\\))"
+        },
+        {
+            "name": "keyword.other.ecl",
+            "match": "\\b(?i:(and|or|in|not|all|any|as|from|atmost|before|beginc|best|between|case|const|counter|csv|descend|embed|encrypt|end|endc|endembed|endmacro|enum|except|exclusive|expire|export|extend|fail|few|first|flat|full|function|functionmacro|group|heading|hole|ifblock|import|in|joined|keep|keyed|last|left|limit|load|local|locale|lookup|macro|many|maxcount|maxlength|min skew|module|interface|named|nocase|noroot|noscan|nosort|of|only|opt|outer|overwrite|packed|partition|penalty|physicallength|pipe|quote|record|repeat|return|right|rows|scan|self|separator|service|shared|skew|skip|sql|store|terminator|thor|threshold|token|transform|trim|type|unicodeorder|unsorted|validate|virtual|whole|wild|within|xml|xpath|after|cluster|compressed|compression|default|encoding|escape|fileposition|forward|grouped|inner|internal|linkcounted|literal|little_endian|lzw|mofn|multiple|namespace|nocase|wnotrim|noxpath|onfail|overwrite|prefetch|retry|right1|right2|rowset|xpath|scope|smart|soapaction|stable|timelimit|timeout|unordered|unstable|update|use|width|__compressed__))\\b"
+        },
+        {
+            "name": "keyword.other.ecl",
+            "match": "\\b(?i:(module(?=\\(.*\\))))\\b"
+        },
+        {
+            "name": "keyword.control.ecl",
+            "match": "\\b(?i:(import|as|checkpoint|deprecated|failcode|failmessage|failure|global|independent|onwarning|persist|priority|recovery|stored|success|wait|when))\\b"
+        },
+        {
+            "name": "keyword.operator.ecl",
+            "match": "\\b(?i:(:=|and|not|or|in|>|<|<>|/|\\|+|-|=))\\b"
+        },
+        {
+            "name": "support.class.ecl",
+            "match": "\\b(?i:(std).(file|date|str|math|metaphone|metaphone3|uni|audit|blas|system.(debug|email|job|log|thorlib|util|workunit)))\\b"
+        },
+        {
+            "name": "entity.name.function.ecl",
+            "match": "([A-Za-z_]+)\\s*(\\()",
+            "captures": {
+                "1": {
+                    "patterns": [
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#functions2"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "repository": {
+        "functions": {
+            "name": "entity.name.function.ecl",
+            "match": "\\b(?i:(abs|acos|aggregate|allnodes|apply|ascii|asin|asstring|atan|atan2|ave|case|catch|choose|choosen|choosesets|clustersize|combine|correlation|cos|cosh|count|covariance|cron|dataset|dedup|define|denormalize|dictionary|distribute|distributed|distribution|ebcdic|enth|error|evaluate|event|eventextra|eventname|exists|exp|failcode|failmessage|fetch|fromunicode|fromxml|getenv|getisvalid|global|graph|group|hash|hash32|hash64|hashcrc|hashmd5|having|httpcall|httpheader|if|iff|index|intformat|isvalid|iterate|join|keyunicode|length|library|limit|ln|local|log|loop|map|matched|matchlength|matchposition|matchtext|matchunicode|max|merge|mergejoin|min|nofold|nolocal|nonempty|normalize|parse|pipe|power|preload|process|project|pull|random|range|rank|ranked|realformat|recordof|regexfind|regexreplace|regroup|rejected|rollup|round|roundup|row|rowdiff|sample|set|sin|sinh|sizeof|soapcall|sort|sorted|sqrt|stepped|stored|sum|table|tan|tanh|thisnode|topn|tounicode|toxml|transfer|transform|trim|truncate|typeof|ungroup|unicodeorder|variance|which|workunit|xmldecode|xmlencode|xmltext|xmlunicode))\\b"
+        },
+        "functions2": {
+            "name": "entity.name.function.ecl",
+            "match": "\\b(?i:(apply|assert|build|buildindex|evaluate|fail|keydiff|keypatch|loadxml|nothor|notify|output|parallel|sequential|soapcall|wait))\\b"
+        },
+        "expression": {
+            "name": "meta.expression.ecl",
+            "patterns": [
+                {
+                    "include": "#comment"
+                },
+                {
+                    "include": "#string"
+                },
+                {
+                    "include": "#literal"
+                }
+            ]
+        },
+        "comment": {
+            "name": "comment.ecl",
+            "patterns": [
+                {
+                    "include": "#comment-block-doc"
+                },
+                {
+                    "include": "#comment-block"
+                },
+                {
+                    "include": "#comment-line"
+                }
+            ]
+        },
+        "comment-block": {
+            "begin": "/\\*",
+            "end": "\\*/",
+            "name": "comment.block.ecl"
+        },
+        "comment-block-doc": {
+            "begin": "/\\*\\*(?!/)",
+            "end": "\\*/",
+            "name": "comment.block.documentation.ecl"
+        },
+        "comment-line": {
+            "match": "(//).*$\\n?",
+            "name": "comment.line.ecl"
+        },
+        "string": {
+            "name": "string.ecl",
+            "patterns": [
+                {
+                    "include": "#qstring-single"
+                }
+            ]
+        },
+        "qstring-single": {
+            "begin": "'",
+            "end": "\\'|(?:[^\\\\\\n]$)",
+            "name": "string.single.ecl",
+            "patterns": [
+                {
+                    "include": "#string-character-escape"
+                }
+            ]
+        },
+        "string-character-escape": {
+            "match": "\\\\(x\\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)",
+            "name": "constant.character.escape.ecl"
+        },
+        "literal": {
+            "name": "literal.ecl",
+            "patterns": [
+                {
+                    "include": "#numeric-literal"
+                },
+                {
+                    "include": "#boolean-literal"
+                },
+                {
+                    "include": "#array-literal"
+                },
+                {
+                    "include": "#self-literal"
+                }
+            ]
+        },
+        "numeric-literal": {
+            "match": "\\b(?<=[^$])((0(x|X)[0-9a-fA-F]+)|(0(o|O)[0-7]+)|(0(b|B)(0|1)+)|(([0-9]+(\\.[0-9]+)?))([eE]([+-]?)[0-9]+(\\.[0-9]+)?)?)\\b",
+            "name": "constant.numeric.ecl"
+        },
+        "boolean-literal": {
+            "match": "\\b(?i:(false|true))\\b",
+            "name": "constant.language.boolean.ecl"
+        },
+        "self-literal": {
+            "match": "\\b(?i:(self))\\b",
+            "name": "constant.language.this.ecl"
+        },
+        "array-literal": {
+            "begin": "\\[",
+            "beginCaptures": {
+                "0": {
+                    "name": "meta.brace.square.ecl"
+                }
+            },
+            "end": "\\]",
+            "endCaptures": {
+                "0": {
+                    "name": "meta.brace.square.ecl"
+                }
+            },
+            "name": "meta.array.literal.ecl",
+            "patterns": [
+                {
+                    "include": "#expression"
+                }
+            ]
+        }
+    }
 }
