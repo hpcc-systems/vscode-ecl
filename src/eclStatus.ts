@@ -1,5 +1,5 @@
+import * as vscode from "vscode";
 import { ECL_MODE } from "./eclMode";
-import vscode = require("vscode");
 
 export let outputChannel = vscode.window.createOutputChannel("ECL");
 

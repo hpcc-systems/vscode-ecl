@@ -1,4 +1,5 @@
-import vscode = require("vscode");
+import * as vscode from "vscode";
+
 import { attachWorkspace, qualifiedIDBoundary } from "./files/ECLMeta";
 
 interface ECLCodeSuggestion {
