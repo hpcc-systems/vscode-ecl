@@ -1,4 +1,4 @@
-import vscode = require("vscode");
+import * as vscode from "vscode";
 
 export function byteOffsetAt(document: vscode.TextDocument, position: vscode.Position): number {
     const offset = document.offsetAt(position);

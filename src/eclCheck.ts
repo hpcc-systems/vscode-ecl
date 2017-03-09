@@ -1,4 +1,4 @@
-import vscode = require("vscode");
+import * as vscode from "vscode";
 import { outputChannel } from "./eclStatus";
 import { IECLError, locateClientTools } from "./files/clientTools";
 

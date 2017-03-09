@@ -1,3 +1,0 @@
-[submodule "hpcc-platform-comms"]
-	path = hpcc-platform-comms
-	url = https://github.com/GordonSmith/hpcc-platform-comms.git

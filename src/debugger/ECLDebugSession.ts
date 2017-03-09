@@ -1,14 +1,14 @@
+import { GraphItem, IObserverHandle, Workunit, WsTopology, WsWorkunits, WUAction, XGMMLGraph, XHRPostTransport } from "@schmoo/comms";
 import {
     Breakpoint, ContinuedEvent, DebugSession, Handles, InitializedEvent, OutputEvent, Scope, Source,
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
 } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { GraphItem, IEventListenerHandle, WsWorkunits, WsTopology, Workunit, WUAction, XGMMLGraph, XHRPostTransport } from "../../hpcc-platform-comms/src/index";
 import { locateAllClientTools, locateClientTools } from "../files/clientTools";
 import os = require("os");
 
-require('console-stamp')(console);
-
+// tslint:disable-next-line:no-var-requires
+require("console-stamp")(console);
 
 // This interface should always match the schema found in `package.json`.
 export type LaunchMode = "submit" | "compile" | "debug";
@@ -86,7 +86,7 @@ class WUScope {
 
 export class ECLDebugSession extends DebugSession {
     workunit: Workunit;
-    watchHandle: IEventListenerHandle;
+    watchHandle: IObserverHandle;
     launchRequestArgs: LaunchRequestArgumentsEx;
 
     private prevMonitorMessage: string;
@@ -161,14 +161,9 @@ export class ECLDebugSession extends DebugSession {
             return clientTools.createArchive(this.launchRequestArgs.program);
         }).then((archive) => {
             this.sendEvent(new OutputEvent("Creating workunit." + os.EOL));
-            let transport = new XHRPostTransport(`${this.launchRequestArgs.protocol}://${this.launchRequestArgs.serverAddress}:${this.launchRequestArgs.port}`, this.launchRequestArgs.user, this.launchRequestArgs.password, this.launchRequestArgs.rejectUnauthorized);
-            let wuConn = new WsWorkunits(transport);
-            let topConn = new WsTopology(transport);
-            let opts = {
-                userID: this.launchRequestArgs.user,
-                userPW: this.launchRequestArgs.password,
-                rejectUnauthorized: this.launchRequestArgs.rejectUnauthorized
-            };
+            const transport = new XHRPostTransport(`${this.launchRequestArgs.protocol}://${this.launchRequestArgs.serverAddress}:${this.launchRequestArgs.port}`, this.launchRequestArgs.user, this.launchRequestArgs.password, this.launchRequestArgs.rejectUnauthorized);
+            const wuConn = new WsWorkunits(transport);
+            const topConn = new WsTopology(transport);
             return Workunit.create(wuConn, topConn).then((wu) => {
                 return wu.update({ QueryText: archive });
             });
