@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.14",
+    "version": "0.0.16",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
@@ -32,28 +32,24 @@
     },
     "extensionDependencies": [],
     "dependencies": {
+        "@hpcc-js/comms": "file:///C:\\Users\\gordon\\git\\hpcc-js-comms",
         "console-stamp": "^0.2.5",
-        "es6-promise": "^4.0.5",
-        "hash-sum": "^1.0.2",
-        "@schmoo/comms": "^0.0.18",
         "opn": "^4.0.2",
-        "request": "^2.79.0",
         "semver": "^5.3.0",
         "tmp": "^0.0.31",
         "tslib": "^1.6.0",
-        "vscode-debugadapter": "^1.17.0",
-        "vscode-debugprotocol": "^1.17.0",
-        "xml2js": "^0.4.17",
-        "xmldom": "^0.1.27"
+        "vscode": "^1.1.0",
+        "vscode-debugadapter": "^1.18.0",
+        "vscode-debugprotocol": "^1.18.0",
+        "xml2js": "^0.4.17"
     },
     "devDependencies": {
-        "@types/mocha": "^2.2.39",
-        "@types/node": "^7.0.5",
+        "@types/mocha": "^2.2.40",
+        "@types/node": "^7.0.12",
         "changelog": "^1.0.7",
         "mocha": "^3.2.0",
-        "tslint": "^4.4.2",
-        "typescript": "^2.2.1",
-        "vscode": "^1.0.3"
+        "tslint": "^5.0.0",
+        "typescript": "^2.2.2"
     },
     "engines": {
         "vscode": "^1.5.0"
@@ -115,8 +111,8 @@
         "keybindings": [
             {
                 "command": "ecl.searchTerm",
-                "key": "f1",
-                "mac": "f1",
+                "key": "shift+f1",
+                "mac": "shift+f1",
                 "when": "editorTextFocus"
             },
             {
@@ -127,14 +123,14 @@
             },
             {
                 "command": "ecl.showECLWatch",
-                "key": "f8",
-                "mac": "f8",
+                "key": "shift+f8",
+                "mac": "shift+f8",
                 "when": "editorTextFocus"
             },
             {
                 "command": "ecl.showAllDocumentation",
-                "key": "f12",
-                "mac": "f12"
+                "key": "shift+f12",
+                "mac": "shift+f12"
             }
         ],
         "debuggers": [

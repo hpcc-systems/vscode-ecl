@@ -311,6 +311,9 @@ export function locateClientTools(overridePath: string, cwd: string, includeFold
     }
     return locateAllClientTools().then((allClientToolsCache) => {
         //  TODO find best match  ---
+        if (!allClientToolsCache.length) {
+            throw "Unable to locate ECL CLient Tools.";
+        }
         return allClientToolsCache[0].clone(cwd, includeFolders, legacyMode);
     });
 }
