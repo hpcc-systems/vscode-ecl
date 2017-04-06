@@ -1,4 +1,4 @@
-import { GraphItem, IObserverHandle, Workunit, WsTopology, WsWorkunits, WUAction, XGMMLGraph, XHRPostTransport } from "@schmoo/comms";
+import { GraphItem, IObserverHandle, Workunit, WsTopology, WsWorkunits, WUAction, XGMMLGraph } from "@hpcc-js/comms";
 import {
     Breakpoint, ContinuedEvent, DebugSession, Handles, InitializedEvent, OutputEvent, Scope, Source,
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
@@ -161,10 +161,12 @@ export class ECLDebugSession extends DebugSession {
             return clientTools.createArchive(this.launchRequestArgs.program);
         }).then((archive) => {
             this.sendEvent(new OutputEvent("Creating workunit." + os.EOL));
-            const transport = new XHRPostTransport(`${this.launchRequestArgs.protocol}://${this.launchRequestArgs.serverAddress}:${this.launchRequestArgs.port}`, this.launchRequestArgs.user, this.launchRequestArgs.password, this.launchRequestArgs.rejectUnauthorized);
-            const wuConn = new WsWorkunits(transport);
-            const topConn = new WsTopology(transport);
-            return Workunit.create(wuConn, topConn).then((wu) => {
+            return Workunit.create({
+                baseUrl: `${this.launchRequestArgs.protocol}://${this.launchRequestArgs.serverAddress}:${this.launchRequestArgs.port}`,
+                userID: this.launchRequestArgs.user,
+                password: this.launchRequestArgs.password,
+                rejectUnauthorized: this.launchRequestArgs.rejectUnauthorized
+            }).then((wu) => {
                 return wu.update({ QueryText: archive });
             });
         }).then((workunit) => {
@@ -173,7 +175,6 @@ export class ECLDebugSession extends DebugSession {
             return workunit.submit(this.launchRequestArgs.targetCluster, this.launchRequestArgs.mode, this.launchRequestArgs.resultLimit);
         }).then(() => {
             this.sendEvent(new OutputEvent("Submitted:  " + this.launchRequestArgs.protocol + "://" + this.launchRequestArgs.serverAddress + ":" + this.launchRequestArgs.port + "/?Widget=WUDetailsWidget&Wuid=" + this.workunit.Wuid + os.EOL));
-            console.log("Submitted:  [xxx](" + this.launchRequestArgs.protocol + "://" + this.launchRequestArgs.serverAddress + ":" + this.launchRequestArgs.port + "/?Widget=WUDetailsWidget&Wuid=" + this.workunit.Wuid + ")" + os.EOL);
         }).then(() => {
             this.workunit.watchUntilRunning().then(() => {
                 this.sendEvent(new InitializedEvent());
@@ -272,7 +273,7 @@ export class ECLDebugSession extends DebugSession {
                 for (const clientLine of clientLines) {
                     for (const validBPLine of validBPLocations) {
                         if (validBPLine.line >= clientLine) {
-                            const bp = <DebugProtocol.Breakpoint>new Breakpoint(true, validBPLine.line);
+                            const bp: DebugProtocol.Breakpoint = new Breakpoint(true, validBPLine.line);
                             bp.id = this._breakpointId++;
                             breakpoints.push(bp);
                             this.workunit.debugBreakpointAdd(validBPLine.id + "_0", "edge", "break");
