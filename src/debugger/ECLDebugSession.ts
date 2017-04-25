@@ -1,4 +1,4 @@
-import { GraphItem, IObserverHandle, Workunit, WsTopology, WsWorkunits, WUAction, XGMMLGraph } from "@hpcc-js/comms";
+import { GraphItem, IObserverHandle, Workunit, WsTopology, WsWorkunits, WUAction, Graph } from "@hpcc-js/comms/src/index-node";
 import {
     Breakpoint, ContinuedEvent, DebugSession, Handles, InitializedEvent, OutputEvent, Scope, Source,
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable

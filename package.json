@@ -32,7 +32,7 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "file:///C:\\Users\\gordon\\git\\hpcc-js-comms",
+        "@hpcc-js/comms": "file:///C:\\Users\\gordon\\git\\hpcc-js\\hpcc-js-comms",
         "console-stamp": "^0.2.5",
         "opn": "^4.0.2",
         "semver": "^5.3.0",
