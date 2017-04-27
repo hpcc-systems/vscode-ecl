@@ -1,351 +1,351 @@
 {
-    "name": "ecl",
-    "version": "0.0.16",
-    "publisher": "GordonSmith",
-    "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
-    "author": {
-        "name": "HPCC Systems"
-    },
-    "icon": "images/eclIcon.png",
-    "categories": [
-        "Languages",
-        "Snippets",
-        "Linters",
-        "Debuggers"
+  "name": "ecl",
+  "version": "0.0.16",
+  "publisher": "GordonSmith",
+  "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
+  "author": {
+    "name": "HPCC Systems"
+  },
+  "icon": "images/eclIcon.png",
+  "categories": [
+    "Languages",
+    "Snippets",
+    "Linters",
+    "Debuggers"
+  ],
+  "galleryBanner": {
+    "color": "#CFB69A",
+    "theme": "light"
+  },
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hpcc-systems/vscode-ecl.git"
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test",
+    "lint": "node ./node_modules/tslint/bin/tslint ./src/*.ts ./src/serverAdapter/*.ts ./test/*.ts",
+    "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/GordonSmith/vscode-ecl all --markdown"
+  },
+  "extensionDependencies": [],
+  "dependencies": {
+    "console-stamp": "^0.2.5",
+    "d3-time-format": "~2.0.5",
+    "opn": "^4.0.2",
+    "semver": "^5.3.0",
+    "tmp": "^0.0.31",
+    "tslib": "^1.6.0",
+    "vscode": "^1.1.0",
+    "vscode-debugadapter": "^1.18.0",
+    "vscode-debugprotocol": "^1.18.0",
+    "xmldom": "^0.1.27"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.40",
+    "@types/node": "^7.0.12",
+    "changelog": "^1.0.7",
+    "mocha": "^3.2.0",
+    "tslint": "^5.0.0",
+    "typescript": "^2.2.2"
+  },
+  "engines": {
+    "vscode": "^1.5.0"
+  },
+  "activationEvents": [
+    "onLanguage:ecl",
+    "onCommand:ecl.test.file"
+  ],
+  "main": "./out/src/eclMain",
+  "contributes": {
+    "languages": [
+      {
+        "id": "ecl",
+        "extensions": [
+          "ecl"
+        ],
+        "aliases": [
+          "ECL",
+          "ecl"
+        ],
+        "configuration": "./ecl.configuration.json"
+      }
     ],
-    "galleryBanner": {
-        "color": "#CFB69A",
-        "theme": "light"
-    },
-    "private": true,
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/hpcc-systems/vscode-ecl.git"
-    },
-    "scripts": {
-        "vscode:prepublish": "tsc -p ./",
-        "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test",
-        "lint": "node ./node_modules/tslint/bin/tslint ./src/*.ts ./src/serverAdapter/*.ts ./test/*.ts",
-        "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/GordonSmith/vscode-ecl all --markdown"
-    },
-    "extensionDependencies": [],
-    "dependencies": {
-        "@hpcc-js/comms": "file:///C:\\Users\\gordon\\git\\hpcc-js\\hpcc-js-comms",
-        "console-stamp": "^0.2.5",
-        "opn": "^4.0.2",
-        "semver": "^5.3.0",
-        "tmp": "^0.0.31",
-        "tslib": "^1.6.0",
-        "vscode": "^1.1.0",
-        "vscode-debugadapter": "^1.18.0",
-        "vscode-debugprotocol": "^1.18.0",
-        "xml2js": "^0.4.17"
-    },
-    "devDependencies": {
-        "@types/mocha": "^2.2.40",
-        "@types/node": "^7.0.12",
-        "changelog": "^1.0.7",
-        "mocha": "^3.2.0",
-        "tslint": "^5.0.0",
-        "typescript": "^2.2.2"
-    },
-    "engines": {
-        "vscode": "^1.5.0"
-    },
-    "activationEvents": [
-        "onLanguage:ecl",
-        "onCommand:ecl.test.file"
+    "grammars": [
+      {
+        "language": "ecl",
+        "scopeName": "source.ecl",
+        "path": "./syntaxes/ecl.tmLanguage.json"
+      }
     ],
-    "main": "./out/src/eclMain",
-    "contributes": {
-        "languages": [
-            {
-                "id": "ecl",
-                "extensions": [
-                    "ecl"
-                ],
-                "aliases": [
-                    "ECL",
-                    "ecl"
-                ],
-                "configuration": "./ecl.configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "ecl",
-                "scopeName": "source.ecl",
-                "path": "./syntaxes/ecl.tmLanguage.json"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "ecl",
-                "path": "./snippets/ecl.json"
-            }
-        ],
-        "commands": [
-            {
-                "command": "ecl.checkSyntax",
-                "title": "ECL: Check Syntax",
-                "description": "Save + check syntax of current file."
-            },
-            {
-                "command": "ecl.showECLWatch",
-                "title": "ECL: Show Workunits",
-                "description": "Show workunits associated with current file."
-            },
-            {
-                "command": "ecl.showAllDocumentation",
-                "title": "ECL: Open documentation in default browser.",
-                "description": "Visit the main documentation on HPCC Systems."
-            },
-            {
-                "command": "ecl.searchTerm",
-                "title": "ECL: Search the currently selected term.",
-                "description": "Utilises the HPCC Search functionality on the website for documentation."
-            }
-        ],
-        "keybindings": [
-            {
-                "command": "ecl.searchTerm",
-                "key": "shift+f1",
-                "mac": "shift+f1",
-                "when": "editorTextFocus"
-            },
-            {
-                "command": "ecl.checkSyntax",
-                "key": "f7",
-                "mac": "f7",
-                "when": "editorTextFocus"
-            },
-            {
-                "command": "ecl.showECLWatch",
-                "key": "shift+f8",
-                "mac": "shift+f8",
-                "when": "editorTextFocus"
-            },
-            {
-                "command": "ecl.showAllDocumentation",
-                "key": "shift+f12",
-                "mac": "shift+f12"
-            }
-        ],
-        "debuggers": [
-            {
-                "type": "ecl",
-                "label": "ECL",
-                "enableBreakpointsFor": {
-                    "languageIds": [
-                        "ecl"
-                    ]
-                },
-                "program": "./out/src/debugger/ECLDebug.js",
-                "runtime": "node",
-                "configurationAttributes": {
-                    "launch": {
-                        "required": [
-                            "workspace",
-                            "serverAddress",
-                            "protocol",
-                            "port",
-                            "targetCluster"
-                        ],
-                        "properties": {
-                            "mode": {
-                                "type": "string",
-                                "enum": [
-                                    "submit",
-                                    "compile",
-                                    "debug"
-                                ],
-                                "default": "submit"
-                            },
-                            "workspace": {
-                                "type": "string",
-                                "description": "Workspace relative path to the program folder (or any file within that folder) when in 'debug' or 'test' mode, and to the pre-built binary file to debug in 'exec' mode.",
-                                "default": "${workspaceRoot}"
-                            },
-                            "program": {
-                                "default": "${file}"
-                            },
-                            "serverAddress": {
-                                "type": "string",
-                                "description": "Server IP/Domain address.",
-                                "default": "127.0.0.1"
-                            },
-                            "protocol": {
-                                "type": "string",
-                                "description": "Server protocol (http or https).",
-                                "enum": [
-                                    "http",
-                                    "https"
-                                ],
-                                "default": "http"
-                            },
-                            "port": {
-                                "type": "number",
-                                "description": "The WsWorkunits port.",
-                                "default": 8010
-                            },
-                            "rejectUnauthorized": {
-                                "type": "boolean",
-                                "description": "Reject unauthorized calls e.g. SSL certificate errors.",
-                                "default": false
-                            },
-                            "targetCluster": {
-                                "type": "string",
-                                "description": "Target cluster.",
-                                "default": "hthor"
-                            },
-                            "eclccPath": {
-                                "type": "string",
-                                "description": "Override eclcc auto detection",
-                                "default": "${config.ecl.eclccPath}"
-                            },
-                            "eclccArgs": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "description": "Build flags, to be passed to the eclcc compiler.",
-                                "default": []
-                            },
-                            "includeFolders": {
-                                "type": "string",
-                                "description": "External folders used by IMPORT",
-                                "default": "${config.ecl.includeFolders}"
-                            },
-                            "legacyMode": {
-                                "type": "string",
-                                "description": "Legacy Mode.",
-                                "default": "${config.ecl.legacyMode}"
-                            },
-                            "resultLimit": {
-                                "type": "number",
-                                "description": "Max result limit for workunit results",
-                                "default": 100
-                            },
-                            "user": {
-                                "type": "string",
-                                "description": "User ID",
-                                "default": ""
-                            },
-                            "password": {
-                                "type": "string",
-                                "description": "User password",
-                                "default": ""
-                            }
-                        }
-                    }
-                },
-                "initialConfigurations": [
-                    {
-                        "name": "localhost-hthor",
-                        "type": "ecl",
-                        "request": "launch",
-                        "mode": "submit",
-                        "workspace": "${workspaceRoot}",
-                        "program": "${file}",
-                        "protocol": "http",
-                        "serverAddress": "localhost",
-                        "port": 8010,
-                        "rejectUnauthorized": false,
-                        "targetCluster": "hthor",
-                        "eclccPath": "${config.ecl.eclccPath}",
-                        "eclccArgs": [],
-                        "includeFolders": "${config.ecl.includeFolders}",
-                        "legacyMode": "${config.ecl.legacyMode}",
-                        "resultLimit": 100,
-                        "user": "",
-                        "password": ""
-                    }
-                ],
-                "configurationSnippets": [
-                    {
-                        "label": "ECL:  localhost-hthor",
-                        "description": "A new configuration to submit ECL to localhost, hthor.",
-                        "body": {
-                            "name": "localhost-hthor-submit",
-                            "type": "ecl",
-                            "request": "launch",
-                            "mode": "submit",
-                            "workspace": "^\"\\${workspaceRoot}\"",
-                            "program": "^\"\\${file}\"",
-                            "protocol": "http",
-                            "serverAddress": "localhost",
-                            "port": 8010,
-                            "rejectUnauthorized": false,
-                            "targetCluster": "hthor",
-                            "eclccPath": "${config.ecl.eclccPath}",
-                            "eclccArgs": [],
-                            "includeFolders": "^\"\\${config.ecl.includeFolders}\"",
-                            "legacyMode": "^\"\\${config.ecl.legacyMode}\"",
-                            "resultLimit": 100,
-                            "user": "",
-                            "password": ""
-                        }
-                    }
-                ]
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "ECL configuration",
+    "snippets": [
+      {
+        "language": "ecl",
+        "path": "./snippets/ecl.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "ecl.checkSyntax",
+        "title": "ECL: Check Syntax",
+        "description": "Save + check syntax of current file."
+      },
+      {
+        "command": "ecl.showECLWatch",
+        "title": "ECL: Show Workunits",
+        "description": "Show workunits associated with current file."
+      },
+      {
+        "command": "ecl.showAllDocumentation",
+        "title": "ECL: Open documentation in default browser.",
+        "description": "Visit the main documentation on HPCC Systems."
+      },
+      {
+        "command": "ecl.searchTerm",
+        "title": "ECL: Search the currently selected term.",
+        "description": "Utilises the HPCC Search functionality on the website for documentation."
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "ecl.searchTerm",
+        "key": "shift+f1",
+        "mac": "shift+f1",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "ecl.checkSyntax",
+        "key": "f7",
+        "mac": "f7",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "ecl.showECLWatch",
+        "key": "shift+f8",
+        "mac": "shift+f8",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "ecl.showAllDocumentation",
+        "key": "shift+f12",
+        "mac": "shift+f12"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "ecl",
+        "label": "ECL",
+        "enableBreakpointsFor": {
+          "languageIds": [
+            "ecl"
+          ]
+        },
+        "program": "./out/src/debugger/ECLDebug.js",
+        "runtime": "node",
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "workspace",
+              "serverAddress",
+              "protocol",
+              "port",
+              "targetCluster"
+            ],
             "properties": {
-                "ecl.syntaxCheckOnSave": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Run 'eclcc -fsytnax' on save."
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "submit",
+                  "compile",
+                  "debug"
+                ],
+                "default": "submit"
+              },
+              "workspace": {
+                "type": "string",
+                "description": "Workspace relative path to the program folder (or any file within that folder) when in 'debug' or 'test' mode, and to the pre-built binary file to debug in 'exec' mode.",
+                "default": "${workspaceRoot}"
+              },
+              "program": {
+                "default": "${file}"
+              },
+              "serverAddress": {
+                "type": "string",
+                "description": "Server IP/Domain address.",
+                "default": "127.0.0.1"
+              },
+              "protocol": {
+                "type": "string",
+                "description": "Server protocol (http or https).",
+                "enum": [
+                  "http",
+                  "https"
+                ],
+                "default": "http"
+              },
+              "port": {
+                "type": "number",
+                "description": "The WsWorkunits port.",
+                "default": 8010
+              },
+              "rejectUnauthorized": {
+                "type": "boolean",
+                "description": "Reject unauthorized calls e.g. SSL certificate errors.",
+                "default": false
+              },
+              "targetCluster": {
+                "type": "string",
+                "description": "Target cluster.",
+                "default": "hthor"
+              },
+              "eclccPath": {
+                "type": "string",
+                "description": "Override eclcc auto detection",
+                "default": "${config.ecl.eclccPath}"
+              },
+              "eclccArgs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
                 },
-                "ecl.includeFolders": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "default": [],
-                    "description": "External folders use by IMPORT"
-                },
-                "ecl.eclccPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Override eclcc auto detection"
-                },
-                "ecl.legacyMode": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Add '-legacy' arguement to eclcc."
-                },
-                "ecl.defaultServer": {
-                    "type": "string",
-                    "description": "Default Server"
-                },
-                "ecl.servers": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "title": "Server",
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "description": "Server Name"
-                            },
-                            "address": {
-                                "type": "string",
-                                "description": "Server Address"
-                            },
-                            "port": {
-                                "type": "number",
-                                "description": "Server Port"
-                            }
-                        }
-                    },
-                    "default": [],
-                    "description": "HPCC Servers"
-                }
+                "description": "Build flags, to be passed to the eclcc compiler.",
+                "default": []
+              },
+              "includeFolders": {
+                "type": "string",
+                "description": "External folders used by IMPORT",
+                "default": "${config.ecl.includeFolders}"
+              },
+              "legacyMode": {
+                "type": "string",
+                "description": "Legacy Mode.",
+                "default": "${config.ecl.legacyMode}"
+              },
+              "resultLimit": {
+                "type": "number",
+                "description": "Max result limit for workunit results",
+                "default": 100
+              },
+              "user": {
+                "type": "string",
+                "description": "User ID",
+                "default": ""
+              },
+              "password": {
+                "type": "string",
+                "description": "User password",
+                "default": ""
+              }
             }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "name": "localhost-hthor",
+            "type": "ecl",
+            "request": "launch",
+            "mode": "submit",
+            "workspace": "${workspaceRoot}",
+            "program": "${file}",
+            "protocol": "http",
+            "serverAddress": "localhost",
+            "port": 8010,
+            "rejectUnauthorized": false,
+            "targetCluster": "hthor",
+            "eclccPath": "${config.ecl.eclccPath}",
+            "eclccArgs": [],
+            "includeFolders": "${config.ecl.includeFolders}",
+            "legacyMode": "${config.ecl.legacyMode}",
+            "resultLimit": 100,
+            "user": "",
+            "password": ""
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "ECL:  localhost-hthor",
+            "description": "A new configuration to submit ECL to localhost, hthor.",
+            "body": {
+              "name": "localhost-hthor-submit",
+              "type": "ecl",
+              "request": "launch",
+              "mode": "submit",
+              "workspace": "^\"\\${workspaceRoot}\"",
+              "program": "^\"\\${file}\"",
+              "protocol": "http",
+              "serverAddress": "localhost",
+              "port": 8010,
+              "rejectUnauthorized": false,
+              "targetCluster": "hthor",
+              "eclccPath": "${config.ecl.eclccPath}",
+              "eclccArgs": [],
+              "includeFolders": "^\"\\${config.ecl.includeFolders}\"",
+              "legacyMode": "^\"\\${config.ecl.legacyMode}\"",
+              "resultLimit": 100,
+              "user": "",
+              "password": ""
+            }
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "ECL configuration",
+      "properties": {
+        "ecl.syntaxCheckOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run 'eclcc -fsytnax' on save."
+        },
+        "ecl.includeFolders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "External folders use by IMPORT"
+        },
+        "ecl.eclccPath": {
+          "type": "string",
+          "default": "",
+          "description": "Override eclcc auto detection"
+        },
+        "ecl.legacyMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Add '-legacy' arguement to eclcc."
+        },
+        "ecl.defaultServer": {
+          "type": "string",
+          "description": "Default Server"
+        },
+        "ecl.servers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Server",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Server Name"
+              },
+              "address": {
+                "type": "string",
+                "description": "Server Address"
+              },
+              "port": {
+                "type": "number",
+                "description": "Server Port"
+              }
+            }
+          },
+          "default": [],
+          "description": "HPCC Servers"
         }
+      }
     }
+  }
 }

@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
-
-import { attachWorkspace, qualifiedIDBoundary } from "./files/ECLMeta";
+import { attachWorkspace, qualifiedIDBoundary } from "../hpcc-js-comms/src/index-node";
 
 interface ECLCodeSuggestion {
     class: string;

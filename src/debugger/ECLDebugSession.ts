@@ -1,10 +1,9 @@
-import { GraphItem, IObserverHandle, Workunit, WsTopology, WsWorkunits, WUAction, Graph } from "@hpcc-js/comms/src/index-node";
 import {
     Breakpoint, ContinuedEvent, DebugSession, Handles, InitializedEvent, OutputEvent, Scope, Source,
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
 } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { locateAllClientTools, locateClientTools } from "../files/clientTools";
+import { Graph, IGraphItem, IObserverHandle, locateAllClientTools, locateClientTools, logger, Workunit, WsTopology, WsWorkunits, WUAction } from "../../hpcc-js-comms/src/index-node";
 import os = require("os");
 
 // tslint:disable-next-line:no-var-requires
@@ -67,9 +66,9 @@ function logError(msg?: any, ...args) {
 */
 
 class WUStack {
-    graphItem: GraphItem;
+    graphItem: IGraphItem;
 
-    constructor(graphItem: GraphItem) {
+    constructor(graphItem: IGraphItem) {
         this.graphItem = graphItem;
     }
 }
@@ -167,7 +166,7 @@ export class ECLDebugSession extends DebugSession {
                 password: this.launchRequestArgs.password,
                 rejectUnauthorized: this.launchRequestArgs.rejectUnauthorized
             }).then((wu) => {
-                return wu.update({ QueryText: archive });
+                return wu.update({ QueryText: archive.content });
             });
         }).then((workunit) => {
             this.workunit = workunit;
@@ -201,7 +200,7 @@ export class ECLDebugSession extends DebugSession {
         }).then(() => {
             return this.workunit.refresh();
         }).catch((e) => {
-            console.log(`Error disconnecting workunit`);
+            logger.error("Error disconnecting workunit");
         });
     }
 
@@ -269,7 +268,7 @@ export class ECLDebugSession extends DebugSession {
             }).then((validBPLocations: any) => {
                 // verify breakpoint locations
                 const clientLines = args.lines;
-                const breakpoints = new Array<Breakpoint>();
+                const breakpoints: Breakpoint[] = [];
                 for (const clientLine of clientLines) {
                     for (const validBPLine of validBPLocations) {
                         if (validBPLine.line >= clientLine) {
@@ -281,6 +280,7 @@ export class ECLDebugSession extends DebugSession {
                         }
                     }
                 }
+                logger.debug(this._breakPoints);
                 this._breakPoints.set(path, breakpoints);
 
                 // send back the actual breakpoint positions
@@ -307,37 +307,37 @@ export class ECLDebugSession extends DebugSession {
         this.sendResponse(response);
     }
 
-    protected pushStackFrame(stackFrames: StackFrame[], graphItem: GraphItem, def?: any): void {
+    protected pushStackFrame(stackFrames: StackFrame[], graphItem: IGraphItem, def?: any): void {
         const id: number = this._stackFrameHandles.create(new WUStack(graphItem));
         if (def) {
-            stackFrames.push(new StackFrame(id, graphItem.id, new Source("builder", def.file), def.line, def.col));
+            stackFrames.push(new StackFrame(id, graphItem.id(), new Source("builder", def.file), def.line, def.col));
         } else {
-            stackFrames.push(new StackFrame(id, graphItem.id));
+            stackFrames.push(new StackFrame(id, graphItem.id()));
         }
     }
 
-    protected createStackTrace(graph: XGMMLGraph, type: string, id: string, debugState, stackFrames: StackFrame[]): void {
+    protected createStackTrace(graph: Graph, type: string, id: string, debugState, stackFrames: StackFrame[]): void {
         switch (type) {
             case "edge":
-                const edge = graph.allEdges[id];
+                const edge = graph.allEdge(id);
                 this.pushStackFrame(stackFrames, edge, edge.getNearestDefinition());
-                this.createStackTrace(graph, "vertex", edge.sourceID, debugState, stackFrames);
+                this.createStackTrace(graph, "vertex", edge.sourceID(), debugState, stackFrames);
                 break;
             case "vertex":
-                const vertex = graph.allVertices[id];
+                const vertex = graph.allVertex(id);
                 this.pushStackFrame(stackFrames, vertex, vertex.getNearestDefinition());
                 if (vertex.parent) {
-                    this.createStackTrace(graph, "subgraph", vertex.parent.id, debugState, stackFrames);
+                    this.createStackTrace(graph, "subgraph", vertex.parent().id(), debugState, stackFrames);
                 } else {
                     this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                 }
                 break;
             case "subgraph":
-                const subgraph = graph.allSubgraphs[id];
+                const subgraph = graph.allSubgraph(id);
                 if (subgraph) {
                     this.pushStackFrame(stackFrames, subgraph, subgraph.getNearestDefinition(debugState.state === "graph end" || debugState.state === "finished"));
-                    if (subgraph.parent) {
-                        this.createStackTrace(graph, "subgraph", subgraph.parent.id, debugState, stackFrames);
+                    if (subgraph.parent()) {
+                        this.createStackTrace(graph, "subgraph", subgraph.parent().id(), debugState, stackFrames);
                     } else {
                         this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                     }
@@ -453,7 +453,7 @@ export class ECLDebugSession extends DebugSession {
                 });
                 return;
             case "results":
-                this.workunit.debugPrint(wuScope.stack.graphItem.id, 0, 10).then((results) => {
+                this.workunit.debugPrint(wuScope.stack.graphItem.id(), 0, 10).then((results) => {
                     variables = results.map((result, idx) => {
                         const summary = [];
                         const values: any = {};
