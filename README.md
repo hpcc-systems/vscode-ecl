@@ -25,7 +25,7 @@ The following Visual Studio Code settings are available for the ECL extension.  
   // Run 'eclcc -fsytnax' on save.
   "ecl.syntaxCheckOnSave": true,
 
-  // External folders use by IMPORT
+  // External folders used by IMPORT
   "ecl.includeFolders": [],
 
   // Override eclcc auto detection
@@ -52,10 +52,10 @@ Submitting or debugging ECL using VS-Code requires specificying the target envir
     "port": 8010,
     "rejectUnauthorized": false,
     "targetCluster": "hthor",
-    "eclccPath": "${config.ecl.eclccPath}",
+    "eclccPath": "${config:ecl.eclccPath}",
     "eclccArgs": [],
-    "includeFolders": "${config.ecl.includeFolders}",
-    "legacyMode": "${config.ecl.legacyMode}",
+    "includeFolders": "${config:ecl.includeFolders}",
+    "legacyMode": "${config:ecl.legacyMode}",
     "resultLimit": 100,
     "user": "",
     "password": ""
