@@ -20,7 +20,8 @@
                 "--extensionDevelopmentPath=${workspaceRoot}"
             ],
             "outFiles": [
-                "${workspaceRoot}/out/**/*.js"
+                "${workspaceRoot}/out/src/**/*.js",
+                "${workspaceRoot}/out/hpcc-js-comms/**/*.js"
             ],
             "stopOnEntry": false,
             "sourceMaps": true
@@ -35,27 +36,11 @@
                 "--server=4711"
             ],
             "outFiles": [
-                "${workspaceRoot}/out/**/*.js"
+                "${workspaceRoot}/out/src/**/*.js",
+                "${workspaceRoot}/out/hpcc-js-comms/**/*.js"
             ],
             "sourceMaps": true,
             "cwd": "${workspaceRoot}"
-        },
-        {
-            "name": "Launch Tests",
-            "type": "extensionHost",
-            "request": "launch",
-            "runtimeExecutable": "${execPath}",
-            // the workspace path should be GOPATH
-            "args": [
-                "--extensionDevelopmentPath=${workspaceRoot}",
-                "--extensionTestsPath=${workspaceRoot}/out/test",
-                "env.GOPATH"
-            ],
-            "stopOnEntry": false,
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceRoot}/out/**/*.js"
-            ]
         }
     ]
 }

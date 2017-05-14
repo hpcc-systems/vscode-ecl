@@ -15,7 +15,6 @@ import { LanguageClient, LanguageClientOptions, SettingMonitor, ServerOptions, T
 let diagnosticCollection: vscode.DiagnosticCollection;
 
 export function activate(ctx: vscode.ExtensionContext): void {
-
     const eclConfig = vscode.workspace.getConfiguration("ecl");
     // ctx.subscriptions.push(vscode.languages.registerHoverProvider(ECL_MODE, new ECLHoverProvider()));
     ctx.subscriptions.push(vscode.languages.registerCompletionItemProvider(ECL_MODE, new ECLCompletionItemProvider(), ".", '\"'));
@@ -64,7 +63,7 @@ export function activate(ctx: vscode.ExtensionContext): void {
     }
 }
 
-function runBuilds(document: vscode.TextDocument, goConfig: vscode.WorkspaceConfiguration) {
+function runBuilds(document: vscode.TextDocument, eclConfig: vscode.WorkspaceConfiguration) {
 
     function mapSeverityToVSCodeSeverity(sev: string) {
         switch (sev) {
@@ -79,7 +78,7 @@ function runBuilds(document: vscode.TextDocument, goConfig: vscode.WorkspaceConf
     }
 
     const uri = document.uri;
-    check(uri.fsPath, goConfig).then((errors) => {
+    check(uri.fsPath, eclConfig).then((errors) => {
         diagnosticCollection.clear();
 
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();

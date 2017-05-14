@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.16",
+    "version": "0.0.18",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
@@ -32,24 +32,24 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "file:///C:\\Users\\gordon\\git\\hpcc-js-comms",
         "console-stamp": "^0.2.5",
-        "opn": "^4.0.2",
+        "d3-time-format": "~2.0.5",
+        "opn": "^5.0.0",
         "semver": "^5.3.0",
         "tmp": "^0.0.31",
-        "tslib": "^1.6.0",
+        "tslib": "^1.7.0",
         "vscode": "^1.1.0",
-        "vscode-debugadapter": "^1.18.0",
-        "vscode-debugprotocol": "^1.18.0",
-        "xml2js": "^0.4.17"
+        "vscode-debugadapter": "^1.19.0",
+        "vscode-debugprotocol": "^1.19.0",
+        "xmldom": "^0.1.27"
     },
     "devDependencies": {
-        "@types/mocha": "^2.2.40",
-        "@types/node": "^7.0.12",
+        "@types/mocha": "^2.2.41",
+        "@types/node": "^7.0.18",
         "changelog": "^1.0.7",
-        "mocha": "^3.2.0",
-        "tslint": "^5.0.0",
-        "typescript": "^2.2.2"
+        "mocha": "^3.3.0",
+        "tslint": "^5.2.0",
+        "typescript": "^2.3.2"
     },
     "engines": {
         "vscode": "^1.5.0"
@@ -203,7 +203,7 @@
                             "eclccPath": {
                                 "type": "string",
                                 "description": "Override eclcc auto detection",
-                                "default": "${config.ecl.eclccPath}"
+                                "default": "${config:ecl.eclccPath}"
                             },
                             "eclccArgs": {
                                 "type": "array",
@@ -216,12 +216,12 @@
                             "includeFolders": {
                                 "type": "string",
                                 "description": "External folders used by IMPORT",
-                                "default": "${config.ecl.includeFolders}"
+                                "default": "${config:ecl.includeFolders}"
                             },
                             "legacyMode": {
                                 "type": "string",
                                 "description": "Legacy Mode.",
-                                "default": "${config.ecl.legacyMode}"
+                                "default": "${config:ecl.legacyMode}"
                             },
                             "resultLimit": {
                                 "type": "number",
@@ -254,10 +254,10 @@
                         "port": 8010,
                         "rejectUnauthorized": false,
                         "targetCluster": "hthor",
-                        "eclccPath": "${config.ecl.eclccPath}",
+                        "eclccPath": "${config:ecl.eclccPath}",
                         "eclccArgs": [],
-                        "includeFolders": "${config.ecl.includeFolders}",
-                        "legacyMode": "${config.ecl.legacyMode}",
+                        "includeFolders": "${config:ecl.includeFolders}",
+                        "legacyMode": "${config:ecl.legacyMode}",
                         "resultLimit": 100,
                         "user": "",
                         "password": ""
@@ -279,10 +279,10 @@
                             "port": 8010,
                             "rejectUnauthorized": false,
                             "targetCluster": "hthor",
-                            "eclccPath": "${config.ecl.eclccPath}",
+                            "eclccPath": "^\"\\${config:ecl.eclccPath}\"",
                             "eclccArgs": [],
-                            "includeFolders": "^\"\\${config.ecl.includeFolders}\"",
-                            "legacyMode": "^\"\\${config.ecl.legacyMode}\"",
+                            "includeFolders": "^\"\\${config:ecl.includeFolders}\"",
+                            "legacyMode": "^\"\\${config:ecl.legacyMode}\"",
                             "resultLimit": 100,
                             "user": "",
                             "password": ""

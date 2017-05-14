@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { attachWorkspace, ECLScope, qualifiedIDBoundary } from "./files/ECLMeta";
+import { attachWorkspace, ECLScope, qualifiedIDBoundary } from "../hpcc-js-comms/src/index-node";
 
 export function definitionLocation(document: vscode.TextDocument, position: vscode.Position, includeDocs = true): Promise<ECLScope> {
     return new Promise<ECLScope>((resolve, reject) => {

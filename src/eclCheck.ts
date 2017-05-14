@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
+import { IECLError, locateClientTools } from "../hpcc-js-comms/src/index-node"; //  npm link ../jpcc-js/hpcc-js-comms
 import { outputChannel } from "./eclStatus";
-import { IECLError, locateClientTools } from "./files/clientTools";
 
 export function check(filename: string, eclConfig: vscode.WorkspaceConfiguration): Promise<IECLError[]> {
     outputChannel.clear();

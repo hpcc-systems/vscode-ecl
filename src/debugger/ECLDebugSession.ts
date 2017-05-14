@@ -1,11 +1,13 @@
-import { GraphItem, IObserverHandle, Workunit, WsTopology, WsWorkunits, WUAction, XGMMLGraph } from "@hpcc-js/comms";
 import {
     Breakpoint, ContinuedEvent, DebugSession, Handles, InitializedEvent, OutputEvent, Scope, Source,
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
 } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { locateAllClientTools, locateClientTools } from "../files/clientTools";
+import { Graph, IGraphItem, IObserverHandle, Level, locateAllClientTools, locateClientTools, scopedLogger, Workunit, WsTopology, WsWorkunits, WUAction } from "../../hpcc-js-comms/src/index-node";
 import os = require("os");
+
+const logger = scopedLogger("debugger/ECLDEbugSession.ts");
+logger.pushLevel(Level.debug);
 
 // tslint:disable-next-line:no-var-requires
 require("console-stamp")(console);
@@ -50,26 +52,10 @@ export interface LaunchRequestArgumentsEx extends DebugProtocol.LaunchRequestArg
     password: string;
 }
 
-// Note: Only turn this on when debugging the serverAdapter.
-// See https://github.com/Microsoft/vscode-go/issues/206#issuecomment-194571950
-const DEBUG = true;
-function log(msg?: any, ...args) {
-    if (DEBUG) {
-        console.warn(msg, ...args);
-    }
-}
-/*
-function logError(msg?: any, ...args) {
-	if (DEBUG) {
-		console.error(msg, ...args);
-	}
-}
-*/
-
 class WUStack {
-    graphItem: GraphItem;
+    graphItem: IGraphItem;
 
-    constructor(graphItem: GraphItem) {
+    constructor(graphItem: IGraphItem) {
         this.graphItem = graphItem;
     }
 }
@@ -105,7 +91,7 @@ export class ECLDebugSession extends DebugSession {
     }
 
     protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
-        log("InitializeRequest");
+        logger.debug("InitializeRequest");
         response.body.supportsConditionalBreakpoints = false;
         response.body.supportsHitConditionalBreakpoints = false;
         response.body.supportsFunctionBreakpoints = false;
@@ -120,11 +106,11 @@ export class ECLDebugSession extends DebugSession {
         response.body.supportsConfigurationDoneRequest = true;
 
         this.sendResponse(response);
-        log("InitializeResponse");
+        logger.debug("InitializeResponse");
     }
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
-        log("launchRequest:  " + JSON.stringify(args));
+        logger.debug("launchRequest:  " + JSON.stringify(args));
         let _action: WUAction;
         switch (args.mode) {
             case "compile":
@@ -167,7 +153,7 @@ export class ECLDebugSession extends DebugSession {
                 password: this.launchRequestArgs.password,
                 rejectUnauthorized: this.launchRequestArgs.rejectUnauthorized
             }).then((wu) => {
-                return wu.update({ QueryText: archive });
+                return wu.update({ QueryText: archive.content });
             });
         }).then((workunit) => {
             this.workunit = workunit;
@@ -178,18 +164,18 @@ export class ECLDebugSession extends DebugSession {
         }).then(() => {
             this.workunit.watchUntilRunning().then(() => {
                 this.sendEvent(new InitializedEvent());
-                log("InitializeEvent");
+                logger.debug("InitializeEvent");
                 this.sendEvent(new ThreadEvent("main", 0));
-                log("ThreadEvent");
+                logger.debug("ThreadEvent");
             });
         }).catch((e) => {
             this.sendEvent(new OutputEvent(`Launch failed - ${e}${os.EOL}`));
             this.sendEvent(new TerminatedEvent());
-            log("InitializeEvent");
+            logger.debug("InitializeEvent");
         });
 
         this.sendResponse(response);
-        log("launchResponse");
+        logger.debug("launchResponse");
     }
 
     private disconnectWorkunit() {
@@ -201,12 +187,12 @@ export class ECLDebugSession extends DebugSession {
         }).then(() => {
             return this.workunit.refresh();
         }).catch((e) => {
-            console.log(`Error disconnecting workunit`);
+            logger.error("Error disconnecting workunit");
         });
     }
 
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
-        log("DisconnectRequest");
+        logger.debug("DisconnectRequest");
         this.disconnectWorkunit().then(() => {
             if (this.watchHandle) {
                 this.watchHandle.release();
@@ -214,13 +200,13 @@ export class ECLDebugSession extends DebugSession {
             }
             this.sendEvent(new OutputEvent(`Monitoring end:  ${this.workunit.Wuid}${os.EOL}`));
             delete this.workunit;
-            log("DisconnectResponse");
+            logger.debug("DisconnectResponse");
             super.disconnectRequest(response, args);
         });
     }
 
     protected configurationDoneRequest(response: DebugProtocol.ConfigurationDoneResponse, args: DebugProtocol.ConfigurationDoneArguments): void {
-        log("ConfigurationDoneRequest");
+        logger.debug("ConfigurationDoneRequest");
         this.sendEvent(new OutputEvent(`Monitoring:  ${this.workunit.Wuid}.${os.EOL}`));
         this.watchHandle = this.workunit.watch((changes) => {
             const debugState: any = this.workunit.DebugState;
@@ -234,7 +220,7 @@ export class ECLDebugSession extends DebugSession {
             }
             if (this.workunit.isComplete()) {
                 this.sendEvent(new TerminatedEvent());
-                log("TerminatedEvent");
+                logger.debug("TerminatedEvent");
             }
             if (this._prevDebugSequence !== debugState.sequence) {
                 this._prevDebugSequence = debugState.sequence;
@@ -246,7 +232,7 @@ export class ECLDebugSession extends DebugSession {
                     case "edge":
                     case "node":
                     case "exception":
-                        log("StoppedEvent");
+                        logger.debug("StoppedEvent");
                         this.sendEvent(new StoppedEvent(debugState.state, 0));
                         break;
                     case "debug_running":
@@ -254,14 +240,14 @@ export class ECLDebugSession extends DebugSession {
                     default:
                 }
             }
-            log(`Debugging: ${debugState.state} - ${JSON.stringify(debugState)}${os.EOL}`);
+            logger.debug(`Debugging: ${debugState.state} - ${JSON.stringify(debugState)}${os.EOL}`);
         }, true);
         this.sendResponse(response);
-        log("ConfigurationDoneResponse");
+        logger.debug("ConfigurationDoneResponse");
     }
 
     protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
-        log("SetBreakPointsRequest");
+        logger.debug("SetBreakPointsRequest");
         if (this.workunit.isDebugging()) {
             const path = args.source.path;
             this.workunit.debugDeleteAllBreakpoints().then(() => {
@@ -269,7 +255,7 @@ export class ECLDebugSession extends DebugSession {
             }).then((validBPLocations: any) => {
                 // verify breakpoint locations
                 const clientLines = args.lines;
-                const breakpoints = new Array<Breakpoint>();
+                const breakpoints: Breakpoint[] = [];
                 for (const clientLine of clientLines) {
                     for (const validBPLine of validBPLocations) {
                         if (validBPLine.line >= clientLine) {
@@ -281,6 +267,7 @@ export class ECLDebugSession extends DebugSession {
                         }
                     }
                 }
+                logger.debug(this._breakPoints);
                 this._breakPoints.set(path, breakpoints);
 
                 // send back the actual breakpoint positions
@@ -288,17 +275,17 @@ export class ECLDebugSession extends DebugSession {
                     breakpoints
                 };
                 this.sendResponse(response);
-                log("SetBreakPointsRequest");
+                logger.debug("SetBreakPointsRequest");
             });
         } else {
             this.sendResponse(response);
-            log("SetBreakPointsRequest");
+            logger.debug("SetBreakPointsRequest");
         }
 
     }
 
     protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
-        log("ThreadsRequest");
+        logger.debug("ThreadsRequest");
         const threads = [];
         threads.push(new Thread(0, "main"));
         response.body = {
@@ -307,37 +294,37 @@ export class ECLDebugSession extends DebugSession {
         this.sendResponse(response);
     }
 
-    protected pushStackFrame(stackFrames: StackFrame[], graphItem: GraphItem, def?: any): void {
+    protected pushStackFrame(stackFrames: StackFrame[], graphItem: IGraphItem, def?: any): void {
         const id: number = this._stackFrameHandles.create(new WUStack(graphItem));
         if (def) {
-            stackFrames.push(new StackFrame(id, graphItem.id, new Source("builder", def.file), def.line, def.col));
+            stackFrames.push(new StackFrame(id, graphItem.id(), new Source("builder", def.file), def.line, def.col));
         } else {
-            stackFrames.push(new StackFrame(id, graphItem.id));
+            stackFrames.push(new StackFrame(id, graphItem.id()));
         }
     }
 
-    protected createStackTrace(graph: XGMMLGraph, type: string, id: string, debugState, stackFrames: StackFrame[]): void {
+    protected createStackTrace(graph: Graph, type: string, id: string, debugState, stackFrames: StackFrame[]): void {
         switch (type) {
             case "edge":
-                const edge = graph.allEdges[id];
+                const edge = graph.allEdge(id);
                 this.pushStackFrame(stackFrames, edge, edge.getNearestDefinition());
-                this.createStackTrace(graph, "vertex", edge.sourceID, debugState, stackFrames);
+                this.createStackTrace(graph, "vertex", edge.sourceID(), debugState, stackFrames);
                 break;
             case "vertex":
-                const vertex = graph.allVertices[id];
+                const vertex = graph.allVertex(id);
                 this.pushStackFrame(stackFrames, vertex, vertex.getNearestDefinition());
                 if (vertex.parent) {
-                    this.createStackTrace(graph, "subgraph", vertex.parent.id, debugState, stackFrames);
+                    this.createStackTrace(graph, "subgraph", vertex.parent().id(), debugState, stackFrames);
                 } else {
                     this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                 }
                 break;
             case "subgraph":
-                const subgraph = graph.allSubgraphs[id];
+                const subgraph = graph.allSubgraph(id);
                 if (subgraph) {
                     this.pushStackFrame(stackFrames, subgraph, subgraph.getNearestDefinition(debugState.state === "graph end" || debugState.state === "finished"));
-                    if (subgraph.parent) {
-                        this.createStackTrace(graph, "subgraph", subgraph.parent.id, debugState, stackFrames);
+                    if (subgraph.parent()) {
+                        this.createStackTrace(graph, "subgraph", subgraph.parent().id(), debugState, stackFrames);
                     } else {
                         this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                     }
@@ -353,7 +340,7 @@ export class ECLDebugSession extends DebugSession {
     }
 
     protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): void {
-        log("StackTraceRequest");
+        logger.debug("StackTraceRequest");
         const stackFrames: StackFrame[] = [];
         if (this.workunit.isDebugging()) {
             this.workunit.debugGraph().then((graph) => {
@@ -367,20 +354,20 @@ export class ECLDebugSession extends DebugSession {
                 } else {
                     this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                 }
-                log("StackTraceResponse");
+                logger.debug("StackTraceResponse");
                 response.body = {
                     stackFrames
                 };
                 this.sendResponse(response);
             }).catch((e) => {
-                log("StackTraceResponse");
+                logger.debug("StackTraceResponse");
                 response.body = {
                     stackFrames
                 };
                 this.sendResponse(response);
             });
         } else {
-            log("StackTraceResponse");
+            logger.debug("StackTraceResponse");
             response.body = {
                 stackFrames
             };
@@ -389,7 +376,7 @@ export class ECLDebugSession extends DebugSession {
     }
 
     protected scopesRequest(response: DebugProtocol.ScopesResponse, args: DebugProtocol.ScopesArguments): void {
-        log("ScopesRequest");
+        logger.debug("ScopesRequest");
         const stackFrameScope: WUStack = this._stackFrameHandles.get(args.frameId);
 
         const scopes: Scope[] = [];
@@ -418,11 +405,11 @@ export class ECLDebugSession extends DebugSession {
             scopes
         };
         this.sendResponse(response);
-        log("ScopesResponse");
+        logger.debug("ScopesResponse");
     }
 
     protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void {
-        log("VariablesRequest");
+        logger.debug("VariablesRequest");
         const wuScope = this._variableHandles.get(args.variablesReference);
         let variables = [];
         switch (wuScope.type) {
@@ -453,7 +440,7 @@ export class ECLDebugSession extends DebugSession {
                 });
                 return;
             case "results":
-                this.workunit.debugPrint(wuScope.stack.graphItem.id, 0, 10).then((results) => {
+                this.workunit.debugPrint(wuScope.stack.graphItem.id(), 0, 10).then((results) => {
                     variables = results.map((result, idx) => {
                         const summary = [];
                         const values: any = {};
@@ -484,22 +471,22 @@ export class ECLDebugSession extends DebugSession {
             variables
         };
         this.sendResponse(response);
-        log("VariablesResponse");
+        logger.debug("VariablesResponse");
     }
 
     protected continueRequest(response: DebugProtocol.ContinueResponse): void {
-        log("ContinueRequest");
+        logger.debug("ContinueRequest");
         this.workunit.debugContinue().then((debugResponse) => {
-            log("debugContinue.then");
+            logger.debug("debugContinue.then");
             this.workunit.refresh();
         });
         this.sendEvent(new ContinuedEvent(0));
         this.sendResponse(response);
-        log("ContinueResponse");
+        logger.debug("ContinueResponse");
     }
 
     protected nextRequest(response: DebugProtocol.NextResponse): void {
-        log("NextRequest");
+        logger.debug("NextRequest");
         const debugState: any = this.workunit.DebugState;
         if (debugState.edgeId) {
             this.workunit.debugStep("edge").then(() => {
@@ -519,11 +506,11 @@ export class ECLDebugSession extends DebugSession {
             });
         }
         this.sendResponse(response);
-        log("NextResponse");
+        logger.debug("NextResponse");
     }
 
     protected stepInRequest(response: DebugProtocol.StepInResponse): void {
-        log("StepInRequest");
+        logger.debug("StepInRequest");
         const debugState: any = this.workunit.DebugState;
         if (debugState.edgeId) {
             this.workunit.debugStep("edge").then(() => {
@@ -543,11 +530,11 @@ export class ECLDebugSession extends DebugSession {
             });
         }
         this.sendResponse(response);
-        log("StepInResponse");
+        logger.debug("StepInResponse");
     }
 
     protected stepOutRequest(response: DebugProtocol.StepOutResponse): void {
-        log("StepOutRequest");
+        logger.debug("StepOutRequest");
         const debugState: any = this.workunit.DebugState;
         if (debugState.edgeId) {
             this.workunit.debugStep("graph").then(() => {
@@ -567,21 +554,21 @@ export class ECLDebugSession extends DebugSession {
             });
         }
         this.sendResponse(response);
-        log("StepOutResponse");
+        logger.debug("StepOutResponse");
     }
 
     protected pauseRequest(response: DebugProtocol.PauseResponse, args: DebugProtocol.PauseArguments): void {
-        log("PauseRequest");
+        logger.debug("PauseRequest");
         this._prevDebugSequence = "pauseRequest";
         this.workunit.debugPause().then((debugResponse) => {
             this.workunit.refresh();
         });
         this.sendResponse(response);
-        log("PauseResponse");
+        logger.debug("PauseResponse");
     }
 
     protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void {
-        log("EvaluateRequest");
+        logger.debug("EvaluateRequest");
         this.sendResponse(response);
     }
 }
