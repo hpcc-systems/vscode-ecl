@@ -179,9 +179,10 @@ export class ECLDebugSession extends DebugSession {
     }
 
     private disconnectWorkunit() {
-        if (this.workunit.isComplete()) {
+        if (this.workunit.isComplete() || !this.workunit.isDebugging()) {
             return Promise.resolve();
         }
+        this.sendEvent(new OutputEvent(`Aborting debug session:  ${this.workunit.Wuid}${os.EOL}`));
         return this.workunit.debugQuit().then(() => {
             return this.workunit.abort();
         }).then(() => {
