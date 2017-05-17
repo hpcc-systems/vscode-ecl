@@ -1,11 +1,21 @@
 import * as opn from "opn";
 import * as vscode from "vscode";
+import { Level, logger, Writer } from "../hpcc-js-comms/src/util/logging";
 import { check } from "./eclCheck";
 import { ECLDefinitionProvider } from "./eclDeclaration";
 import { ECL_MODE } from "./eclMode";
 import { showHideStatus } from "./eclStatus";
 import { ECLCompletionItemProvider } from "./eclSuggest";
 import { ECLWatchTextDocumentContentProvider, eclWatchUri } from "./ECLWatch";
+
+class VSCodeWriter implements Writer {
+    eclOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("ECL");
+
+    write(dateTime: string, level: Level, id: string, msg: string) {
+        this.eclOutputChannel.appendLine(`[${dateTime}] ${Level[level].toUpperCase()} ${id}:  ${msg}`);
+    }
+}
+logger.writer(new VSCodeWriter());
 
 /*
 import { workspace, Disposable, ExtensionContext } from 'vscode';

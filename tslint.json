@@ -8,8 +8,9 @@
     "extends": "tslint:recommended",
     "rules": {
         /*
-     * Any rules specified here will override those from the base config we are extending.
-     */
+         * Any rules specified here will override those from the base config we are extending.
+         */
+        "arrow-parens": false,
         "prefer-for-of": true,
         "member-access": false,
         "variable-name": [
