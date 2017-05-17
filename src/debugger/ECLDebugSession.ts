@@ -143,6 +143,7 @@ export class ECLDebugSession extends DebugSession {
         };
         this.sendEvent(new OutputEvent("Locating Client Tools." + os.EOL));
         locateClientTools(this.launchRequestArgs.eclccPath, this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders, this.launchRequestArgs.legacyMode).then((clientTools) => {
+            this.sendEvent(new OutputEvent("Client Tools:  " + clientTools.eclccPath + os.EOL));
             this.sendEvent(new OutputEvent("Generating archive." + os.EOL));
             return clientTools.createArchive(this.launchRequestArgs.program);
         }).then((archive) => {
