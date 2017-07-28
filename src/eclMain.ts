@@ -1,3 +1,4 @@
+import { Level, logger, Writer } from "@hpcc-js/util";
 import * as opn from "opn";
 import * as vscode from "vscode";
 import { check } from "./eclCheck";
@@ -6,6 +7,15 @@ import { ECL_MODE } from "./eclMode";
 import { showHideStatus } from "./eclStatus";
 import { ECLCompletionItemProvider } from "./eclSuggest";
 import { ECLWatchTextDocumentContentProvider, eclWatchUri } from "./ECLWatch";
+
+class VSCodeWriter implements Writer {
+    eclOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("ECL");
+
+    write(dateTime: string, level: Level, id: string, msg: string) {
+        this.eclOutputChannel.appendLine(`[${dateTime}] ${Level[level].toUpperCase()} ${id}:  ${msg}`);
+    }
+}
+logger.writer(new VSCodeWriter());
 
 /*
 import { workspace, Disposable, ExtensionContext } from 'vscode';
@@ -88,8 +98,8 @@ function runBuilds(document: vscode.TextDocument, eclConfig: vscode.WorkspaceCon
             let startColumn = 0;
             let endColumn = 1;
             if (document && document.uri.toString() === canonicalFile) {
-                const range = new vscode.Range(error.line - 1, 0, error.line - 1, document.lineAt(error.line - 1).range.end.character + 1);
-                const text = document.getText(range);
+                const range2 = new vscode.Range(error.line - 1, 0, error.line - 1, document.lineAt(error.line - 1).range.end.character + 1);
+                const text = document.getText(range2);
                 const [, leading, trailing] = /^(\s*).*(\s*)$/.exec(text);
                 startColumn = leading.length;
                 endColumn = text.length - trailing.length;

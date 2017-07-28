@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
 import { ECL_MODE } from "./eclMode";
 
-export let outputChannel = vscode.window.createOutputChannel("ECL");
-
 let statusBarEntry: vscode.StatusBarItem;
 
 export function showHideStatus() {
