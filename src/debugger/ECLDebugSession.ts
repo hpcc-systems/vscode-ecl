@@ -1,10 +1,12 @@
+import { locateAllClientTools, locateClientTools, Workunit, WUUpdate } from "@hpcc-js/comms";
+import { Graph, IGraphItem, IObserverHandle, Level, scopedLogger } from "@hpcc-js/util";
 import {
     Breakpoint, ContinuedEvent, DebugSession, Handles, InitializedEvent, OutputEvent, Scope, Source,
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
 } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { Graph, IGraphItem, IObserverHandle, Level, locateAllClientTools, locateClientTools, scopedLogger, Workunit, WsTopology, WsWorkunits, WUAction } from "../../hpcc-js-comms/src/index-node";
 import os = require("os");
+import path = require("path");
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
 logger.pushLevel(Level.debug);
@@ -35,7 +37,7 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
 }
 
 export interface LaunchRequestArgumentsEx extends DebugProtocol.LaunchRequestArguments {
-    mode: WUAction;
+    mode: WUUpdate.Action;
     program: string;
     workspace: string;
     protocol: LaunchProtocol;
@@ -111,17 +113,17 @@ export class ECLDebugSession extends DebugSession {
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
         logger.debug("launchRequest:  " + JSON.stringify(args));
-        let _action: WUAction;
+        let _action: WUUpdate.Action;
         switch (args.mode) {
             case "compile":
-                _action = WUAction.Compile;
+                _action = WUUpdate.Action.Compile;
                 break;
             case "debug":
-                _action = WUAction.Debug;
+                _action = WUUpdate.Action.Debug;
                 break;
             case "submit":
             default:
-                _action = WUAction.Run;
+                _action = WUUpdate.Action.Run;
                 break;
         }
         this.launchRequestArgs = {
@@ -154,7 +156,11 @@ export class ECLDebugSession extends DebugSession {
                 password: this.launchRequestArgs.password,
                 rejectUnauthorized: this.launchRequestArgs.rejectUnauthorized
             }).then((wu) => {
-                return wu.update({ QueryText: archive.content });
+                const pathParts = path.parse(this.launchRequestArgs.program);
+                return wu.update({
+                    Jobname: pathParts.name,
+                    QueryText: archive.content
+                });
             });
         }).then((workunit) => {
             this.workunit = workunit;
@@ -251,9 +257,9 @@ export class ECLDebugSession extends DebugSession {
     protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
         logger.debug("SetBreakPointsRequest");
         if (this.workunit.isDebugging()) {
-            const path = args.source.path;
+            const sourcePath = args.source.path;
             this.workunit.debugDeleteAllBreakpoints().then(() => {
-                return this.workunit.debugBreakpointValid(path);
+                return this.workunit.debugBreakpointValid(sourcePath);
             }).then((validBPLocations: any) => {
                 // verify breakpoint locations
                 const clientLines = args.lines;
@@ -270,7 +276,7 @@ export class ECLDebugSession extends DebugSession {
                     }
                 }
                 logger.debug(this._breakPoints);
-                this._breakPoints.set(path, breakpoints);
+                this._breakPoints.set(sourcePath, breakpoints);
 
                 // send back the actual breakpoint positions
                 response.body = {

@@ -1,6 +1,6 @@
+import { Level, logger, Writer } from "@hpcc-js/util";
 import * as opn from "opn";
 import * as vscode from "vscode";
-import { Level, logger, Writer } from "../hpcc-js-comms/src/util/logging";
 import { check } from "./eclCheck";
 import { ECLDefinitionProvider } from "./eclDeclaration";
 import { ECL_MODE } from "./eclMode";
@@ -98,8 +98,8 @@ function runBuilds(document: vscode.TextDocument, eclConfig: vscode.WorkspaceCon
             let startColumn = 0;
             let endColumn = 1;
             if (document && document.uri.toString() === canonicalFile) {
-                const range = new vscode.Range(error.line - 1, 0, error.line - 1, document.lineAt(error.line - 1).range.end.character + 1);
-                const text = document.getText(range);
+                const range2 = new vscode.Range(error.line - 1, 0, error.line - 1, document.lineAt(error.line - 1).range.end.character + 1);
+                const text = document.getText(range2);
                 const [, leading, trailing] = /^(\s*).*(\s*)$/.exec(text);
                 startColumn = leading.length;
                 endColumn = text.length - trailing.length;
