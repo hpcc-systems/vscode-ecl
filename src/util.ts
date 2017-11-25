@@ -1,3 +1,4 @@
+import { Level, logger as _logger, Writer } from "@hpcc-js/util";
 import * as vscode from "vscode";
 
 export function byteOffsetAt(document: vscode.TextDocument, position: vscode.Position): number {
@@ -10,3 +11,13 @@ export function byteOffsetAt(document: vscode.TextDocument, position: vscode.Pos
     }
     return byteOffset;
 }
+
+class VSCodeWriter implements Writer {
+    eclOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("ECL");
+
+    write(dateTime: string, level: Level, id: string, msg: string) {
+        this.eclOutputChannel.appendLine(`[${dateTime}] ${Level[level].toUpperCase()} ${id}:  ${msg}`);
+    }
+}
+
+export const logger = _logger.writer(new VSCodeWriter());

@@ -1,4 +1,3 @@
-import { Level, logger, Writer } from "@hpcc-js/util";
 import * as opn from "opn";
 import * as vscode from "vscode";
 import { check } from "./eclCheck";
@@ -7,15 +6,7 @@ import { ECL_MODE } from "./eclMode";
 import { showHideStatus } from "./eclStatus";
 import { ECLCompletionItemProvider } from "./eclSuggest";
 import { ECLWatchTextDocumentContentProvider, eclWatchUri } from "./ECLWatch";
-
-class VSCodeWriter implements Writer {
-    eclOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("ECL");
-
-    write(dateTime: string, level: Level, id: string, msg: string) {
-        this.eclOutputChannel.appendLine(`[${dateTime}] ${Level[level].toUpperCase()} ${id}:  ${msg}`);
-    }
-}
-logger.writer(new VSCodeWriter());
+import { logger } from "./util";
 
 /*
 import { workspace, Disposable, ExtensionContext } from 'vscode';
@@ -25,7 +16,6 @@ import { LanguageClient, LanguageClientOptions, SettingMonitor, ServerOptions, T
 let diagnosticCollection: vscode.DiagnosticCollection;
 
 export function activate(ctx: vscode.ExtensionContext): void {
-    const eclConfig = vscode.workspace.getConfiguration("ecl");
     // ctx.subscriptions.push(vscode.languages.registerHoverProvider(ECL_MODE, new ECLHoverProvider()));
     ctx.subscriptions.push(vscode.languages.registerCompletionItemProvider(ECL_MODE, new ECLCompletionItemProvider(), ".", '\"'));
     ctx.subscriptions.push(vscode.languages.registerDefinitionProvider(ECL_MODE, new ECLDefinitionProvider()));
@@ -48,7 +38,7 @@ export function activate(ctx: vscode.ExtensionContext): void {
 
     ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", () => {
         vscode.window.activeTextEditor.document.save();
-        runBuilds(vscode.window.activeTextEditor.document, eclConfig);
+        runBuilds(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.uri : null));
     }));
 
     ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showAllDocumentation", () => {
@@ -68,9 +58,11 @@ export function activate(ctx: vscode.ExtensionContext): void {
         });
     }));
 
-    if (vscode.window.activeTextEditor) {
-        runBuilds(vscode.window.activeTextEditor.document, eclConfig);
-    }
+    vscode.window.onDidChangeActiveTextEditor(event => {
+        if (event) {
+            runBuilds(event.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.uri : null));
+        }
+    });
 }
 
 function runBuilds(document: vscode.TextDocument, eclConfig: vscode.WorkspaceConfiguration) {
@@ -88,7 +80,7 @@ function runBuilds(document: vscode.TextDocument, eclConfig: vscode.WorkspaceCon
     }
 
     const uri = document.uri;
-    check(uri.fsPath, eclConfig).then((errors) => {
+    check(uri, eclConfig).then((errors) => {
         diagnosticCollection.clear();
 
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
@@ -132,7 +124,7 @@ function startBuildOnSaveWatcher(subscriptions: vscode.Disposable[]) {
         if (document.languageId !== "ecl" || ignoreNextSave.has(document)) {
             return;
         }
-        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        const eclConfig = vscode.workspace.getConfiguration("ecl", document.uri);
         const textEditor = vscode.window.activeTextEditor;
         const formatPromise: PromiseLike<void> = Promise.resolve();
         if (eclConfig["formatOnSave"] && textEditor.document === document) {

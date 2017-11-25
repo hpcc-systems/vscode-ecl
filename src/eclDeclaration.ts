@@ -12,7 +12,18 @@ export function definitionLocation(document: vscode.TextDocument, position: vsco
             const qualifiedID = lineText.substring(startCharPos, endCharPos + 1);
 
             const metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
-            resolve(metaWorkspace.resolveQualifiedID(document.fileName, qualifiedID, document.offsetAt(position)));
+            let eclDef = metaWorkspace.resolveQualifiedID(document.fileName, qualifiedID, document.offsetAt(position));
+            if (!eclDef) {
+                for (const wuf of vscode.workspace.workspaceFolders) {
+                    if (wuf.uri.fsPath !== vscode.workspace.rootPath) {
+                        eclDef = this.resolvePartialID(wuf.uri.fsPath, document.fileName, qualifiedID, document.offsetAt(position));
+                        if (eclDef) {
+                            break;
+                        }
+                    }
+                }
+            }
+            resolve(eclDef);
         }
         resolve(null);
     });
