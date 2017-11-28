@@ -20,12 +20,14 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
 
     resolvePartialID(rootPath: string, filePath: string, partialID: string, offsetAt: number): vscode.CompletionItem[] | undefined {
         const metaWorkspace = attachWorkspace(rootPath);
-        const eclDef = metaWorkspace.resolvePartialID(filePath, partialID, offsetAt);
+        if (metaWorkspace) {
+            const eclDef = metaWorkspace.resolvePartialID(filePath, partialID, offsetAt);
 
-        if (eclDef) {
-            return eclDef.suggestions().map((suggestion) => {
-                return new vscode.CompletionItem(suggestion.name, this.vscodeKindFromECLType(suggestion.type));
-            });
+            if (eclDef) {
+                return eclDef.suggestions().map((suggestion) => {
+                    return new vscode.CompletionItem(suggestion.name, this.vscodeKindFromECLType(suggestion.type));
+                });
+            }
         }
         return undefined;
     }

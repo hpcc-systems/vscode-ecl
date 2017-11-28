@@ -48,7 +48,7 @@ export function activate(ctx: vscode.ExtensionContext): void {
         if (vscode.window.activeTextEditor) {
             const range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
             const searchTerm = editor.document.getText(range);
-        opn(`https://hpccsystems.com/training/documentation/ecl-language-reference/html/${searchTerm}.html`);
+            opn(`https://hpccsystems.com/training/documentation/ecl-language-reference/html/${searchTerm}.html`);
         }
     }));
 
