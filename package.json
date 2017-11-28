@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.20",
+    "version": "0.0.22",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
@@ -28,14 +28,14 @@
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test",
         "lint": "node ./node_modules/tslint/bin/tslint ./src/*.ts ./src/serverAdapter/*.ts ./test/*.ts",
-        "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/GordonSmith/vscode-ecl all --markdown"
+        "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/GordonSmith/vscode-ecl all --markdown",
+        "bump-publish": "vsce publish patch"
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "~0.0.30",
-        "@hpcc-js/util": "~0.0.30",
+        "@hpcc-js/comms": "0.0.53",
+        "@hpcc-js/util": "0.0.49",
         "console-stamp": "^0.2.5",
-        "d3-time-format": "~2.0.5",
         "es6-promise": "~4.1.1",
         "opn": "^5.1.0",
         "semver": "^5.4.1",
@@ -55,7 +55,7 @@
         "typescript": "^2.4.2"
     },
     "engines": {
-        "vscode": "^1.5.0"
+        "vscode": "^1.16.0"
     },
     "activationEvents": [
         "onLanguage:ecl",
@@ -91,9 +91,14 @@
         ],
         "commands": [
             {
-                "command": "ecl.checkSyntax",
+                "command": "ecl.syntaxCheck",
                 "title": "ECL: Check Syntax",
                 "description": "Save + check syntax of current file."
+            },
+            {
+                "command": "ecl.syntaxCheckAll",
+                "title": "ECL: Check Syntax (all files)",
+                "description": "Save All + check syntax of all files."
             },
             {
                 "command": "ecl.showECLWatch",
@@ -101,9 +106,9 @@
                 "description": "Show workunits associated with current file."
             },
             {
-                "command": "ecl.showAllDocumentation",
-                "title": "ECL: Open documentation in default browser.",
-                "description": "Visit the main documentation on HPCC Systems."
+                "command": "ecl.showLanguageReference",
+                "title": "ECL: Language Reference (online)",
+                "description": "Visit the language reference website."
             },
             {
                 "command": "ecl.searchTerm",
@@ -119,10 +124,15 @@
                 "when": "editorTextFocus"
             },
             {
-                "command": "ecl.checkSyntax",
+                "command": "ecl.syntaxCheck",
                 "key": "f7",
                 "mac": "f7",
                 "when": "editorTextFocus"
+            },
+            {
+                "command": "ecl.syntaxCheckAll",
+                "key": "shift+f7",
+                "mac": "shift+f7"
             },
             {
                 "command": "ecl.showECLWatch",
