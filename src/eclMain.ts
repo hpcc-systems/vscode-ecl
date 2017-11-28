@@ -6,6 +6,9 @@ import { ECL_MODE } from "./eclMode";
 import { showHideStatus } from "./eclStatus";
 import { ECLCompletionItemProvider } from "./eclSuggest";
 import { ECLWatchTextDocumentContentProvider, eclWatchUri } from "./ECLWatch";
+import { initLogger, Level } from "./util";
+
+initLogger(Level.info);
 
 /*
 import { workspace, Disposable, ExtensionContext } from 'vscode';

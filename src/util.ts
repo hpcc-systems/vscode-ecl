@@ -1,4 +1,4 @@
-import { Level, logger as _logger, Writer } from "@hpcc-js/util";
+import { Level, logger, Writer } from "@hpcc-js/util";
 import * as vscode from "vscode";
 
 export function byteOffsetAt(document: vscode.TextDocument, position: vscode.Position): number {
@@ -20,4 +20,8 @@ class VSCodeWriter implements Writer {
     }
 }
 
-export const serverLogger = _logger.writer(new VSCodeWriter());
+export { Level };
+export function initLogger(level: Level) {
+    logger.writer(new VSCodeWriter());
+    logger.level(level);
+}
