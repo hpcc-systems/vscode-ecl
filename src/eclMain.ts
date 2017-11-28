@@ -41,14 +41,14 @@ export function activate(ctx: vscode.ExtensionContext): void {
         runBuilds(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.uri : null));
     }));
 
-    ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showAllDocumentation", () => {
-        opn("https://hpccsystems.com/download/documentation/all");
+    ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", () => {
+        opn("https://hpccsystems.com/training/documentation/ecl-language-reference/html");
     }));
 
     ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", (editor: vscode.TextEditor) => {
         const range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
         const searchTerm = editor.document.getText(range);
-        opn("https://hpccsystems.com/search/node/" + searchTerm);
+        opn(`https://hpccsystems.com/training/documentation/ecl-language-reference/html/${searchTerm}.html`);
     }));
 
     ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showECLWatch", () => {
