@@ -1,12 +1,12 @@
 import { locateAllClientTools, locateClientTools, Workunit, WUUpdate } from "@hpcc-js/comms";
 import { Graph, IGraphItem, IObserverHandle, Level, scopedLogger } from "@hpcc-js/util";
+import os = require("os");
+import path = require("path");
 import {
     Breakpoint, ContinuedEvent, DebugSession, Handles, InitializedEvent, OutputEvent, Scope, Source,
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
 } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import os = require("os");
-import path = require("path");
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
 logger.pushLevel(Level.debug);
@@ -94,19 +94,20 @@ export class ECLDebugSession extends DebugSession {
 
     protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
         logger.debug("InitializeRequest");
-        response.body.supportsConditionalBreakpoints = false;
-        response.body.supportsHitConditionalBreakpoints = false;
-        response.body.supportsFunctionBreakpoints = false;
-        response.body.supportsConfigurationDoneRequest = true;
-        response.body.supportsEvaluateForHovers = false;
-        response.body.supportsStepBack = false;
-        response.body.supportsSetVariable = false;
-        response.body.supportsRestartFrame = false;
-        response.body.supportsStepInTargetsRequest = false;
-        response.body.supportsGotoTargetsRequest = false;
-        response.body.supportsCompletionsRequest = false;
-        response.body.supportsConfigurationDoneRequest = true;
-
+        if (response.body) {
+            response.body.supportsConditionalBreakpoints = false;
+            response.body.supportsHitConditionalBreakpoints = false;
+            response.body.supportsFunctionBreakpoints = false;
+            response.body.supportsConfigurationDoneRequest = true;
+            response.body.supportsEvaluateForHovers = false;
+            response.body.supportsStepBack = false;
+            response.body.supportsSetVariable = false;
+            response.body.supportsRestartFrame = false;
+            response.body.supportsStepInTargetsRequest = false;
+            response.body.supportsGotoTargetsRequest = false;
+            response.body.supportsCompletionsRequest = false;
+            response.body.supportsConfigurationDoneRequest = true;
+        }
         this.sendResponse(response);
         logger.debug("InitializeResponse");
     }
@@ -256,22 +257,24 @@ export class ECLDebugSession extends DebugSession {
 
     protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
         logger.debug("SetBreakPointsRequest");
-        if (this.workunit.isDebugging()) {
+        if (this.workunit.isDebugging() && args.source.path) {
             const sourcePath = args.source.path;
             this.workunit.debugDeleteAllBreakpoints().then(() => {
                 return this.workunit.debugBreakpointValid(sourcePath);
             }).then((validBPLocations: any) => {
                 // verify breakpoint locations
-                const clientLines = args.lines;
                 const breakpoints: Breakpoint[] = [];
-                for (const clientLine of clientLines) {
-                    for (const validBPLine of validBPLocations) {
-                        if (validBPLine.line >= clientLine) {
-                            const bp: DebugProtocol.Breakpoint = new Breakpoint(true, validBPLine.line);
-                            bp.id = this._breakpointId++;
-                            breakpoints.push(bp);
-                            this.workunit.debugBreakpointAdd(validBPLine.id + "_0", "edge", "break");
-                            break;
+                const clientLines = args.lines;
+                if (clientLines) {
+                    for (const clientLine of clientLines) {
+                        for (const validBPLine of validBPLocations) {
+                            if (validBPLine.line >= clientLine) {
+                                const bp: DebugProtocol.Breakpoint = new Breakpoint(true, validBPLine.line);
+                                bp.id = this._breakpointId++;
+                                breakpoints.push(bp);
+                                this.workunit.debugBreakpointAdd(validBPLine.id + "_0", "edge", "break");
+                                break;
+                            }
                         }
                     }
                 }
@@ -294,7 +297,7 @@ export class ECLDebugSession extends DebugSession {
 
     protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
         logger.debug("ThreadsRequest");
-        const threads = [];
+        const threads: Thread[] = [];
         threads.push(new Thread(0, "main"));
         response.body = {
             threads
@@ -322,7 +325,7 @@ export class ECLDebugSession extends DebugSession {
                 const vertex = graph.allVertex(id);
                 this.pushStackFrame(stackFrames, vertex, vertex.getNearestDefinition());
                 if (vertex.parent) {
-                    this.createStackTrace(graph, "subgraph", vertex.parent().id(), debugState, stackFrames);
+                    this.createStackTrace(graph, "subgraph", vertex.parent()!.id(), debugState, stackFrames);
                 } else {
                     this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                 }
@@ -332,7 +335,7 @@ export class ECLDebugSession extends DebugSession {
                 if (subgraph) {
                     this.pushStackFrame(stackFrames, subgraph, subgraph.getNearestDefinition(debugState.state === "graph end" || debugState.state === "finished"));
                     if (subgraph.parent()) {
-                        this.createStackTrace(graph, "subgraph", subgraph.parent().id(), debugState, stackFrames);
+                        this.createStackTrace(graph, "subgraph", subgraph.parent()!.id(), debugState, stackFrames);
                     } else {
                         this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                     }
@@ -419,7 +422,7 @@ export class ECLDebugSession extends DebugSession {
     protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void {
         logger.debug("VariablesRequest");
         const wuScope = this._variableHandles.get(args.variablesReference);
-        let variables = [];
+        let variables: Variable[] = [];
         switch (wuScope.type) {
             case "local":
                 for (const key in wuScope.stack.graphItem.attrs) {
@@ -450,7 +453,7 @@ export class ECLDebugSession extends DebugSession {
             case "results":
                 this.workunit.debugPrint(wuScope.stack.graphItem.id(), 0, 10).then((results) => {
                     variables = results.map((result, idx) => {
-                        const summary = [];
+                        const summary: any[] = [];
                         const values: any = {};
                         for (const key in result) {
                             if (result.hasOwnProperty(key)) {

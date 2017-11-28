@@ -20,4 +20,4 @@ class VSCodeWriter implements Writer {
     }
 }
 
-export const logger = _logger.writer(new VSCodeWriter());
+export const serverLogger = _logger.writer(new VSCodeWriter());

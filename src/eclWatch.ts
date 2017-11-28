@@ -18,25 +18,28 @@ export class ECLWatchTextDocumentContentProvider implements vscode.TextDocumentC
     }
 
     private createCssSnippet() {
-        const editor = vscode.window.activeTextEditor;
-        if (!(editor.document.languageId === "css")) {
-            return this.errorSnippet("Active editor doesn't show a CSS document - no properties to preview.");
+        if (vscode.window.activeTextEditor) {
+            if (!(vscode.window.activeTextEditor.document.languageId === "css")) {
+                return this.errorSnippet("Active editor doesn't show a CSS document - no properties to preview.");
+            }
         }
         return this.extractSnippet();
     }
 
     private extractSnippet(): string {
         const editor = vscode.window.activeTextEditor;
-        const text = editor.document.getText();
-        const selStart = editor.document.offsetAt(editor.selection.anchor);
-        const propStart = text.lastIndexOf("{", selStart);
-        const propEnd = text.indexOf("}", selStart);
+        if (editor) {
+            const text = editor.document.getText();
+            const selStart = editor.document.offsetAt(editor.selection.anchor);
+            const propStart = text.lastIndexOf("{", selStart);
+            const propEnd = text.indexOf("}", selStart);
 
-        if (propStart === -1 || propEnd === -1) {
-            return this.errorSnippet("Cannot determine the rule's properties.");
-        } else {
+            if (propStart === -1 || propEnd === -1) {
+                return this.errorSnippet("Cannot determine the rule's properties.");
+            }
             return this.snippet(editor.document, propStart, propEnd);
         }
+        return "";
     }
 
     private errorSnippet(error: string): string {

@@ -1,17 +1,6 @@
 import { attachWorkspace, qualifiedIDBoundary } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 
-interface ECLCodeSuggestion {
-    class: string;
-    name: string;
-    type: string;
-}
-
-interface PackageInfo {
-    name: string;
-    path: string;
-}
-
 export class ECLCompletionItemProvider implements vscode.CompletionItemProvider {
 
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Thenable<vscode.CompletionItem[]> {
@@ -29,7 +18,7 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
         return vscode.CompletionItemKind.Variable;
     }
 
-    resolvePartialID(rootPath: string, filePath: string, partialID: string, offsetAt: number): vscode.CompletionItem[] | null {
+    resolvePartialID(rootPath: string, filePath: string, partialID: string, offsetAt: number): vscode.CompletionItem[] | undefined {
         const metaWorkspace = attachWorkspace(rootPath);
         const eclDef = metaWorkspace.resolvePartialID(filePath, partialID, offsetAt);
 
@@ -38,7 +27,7 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
                 return new vscode.CompletionItem(suggestion.name, this.vscodeKindFromECLType(suggestion.type));
             });
         }
-        return null;
+        return undefined;
     }
 
     public provideCompletionItemsInternal(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, config: vscode.WorkspaceConfiguration): Thenable<vscode.CompletionItem[]> {
@@ -65,8 +54,11 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
             const startCharPos = qualifiedIDBoundary(lineText, position.character - 1, true);
             const partialID = lineText.substring(startCharPos, position.character + 1);
 
-            let completionItems = this.resolvePartialID(vscode.workspace.rootPath, document.fileName, partialID, document.offsetAt(position));
-            if (!completionItems) {
+            let completionItems;
+            if (vscode.workspace.rootPath) {
+                completionItems = this.resolvePartialID(vscode.workspace.rootPath, document.fileName, partialID, document.offsetAt(position));
+            }
+            if (!completionItems && vscode.workspace.workspaceFolders) {
                 for (const wuf of vscode.workspace.workspaceFolders) {
                     if (wuf.uri.fsPath !== vscode.workspace.rootPath) {
                         completionItems = this.resolvePartialID(wuf.uri.fsPath, document.fileName, partialID, document.offsetAt(position));

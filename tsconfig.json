@@ -6,6 +6,10 @@
         "outDir": "out",
         "sourceMap": true,
         "importHelpers": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "noImplicitAny": false,
+        "noUnusedLocals": true,
         "lib": [
             "es6",
             "dom"

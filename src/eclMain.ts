@@ -1,19 +1,16 @@
 import * as opn from "opn";
 import * as vscode from "vscode";
-import { check } from "./eclCheck";
+import { checkTextDocument, diagnosticCollection } from "./eclCheck";
 import { ECLDefinitionProvider } from "./eclDeclaration";
 import { ECL_MODE } from "./eclMode";
 import { showHideStatus } from "./eclStatus";
 import { ECLCompletionItemProvider } from "./eclSuggest";
 import { ECLWatchTextDocumentContentProvider, eclWatchUri } from "./ECLWatch";
-import { logger } from "./util";
 
 /*
 import { workspace, Disposable, ExtensionContext } from 'vscode';
 import { LanguageClient, LanguageClientOptions, SettingMonitor, ServerOptions, TransportKind } from 'vscode-languageclient';
 */
-
-let diagnosticCollection: vscode.DiagnosticCollection;
 
 export function activate(ctx: vscode.ExtensionContext): void {
     // ctx.subscriptions.push(vscode.languages.registerHoverProvider(ECL_MODE, new ECLHoverProvider()));
@@ -29,16 +26,18 @@ export function activate(ctx: vscode.ExtensionContext): void {
 
     ctx.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider("css-preview", new ECLWatchTextDocumentContentProvider()));
 
-    diagnosticCollection = vscode.languages.createDiagnosticCollection("ecl");
-    ctx.subscriptions.push(diagnosticCollection);
+    diagnosticCollection(vscode.languages.createDiagnosticCollection("ecl"));
+    ctx.subscriptions.push(diagnosticCollection());
     vscode.window.onDidChangeActiveTextEditor(showHideStatus, null, ctx.subscriptions);
     // vscode.window.onDidChangeActiveTextEditor(getCodeCoverage, null, ctx.subscriptions);
 
     startBuildOnSaveWatcher(ctx.subscriptions);
 
     ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", () => {
-        vscode.window.activeTextEditor.document.save();
-        runBuilds(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.uri : null));
+        if (vscode.window.activeTextEditor) {
+            vscode.window.activeTextEditor.document.save();
+            checkTextDocument(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
+        }
     }));
 
     ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", () => {
@@ -46,9 +45,11 @@ export function activate(ctx: vscode.ExtensionContext): void {
     }));
 
     ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", (editor: vscode.TextEditor) => {
-        const range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
-        const searchTerm = editor.document.getText(range);
+        if (vscode.window.activeTextEditor) {
+            const range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
+            const searchTerm = editor.document.getText(range);
         opn(`https://hpccsystems.com/training/documentation/ecl-language-reference/html/${searchTerm}.html`);
+        }
     }));
 
     ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showECLWatch", () => {
@@ -59,57 +60,9 @@ export function activate(ctx: vscode.ExtensionContext): void {
     }));
 
     vscode.window.onDidChangeActiveTextEditor(event => {
-        if (event) {
-            runBuilds(event.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.uri : null));
+        if (event && vscode.window.activeTextEditor) {
+            checkTextDocument(event.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
         }
-    });
-}
-
-function runBuilds(document: vscode.TextDocument, eclConfig: vscode.WorkspaceConfiguration) {
-
-    function mapSeverityToVSCodeSeverity(sev: string) {
-        switch (sev) {
-            case "error": return vscode.DiagnosticSeverity.Error;
-            case "warning": return vscode.DiagnosticSeverity.Warning;
-            default: return vscode.DiagnosticSeverity.Error;
-        }
-    }
-
-    if (document.languageId !== "ecl") {
-        return;
-    }
-
-    const uri = document.uri;
-    check(uri, eclConfig).then((errors) => {
-        diagnosticCollection.clear();
-
-        const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
-
-        errors.forEach((error) => {
-            const canonicalFile = vscode.Uri.file(error.filePath).toString();
-            let startColumn = 0;
-            let endColumn = 1;
-            if (document && document.uri.toString() === canonicalFile) {
-                const range2 = new vscode.Range(error.line - 1, 0, error.line - 1, document.lineAt(error.line - 1).range.end.character + 1);
-                const text = document.getText(range2);
-                const [, leading, trailing] = /^(\s*).*(\s*)$/.exec(text);
-                startColumn = leading.length;
-                endColumn = text.length - trailing.length;
-            }
-            const range = new vscode.Range(error.line - 1, error.col, error.line - 1, error.col);
-            const diagnostic = new vscode.Diagnostic(range, error.msg, mapSeverityToVSCodeSeverity(error.severity));
-            let diagnostics = diagnosticMap.get(canonicalFile);
-            if (!diagnostics) {
-                diagnostics = [];
-            }
-            diagnostics.push(diagnostic);
-            diagnosticMap.set(canonicalFile, diagnostics);
-        });
-        diagnosticMap.forEach((diags, file) => {
-            diagnosticCollection.set(vscode.Uri.parse(file), diags);
-        });
-    }).catch((err) => {
-        vscode.window.showInformationMessage("Error: " + err);
     });
 }
 
@@ -125,13 +78,14 @@ function startBuildOnSaveWatcher(subscriptions: vscode.Disposable[]) {
             return;
         }
         const eclConfig = vscode.workspace.getConfiguration("ecl", document.uri);
-        const textEditor = vscode.window.activeTextEditor;
-        const formatPromise: PromiseLike<void> = Promise.resolve();
-        if (eclConfig["formatOnSave"] && textEditor.document === document) {
-            //  TODO
+        if (vscode.window.activeTextEditor) {
+            const formatPromise: PromiseLike<void> = Promise.resolve();
+            if (eclConfig["formatOnSave"] && vscode.window.activeTextEditor.document === document) {
+                //  TODO
+            }
+            formatPromise.then(() => {
+                checkTextDocument(document, eclConfig);
+            });
         }
-        formatPromise.then(() => {
-            runBuilds(document, eclConfig);
-        });
     }, null, subscriptions);
 }
