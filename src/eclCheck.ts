@@ -1,4 +1,5 @@
 import { attachWorkspace, IECLError, locateClientTools } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
+import * as path from "path";
 import * as vscode from "vscode";
 import { serverLogger } from "./util";
 
@@ -25,7 +26,7 @@ function calcIncludeFolders(wsPath: string): string[] {
             safeAppend(wuf.uri.fsPath);
             const eclConfig = vscode.workspace.getConfiguration("ecl", wuf.uri);
             for (const fsPath of eclConfig["includeFolders"]) {
-                safeAppend(fsPath);
+                safeAppend(path.isAbsolute(fsPath) ? fsPath : path.resolve(wsPath, fsPath));
             }
         }
     }
