@@ -59,6 +59,9 @@ export function activate(ctx: vscode.ExtensionContext): void {
         });
     }));
 
+    for (const te of vscode.window.visibleTextEditors) {
+        checkTextDocument(te.document, vscode.workspace.getConfiguration("ecl", te.document.uri));
+    }
     vscode.window.onDidChangeActiveTextEditor(event => {
         if (event && vscode.window.activeTextEditor) {
             checkTextDocument(event.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
