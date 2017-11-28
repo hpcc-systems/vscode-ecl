@@ -58,23 +58,20 @@ export function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfigurat
     });
 }
 
+function mapSeverityToVSCodeSeverity(sev: string) {
+    switch (sev) {
+        case "error": return vscode.DiagnosticSeverity.Error;
+        case "warning": return vscode.DiagnosticSeverity.Warning;
+        default: return vscode.DiagnosticSeverity.Error;
+    }
+}
+
 export function checkTextDocument(document: vscode.TextDocument, eclConfig: vscode.WorkspaceConfiguration) {
-
-    function mapSeverityToVSCodeSeverity(sev: string) {
-        switch (sev) {
-            case "error": return vscode.DiagnosticSeverity.Error;
-            case "warning": return vscode.DiagnosticSeverity.Warning;
-            default: return vscode.DiagnosticSeverity.Error;
-        }
-    }
-
-    if (document.languageId !== "ecl") {
-        return;
-    }
+    if (document.languageId !== "ecl") return;
 
     const uri = document.uri;
     check(uri, eclConfig).then((errors) => {
-        _diagnosticCollection.clear();
+        _diagnosticCollection.delete(uri);
 
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
 
