@@ -91,9 +91,14 @@
         ],
         "commands": [
             {
-                "command": "ecl.checkSyntax",
+                "command": "ecl.syntaxCheck",
                 "title": "ECL: Check Syntax",
                 "description": "Save + check syntax of current file."
+            },
+            {
+                "command": "ecl.syntaxCheckAll",
+                "title": "ECL: Check Syntax (all files)",
+                "description": "Save All + check syntax of all files."
             },
             {
                 "command": "ecl.showECLWatch",
@@ -119,10 +124,15 @@
                 "when": "editorTextFocus"
             },
             {
-                "command": "ecl.checkSyntax",
+                "command": "ecl.syntaxCheck",
                 "key": "f7",
                 "mac": "f7",
                 "when": "editorTextFocus"
+            },
+            {
+                "command": "ecl.syntaxCheckAll",
+                "key": "shift+f7",
+                "mac": "shift+f7"
             },
             {
                 "command": "ecl.showECLWatch",
