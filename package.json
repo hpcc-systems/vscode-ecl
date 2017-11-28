@@ -101,9 +101,9 @@
                 "description": "Show workunits associated with current file."
             },
             {
-                "command": "ecl.showAllDocumentation",
-                "title": "ECL: Open documentation in default browser.",
-                "description": "Visit the main documentation on HPCC Systems."
+                "command": "ecl.showLanguageReference",
+                "title": "ECL: Language Reference (online)",
+                "description": "Visit the language reference website."
             },
             {
                 "command": "ecl.searchTerm",
