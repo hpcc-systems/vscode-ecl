@@ -1,6 +1,6 @@
 import * as opn from "opn";
 import * as vscode from "vscode";
-import { checkTextDocument, diagnosticCollection } from "./eclCheck";
+import { checkTextDocument, checkWorkspace, diagnosticCollection } from "./eclCheck";
 import { ECLDefinitionProvider } from "./eclDeclaration";
 import { ECL_MODE } from "./eclMode";
 import { showHideStatus } from "./eclStatus";
@@ -36,10 +36,18 @@ export function activate(ctx: vscode.ExtensionContext): void {
 
     startBuildOnSaveWatcher(ctx.subscriptions);
 
-    ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", () => {
+    ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheck", () => {
         if (vscode.window.activeTextEditor) {
             vscode.window.activeTextEditor.document.save();
             checkTextDocument(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
+        }
+    }));
+
+    ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheckAll", () => {
+        if (vscode.workspace.workspaceFolders) {
+            for (const wsf of vscode.workspace.workspaceFolders) {
+                checkWorkspace(wsf);
+            }
         }
     }));
 
