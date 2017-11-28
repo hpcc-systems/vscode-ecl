@@ -1,7 +1,9 @@
 import { attachWorkspace, IECLError, locateClientTools } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
 import * as path from "path";
+import { scopedLogger } from "@hpcc-js/util";
 import * as vscode from "vscode";
-import { serverLogger } from "./util";
+
+const logger = scopedLogger("debugger/ECLDEbugSession.ts");
 
 let _diagnosticCollection: vscode.DiagnosticCollection;
 export function diagnosticCollection(_?: vscode.DiagnosticCollection): vscode.DiagnosticCollection {
@@ -41,10 +43,10 @@ export function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfigurat
         if (!clientTools) {
             throw new Error();
         } else if (!!eclConfig["syntaxCheckOnSave"]) {
-            serverLogger.warning("syntaxCheck", fileUri.fsPath.toString());
+            logger.debug(`syntaxCheck:  ${fileUri.fsPath.toString()}`);
             return clientTools.syntaxCheck(fileUri.fsPath).then(errors => {
                 if (errors[1].length) {
-                    serverLogger.warning("clientTools.syntaxCheck", errors[1].toString());
+                    logger.warning(`syntaxCheck:  ${errors[1].toString()}`);
                 }
                 return errors[0];
             });
