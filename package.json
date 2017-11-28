@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.20",
+    "version": "0.0.21",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
@@ -28,14 +28,14 @@
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test",
         "lint": "node ./node_modules/tslint/bin/tslint ./src/*.ts ./src/serverAdapter/*.ts ./test/*.ts",
-        "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/GordonSmith/vscode-ecl all --markdown"
+        "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/GordonSmith/vscode-ecl all --markdown",
+        "bump-publish": "vsce publish patch"
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "~0.0.30",
-        "@hpcc-js/util": "~0.0.30",
+        "@hpcc-js/comms": "0.0.52",
+        "@hpcc-js/util": "0.0.49",
         "console-stamp": "^0.2.5",
-        "d3-time-format": "~2.0.5",
         "es6-promise": "~4.1.1",
         "opn": "^5.1.0",
         "semver": "^5.4.1",
