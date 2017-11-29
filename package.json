@@ -114,6 +114,11 @@
                 "command": "ecl.searchTerm",
                 "title": "ECL: Search the currently selected term.",
                 "description": "Utilises the HPCC Search functionality on the website for documentation."
+            },
+            {
+                "command": "ecl.openWUDetails",
+                "title": "ECL: Open Workunit Details",
+                "description": "Open ECL Watch Workunit Details page."
             }
         ],
         "keybindings": [
@@ -146,6 +151,14 @@
                 "mac": "shift+f12"
             }
         ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "eclWatch",
+                    "name": "ECL Watch"
+                }
+            ]
+        },
         "debuggers": [
             {
                 "type": "ecl",

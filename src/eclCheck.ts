@@ -3,16 +3,9 @@ import { scopedLogger } from "@hpcc-js/util";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
+import { eclDiagnosticCollection } from "./eclDiagnostic";
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
-
-let _diagnosticCollection: vscode.DiagnosticCollection;
-export function diagnosticCollection(_?: vscode.DiagnosticCollection): vscode.DiagnosticCollection {
-    if (!_) return _diagnosticCollection;
-    const retVal = _diagnosticCollection;
-    _diagnosticCollection = _;
-    return retVal;
-}
 
 function calcIncludeFolders(wsPath: string): string[] {
     const dedup: { [key: string]: boolean } = {};
@@ -72,7 +65,7 @@ function mapSeverityToVSCodeSeverity(sev: string) {
 
 export function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
     return check(uri, eclConfig).then((errors) => {
-        _diagnosticCollection.delete(uri);
+        eclDiagnosticCollection.delete(uri);
 
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
 
@@ -88,7 +81,7 @@ export function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfigurati
             diagnosticMap.set(canonicalFile, diagnostics);
         });
         diagnosticMap.forEach((diags, file) => {
-            _diagnosticCollection.set(vscode.Uri.parse(file), diags);
+            eclDiagnosticCollection.set(vscode.Uri.parse(file), diags);
         });
     }).catch((err) => {
         vscode.window.showInformationMessage("Error: " + err);
