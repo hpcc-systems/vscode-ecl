@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.22",
+    "version": "0.0.23",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
@@ -33,7 +33,7 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "0.0.53",
+        "@hpcc-js/comms": "0.0.54",
         "@hpcc-js/util": "0.0.49",
         "console-stamp": "^0.2.5",
         "es6-promise": "~4.1.1",
