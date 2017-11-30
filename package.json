@@ -20,7 +20,7 @@
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/hpcc-systems/vscode-ecl.git"
+        "url": "https://github.com/GordonSmith/vscode-ecl.git"
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
