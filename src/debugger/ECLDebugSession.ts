@@ -3,7 +3,7 @@ import { Graph, IGraphItem, IObserverHandle, Level, logger, scopedLogger, Scoped
 import os = require("os");
 import path = require("path");
 import {
-    Breakpoint, ContinuedEvent, DebugSession, Handles, InitializedEvent, OutputEvent, Scope, Source,
+    Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEvent, OutputEvent, Scope, Source,
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
 } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
@@ -171,10 +171,18 @@ export class ECLDebugSession extends DebugSession {
                 password: this.launchRequestArgs.password,
                 rejectUnauthorized: this.launchRequestArgs.rejectUnauthorized
             }).then((wu) => {
+                this.sendEvent(new Event("WUCreated", { ...this.launchRequestArgs, wuid: wu.Wuid }));
                 const pathParts = path.parse(this.launchRequestArgs.program);
                 return wu.update({
                     Jobname: pathParts.name,
-                    QueryText: archive.content
+                    QueryText: archive.content,
+                    ApplicationValues: {
+                        ApplicationValue: [{
+                            Application: "vscode-ecl",
+                            Name: "filePath",
+                            Value: this.launchRequestArgs.program
+                        }]
+                    }
                 });
             });
         }).then((workunit) => {
@@ -240,6 +248,7 @@ export class ECLDebugSession extends DebugSession {
             if (this.prevMonitorMessage !== monitorMsg) {
                 this.prevMonitorMessage = monitorMsg;
                 this.sendEvent(new OutputEvent(monitorMsg));
+                this.sendEvent(new Event("WUWatched", { ...this.launchRequestArgs, wuid: this.workunit.Wuid }));
             }
             if (this.workunit.isComplete()) {
                 this.sendEvent(new TerminatedEvent());
