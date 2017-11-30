@@ -1,34 +1,56 @@
 import * as vscode from "vscode";
 import { ECL_MODE } from "./eclMode";
 
-let statusBarEntry: vscode.StatusBarItem;
+export let eclStatusBar: ECLStatusBar;
+export class ECLStatusBar {
+    _ctx: vscode.ExtensionContext;
+    _statusBarEntry: vscode.StatusBarItem;
 
-export function showHideStatus() {
-    if (!statusBarEntry) {
-        return;
-    }
-    if (!vscode.window.activeTextEditor) {
-        statusBarEntry.hide();
-        return;
-    }
-    if (vscode.languages.match(ECL_MODE, vscode.window.activeTextEditor.document)) {
-        statusBarEntry.show();
-        return;
-    }
-    statusBarEntry.hide();
-}
+    private constructor(ctx: vscode.ExtensionContext) {
+        this._ctx = ctx;
 
-export function hideEclStatus() {
-    if (statusBarEntry) {
-        statusBarEntry.dispose();
+        this.onActiveWatcher();
     }
-}
 
-export function showEclStatus(message: string, command: string, tooltip?: string) {
-    statusBarEntry = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
-    statusBarEntry.text = message;
-    statusBarEntry.command = command;
-    statusBarEntry.color = "yellow";
-    statusBarEntry.tooltip = tooltip;
-    statusBarEntry.show();
+    static attach(ctx: vscode.ExtensionContext): ECLStatusBar {
+        if (!eclStatusBar) {
+            eclStatusBar = new ECLStatusBar(ctx);
+        }
+        return eclStatusBar;
+    }
+
+    onActiveWatcher() {
+        vscode.window.onDidChangeActiveTextEditor(event => {
+            if (event && vscode.window.activeTextEditor) {
+                if (!this._statusBarEntry) {
+                    return;
+                }
+                if (!vscode.window.activeTextEditor) {
+                    this._statusBarEntry.hide();
+                    return;
+                }
+                if (vscode.languages.match(ECL_MODE, vscode.window.activeTextEditor.document)) {
+                    this._statusBarEntry.show();
+                    return;
+                }
+                this._statusBarEntry.hide();
+            }
+        }, null, this._ctx.subscriptions);
+    }
+
+    hideEclStatus() {
+        if (this._statusBarEntry) {
+            this._statusBarEntry.dispose();
+            delete this._statusBarEntry;
+        }
+    }
+
+    showEclStatus(message: string, command: string, tooltip?: string) {
+        this._statusBarEntry = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
+        this._statusBarEntry.text = message;
+        this._statusBarEntry.command = command;
+        this._statusBarEntry.color = "yellow";
+        this._statusBarEntry.tooltip = tooltip;
+        this._statusBarEntry.show();
+    }
 }

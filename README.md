@@ -1,14 +1,16 @@
 # ECL for Visual Studio Code
 
-[![Join the chat at https://gitter.im/GordonSmith/vscode-ecl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/GordonSmith/vscode-ecl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/GordonSmith/vscode-ecl.svg?branch=master)](https://travis-ci.org/GordonSmith/vscode-ecl)
-
-Read the [Release Notes](https://github.com/GordonSmith/vscode-ecl/releases) to know what has changed over the last few versions of this extension
+Read the [Release Notes](https://github.com/GordonSmith/vscode-ecl/releases) to know what has changed over the last few versions of this extension.
 
 This extension adds rich language support for the ECL language to VS Code, including:
 
 - Syntax highlighting
 - Auto completion
+- F7 Syntax check
+- shift+F7 Syntax check all
 - F12 "Goto definition"
+- Basic workunit support
+- Multi root workspaces ([vscode docs](https://code.visualstudio.com/docs/editor/multi-root-workspaces)):  No need to manually include folders.
 - Debugging
 
 ## Installation
