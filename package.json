@@ -332,17 +332,27 @@
                         "type": "string"
                     },
                     "default": [],
-                    "description": "External folders use by IMPORT"
+                    "description": "External folders use by IMPORT."
                 },
                 "ecl.eclccPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Override eclcc auto detection"
+                    "description": "Override eclcc auto detection."
                 },
                 "ecl.legacyMode": {
                     "type": "boolean",
                     "default": false,
                     "description": "Add '-legacy' arguement to eclcc."
+                },
+                "ecl.WUOpenExternal": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Open WU in external browser."
+                },
+                "ecl.WUAutoOpen": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Automatically open WU on creation."
                 },
                 "ecl.defaultServer": {
                     "type": "string",

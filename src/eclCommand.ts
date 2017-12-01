@@ -61,10 +61,15 @@ export class ECLCommands {
     }
 
     openWUDetails(url: string, wuid: string) {
-        const uri = encodeLocation(url, wuid);
-        return vscode.commands.executeCommand("vscode.previewHtml", uri, vscode.ViewColumn.Two, wuid).then((success) => {
-        }, (reason) => {
-            vscode.window.showErrorMessage(reason);
-        });
+        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        if (eclConfig.get<boolean>("WUOpenExternal")) {
+            opn(url);
+        } else {
+            const uri = encodeLocation(url, wuid);
+            return vscode.commands.executeCommand("vscode.previewHtml", uri, vscode.ViewColumn.Two, wuid).then((success) => {
+            }, (reason) => {
+                vscode.window.showErrorMessage(reason);
+            });
+        }
     }
 }

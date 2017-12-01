@@ -35,6 +35,12 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
   // Add '-legacy' arguement to eclcc.
   "ecl.legacyMode": false,
+
+  // Open workunits in external browser.
+  "ecl.WUOpenExternal": false
+
+  // Automatically open WU in browser on creation.
+  "ecl.WUAutoOpen": false
 ```
 
 #### Launch Settings
