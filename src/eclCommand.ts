@@ -1,6 +1,7 @@
 import * as opn from "opn";
 import * as vscode from "vscode";
 import { checkTextDocument, checkWorkspace } from "./eclCheck";
+import { eclDiagnosticCollection } from "./eclDiagnostic";
 import { encodeLocation } from "./eclWatch";
 
 export let eclCommands: ECLCommands;
@@ -11,6 +12,7 @@ export class ECLCommands {
         this._ctx = ctx;
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheck", this.syntaxCheck));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheckAll", this.syntaxCheckAll));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheckClear", this.syntaxCheckClear));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showECLWatch", this.showECLWatch));
@@ -37,6 +39,10 @@ export class ECLCommands {
                 checkWorkspace(wsf);
             }
         }
+    }
+
+    syntaxCheckClear() {
+        eclDiagnosticCollection.clear();
     }
 
     showLanguageReference() {

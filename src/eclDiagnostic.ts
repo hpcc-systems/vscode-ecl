@@ -10,6 +10,9 @@ export class ECLDiagnostic {
         this._ctx = ctx;
         eclDiagnosticCollection = vscode.languages.createDiagnosticCollection("ecl");
         ctx.subscriptions.push(eclDiagnosticCollection);
+        vscode.workspace.onDidCloseTextDocument(event => {
+            eclDiagnosticCollection.delete(event.uri);
+        }, null, this._ctx.subscriptions);
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLDiagnostic {
