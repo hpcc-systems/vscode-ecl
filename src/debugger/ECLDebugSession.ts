@@ -1,4 +1,4 @@
-import { locateAllClientTools, locateClientTools, Workunit, WUUpdate } from "@hpcc-js/comms";
+import { locateAllClientTools, locateClientTools, Workunit } from "@hpcc-js/comms";
 import { Graph, IGraphItem, IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
 import os = require("os");
 import path = require("path");
@@ -7,6 +7,7 @@ import {
     StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
 } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
+import { LaunchConfig, LaunchRequestArguments } from "./launchConfig";
 
 class VSCodeServerWriter implements Writer {
     private _owner: DebugSession;
@@ -21,46 +22,6 @@ class VSCodeServerWriter implements Writer {
 
 // tslint:disable-next-line:no-var-requires
 require("console-stamp")(console);
-
-// This interface should always match the schema found in `package.json`.
-export type LaunchMode = "submit" | "compile" | "debug";
-export type LaunchProtocol = "http" | "https";
-export type LaunchLegacyMode = "true" | "false";
-export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
-    mode: LaunchMode;
-    program: string;
-    workspace: string;
-    protocol: LaunchProtocol;
-    serverAddress: string;
-    port: number;
-    rejectUnauthorized: boolean;
-    targetCluster: string;
-    eclccPath: string;
-    eclccArgs: string[];
-    includeFolders: string;
-    legacyMode: LaunchLegacyMode;
-    resultLimit: number;
-    user: string;
-    password: string;
-}
-
-export interface LaunchRequestArgumentsEx extends DebugProtocol.LaunchRequestArguments {
-    mode: WUUpdate.Action;
-    program: string;
-    workspace: string;
-    protocol: LaunchProtocol;
-    serverAddress: string;
-    port: number;
-    rejectUnauthorized: boolean;
-    targetCluster: string;
-    eclccPath: string;
-    eclccArgs: string[];
-    includeFolders: string[];
-    legacyMode: boolean;
-    resultLimit: number;
-    user: string;
-    password: string;
-}
 
 class WUStack {
     graphItem: IGraphItem;
@@ -83,7 +44,7 @@ class WUScope {
 export class ECLDebugSession extends DebugSession {
     workunit: Workunit;
     watchHandle: IObserverHandle;
-    launchRequestArgs: LaunchRequestArgumentsEx;
+    launchConfig: LaunchConfig;
 
     private prevMonitorMessage: string;
 
@@ -128,51 +89,17 @@ export class ECLDebugSession extends DebugSession {
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
         this.logger.debug("launchRequest:  " + JSON.stringify(args));
-        let _action: WUUpdate.Action;
-        switch (args.mode) {
-            case "compile":
-                _action = WUUpdate.Action.Compile;
-                break;
-            case "debug":
-                _action = WUUpdate.Action.Debug;
-                break;
-            case "submit":
-            default:
-                _action = WUUpdate.Action.Run;
-                break;
-        }
-        this.launchRequestArgs = {
-            mode: _action,
-            program: args.program,
-            workspace: args.workspace,
-            protocol: args.protocol || "http",
-            serverAddress: args.serverAddress,
-            port: args.port,
-            rejectUnauthorized: args.rejectUnauthorized || false,
-            targetCluster: args.targetCluster,
-            eclccPath: args.eclccPath ? args.eclccPath : "",
-            eclccArgs: args.eclccArgs ? args.eclccArgs : [],
-            includeFolders: args.includeFolders ? args.includeFolders.split(",") : [],
-            legacyMode: args.legacyMode === "true" ? true : false,
-            resultLimit: args.resultLimit || 100,
-            user: args.user || "",
-            password: args.password || ""
-        };
+        this.launchConfig = new LaunchConfig(args);
         this.sendEvent(new OutputEvent("Locating Client Tools." + os.EOL));
-        locateClientTools(this.launchRequestArgs.eclccPath, this.launchRequestArgs.workspace, this.launchRequestArgs.includeFolders, this.launchRequestArgs.legacyMode).then((clientTools) => {
+        locateClientTools(this.launchConfig._config.eclccPath, this.launchConfig._config.workspace, this.launchConfig.includeFolders(), this.launchConfig.legacyMode()).then((clientTools) => {
             this.sendEvent(new OutputEvent("Client Tools:  " + clientTools.eclccPath + os.EOL));
             this.sendEvent(new OutputEvent("Generating archive." + os.EOL));
-            return clientTools.createArchive(this.launchRequestArgs.program);
+            return clientTools.createArchive(this.launchConfig._config.program);
         }).then((archive) => {
             this.sendEvent(new OutputEvent("Creating workunit." + os.EOL));
-            return Workunit.create({
-                baseUrl: `${this.launchRequestArgs.protocol}://${this.launchRequestArgs.serverAddress}:${this.launchRequestArgs.port}`,
-                userID: this.launchRequestArgs.user,
-                password: this.launchRequestArgs.password,
-                rejectUnauthorized: this.launchRequestArgs.rejectUnauthorized
-            }).then((wu) => {
-                this.sendEvent(new Event("WUCreated", { ...this.launchRequestArgs, wuid: wu.Wuid }));
-                const pathParts = path.parse(this.launchRequestArgs.program);
+            return this.launchConfig.createWorkunit().then((wu) => {
+                this.sendEvent(new Event("WUCreated", { ...this.launchConfig._config, wuid: wu.Wuid }));
+                const pathParts = path.parse(this.launchConfig._config.program);
                 return wu.update({
                     Jobname: pathParts.name,
                     QueryText: archive.content,
@@ -180,7 +107,7 @@ export class ECLDebugSession extends DebugSession {
                         ApplicationValue: [{
                             Application: "vscode-ecl",
                             Name: "filePath",
-                            Value: this.launchRequestArgs.program
+                            Value: this.launchConfig._config.program
                         }]
                     }
                 });
@@ -188,9 +115,9 @@ export class ECLDebugSession extends DebugSession {
         }).then((workunit) => {
             this.workunit = workunit;
             this.sendEvent(new OutputEvent("Submitting workunit:  " + workunit.Wuid + os.EOL));
-            return workunit.submit(this.launchRequestArgs.targetCluster, this.launchRequestArgs.mode, this.launchRequestArgs.resultLimit);
+            return workunit.submit(this.launchConfig._config.targetCluster, this.launchConfig.action(), this.launchConfig._config.resultLimit);
         }).then(() => {
-            this.sendEvent(new OutputEvent("Submitted:  " + this.launchRequestArgs.protocol + "://" + this.launchRequestArgs.serverAddress + ":" + this.launchRequestArgs.port + "/?Widget=WUDetailsWidget&Wuid=" + this.workunit.Wuid + os.EOL));
+            this.sendEvent(new OutputEvent("Submitted:  " + this.launchConfig.wuDetailsUrl(this.workunit.Wuid) + os.EOL));
         }).then(() => {
             this.workunit.watchUntilRunning().then(() => {
                 this.sendEvent(new InitializedEvent());
@@ -248,7 +175,6 @@ export class ECLDebugSession extends DebugSession {
             if (this.prevMonitorMessage !== monitorMsg) {
                 this.prevMonitorMessage = monitorMsg;
                 this.sendEvent(new OutputEvent(monitorMsg));
-                this.sendEvent(new Event("WUWatched", { ...this.launchRequestArgs, wuid: this.workunit.Wuid }));
             }
             if (this.workunit.isComplete()) {
                 this.sendEvent(new TerminatedEvent());
@@ -367,7 +293,7 @@ export class ECLDebugSession extends DebugSession {
                 }
                 break;
             case "workunit":
-                this.pushStackFrame(stackFrames, graph, { file: this.launchRequestArgs.program, col: debugState.state === "finished" ? Number.MAX_SAFE_INTEGER : 0 });
+                this.pushStackFrame(stackFrames, graph, { file: this.launchConfig._config.program, col: debugState.state === "finished" ? Number.MAX_SAFE_INTEGER : 0 });
                 break;
             default:
         }
