@@ -8,6 +8,7 @@ This extension adds rich language support for the ECL language to VS Code, inclu
 - Auto completion
 - F7 Syntax check
 - shift+F7 Syntax check all
+- ctrl+F7 Syntax check clear all reported problems
 - F12 "Goto definition"
 - Basic workunit support
 - Multi root workspaces ([vscode docs](https://code.visualstudio.com/docs/editor/multi-root-workspaces)):  No need to manually include folders.
@@ -35,6 +36,12 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
   // Add '-legacy' arguement to eclcc.
   "ecl.legacyMode": false,
+
+  // Open workunits in external browser.
+  "ecl.WUOpenExternal": false
+
+  // Automatically open WU in browser on creation.
+  "ecl.WUAutoOpen": false
 ```
 
 #### Launch Settings

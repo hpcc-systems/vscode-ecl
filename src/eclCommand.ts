@@ -1,6 +1,7 @@
 import * as opn from "opn";
 import * as vscode from "vscode";
 import { checkTextDocument, checkWorkspace } from "./eclCheck";
+import { eclDiagnosticCollection } from "./eclDiagnostic";
 import { encodeLocation } from "./eclWatch";
 
 export let eclCommands: ECLCommands;
@@ -11,6 +12,7 @@ export class ECLCommands {
         this._ctx = ctx;
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheck", this.syntaxCheck));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheckAll", this.syntaxCheckAll));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheckClear", this.syntaxCheckClear));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showECLWatch", this.showECLWatch));
@@ -39,6 +41,10 @@ export class ECLCommands {
         }
     }
 
+    syntaxCheckClear() {
+        eclDiagnosticCollection.clear();
+    }
+
     showLanguageReference() {
         opn("https://hpccsystems.com/training/documentation/ecl-language-reference/html");
     }
@@ -61,10 +67,15 @@ export class ECLCommands {
     }
 
     openWUDetails(url: string, wuid: string) {
-        const uri = encodeLocation(url, wuid);
-        return vscode.commands.executeCommand("vscode.previewHtml", uri, vscode.ViewColumn.Two, wuid).then((success) => {
-        }, (reason) => {
-            vscode.window.showErrorMessage(reason);
-        });
+        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        if (eclConfig.get<boolean>("WUOpenExternal")) {
+            opn(url);
+        } else {
+            const uri = encodeLocation(url, wuid);
+            return vscode.commands.executeCommand("vscode.previewHtml", uri, vscode.ViewColumn.Two, wuid).then((success) => {
+            }, (reason) => {
+                vscode.window.showErrorMessage(reason);
+            });
+        }
     }
 }
