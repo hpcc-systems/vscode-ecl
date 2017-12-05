@@ -1,5 +1,7 @@
 import { Workunit } from "@hpcc-js/comms";
 import * as vscode from "vscode";
+import { LaunchConfig, LaunchRequestArguments } from "./debugger/launchConfig";
+import { eclCommands } from "./eclCommand";
 
 let eclTree: ECLTree;
 class ECLNode {
@@ -18,6 +20,10 @@ class ECLNode {
         return false;
     }
 
+    collapseState(): vscode.TreeItemCollapsibleState {
+        return this.hasChildren() ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None;
+    }
+
     getChildren(): vscode.ProviderResult<ECLNode[]> {
         return [];
     }
@@ -27,23 +33,21 @@ class ECLNode {
     }
 }
 
+const disabledLaunchConfig: { [name: string]: boolean } = {};
+
 class ECLWUNode extends ECLNode {
-    _baseUrl: string;
+    _launchNode: ECLLaunchNode;
     _wu: Workunit;
 
-    constructor(tree: ECLTree, baseUrl: string, wu: Workunit) {
-        super(tree);
-        this._baseUrl = baseUrl;
+    constructor(launchNode: ECLLaunchNode, wu: Workunit) {
+        super(launchNode._tree);
+        this._launchNode = launchNode;
         this._wu = wu;
         if (!this._wu.isComplete()) {
             this._wu.watchUntilComplete(changes => {
                 this._tree.refresh(true);
             });
         }
-    }
-
-    wuDetailsUrl() {
-        return `${this._baseUrl}/?Wuid=${this._wu.Wuid}&Widget=WUDetailsWidget`;
     }
 
     getLabel(): string {
@@ -53,9 +57,51 @@ class ECLWUNode extends ECLNode {
     command(): vscode.Command | undefined {
         return {
             command: "ecl.openWUDetails",
-            arguments: [this.wuDetailsUrl(), this._wu.Wuid],
+            arguments: [this._launchNode._launchConfig.wuDetailsUrl(this._wu.Wuid), this._wu.Wuid],
             title: "Open ECL Workunit Details"
         };
+    }
+}
+
+class ECLLaunchNode extends ECLNode {
+    _rootNode: ECLRootNode;
+    _name: string;
+    _launchConfig: LaunchConfig;
+
+    constructor(rootNode: ECLRootNode, name: string, config: LaunchRequestArguments) {
+        super(rootNode._tree);
+        this._rootNode = rootNode;
+        this._name = name;
+        this._launchConfig = new LaunchConfig(config);
+    }
+
+    getLabel(): string {
+        return this._name + (disabledLaunchConfig[this._name] ? " (unresponsive)" : "");
+    }
+
+    collapseState(): vscode.TreeItemCollapsibleState {
+        return vscode.TreeItemCollapsibleState.Expanded;
+    }
+
+    getChildren(): vscode.ProviderResult<ECLWUNode[]> {
+        if (disabledLaunchConfig[this._name]) return [];
+        disabledLaunchConfig[this._name] = true;
+        return this._launchConfig.query({
+            Cluster: this._launchConfig._config.targetCluster,
+            ApplicationValues: {
+                ApplicationValue: [{
+                    Application: "vscode-ecl",
+                    Name: "filePath",
+                    Value: this._rootNode._fsPath
+                }]
+            },
+            Count: 5
+        }).then(workunits => {
+            disabledLaunchConfig[this._name] = false;
+            return workunits.map(wu => new ECLWUNode(this, wu));
+        }).catch(e => {
+            return [];
+        });
     }
 }
 
@@ -88,52 +134,37 @@ class ECLRootNode extends ECLNode {
         return true;
     }
 
-    baseUrl(config: any): string {
-        return `${config.protocol}://${config.serverAddress}:${config.port}`;
-    }
-
-    gatherServers(retVal: string[], uri?: vscode.Uri) {
-        const eclLaunch = vscode.workspace.getConfiguration("launch", uri);
-        if (eclLaunch.has("configurations")) {
-            for (const launchConfig of eclLaunch.get<any[]>("configurations")!) {
-                if (launchConfig.type === "ecl" && launchConfig.name) {
-                    const baseUrl = this.baseUrl(launchConfig);
-                    if (retVal.indexOf(baseUrl) < 0)
-                        retVal.push(baseUrl);
+    getChildren(): vscode.ProviderResult<ECLLaunchNode[]> {
+        const retVal: ECLLaunchNode[] = [];
+        const context = this;
+        function gatherServers(uri?: vscode.Uri) {
+            const eclLaunch = vscode.workspace.getConfiguration("launch", uri);
+            if (eclLaunch.has("configurations")) {
+                for (const launchConfig of eclLaunch.get<any[]>("configurations")!) {
+                    if (launchConfig.type === "ecl" && launchConfig.name) {
+                        retVal.push(new ECLLaunchNode(context, launchConfig.name, launchConfig));
+                    }
                 }
             }
         }
-    }
-
-    getChildren(): vscode.ProviderResult<ECLWUNode[]> {
-        if (!this._fsPath) return [];
-        const servers: string[] = [];
         if (vscode.workspace.workspaceFolders) {
             for (const wuf of vscode.workspace.workspaceFolders) {
-                this.gatherServers(servers, wuf.uri);
+                gatherServers(wuf.uri);
             }
         } else {
-            this.gatherServers(servers);
+            gatherServers();
         }
 
-        return Promise.all(servers.map(server => Workunit.query({ baseUrl: server }, {
-            ApplicationValues: {
-                ApplicationValue: [{
-                    Application: "vscode-ecl",
-                    Name: "filePath",
-                    Value: this._fsPath
-                }]
+        return Promise.all(retVal.map(launchNode => {
+            if (disabledLaunchConfig[launchNode._name] === undefined) {
+                return launchNode._launchConfig.ping(3000).then(alive => {
+                    disabledLaunchConfig[launchNode._name] = !alive;
+                    return launchNode;
+                });
+            } else {
+                return Promise.resolve(launchNode);
             }
-        }))).then(responses => {
-            const retVal: ECLWUNode[] = [];
-            for (let i = 0; i < responses.length; ++i) {
-                const response = responses[i];
-                for (const wu of response) {
-                    retVal.push(new ECLWUNode(this._tree, servers[i], wu));
-                }
-            }
-            return retVal;
-        });
+        }));
     }
 }
 
@@ -179,7 +210,7 @@ export class ECLTree implements vscode.TreeDataProvider<ECLNode> {
 
     getTreeItem(node: ECLNode): vscode.TreeItem | Thenable<vscode.TreeItem> {
         if (!node._treeItem) {
-            node._treeItem = new vscode.TreeItem(node.getLabel(), node.hasChildren() ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
+            node._treeItem = new vscode.TreeItem(node.getLabel(), node.collapseState());
             node._treeItem.command = node.command();
         }
         /*
