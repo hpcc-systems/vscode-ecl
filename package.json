@@ -101,6 +101,11 @@
                 "description": "Save All + check syntax of all files."
             },
             {
+                "command": "ecl.syntaxCheckClear",
+                "title": "ECL: Clear all reported problems",
+                "description": "Clear all reported ECL problems."
+            },
+            {
                 "command": "ecl.showECLWatch",
                 "title": "ECL: Show Workunits",
                 "description": "Show workunits associated with current file."
@@ -138,6 +143,11 @@
                 "command": "ecl.syntaxCheckAll",
                 "key": "shift+f7",
                 "mac": "shift+f7"
+            },
+            {
+                "command": "ecl.syntaxCheckClear",
+                "key": "ctrl+f7",
+                "mac": "ctrl+f7"
             },
             {
                 "command": "ecl.showECLWatch",
