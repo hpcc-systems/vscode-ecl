@@ -186,6 +186,11 @@ export class ECLTree implements vscode.TreeDataProvider<ECLNode> {
             switch (event.event) {
                 case "WUCreated":
                     this.refresh();
+                    const eclConfig = vscode.workspace.getConfiguration("ecl");
+                    if (eclConfig.get<boolean>("WUAutoOpen")) {
+                        const launchConfig = new LaunchConfig(event.body);
+                        eclCommands.openWUDetails(launchConfig.wuDetailsUrl(event.body.wuid), event.body.wuid);
+                    }
                     break;
             }
         }, null, ctx.subscriptions);
@@ -213,15 +218,6 @@ export class ECLTree implements vscode.TreeDataProvider<ECLNode> {
             node._treeItem = new vscode.TreeItem(node.getLabel(), node.collapseState());
             node._treeItem.command = node.command();
         }
-        /*
-        treeItem.command = {
-            command: 'extension.openJsonSelection',
-            title: '',
-            arguments: [new vscode.Range(this.editor.document.positionAt(node.offset), this.editor.document.positionAt(node.offset + node.length))]
-        };
-        treeItem.iconPath = this.getIcon(node);
-        treeItem.contextValue = this.getNodeType(node);
-        */
         return node._treeItem;
     }
 
