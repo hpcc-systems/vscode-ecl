@@ -3,7 +3,7 @@ import { scopedLogger } from "@hpcc-js/util";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { eclDiagnosticCollection } from "./eclDiagnostic";
+import { eclDiagnostic } from "./eclDiagnostic";
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
 
@@ -37,17 +37,20 @@ export function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfigurat
         if (!clientTools) {
             throw new Error();
         } else if (!!eclConfig["syntaxCheckOnSave"]) {
-            logger.debug(`syntaxCheck:  ${fileUri.fsPath}`);
+            logger.debug(`syntaxCheck-promise:  ${fileUri.fsPath}`);
             return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then(errors => {
                 if (errors[1].length) {
-                    logger.warning(`syntaxCheck:  ${errors[1].toString()}`);
+                    logger.warning(`syntaxCheck-warning:  ${fileUri.fsPath} ${errors[1].toString()}`);
                 }
+                logger.debug(`syntaxCheck-resolve:  ${fileUri.fsPath} ${errors[0].length} total.`);
                 return errors[0];
             }).catch(e => {
+                logger.debug(`syntaxCheck-reject:  ${fileUri.fsPath} ${e.msg}`);
                 vscode.window.showInformationMessage(`Syntax check exception:  ${fileUri.fsPath} ${e.msg}`);
                 return Promise.resolve([]);
             });
         }
+        logger.debug(`syntaxCheck-skipped:  ${fileUri.fsPath}`);
         return Promise.resolve([]);
     }).catch(e => {
         vscode.window.showInformationMessage('Unable to locate "eclcc" binary.  Ensure ECL ClientTools is installed.');
@@ -63,9 +66,17 @@ function mapSeverityToVSCodeSeverity(sev: string) {
     }
 }
 
+const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...checking...")];
 export function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
+    if (uri) {
+        const wsf = vscode.workspace.getWorkspaceFolder(uri);
+        if (wsf) {
+            vscode.window.setStatusBarMessage(`Syntax Check:  ${path.relative(wsf.uri.fsPath, uri.fsPath)}`);
+        }
+    }
+    eclDiagnostic.set(uri, checking);
     return check(uri, eclConfig).then((errors) => {
-        eclDiagnosticCollection.delete(uri);
+        eclDiagnostic.set(uri, []);
 
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
 
@@ -81,10 +92,13 @@ export function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfigurati
             diagnosticMap.set(canonicalFile, diagnostics);
         });
         diagnosticMap.forEach((diags, file) => {
-            eclDiagnosticCollection.set(vscode.Uri.parse(file), diags);
+            eclDiagnostic.set(vscode.Uri.parse(file), diags);
         });
+        vscode.window.setStatusBarMessage("");
     }).catch((err) => {
+        eclDiagnostic.set(uri, []);
         vscode.window.showInformationMessage("Error: " + err);
+        vscode.window.setStatusBarMessage("");
     });
 }
 
@@ -113,8 +127,6 @@ export async function checkWorkspace(wsf: vscode.WorkspaceFolder): Promise<void>
         files.push(filePath);
     });
     for (const file of files) {
-        vscode.window.setStatusBarMessage(`Syntax Check:  ${path.relative(wsf.uri.fsPath, file)}`);
         await checkUri(vscode.Uri.file(file), vscode.workspace.getConfiguration("ecl", wsf.uri));
-        vscode.window.setStatusBarMessage("");
     }
 }
