@@ -26,25 +26,29 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
 ```javascript
   // Run 'eclcc -sytnax' on save.
-  "ecl.syntaxCheckOnSave": true,
+  "ecl.syntaxCheckOnSave": true
 
   // Syntax check args.
   "ecl.syntaxArgs": ["-syntax"],
 
 // External folders used by IMPORT
-  "ecl.includeFolders": [],
+  "ecl.includeFolders": []
 
   // Override eclcc auto detection
-  "ecl.eclccPath": "",
+  "ecl.eclccPath": ""
 
   // Add '-legacy' arguement to eclcc.
-  "ecl.legacyMode": false,
+  "ecl.legacyMode": false
 
   // Open workunits in external browser.
   "ecl.WUOpenExternal": false
 
   // Automatically open WU in browser on creation.
   "ecl.WUAutoOpen": false
+
+  // Debug logging.
+  "ecl.debugLogging": false
+  
 ```
 
 #### Launch Settings

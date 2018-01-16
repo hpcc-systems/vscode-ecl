@@ -400,6 +400,11 @@
                     },
                     "default": [],
                     "description": "HPCC Servers"
+                },
+                "ecl.debugLogging": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Debug level logging (requires restart)"
                 }
             }
         }
