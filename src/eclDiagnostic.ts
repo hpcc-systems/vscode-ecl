@@ -31,7 +31,9 @@ export class ECLDiagnostic {
                     eclDiagnosticCollection.set(this._activeTextEditor, _diagnosticCache[this._activeTextEditor.toString()]);
                 } else {
                     const eclConfig = vscode.workspace.getConfiguration("ecl", event.document.uri);
-                    checkTextDocument(event.document, eclConfig);
+                    if (eclConfig.get<boolean>("syntaxCheckOnLoad")) {
+                        checkTextDocument(event.document, eclConfig);
+                    }
                 }
             }
         });

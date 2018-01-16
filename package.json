@@ -337,14 +337,19 @@
                         "type": "string"
                     },
                     "default": [
-                        "-sytnax"
+                        "-syntax"
                     ],
                     "description": "eclcc syntax check arguments."
                 },
                 "ecl.syntaxCheckOnSave": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Run 'eclcc -sytnax' on save."
+                    "description": "Run 'eclcc -syntax' on save."
+                },
+                "ecl.syntaxCheckOnLoad": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Run 'eclcc -syntax' on load."
                 },
                 "ecl.includeFolders": {
                     "type": "array",
