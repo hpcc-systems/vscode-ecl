@@ -38,7 +38,7 @@ export function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfigurat
             throw new Error();
         } else if (!!eclConfig["syntaxCheckOnSave"]) {
             logger.debug(`syntaxCheck:  ${fileUri.fsPath}`);
-            return clientTools.syntaxCheck(fileUri.fsPath).then(errors => {
+            return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then(errors => {
                 if (errors[1].length) {
                     logger.warning(`syntaxCheck:  ${errors[1].toString()}`);
                 }
