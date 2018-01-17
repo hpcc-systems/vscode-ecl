@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.25",
+    "version": "0.0.26",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
@@ -33,18 +33,15 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "0.0.55",
-        "@hpcc-js/util": "0.0.49",
+        "@hpcc-js/comms": "0.0.73",
+        "@hpcc-js/util": "0.0.66",
         "console-stamp": "^0.2.5",
         "es6-promise": "~4.1.1",
         "opn": "^5.1.0",
-        "semver": "^5.4.1",
-        "tmp": "^0.0.31",
         "tslib": "^1.7.1",
         "vscode": "^1.1.4",
         "vscode-debugadapter": "^1.22.0",
-        "vscode-debugprotocol": "^1.22.0",
-        "xmldom": "^0.1.27"
+        "vscode-debugprotocol": "^1.22.0"
     },
     "devDependencies": {
         "@types/mocha": "^2.2.41",
