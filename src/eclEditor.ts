@@ -15,7 +15,6 @@ export class ECLEditor {
 
         this.visibleCheckSyntax();
         this.onSaveWatcher();
-        this.onActiveWatcher();
         ctx.subscriptions.push(vscode.languages.registerCompletionItemProvider(ECL_MODE, this._completionProvider, ".", '\"'));
         ctx.subscriptions.push(vscode.languages.registerDefinitionProvider(ECL_MODE, this._definitionProvider));
     }
@@ -50,13 +49,5 @@ export class ECLEditor {
                 });
             }
         }, null, this._ctx.subscriptions);
-    }
-
-    onActiveWatcher() {
-        vscode.window.onDidChangeActiveTextEditor(event => {
-            if (event && vscode.window.activeTextEditor) {
-                checkTextDocument(event.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
-            }
-        });
     }
 }

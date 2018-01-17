@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.23",
+    "version": "0.0.25",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
@@ -331,10 +331,25 @@
             "type": "object",
             "title": "ECL configuration",
             "properties": {
+                "ecl.syntaxArgs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "-syntax"
+                    ],
+                    "description": "eclcc syntax check arguments."
+                },
                 "ecl.syntaxCheckOnSave": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Run 'eclcc -fsytnax' on save."
+                    "description": "Run 'eclcc -syntax' on save."
+                },
+                "ecl.syntaxCheckOnLoad": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Run 'eclcc -syntax' on load."
                 },
                 "ecl.includeFolders": {
                     "type": "array",
@@ -390,6 +405,11 @@
                     },
                     "default": [],
                     "description": "HPCC Servers"
+                },
+                "ecl.debugLogging": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Debug level logging (requires restart)"
                 }
             }
         }

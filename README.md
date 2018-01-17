@@ -25,23 +25,33 @@ This extension adds rich language support for the ECL language to VS Code, inclu
 The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`cmd+,`) or workspace settings (`.vscode/settings.json`):
 
 ```javascript
-  // Run 'eclcc -fsytnax' on save.
-  "ecl.syntaxCheckOnSave": true,
+  // Syntax check args.
+  "ecl.syntaxArgs": ["-syntax"],
 
-  // External folders used by IMPORT
-  "ecl.includeFolders": [],
+  // Run 'eclcc -syntax' on save.
+  "ecl.syntaxCheckOnSave": true
+
+  // Run 'eclcc -syntax' on load.
+  "ecl.syntaxCheckOnLoad": true
+
+// External folders used by IMPORT
+  "ecl.includeFolders": []
 
   // Override eclcc auto detection
-  "ecl.eclccPath": "",
+  "ecl.eclccPath": ""
 
   // Add '-legacy' arguement to eclcc.
-  "ecl.legacyMode": false,
+  "ecl.legacyMode": false
 
   // Open workunits in external browser.
   "ecl.WUOpenExternal": false
 
   // Automatically open WU in browser on creation.
   "ecl.WUAutoOpen": false
+
+  // Debug logging.
+  "ecl.debugLogging": false
+  
 ```
 
 #### Launch Settings
