@@ -331,10 +331,20 @@
             "type": "object",
             "title": "ECL configuration",
             "properties": {
+                "ecl.syntaxArgs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "-sytnax"
+                    ],
+                    "description": "eclcc syntax check arguments."
+                },
                 "ecl.syntaxCheckOnSave": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Run 'eclcc -fsytnax' on save."
+                    "description": "Run 'eclcc -sytnax' on save."
                 },
                 "ecl.includeFolders": {
                     "type": "array",
