@@ -1,7 +1,7 @@
 import * as opn from "opn";
 import * as vscode from "vscode";
 import { checkTextDocument, checkWorkspace } from "./eclCheck";
-import { eclDiagnosticCollection } from "./eclDiagnostic";
+import { eclDiagnostic } from "./eclDiagnostic";
 import { encodeLocation } from "./eclWatch";
 
 export let eclCommands: ECLCommands;
@@ -42,7 +42,7 @@ export class ECLCommands {
     }
 
     syntaxCheckClear() {
-        eclDiagnosticCollection.clear();
+        eclDiagnostic.clear();
     }
 
     showLanguageReference() {
