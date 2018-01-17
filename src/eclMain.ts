@@ -7,7 +7,9 @@ import { ECLTree } from "./eclTree";
 import { ECLWatch } from "./eclWatch";
 import { initLogger, Level } from "./util";
 
-initLogger(Level.info);
+const eclConfig = vscode.workspace.getConfiguration("ecl");
+
+initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
 
 export function activate(ctx: vscode.ExtensionContext): void {
     // ctx.subscriptions.push(vscode.languages.registerHoverProvider(ECL_MODE, new ECLHoverProvider()));
