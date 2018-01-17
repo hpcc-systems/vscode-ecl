@@ -29,7 +29,7 @@ function calcIncludeFolders(wsPath: string): string[] {
     return retVal;
 }
 
-export function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<IECLError[]> {
+function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<IECLError[]> {
     const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
     const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
     const includeFolders = calcIncludeFolders(currentWorkspacePath);
@@ -67,7 +67,7 @@ function mapSeverityToVSCodeSeverity(sev: string) {
 }
 
 const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...checking...")];
-export function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
+function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
     if (uri) {
         const wsf = vscode.workspace.getWorkspaceFolder(uri);
         if (wsf) {
