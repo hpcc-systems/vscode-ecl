@@ -1,6 +1,6 @@
 # ECL for Visual Studio Code
 
-Read the [Release Notes](https://github.com/GordonSmith/vscode-ecl/releases) to know what has changed over the last few versions of this extension.
+Read the [Release Notes](https://github.com/hpcc-systems/vscode-ecl/releases) to know what has changed over the last few versions of this extension.
 
 This extension adds rich language support for the ECL language to VS Code, including:
 
@@ -90,7 +90,7 @@ First make sure you do not have the extension installed in `~/.vscode/extensions
 ```bash
 rm -rf ~/.vscode/extensions/GordonSmith.ecl
 cd ~
-git clone https://github.com/GordonSmith/vscode-ecl
+git clone https://github.com/hpcc-systems/vscode-ecl
 cd vscode-ecl
 npm install
 code .

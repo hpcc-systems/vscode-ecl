@@ -4,7 +4,7 @@ import { LaunchConfig, LaunchRequestArguments } from "./debugger/launchConfig";
 import { eclCommands } from "./eclCommand";
 
 let eclTree: ECLTree;
-class ECLNode {
+export class ECLNode {
     _tree: ECLTree;
     _treeItem: vscode.TreeItem;
 
@@ -173,7 +173,7 @@ export class ECLTree implements vscode.TreeDataProvider<ECLNode> {
     _onDidChangeTreeData: vscode.EventEmitter<ECLNode | null> = new vscode.EventEmitter<ECLNode | null>();
     readonly onDidChangeTreeData: vscode.Event<ECLNode | null> = this._onDidChangeTreeData.event;
 
-    _root = new ECLRootNode(this);
+    private _root = new ECLRootNode(this);
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
