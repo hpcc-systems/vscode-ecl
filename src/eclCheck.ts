@@ -50,8 +50,6 @@ function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): P
                 return Promise.resolve([]);
             });
         }
-        logger.debug(`syntaxCheck-skipped:  ${fileUri.fsPath}`);
-        return Promise.resolve([]);
     }).catch(e => {
         vscode.window.showInformationMessage('Unable to locate "eclcc" binary.  Ensure ECL ClientTools is installed.');
         return Promise.resolve([]);
