@@ -44,9 +44,11 @@ export class ECLEditor {
                 if (eclConfig["formatOnSave"] && vscode.window.activeTextEditor.document === document) {
                     //  TODO Auto Format  ---
                 }
-                formatPromise.then(() => {
-                    checkTextDocument(document, eclConfig);
-                });
+                if (!!eclConfig["syntaxCheckOnSave"]) {
+                    formatPromise.then(() => {
+                        checkTextDocument(document, eclConfig);
+                    });
+                }
             }
         }, null, this._ctx.subscriptions);
     }

@@ -36,7 +36,7 @@ function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): P
     return locateClientTools(eclConfig["eclccPath"], currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then((clientTools): Promise<IECLError[]> => {
         if (!clientTools) {
             throw new Error();
-        } else if (!!eclConfig["syntaxCheckOnSave"]) {
+        } else {
             logger.debug(`syntaxCheck-promise:  ${fileUri.fsPath}`);
             return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then(errors => {
                 if (errors[1].length) {
@@ -50,8 +50,6 @@ function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): P
                 return Promise.resolve([]);
             });
         }
-        logger.debug(`syntaxCheck-skipped:  ${fileUri.fsPath}`);
-        return Promise.resolve([]);
     }).catch(e => {
         vscode.window.showInformationMessage('Unable to locate "eclcc" binary.  Ensure ECL ClientTools is installed.');
         return Promise.resolve([]);

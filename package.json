@@ -1,6 +1,6 @@
 {
     "name": "ecl",
-    "version": "0.0.26",
+    "version": "0.0.28",
     "publisher": "GordonSmith",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
@@ -20,7 +20,7 @@
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/GordonSmith/vscode-ecl.git"
+        "url": "https://github.com/hpcc-systems/vscode-ecl.git"
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
@@ -28,20 +28,20 @@
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test",
         "lint": "node ./node_modules/tslint/bin/tslint ./src/*.ts ./src/serverAdapter/*.ts ./test/*.ts",
-        "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/GordonSmith/vscode-ecl all --markdown",
+        "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/hpcc-systems/vscode-ecl all --markdown",
         "bump-publish": "vsce publish patch"
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "0.0.73",
-        "@hpcc-js/util": "0.0.66",
-        "console-stamp": "^0.2.5",
-        "es6-promise": "~4.1.1",
-        "opn": "^5.1.0",
-        "tslib": "^1.7.1",
-        "vscode": "^1.1.4",
-        "vscode-debugadapter": "^1.22.0",
-        "vscode-debugprotocol": "^1.22.0"
+        "@hpcc-js/comms": "0.0.74",
+        "@hpcc-js/util": "0.0.67",
+        "console-stamp": "0.2.6",
+        "es6-promise": "4.2.4",
+        "opn": "5.2.0",
+        "tslib": "1.9.0",
+        "vscode": "1.1.10",
+        "vscode-debugadapter": "1.27.0",
+        "vscode-debugprotocol": "1.27.0"
     },
     "devDependencies": {
         "@types/mocha": "^2.2.41",
@@ -49,7 +49,7 @@
         "changelog": "^1.4.0",
         "mocha": "^3.4.2",
         "tslint": "^5.5.0",
-        "typescript": "^2.4.2"
+        "typescript": "^2.7.2"
     },
     "engines": {
         "vscode": "^1.16.0"
@@ -368,7 +368,7 @@
                 },
                 "ecl.WUOpenExternal": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "Open WU in external browser."
                 },
                 "ecl.WUAutoOpen": {
