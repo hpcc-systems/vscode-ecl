@@ -368,7 +368,7 @@
                 },
                 "ecl.WUOpenExternal": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "Open WU in external browser."
                 },
                 "ecl.WUAutoOpen": {
