@@ -28,7 +28,6 @@
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test",
         "lint": "node ./node_modules/tslint/bin/tslint ./src/*.ts ./src/serverAdapter/*.ts ./test/*.ts",
-        "changelog": "node ./node_modules/changelog/bin/changelog.js https://github.com/hpcc-systems/vscode-ecl all --markdown",
         "bump-publish": "vsce publish patch"
     },
     "extensionDependencies": [],
@@ -37,7 +36,6 @@
         "@hpcc-js/util": "0.0.67",
         "console-stamp": "0.2.6",
         "es6-promise": "4.2.4",
-        "opn": "5.2.0",
         "tslib": "1.9.0",
         "vscode": "1.1.10",
         "vscode-debugadapter": "1.27.0",
@@ -46,7 +44,6 @@
     "devDependencies": {
         "@types/mocha": "^2.2.41",
         "@types/node": "^7.0.18",
-        "changelog": "^1.4.0",
         "mocha": "^3.4.2",
         "tslint": "^5.5.0",
         "typescript": "^2.7.2"

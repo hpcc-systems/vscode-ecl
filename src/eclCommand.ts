@@ -1,4 +1,3 @@
-import * as opn from "opn";
 import * as vscode from "vscode";
 import { checkTextDocument, checkWorkspace } from "./eclCheck";
 import { eclDiagnostic } from "./eclDiagnostic";
@@ -46,14 +45,14 @@ export class ECLCommands {
     }
 
     showLanguageReference() {
-        opn("https://hpccsystems.com/training/documentation/ecl-language-reference/html");
+        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse("https://hpccsystems.com/training/documentation/ecl-language-reference/html"));
     }
 
     searchTerm(editor: vscode.TextEditor) {
         if (vscode.window.activeTextEditor) {
             const range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
             const searchTerm = editor.document.getText(range);
-            opn(`https://hpccsystems.com/training/documentation/ecl-language-reference/html/${searchTerm}.html`);
+            vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`https://hpccsystems.com/training/documentation/ecl-language-reference/html/${searchTerm}.html`));
         }
     }
 
@@ -69,7 +68,7 @@ export class ECLCommands {
     openWUDetails(url: string, wuid: string) {
         const eclConfig = vscode.workspace.getConfiguration("ecl");
         if (eclConfig.get<boolean>("WUOpenExternal")) {
-            opn(url);  // TODO replace with vsocde.open
+            vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(url));
         } else {
             const uri = encodeLocation(url, wuid);
             return vscode.commands.executeCommand("vscode.previewHtml", uri, vscode.ViewColumn.Two, wuid).then((success) => {
