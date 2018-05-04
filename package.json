@@ -155,8 +155,17 @@
                 "mac": "shift+f12"
             }
         ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "ecl-explorer",
+                    "title": "hpcc-systems",
+                    "icon": "images/ecl-explorer.svg"
+                }
+            ]
+        },
         "views": {
-            "explorer": [
+            "ecl-explorer": [
                 {
                     "id": "eclWatch",
                     "name": "ECL Watch"
