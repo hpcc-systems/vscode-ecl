@@ -13,6 +13,7 @@
         "strictNullChecks": false,
         "importHelpers": true,
         "skipLibCheck": true,
+        "noImplicitThis": true,
         "lib": [
             "es6",
             "dom"

@@ -32,21 +32,21 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "0.0.74",
-        "@hpcc-js/util": "0.0.67",
+        "@hpcc-js/comms": "0.0.80",
+        "@hpcc-js/util": "0.0.73",
         "console-stamp": "0.2.6",
         "es6-promise": "4.2.4",
         "tslib": "1.9.0",
-        "vscode": "1.1.10",
-        "vscode-debugadapter": "1.27.0",
-        "vscode-debugprotocol": "1.27.0"
+        "vscode": "1.1.17",
+        "vscode-debugadapter": "1.29.0",
+        "vscode-debugprotocol": "1.29.0"
     },
     "devDependencies": {
-        "@types/mocha": "^2.2.41",
+        "@types/mocha": "^5.2.0",
         "@types/node": "^7.0.18",
-        "mocha": "^3.4.2",
-        "tslint": "^5.5.0",
-        "typescript": "^2.7.2"
+        "mocha": "^5.1.1",
+        "tslint": "^5.10.0",
+        "typescript": "^2.8.3"
     },
     "engines": {
         "vscode": "^1.16.0"
