@@ -59,7 +59,13 @@
             "check-type"
         ],
         "prefer-const": true,
-        "no-string-literal": false
+        "no-string-literal": false,
+        "ordered-imports": [
+            true,
+            {
+                "named-imports-order": "lowercase-last"
+            }
+        ]
     },
     "jsRules": {
         /*

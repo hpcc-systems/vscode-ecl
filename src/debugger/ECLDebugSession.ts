@@ -1,13 +1,13 @@
-import { locateAllClientTools, locateClientTools, Workunit } from "@hpcc-js/comms";
-import { Graph, IGraphItem, IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
-import os = require("os");
-import path = require("path");
-import {
-    Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEvent, OutputEvent, Scope, Source,
-    StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable
-} from "vscode-debugadapter";
+import { Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex, locateAllClientTools, locateClientTools } from "@hpcc-js/comms";
+import { IObserverHandle, Level, ScopedLogging, Writer, logger, scopedLogger } from "@hpcc-js/util";
+import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEvent, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
 import { LaunchConfig, LaunchRequestArguments } from "./launchConfig";
+
+import os = require("os");
+import path = require("path");
+
+export type XGMMLGraphItem = XGMMLGraph | XGMMLSubgraph | XGMMLVertex | XGMMLEdge;
 
 class VSCodeServerWriter implements Writer {
     private _owner: DebugSession;
@@ -20,13 +20,72 @@ class VSCodeServerWriter implements Writer {
     }
 }
 
-// tslint:disable-next-line:no-var-requires
-require("console-stamp")(console);
+const ATTR_DEFINITION = "definition";
+
+export interface IECLDefintion {
+    id: string;
+    file: string;
+    line: number;
+    column: number;
+}
+
+function getECLDefinition(vertex: XGMMLVertex): IECLDefintion {
+    const match = /([a-z]:\\(?:[-\w\.\d]+\\)*(?:[-\w\.\d]+)?|(?:\/[\w\.\-]+)+)\((\d*),(\d*)\)/.exec(vertex._[ATTR_DEFINITION]);
+    if (match) {
+        const [, _file, _row, _col] = match;
+        _file.replace("/./", "/");
+        return {
+            id: vertex._.id,
+            file: _file,
+            line: +_row,
+            column: +_col
+        };
+    }
+    throw new Error(`Bad definition:  ${vertex._[ATTR_DEFINITION]}`);
+}
+
+function hasECLDefinition(vertex: XGMMLVertex): boolean {
+    return vertex._[ATTR_DEFINITION] !== undefined;
+}
+
+function getNearestDefinition(item: XGMMLGraphItem, backwards: boolean = false): IECLDefintion | null {
+    //  Todo - order is incorrect...
+    if (item instanceof XGMMLVertex) {
+        if (hasECLDefinition(item)) {
+            return getECLDefinition(item);
+        }
+        let retVal: IECLDefintion | null = null;
+        item.inEdges.some((edge) => {
+            retVal = getNearestDefinition(edge, backwards);
+            if (retVal) {
+                return true;
+            }
+            return false;
+        });
+        return retVal;
+    } else if (item instanceof XGMMLSubgraph) {
+        let vertices = item.vertices;
+        if (backwards) {
+            vertices = vertices.reverse();
+        }
+        let retVal: IECLDefintion | null = null;
+        vertices.some((vertex) => {
+            retVal = getNearestDefinition(vertex, backwards);
+            if (retVal) {
+                return true;
+            }
+            return false;
+        });
+        return retVal;
+    } else if (item instanceof XGMMLEdge) {
+        return getNearestDefinition(item.source, backwards);
+    }
+}
 
 class WUStack {
-    graphItem: IGraphItem;
+    graphItem: XGMMLGraphItem;
 
-    constructor(graphItem: IGraphItem) {
+    constructor(graphItem: XGMMLGraphItem) {
         this.graphItem = graphItem;
     }
 }
@@ -254,37 +313,38 @@ export class ECLDebugSession extends DebugSession {
         this.sendResponse(response);
     }
 
-    protected pushStackFrame(stackFrames: StackFrame[], graphItem: IGraphItem, def?: any): void {
+    protected pushStackFrame(stackFrames: StackFrame[], graphItem: XGMMLGraphItem, def?: any): void {
         const id: number = this._stackFrameHandles.create(new WUStack(graphItem));
+        const graphItemID = graphItem instanceof XGMMLGraph ? graphItem.root._.id : graphItem._.id;
         if (def) {
-            stackFrames.push(new StackFrame(id, graphItem.id(), new Source("builder", def.file), def.line, def.col));
+            stackFrames.push(new StackFrame(id, graphItemID, new Source("builder", def.file), def.line, def.col));
         } else {
-            stackFrames.push(new StackFrame(id, graphItem.id()));
+            stackFrames.push(new StackFrame(id, graphItemID));
         }
     }
 
-    protected createStackTrace(graph: Graph, type: string, id: string, debugState, stackFrames: StackFrame[]): void {
+    protected createStackTrace(graph: XGMMLGraph, type: string, id: string, debugState, stackFrames: StackFrame[]): void {
         switch (type) {
             case "edge":
-                const edge = graph.allEdge(id);
-                this.pushStackFrame(stackFrames, edge, edge.getNearestDefinition());
-                this.createStackTrace(graph, "vertex", edge.sourceID(), debugState, stackFrames);
+                const edge = graph.edge(id);
+                this.pushStackFrame(stackFrames, edge, getNearestDefinition(edge));
+                this.createStackTrace(graph, "vertex", edge.source._.id, debugState, stackFrames);
                 break;
             case "vertex":
-                const vertex = graph.allVertex(id);
-                this.pushStackFrame(stackFrames, vertex, vertex.getNearestDefinition());
+                const vertex = graph.vertex(id);
+                this.pushStackFrame(stackFrames, vertex, getNearestDefinition(vertex));
                 if (vertex.parent) {
-                    this.createStackTrace(graph, "subgraph", vertex.parent()!.id(), debugState, stackFrames);
+                    this.createStackTrace(graph, "subgraph", vertex.parent!._.id, debugState, stackFrames);
                 } else {
                     this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                 }
                 break;
             case "subgraph":
-                const subgraph = graph.allSubgraph(id);
+                const subgraph = graph.subgraph(id);
                 if (subgraph) {
-                    this.pushStackFrame(stackFrames, subgraph, subgraph.getNearestDefinition(debugState.state === "graph end" || debugState.state === "finished"));
-                    if (subgraph.parent()) {
-                        this.createStackTrace(graph, "subgraph", subgraph.parent()!.id(), debugState, stackFrames);
+                    this.pushStackFrame(stackFrames, subgraph, getNearestDefinition(subgraph, debugState.state === "graph end" || debugState.state === "finished"));
+                    if (subgraph.parent) {
+                        this.createStackTrace(graph, "subgraph", subgraph.parent._.id, debugState, stackFrames);
                     } else {
                         this.createStackTrace(graph, "workunit", this.workunit.Wuid, debugState, stackFrames);
                     }
@@ -303,7 +363,7 @@ export class ECLDebugSession extends DebugSession {
         this.logger.debug("StackTraceRequest");
         const stackFrames: StackFrame[] = [];
         if (this.workunit.isDebugging()) {
-            this.workunit.debugGraph().then((graph) => {
+            this.workunit.debugGraph().then((graph: XGMMLGraph) => {
                 const debugState: any = this.workunit.DebugState;
                 if (debugState.edgeId) {
                     this.createStackTrace(graph, "edge", debugState.edgeId, debugState, stackFrames);
@@ -340,26 +400,20 @@ export class ECLDebugSession extends DebugSession {
         const stackFrameScope: WUStack = this._stackFrameHandles.get(args.frameId);
 
         const scopes: Scope[] = [];
-        switch (stackFrameScope.graphItem.className()) {
-            case "Edge":
-                scopes.push(new Scope("Results", this._variableHandles.create(new WUScope(stackFrameScope, "results")), false));
-                scopes.push(new Scope("Local", this._variableHandles.create(new WUScope(stackFrameScope, "local")), false));
-                break;
-            case "Vertex":
-                scopes.push(new Scope("Local", this._variableHandles.create(new WUScope(stackFrameScope, "local")), false));
-                scopes.push(new Scope("Out Edges", this._variableHandles.create(new WUScope(stackFrameScope, "outedges")), false));
-                break;
-            case "Subgraph":
-                scopes.push(new Scope("Local", this._variableHandles.create(new WUScope(stackFrameScope, "local")), false));
-                scopes.push(new Scope("Subgraphs", this._variableHandles.create(new WUScope(stackFrameScope, "subgraphs")), false));
-                scopes.push(new Scope("Vertices", this._variableHandles.create(new WUScope(stackFrameScope, "vertices")), false));
-                break;
-            case "XGMMLGraph":
-                scopes.push(new Scope("Local", this._variableHandles.create(new WUScope(stackFrameScope, "workunit")), false));
-                scopes.push(new Scope("Graphs", this._variableHandles.create(new WUScope(stackFrameScope, "subgraphs")), false));
-                scopes.push(new Scope("Debug", this._variableHandles.create(new WUScope(stackFrameScope, "breakpoints")), true));
-                break;
-            default:
+        if (stackFrameScope.graphItem instanceof XGMMLEdge) {
+            scopes.push(new Scope("Results", this._variableHandles.create(new WUScope(stackFrameScope, "results")), false));
+            scopes.push(new Scope("Local", this._variableHandles.create(new WUScope(stackFrameScope, "local")), false));
+        } else if (stackFrameScope.graphItem instanceof XGMMLVertex) {
+            scopes.push(new Scope("Local", this._variableHandles.create(new WUScope(stackFrameScope, "local")), false));
+            scopes.push(new Scope("Out Edges", this._variableHandles.create(new WUScope(stackFrameScope, "outedges")), false));
+        } else if (stackFrameScope.graphItem instanceof XGMMLSubgraph) {
+            scopes.push(new Scope("Local", this._variableHandles.create(new WUScope(stackFrameScope, "local")), false));
+            scopes.push(new Scope("Subgraphs", this._variableHandles.create(new WUScope(stackFrameScope, "subgraphs")), false));
+            scopes.push(new Scope("Vertices", this._variableHandles.create(new WUScope(stackFrameScope, "vertices")), false));
+        } else if (stackFrameScope.graphItem instanceof XGMMLGraph) {
+            scopes.push(new Scope("Local", this._variableHandles.create(new WUScope(stackFrameScope, "workunit")), false));
+            scopes.push(new Scope("Graphs", this._variableHandles.create(new WUScope(stackFrameScope, "subgraphs")), false));
+            scopes.push(new Scope("Debug", this._variableHandles.create(new WUScope(stackFrameScope, "breakpoints")), true));
         }
         response.body = {
             scopes
@@ -372,60 +426,62 @@ export class ECLDebugSession extends DebugSession {
         this.logger.debug("VariablesRequest");
         const wuScope = this._variableHandles.get(args.variablesReference);
         let variables: Variable[] = [];
-        switch (wuScope.type) {
-            case "local":
-                for (const key in wuScope.stack.graphItem.attrs) {
-                    if (wuScope.stack.graphItem.attrs.hasOwnProperty(key)) {
-                        variables.push(new Variable(key, "" + wuScope.stack.graphItem.attrs[key]));
-                    }
-                }
-                break;
-            case "workunit":
-                const state = this.workunit.properties;
-                for (const key in state) {
-                    if (state.hasOwnProperty(key)) {
-                        variables.push(new Variable(key, "" + state[key]));
-                    }
-                }
-                break;
-            case "breakpoints":
-                this.workunit.debugBreakpointList().then((breakpoints) => {
-                    variables = breakpoints.map((breakpoint) => {
-                        return new Variable(breakpoint.action + "_" + breakpoint.idx, "" + breakpoint.id);
-                    });
-                    response.body = {
-                        variables
-                    };
-                    this.sendResponse(response);
-                });
-                return;
-            case "results":
-                this.workunit.debugPrint(wuScope.stack.graphItem.id(), 0, 10).then((results) => {
-                    variables = results.map((result, idx) => {
-                        const summary: any[] = [];
-                        const values: any = {};
-                        for (const key in result) {
-                            if (result.hasOwnProperty(key)) {
-                                values[key] = result[key];
-                                summary.push(result[key]);
-                            }
+        if (!(wuScope.stack.graphItem instanceof XGMMLGraph)) {
+            switch (wuScope.type) {
+                case "local":
+                    for (const key in wuScope.stack.graphItem._) {
+                        if (wuScope.stack.graphItem._.hasOwnProperty(key)) {
+                            variables.push(new Variable(key, "" + wuScope.stack.graphItem._[key]));
                         }
-                        return new Variable("Row_" + idx, JSON.stringify(summary), this._variableHandles.create(new WUScope(new WUStack(values), "rows")));
-                    });
-                    response.body = {
-                        variables
-                    };
-                    this.sendResponse(response);
-                });
-                return;
-            case "rows":
-                for (const key in wuScope.stack.graphItem) {
-                    if (wuScope.stack.graphItem.hasOwnProperty(key)) {
-                        variables.push(new Variable(key, "" + wuScope.stack.graphItem[key]));
                     }
-                }
-                break;
-            default:
+                    break;
+                case "workunit":
+                    const state = this.workunit.properties;
+                    for (const key in state) {
+                        if (state.hasOwnProperty(key)) {
+                            variables.push(new Variable(key, "" + state[key]));
+                        }
+                    }
+                    break;
+                case "breakpoints":
+                    this.workunit.debugBreakpointList().then((breakpoints) => {
+                        variables = breakpoints.map((breakpoint) => {
+                            return new Variable(breakpoint.action + "_" + breakpoint.idx, "" + breakpoint.id);
+                        });
+                        response.body = {
+                            variables
+                        };
+                        this.sendResponse(response);
+                    });
+                    return;
+                case "results":
+                    this.workunit.debugPrint(wuScope.stack.graphItem._.id, 0, 10).then((results) => {
+                        variables = results.map((result, idx) => {
+                            const summary: any[] = [];
+                            const values: any = {};
+                            for (const key in result) {
+                                if (result.hasOwnProperty(key)) {
+                                    values[key] = result[key];
+                                    summary.push(result[key]);
+                                }
+                            }
+                            return new Variable("Row_" + idx, JSON.stringify(summary), this._variableHandles.create(new WUScope(new WUStack(values), "rows")));
+                        });
+                        response.body = {
+                            variables
+                        };
+                        this.sendResponse(response);
+                    });
+                    return;
+                case "rows":
+                    for (const key in wuScope.stack.graphItem) {
+                        if (wuScope.stack.graphItem.hasOwnProperty(key)) {
+                            variables.push(new Variable(key, "" + wuScope.stack.graphItem[key]));
+                        }
+                    }
+                    break;
+                default:
+            }
         }
         response.body = {
             variables
