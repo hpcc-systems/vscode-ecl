@@ -17,8 +17,8 @@ This extension adds rich language support for the ECL language to VS Code, inclu
 ## Installation
 
 - Install Visual Studio Code. 
-- In VS-Code open the command palette (`cmd-shift-p`) and select `Install Extension`.  Enter 'ecl' to filter the available extensions and choose `ecl`.
-- Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download/developer-tools/client-tools)
+- In VS-Code, open the command palette (`cmd-shift-p`) and select `Install Extension`.  Enter 'ecl' to filter the available extensions and choose `ecl`.
+- Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download)
 
 ### VS-Code Settings
 
