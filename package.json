@@ -8,7 +8,7 @@
     },
     "icon": "images/eclIcon.png",
     "categories": [
-        "Languages",
+        "Programming Languages",
         "Snippets",
         "Linters",
         "Debuggers"
@@ -32,7 +32,7 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "0.0.80",
+        "@hpcc-js/comms": "0.0.82",
         "@hpcc-js/util": "0.0.73",
         "console-stamp": "0.2.6",
         "es6-promise": "4.2.4",
@@ -228,6 +228,11 @@
                                 "type": "number",
                                 "description": "The WsWorkunits port.",
                                 "default": 8010
+                            },
+                            "abortSubmitOnError": {
+                                "type": "boolean",
+                                "description": "Abort submit when errors are reported during archive generation.",
+                                "default": true
                             },
                             "rejectUnauthorized": {
                                 "type": "boolean",
