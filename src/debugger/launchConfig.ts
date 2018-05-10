@@ -14,6 +14,7 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
     protocol: LaunchProtocol;
     serverAddress: string;
     port: number;
+    abortSubmitOnError?: boolean;
     rejectUnauthorized?: boolean;
     targetCluster: string;
     eclccPath?: string;
@@ -31,6 +32,7 @@ export class LaunchConfig {
         this._config = {
             ...args,
             protocol: args.protocol || "http",
+            abortSubmitOnError: args.abortSubmitOnError !== undefined ? args.abortSubmitOnError : true,
             rejectUnauthorized: args.rejectUnauthorized || false,
             eclccPath: args.eclccPath ? args.eclccPath : "",
             eclccArgs: args.eclccArgs ? args.eclccArgs : [],

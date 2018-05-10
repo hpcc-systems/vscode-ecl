@@ -1,5 +1,6 @@
-import { Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex, locateAllClientTools, locateClientTools } from "@hpcc-js/comms";
-import { IObserverHandle, Level, ScopedLogging, Writer, logger, scopedLogger } from "@hpcc-js/util";
+import { locateAllClientTools, locateClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
+import { IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
+
 import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEvent, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
 import { LaunchConfig, LaunchRequestArguments } from "./launchConfig";
@@ -154,7 +155,12 @@ export class ECLDebugSession extends DebugSession {
             this.sendEvent(new OutputEvent("Client Tools:  " + clientTools.eclccPath + os.EOL));
             this.sendEvent(new OutputEvent("Generating archive." + os.EOL));
             return clientTools.createArchive(this.launchConfig._config.program);
-        }).then((archive) => {
+        }).then(archive => {
+            if (this.launchConfig._config.abortSubmitOnError && archive.err.hasError()) {
+                throw new Error(`ECL Syntax Error(s):\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
+            }
+            return archive;
+        }).then(archive => {
             this.sendEvent(new OutputEvent("Creating workunit." + os.EOL));
             return this.launchConfig.createWorkunit().then((wu) => {
                 this.sendEvent(new Event("WUCreated", { ...this.launchConfig._config, wuid: wu.Wuid }));

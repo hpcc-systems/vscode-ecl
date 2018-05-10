@@ -69,6 +69,7 @@ Submitting or debugging ECL using VS-Code requires specificying the target envir
     "protocol": "http",
     "serverAddress": "localhost",
     "port": 8010,
+    "abortSubmitOnError": true,
     "rejectUnauthorized": false,
     "targetCluster": "hthor",
     "eclccPath": "${config:ecl.eclccPath}",

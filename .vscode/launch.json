@@ -35,8 +35,7 @@
                 "--server=4711"
             ],
             "outFiles": [
-                "${workspaceRoot}/out/src/**/*.js",
-                "${workspaceRoot}/out/hpcc-js-comms/**/*.js"
+                "${workspaceRoot}/out/src/**/*.js"
             ],
             "sourceMaps": true,
             "cwd": "${workspaceRoot}"

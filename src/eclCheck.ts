@@ -1,4 +1,4 @@
-import { attachWorkspace, IECLError, locateClientTools } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
+import { attachWorkspace, EclccErrors, IECLErrorWarning, locateClientTools } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
 import { scopedLogger } from "@hpcc-js/util";
 import * as fs from "fs";
 import * as path from "path";
@@ -29,21 +29,21 @@ function calcIncludeFolders(wsPath: string): string[] {
     return retVal;
 }
 
-function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<IECLError[]> {
+function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<IECLErrorWarning[]> {
     const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
     const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
     const includeFolders = calcIncludeFolders(currentWorkspacePath);
-    return locateClientTools(eclConfig["eclccPath"], currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then((clientTools): Promise<IECLError[]> => {
+    return locateClientTools(eclConfig["eclccPath"], currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then((clientTools): Promise<IECLErrorWarning[]> => {
         if (!clientTools) {
             throw new Error();
         } else {
             logger.debug(`syntaxCheck-promise:  ${fileUri.fsPath}`);
-            return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then(errors => {
-                if (errors[1].length) {
-                    logger.warning(`syntaxCheck-warning:  ${fileUri.fsPath} ${errors[1].toString()}`);
+            return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then((errors: EclccErrors) => {
+                if (errors.hasUnknown()) {
+                    logger.warning(`syntaxCheck-warning:  ${fileUri.fsPath} ${errors.unknown().toString()}`);
                 }
-                logger.debug(`syntaxCheck-resolve:  ${fileUri.fsPath} ${errors[0].length} total.`);
-                return errors[0];
+                logger.debug(`syntaxCheck-resolve:  ${fileUri.fsPath} ${errors.errors().length} total.`);
+                return errors.all();
             }).catch(e => {
                 logger.debug(`syntaxCheck-reject:  ${fileUri.fsPath} ${e.msg}`);
                 vscode.window.showInformationMessage(`Syntax check exception:  ${fileUri.fsPath} ${e.msg}`);
