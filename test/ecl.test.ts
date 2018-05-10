@@ -1,13 +1,13 @@
-suite('ECL Extension Tests', () => {
-	suiteSetup(() => {
-	});
+suite("ECL Extension Tests", () => {
+    suiteSetup(() => {
+    });
 
-	suiteTeardown(() => {
-	});
+    suiteTeardown(() => {
+    });
 
-	test('Async Test', (done) => {
-		new Promise((resolve, reject) => {
-			resolve();
-		}).then(() => done(), done);
-	});
+    test("Async Test", (done) => {
+        new Promise((resolve, reject) => {
+            resolve();
+        }).then(() => done(), done);
+    });
 });
