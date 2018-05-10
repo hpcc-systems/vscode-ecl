@@ -8,15 +8,26 @@
     "extends": "tslint:recommended",
     "rules": {
         /*
-         * Any rules specified here will override those from the base config we are extending.
-         */
+     * Any rules specified here will override those from the base config we are extending.
+     */
+        "prefer-for-of": false,
+        "no-console": [
+            false
+        ],
+        "radix": false,
+        "interface-over-type-literal": false,
+        "no-empty-interface": false,
+        "no-unused-expression": false,
+        "no-shadowed-variable": [
+            false,
+            {}
+        ],
+        "space-before-function-paren": false,
         "arrow-parens": false,
-        "prefer-for-of": true,
+        "forin": false,
         "member-access": false,
         "variable-name": [
-            true,
-            "allow-leading-underscore",
-            "allow-pascal-case"
+            false
         ],
         "object-literal-sort-keys": false,
         "trailing-comma": [
@@ -27,12 +38,7 @@
             }
         ],
         "curly": false,
-        "member-ordering": [
-            true
-        ],
-        "no-unused-variable": [
-            true
-        ],
+        "member-ordering": false,
         "max-classes-per-file": [
             false
         ],
@@ -59,13 +65,7 @@
             "check-type"
         ],
         "prefer-const": true,
-        "no-string-literal": false,
-        "ordered-imports": [
-            true,
-            {
-                "named-imports-order": "lowercase-last"
-            }
-        ]
+        "no-string-literal": false
     },
     "jsRules": {
         /*
