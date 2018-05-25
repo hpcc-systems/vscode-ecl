@@ -77,8 +77,8 @@ Submitting or debugging ECL using VS-Code requires specificying the target envir
     "includeFolders": "${config:ecl.includeFolders}",
     "legacyMode": "${config:ecl.legacyMode}",
     "resultLimit": 100,
-    "user": "",
-    "password": ""
+    "user": "",     //  Optional (vscode will prompt as needed)
+    "password": ""  //  Optional (vscode will prompt as needed)
 }
 ```
 

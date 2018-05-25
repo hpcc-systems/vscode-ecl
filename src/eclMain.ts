@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { ECLCommands } from "./eclCommand";
+import { ECLConfigurationProvider } from "./eclConfigProvider";
 import { ECLDiagnostic } from "./eclDiagnostic";
 import { ECLEditor } from "./eclEditor";
 import { ECLStatusBar } from "./eclStatus";
@@ -21,6 +22,7 @@ export function activate(ctx: vscode.ExtensionContext): void {
     // ctx.subscriptions.push(vscode.languages.registerSignatureHelpProvider(ECL_MODE, new ECLSignatureHelpProvider(), '(', ','));
     // ctx.subscriptions.push(vscode.languages.registerCodeActionsProvider(ECL_MODE, new EclCodeActionProvider()));
 
+    ECLConfigurationProvider.attach(ctx);
     ECLDiagnostic.attach(ctx);
     ECLCommands.attach(ctx);
     ECLEditor.attach(ctx);
