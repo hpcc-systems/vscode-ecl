@@ -61,7 +61,8 @@
             {
                 "id": "ecl",
                 "extensions": [
-                    "ecl"
+                    "ecl",
+                    "ecllib"
                 ],
                 "aliases": [
                     "ECL",
