@@ -33,7 +33,7 @@ function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): P
     const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
     const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
     const includeFolders = calcIncludeFolders(currentWorkspacePath);
-    return locateClientTools(eclConfig["eclccPath"], currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then((clientTools): Promise<IECLErrorWarning[]> => {
+    return locateClientTools(eclConfig["eclccPath"], "", currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then((clientTools): Promise<IECLErrorWarning[]> => {
         if (!clientTools) {
             throw new Error();
         } else {

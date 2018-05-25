@@ -150,8 +150,11 @@ export class ECLDebugSession extends DebugSession {
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
         this.logger.debug("launchRequest:  " + JSON.stringify(args));
         this.launchConfig = new LaunchConfig(args);
-        this.sendEvent(new OutputEvent("Locating Client Tools." + os.EOL));
-        locateClientTools(this.launchConfig._config.eclccPath, this.launchConfig._config.workspace, this.launchConfig.includeFolders(), this.launchConfig.legacyMode()).then((clientTools) => {
+        this.sendEvent(new OutputEvent("Fetch build version." + os.EOL));
+        this.launchConfig.fetchBuild().then(build => {
+            this.sendEvent(new OutputEvent("Locating Client Tools." + os.EOL));
+            return locateClientTools(this.launchConfig._config.eclccPath, build, this.launchConfig._config.workspace, this.launchConfig.includeFolders(), this.launchConfig.legacyMode());
+        }).then((clientTools) => {
             this.sendEvent(new OutputEvent("Client Tools:  " + clientTools.eclccPath + os.EOL));
             this.sendEvent(new OutputEvent("Generating archive." + os.EOL));
             return clientTools.createArchive(this.launchConfig._config.program);
