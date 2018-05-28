@@ -9,6 +9,8 @@ export class ECLStatusBar {
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
 
+        this._statusBarEntry = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
+
         this.onActiveWatcher();
     }
 
@@ -27,13 +29,11 @@ export class ECLStatusBar {
                 }
                 if (!vscode.window.activeTextEditor) {
                     this._statusBarEntry.hide();
-                    return;
-                }
-                if (vscode.languages.match(ECL_MODE, vscode.window.activeTextEditor.document)) {
+                } else if (vscode.languages.match(ECL_MODE, vscode.window.activeTextEditor.document)) {
                     this._statusBarEntry.show();
-                    return;
+                } else {
+                    this._statusBarEntry.hide();
                 }
-                this._statusBarEntry.hide();
             }
         }, null, this._ctx.subscriptions);
     }
@@ -45,11 +45,8 @@ export class ECLStatusBar {
         }
     }
 
-    showEclStatus(message: string, command: string, tooltip?: string) {
-        this._statusBarEntry = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
+    showEclStatus(message: string, tooltip?: string) {
         this._statusBarEntry.text = message;
-        this._statusBarEntry.command = command;
-        this._statusBarEntry.color = "yellow";
         this._statusBarEntry.tooltip = tooltip;
         this._statusBarEntry.show();
     }

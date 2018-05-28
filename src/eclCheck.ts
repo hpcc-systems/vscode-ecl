@@ -1,9 +1,10 @@
-import { attachWorkspace, EclccErrors, IECLErrorWarning, locateClientTools } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
+import { attachWorkspace, IECLErrorWarning, locateClientTools } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
 import { scopedLogger } from "@hpcc-js/util";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { eclDiagnostic } from "./eclDiagnostic";
+import { eclStatusBar } from "./eclStatus";
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
 
@@ -29,30 +30,38 @@ function calcIncludeFolders(wsPath: string): string[] {
     return retVal;
 }
 
-function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<IECLErrorWarning[]> {
+interface CheckResponse {
+    errors: IECLErrorWarning[];
+    checked: string[];
+}
+function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<CheckResponse> {
     const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
     const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
     const includeFolders = calcIncludeFolders(currentWorkspacePath);
-    return locateClientTools(eclConfig["eclccPath"], "", currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then((clientTools): Promise<IECLErrorWarning[]> => {
+    return locateClientTools(eclConfig["eclccPath"], "", currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then((clientTools): Promise<CheckResponse> => {
         if (!clientTools) {
+            eclStatusBar.showEclStatus("Unknown", "eclcc:  Unable to locate eclcc");
             throw new Error();
         } else {
+            clientTools.version().then(version => {
+                eclStatusBar.showEclStatus(`${version}`, clientTools.eclccPath);
+            });
             logger.debug(`syntaxCheck-promise:  ${fileUri.fsPath}`);
-            return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then((errors: EclccErrors) => {
+            return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then((errors) => {
                 if (errors.hasUnknown()) {
                     logger.warning(`syntaxCheck-warning:  ${fileUri.fsPath} ${errors.unknown().toString()}`);
                 }
                 logger.debug(`syntaxCheck-resolve:  ${fileUri.fsPath} ${errors.errors().length} total.`);
-                return errors.all();
+                return { errors: errors.all(), checked: errors.checked() };
             }).catch(e => {
                 logger.debug(`syntaxCheck-reject:  ${fileUri.fsPath} ${e.msg}`);
                 vscode.window.showInformationMessage(`Syntax check exception:  ${fileUri.fsPath} ${e.msg}`);
-                return Promise.resolve([]);
+                return Promise.resolve({ errors: [], checked: [] });
             });
         }
     }).catch(e => {
         vscode.window.showInformationMessage('Unable to locate "eclcc" binary.  Ensure ECL ClientTools is installed.');
-        return Promise.resolve([]);
+        return Promise.resolve({ errors: [], checked: [] });
     });
 }
 
@@ -73,13 +82,15 @@ function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Pr
         }
     }
     eclDiagnostic.set(uri, checking);
-    return check(uri, eclConfig).then((errors) => {
-        eclDiagnostic.set(uri, []);
-
+    return check(uri, eclConfig).then(({ errors, checked }) => {
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
 
+        for (const checkedPath of checked) {
+            eclDiagnostic.set(vscode.Uri.file(checkedPath), []);
+        }
         errors.forEach(error => {
-            const canonicalFile = vscode.Uri.file(error.filePath).toString();
+            const errorFilePath = path.normalize(error.filePath).toString();
+            const canonicalFile = vscode.Uri.file(errorFilePath).toString();
             const range = new vscode.Range(error.line - 1, error.col, error.line - 1, error.col);
             const diagnostic = new vscode.Diagnostic(range, error.msg, mapSeverityToVSCodeSeverity(error.severity));
             let diagnostics = diagnosticMap.get(canonicalFile);
