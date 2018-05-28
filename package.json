@@ -32,7 +32,7 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "0.0.82",
+        "@hpcc-js/comms": "0.4.0",
         "@hpcc-js/util": "0.0.73",
         "console-stamp": "0.2.6",
         "es6-promise": "4.2.4",
