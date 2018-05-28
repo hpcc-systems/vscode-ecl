@@ -1,4 +1,4 @@
-import { Activity, AccountService, VerifyUser, Workunit, WUQuery, WUUpdate } from "@hpcc-js/comms";
+import { AccountService, Activity, VerifyUser, Workunit, WUQuery, WUUpdate } from "@hpcc-js/comms";
 import { setTimeout } from "timers";
 import { DebugProtocol } from "vscode-debugprotocol";
 
@@ -6,6 +6,13 @@ import { DebugProtocol } from "vscode-debugprotocol";
 export type LaunchMode = "submit" | "compile" | "debug";
 export type LaunchProtocol = "http" | "https";
 export type LaunchLegacyMode = "true" | "false" | "";
+
+export enum LaunchConfigState {
+    Unknown,
+    Unreachable,
+    Credentials,
+    Ok
+}
 
 export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
     mode?: LaunchMode;
@@ -84,24 +91,18 @@ export class LaunchConfig {
         });
     }
 
-    ping(timeout: number = 5000): Promise<boolean> {
+    ping(timeout: number = 5000): Promise<LaunchConfigState> {
         const timeoutPrommise = new Promise((resolve, reject) => {
             setTimeout(() => {
-                reject("Ping timeout");
+                reject("timeout");
             }, timeout);
         });
-        const queryPromise = Workunit.query({
-            baseUrl: this.espUrl(),
-            userID: this._config.user,
-            password: this._config.password,
-            rejectUnauthorized: this._config.rejectUnauthorized
-        }, { Count: 1 });
-
+        const queryPromise = this.verifyUser(this._config.user, this._config.password);
         return Promise.race([timeoutPrommise, queryPromise])
             .then(r => {
-                return true;
+                return LaunchConfigState.Ok;
             }).catch(e => {
-                return false;
+                return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
             });
     }
 
