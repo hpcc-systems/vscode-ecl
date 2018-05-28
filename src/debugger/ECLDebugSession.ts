@@ -1,7 +1,7 @@
 import { locateAllClientTools, locateClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
 import { IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
 
-import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEvent, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, ThreadEvent, Variable } from "vscode-debugadapter";
+import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEvent, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, Variable } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
 import { LaunchConfig, LaunchRequestArguments } from "./launchConfig";
 
@@ -190,8 +190,6 @@ export class ECLDebugSession extends DebugSession {
             this.workunit.watchUntilRunning().then(() => {
                 this.sendEvent(new InitializedEvent());
                 this.logger.debug("InitializeEvent");
-                this.sendEvent(new ThreadEvent("main", 0));
-                this.logger.debug("ThreadEvent");
             });
         }).catch((e) => {
             this.sendEvent(new OutputEvent(`Launch failed - ${e}${os.EOL}`));

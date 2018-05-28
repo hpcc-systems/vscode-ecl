@@ -1,4 +1,4 @@
-import { Activity, Workunit, WUQuery, WUUpdate } from "@hpcc-js/comms";
+import { Activity, AccountService, VerifyUser, Workunit, WUQuery, WUUpdate } from "@hpcc-js/comms";
 import { setTimeout } from "timers";
 import { DebugProtocol } from "vscode-debugprotocol";
 
@@ -70,6 +70,18 @@ export class LaunchConfig {
 
     includeFolders(): string[] {
         return this._config.includeFolders!.split(",");
+    }
+
+    async verifyUser(userID: string, password: string): Promise<VerifyUser.Response> {
+        const acService = new AccountService({
+            baseUrl: this.espUrl(),
+            userID,
+            password
+        });
+        return acService.VerifyUser({
+            application: "vscode-ecl",
+            version: "*"
+        });
     }
 
     ping(timeout: number = 5000): Promise<boolean> {
