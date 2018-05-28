@@ -1,6 +1,6 @@
 import { Workunit } from "@hpcc-js/comms";
 import * as vscode from "vscode";
-import { LaunchConfig, LaunchRequestArguments } from "./debugger/launchConfig";
+import { LaunchConfig, LaunchConfigState, LaunchRequestArguments } from "./debugger/launchConfig";
 import { eclCommands } from "./eclCommand";
 
 let eclTree: ECLTree;
@@ -33,7 +33,7 @@ export class ECLNode {
     }
 }
 
-const disabledLaunchConfig: { [name: string]: boolean } = {};
+const disabledLaunchConfig: { [name: string]: LaunchConfigState } = {};
 
 class ECLWUNode extends ECLNode {
     _launchNode: ECLLaunchNode;
@@ -66,17 +66,19 @@ class ECLWUNode extends ECLNode {
 class ECLLaunchNode extends ECLNode {
     _rootNode: ECLRootNode;
     _name: string;
+    _config;
     _launchConfig: LaunchConfig;
 
     constructor(rootNode: ECLRootNode, name: string, config: LaunchRequestArguments) {
         super(rootNode._tree);
         this._rootNode = rootNode;
         this._name = name;
+        this._config = config;
         this._launchConfig = new LaunchConfig(config);
     }
 
     getLabel(): string {
-        return this._name + (disabledLaunchConfig[this._name] ? " (unresponsive)" : "");
+        return `${this._name} (${LaunchConfigState[disabledLaunchConfig[this._name]]})`;
     }
 
     collapseState(): vscode.TreeItemCollapsibleState {
@@ -84,8 +86,8 @@ class ECLLaunchNode extends ECLNode {
     }
 
     getChildren(): vscode.ProviderResult<ECLWUNode[]> {
-        if (disabledLaunchConfig[this._name]) return [];
-        disabledLaunchConfig[this._name] = true;
+        if (disabledLaunchConfig[this._name] !== LaunchConfigState.Ok) return [];
+        disabledLaunchConfig[this._name] = LaunchConfigState.Unknown;
         return this._launchConfig.query({
             Cluster: this._launchConfig._config.targetCluster,
             ApplicationValues: {
@@ -97,9 +99,10 @@ class ECLLaunchNode extends ECLNode {
             },
             Count: 5
         }).then(workunits => {
-            disabledLaunchConfig[this._name] = false;
+            disabledLaunchConfig[this._name] = LaunchConfigState.Ok;
             return workunits.map(wu => new ECLWUNode(this, wu));
         }).catch(e => {
+            disabledLaunchConfig[this._name] = LaunchConfigState.Unreachable;
             return [];
         });
     }
@@ -156,13 +159,16 @@ class ECLRootNode extends ECLNode {
         }
 
         return Promise.all(retVal.map(launchNode => {
-            if (disabledLaunchConfig[launchNode._name] === undefined) {
-                return launchNode._launchConfig.ping(3000).then(alive => {
-                    disabledLaunchConfig[launchNode._name] = !alive;
-                    return launchNode;
-                });
-            } else {
-                return Promise.resolve(launchNode);
+            switch (disabledLaunchConfig[launchNode._name]) {
+                case undefined:
+                case LaunchConfigState.Unknown:
+                case LaunchConfigState.Credentials:
+                    return launchNode._launchConfig.ping(3000).then(alive => {
+                        disabledLaunchConfig[launchNode._name] = alive;
+                        return launchNode;
+                    });
+                default:
+                    return Promise.resolve(launchNode);
             }
         }));
     }

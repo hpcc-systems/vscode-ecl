@@ -55,7 +55,7 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
     async promptUserID(debugConfiguration: vscode.DebugConfiguration) {
         const credentials = this.credentials(debugConfiguration);
         credentials.user = await vscode.window.showInputBox({
-            prompt: "User ID",
+            prompt: `User ID (${debugConfiguration.name})`,
             password: false,
             value: credentials.user
         });
@@ -64,21 +64,28 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
     async promptPassword(debugConfiguration: vscode.DebugConfiguration): Promise<boolean> {
         const credentials = this.credentials(debugConfiguration);
         credentials.password = await vscode.window.showInputBox({
-            prompt: "Password",
+            prompt: `Password (${debugConfiguration.name})`,
             password: true,
             value: credentials.password
         });
         return false;
     }
 
-    async resolveDebugConfiguration?(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: vscode.DebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration> {
-        this._currentConfig = debugConfiguration;
+    async checkCredentials(debugConfiguration: vscode.DebugConfiguration): Promise<boolean> {
         for (let i = 0; i < 3; ++i) {
             if (await this.verifyUser(debugConfiguration)) {
-                return debugConfiguration;
+                return true;
             }
             await this.promptUserID(debugConfiguration);
             await this.promptPassword(debugConfiguration);
+        }
+        return false;
+    }
+
+    async resolveDebugConfiguration?(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: vscode.DebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration> {
+        this._currentConfig = debugConfiguration;
+        if (await this.checkCredentials(debugConfiguration)) {
+            return debugConfiguration;
         }
         throw new Error("Invalid user ID / password");
     }
