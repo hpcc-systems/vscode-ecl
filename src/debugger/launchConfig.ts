@@ -1,4 +1,4 @@
-import { Workunit, WUQuery, WUUpdate } from "@hpcc-js/comms";
+import { Activity, Workunit, WUQuery, WUUpdate } from "@hpcc-js/comms";
 import { setTimeout } from "timers";
 import { DebugProtocol } from "vscode-debugprotocol";
 
@@ -91,6 +91,22 @@ export class LaunchConfig {
             }).catch(e => {
                 return false;
             });
+    }
+
+    _buildPromise;
+    fetchBuild(): Promise<string> {
+        if (!this._buildPromise) {
+            const activity = Activity.attach({
+                baseUrl: this.espUrl(),
+                userID: this._config.user,
+                password: this._config.password,
+                rejectUnauthorized: this._config.rejectUnauthorized
+            });
+            this._buildPromise = activity.refresh().then(activity => {
+                return activity.Build;
+            });
+        }
+        return this._buildPromise;
     }
 
     createWorkunit() {
