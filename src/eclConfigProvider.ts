@@ -24,10 +24,6 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
         return eclConfigurationProvider;
     }
 
-    provideDebugConfigurations?(folder: vscode.WorkspaceFolder | undefined, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration[]> {
-        return [];
-    }
-
     credentials(debugConfiguration: vscode.DebugConfiguration): Credentials {
         let retVal = this._credentials[debugConfiguration.name];
         if (!retVal) {
