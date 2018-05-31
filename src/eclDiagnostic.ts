@@ -19,13 +19,7 @@ export class ECLDiagnostic {
         }, null, this._ctx.subscriptions);
 
         vscode.window.onDidChangeActiveTextEditor((event: vscode.TextEditor) => {
-            if (this._activeTextEditor === event.document.uri) {
-                return;
-            }
-            if (this._activeTextEditor) {
-                delete this._activeTextEditor;
-            }
-            if (event) {
+            if (event && event.document && this._activeTextEditor !== event.document.uri) {
                 this._activeTextEditor = event.document.uri;
                 if (_diagnosticCache[this._activeTextEditor.toString()]) {
                     eclDiagnosticCollection.set(this._activeTextEditor, _diagnosticCache[this._activeTextEditor.toString()]);
