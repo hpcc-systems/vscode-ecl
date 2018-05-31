@@ -69,11 +69,11 @@ function mapSeverityToVSCodeSeverity(sev: string) {
     switch (sev) {
         case "error": return vscode.DiagnosticSeverity.Error;
         case "warning": return vscode.DiagnosticSeverity.Warning;
-        default: return vscode.DiagnosticSeverity.Error;
+        default: return vscode.DiagnosticSeverity.Information;
     }
 }
 
-const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...checking...")];
+const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...checking...", vscode.DiagnosticSeverity.Information)];
 function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
     if (uri) {
         const wsf = vscode.workspace.getWorkspaceFolder(uri);
@@ -91,7 +91,9 @@ function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Pr
         errors.forEach(error => {
             const errorFilePath = path.normalize(error.filePath).toString();
             const canonicalFile = vscode.Uri.file(errorFilePath).toString();
-            const range = new vscode.Range(error.line - 1, error.col, error.line - 1, error.col);
+            const line = +error.line > 0 ? +error.line - 1 : 0;
+            const col = +error.col >= 0 ? +error.col : 0;
+            const range = new vscode.Range(line, col, line, col);
             const diagnostic = new vscode.Diagnostic(range, error.msg, mapSeverityToVSCodeSeverity(error.severity));
             let diagnostics = diagnosticMap.get(canonicalFile);
             if (!diagnostics) {
