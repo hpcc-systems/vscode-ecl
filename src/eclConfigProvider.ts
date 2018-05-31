@@ -1,5 +1,8 @@
+import { scopedLogger } from "@hpcc-js/util";
 import * as vscode from "vscode";
 import { LaunchConfig } from "./debugger/launchConfig";
+
+const logger = scopedLogger("eclConfigProvide.ts");
 
 export interface Credentials {
     user: string;
@@ -25,9 +28,9 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
     }
 
     credentials(debugConfiguration: vscode.DebugConfiguration): Credentials {
-        let retVal = this._credentials[debugConfiguration.name];
+        let retVal = this._credentials[debugConfiguration.serverAddress];
         if (!retVal) {
-            retVal = this._credentials[debugConfiguration.name] = {
+            retVal = this._credentials[debugConfiguration.serverAddress] = {
                 user: debugConfiguration.user,
                 password: debugConfiguration.password
             };
@@ -44,6 +47,7 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
             debugConfiguration.password = credentials.password;
             return true;
         } catch (e) {
+            logger.info(`Verify User Failed (${debugConfiguration.name}):  ${credentials.user}@${debugConfiguration.serverAddress}:${debugConfiguration.port}`);
             return false;
         }
     }
@@ -80,7 +84,9 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
 
     async resolveDebugConfiguration?(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: vscode.DebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration> {
         this._currentConfig = debugConfiguration;
-        if (await this.checkCredentials(debugConfiguration)) {
+        if (debugConfiguration.user && debugConfiguration.password) {
+            return debugConfiguration;
+        } else if (await this.checkCredentials(debugConfiguration)) {
             return debugConfiguration;
         }
         throw new Error("Invalid user ID / password");
