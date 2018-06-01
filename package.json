@@ -32,8 +32,8 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "0.4.1",
-        "@hpcc-js/util": "0.0.73",
+        "@hpcc-js/comms": "0.4.2",
+        "@hpcc-js/util": "0.0.74",
         "console-stamp": "0.2.6",
         "es6-promise": "4.2.4",
         "tslib": "1.9.0",
