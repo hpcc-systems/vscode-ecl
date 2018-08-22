@@ -8,7 +8,7 @@ This extension adds rich language support for the ECL language to VS Code, inclu
 - Auto completion
 - F7 Syntax check
 - shift+F7 Syntax check all
-- ctrl+F7 Syntax check clear all reported problems
+- cmd/ctrl+F7 Syntax check clear all reported problems
 - F12 "Goto definition"
 - Basic workunit support
 - Multi root workspaces ([vscode docs](https://code.visualstudio.com/docs/editor/multi-root-workspaces)):  No need to manually include folders.
@@ -17,12 +17,12 @@ This extension adds rich language support for the ECL language to VS Code, inclu
 ## Installation
 
 - Install Visual Studio Code. 
-- In VS-Code open the command palette (`cmd-shift-p`) and select `Install Extension`.  Enter 'ecl' to filter the available extensions and choose `ecl`.
+- In VS-Code open the command palette (`ctrl/cmd+shift+p`) and select `Install Extension`.  Enter 'ecl' to filter the available extensions and choose `ecl`.
 - Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download/developer-tools/client-tools)
 
 ### VS-Code Settings
 
-The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`cmd+,`) or workspace settings (`.vscode/settings.json`):
+The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`ctrl/cmd+,`) or workspace settings (`.vscode/settings.json`):
 
 ```javascript
   // Syntax check args.
@@ -56,7 +56,7 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
 #### Launch Settings
 
-Submitting or debugging ECL using VS-Code requires specificying the target environment within the VS Code `launch.json` (pressing `F5` will prompt the user to auto create a skelleton file if none exists):
+Submitting or debugging ECL using VS-Code requires specifiying the target environment within the VS Code `launch.json` (pressing `F5` will prompt you to auto create a skeleton file if none exists):
 
 ```javascript
 {
