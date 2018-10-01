@@ -38,7 +38,7 @@
         "console-stamp": "0.2.6",
         "es6-promise": "4.2.4",
         "tslib": "1.9.0",
-        "vscode": "1.1.17",
+        "vscode": "1.1.21",
         "vscode-debugadapter": "1.29.0",
         "vscode-debugprotocol": "1.29.0"
     },
