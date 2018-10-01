@@ -1,7 +1,8 @@
 {
     "name": "ecl",
-    "version": "0.0.34",
-    "publisher": "GordonSmith",
+    "version": "1.0.0",
+    "publisher": "hpcc-systems",
+    "displayName": "ECL Language",
     "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
     "author": {
         "name": "HPCC Systems"
@@ -37,7 +38,7 @@
         "console-stamp": "0.2.6",
         "es6-promise": "4.2.4",
         "tslib": "1.9.0",
-        "vscode": "1.1.17",
+        "vscode": "1.1.21",
         "vscode-debugadapter": "1.29.0",
         "vscode-debugprotocol": "1.29.0"
     },
