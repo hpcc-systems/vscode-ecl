@@ -31,11 +31,11 @@
         },
         {
             "name": "entity.name.type.ecl",
-            "match": "\\b(?i:(data|string|qstring|varstring|varunicode|unicode))\\d+\\b"
+            "match": "\\b(?i:(data|string|qstring|varstring|varunicode|unicode|utf8))\\d+\\b"
         },
         {
             "name": "entity.name.type.ecl",
-            "match": "\\b(?i:(ascii|big_endian|boolean|data|decimal|ebcdic|grouped|integer|linkcounted|pattern|qstring|real|record|rule|set of|streamed|string|token|udecimal|unicode|unsigned|varstring|varunicode))\\b"
+            "match": "\\b(?i:(ascii|big_endian|boolean|data|decimal|ebcdic|grouped|integer|linkcounted|pattern|qstring|real|record|rule|set of|streamed|string|token|udecimal|unicode|utf8|unsigned|varstring|varunicode))\\b"
         },
         {
             "name": "entity.other.inherited-class.ecl",
