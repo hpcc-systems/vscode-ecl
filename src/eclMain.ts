@@ -13,6 +13,10 @@ const eclConfig = vscode.workspace.getConfiguration("ecl");
 initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
 
 export function activate(ctx: vscode.ExtensionContext): void {
+    vscode.window.showInformationMessage(`This extension is now deprecated as it has been relocated to "hpcc-systems"`, "more info").then((m => {
+        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse("https://marketplace.visualstudio.com/items?itemName=GordonSmith.ecl"));
+    }));
+
     // ctx.subscriptions.push(vscode.languages.registerHoverProvider(ECL_MODE, new ECLHoverProvider()));
     // ctx.subscriptions.push(vscode.languages.registerReferenceProvider(ECL_MODE, new ECLReferenceProvider()));
     // ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(ECL_MODE, new ECLDocumentFormattingEditProvider()));
