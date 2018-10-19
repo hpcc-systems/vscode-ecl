@@ -344,6 +344,7 @@
             "properties": {
                 "ecl.syntaxArgs": {
                     "type": "array",
+                    "scope": "resource",
                     "items": {
                         "type": "string"
                     },
