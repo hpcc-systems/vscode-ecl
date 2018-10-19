@@ -151,11 +151,6 @@
                 "key": "shift+f8",
                 "mac": "shift+f8",
                 "when": "editorTextFocus"
-            },
-            {
-                "command": "ecl.showAllDocumentation",
-                "key": "shift+f12",
-                "mac": "shift+f12"
             }
         ],
         "viewsContainers": {
