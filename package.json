@@ -33,8 +33,8 @@
     },
     "extensionDependencies": [],
     "dependencies": {
-        "@hpcc-js/comms": "0.4.2",
-        "@hpcc-js/util": "0.0.74",
+        "@hpcc-js/comms": "2.0.5",
+        "@hpcc-js/util": "2.1.2",
         "console-stamp": "0.2.7",
         "es6-promise": "4.2.5",
         "tslib": "1.9.3",
@@ -44,14 +44,14 @@
     },
     "devDependencies": {
         "@types/mocha": "5.2.5",
-        "@types/node": "8",
+        "@types/node": "8.9.3",
         "mocha": "5.2.0",
         "tslint": "5.11.0",
-        "typescript": "3.1.3",
+        "typescript": "3.1.6",
         "vsce": "1.52.0"
     },
     "engines": {
-        "vscode": "^1.22.0"
+        "vscode": "1.28.2"
     },
     "activationEvents": [
         "onLanguage:ecl",
@@ -355,6 +355,7 @@
                 },
                 "ecl.syntaxCheckOnLoad": {
                     "type": "boolean",
+                    "scope": "resource",
                     "default": true,
                     "description": "Run 'eclcc -syntax' on load."
                 },
@@ -385,33 +386,6 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Automatically open WU on creation."
-                },
-                "ecl.defaultServer": {
-                    "type": "string",
-                    "description": "Default Server"
-                },
-                "ecl.servers": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "title": "Server",
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "description": "Server Name"
-                            },
-                            "address": {
-                                "type": "string",
-                                "description": "Server Address"
-                            },
-                            "port": {
-                                "type": "number",
-                                "description": "Server Port"
-                            }
-                        }
-                    },
-                    "default": [],
-                    "description": "HPCC Servers"
                 },
                 "ecl.debugLogging": {
                     "type": "boolean",

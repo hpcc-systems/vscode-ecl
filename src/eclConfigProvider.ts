@@ -47,6 +47,11 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
             debugConfiguration.password = credentials.password;
             return true;
         } catch (e) {
+            if (e.Exception && e.Exception.length !== undefined && !e.Exception.some(exp => exp.Code === 0)) {
+                debugConfiguration.user = credentials.user;
+                debugConfiguration.password = credentials.password;
+                return true;
+            }
             logger.info(`Verify User Failed (${debugConfiguration.name}):  ${credentials.user}@${debugConfiguration.serverAddress}:${debugConfiguration.port}`);
             return false;
         }
