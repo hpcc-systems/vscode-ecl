@@ -87,7 +87,7 @@ export class LaunchConfig {
         });
         return acService.VerifyUser({
             application: "vscode-ecl",
-            version: "*"
+            version: undefined
         });
     }
 
