@@ -32,10 +32,11 @@
         "lint": "node ./node_modules/tslint/bin/tslint ./src/*.ts ./src/serverAdapter/*.ts ./test/*.ts",
         "test": "node ./node_modules/vscode/bin/test",
         "standard-version": "standard-version",
-        "vscode:prepublish": "run-p compile standard-version",
+        "vscode:prepublish": "run-s clean compile",
         "git-push": "git push --follow-tags upstream master",
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "publish": "vsce publish"
+        "vsce-publish": "vsce publish",
+        "publish": "run-s standard-version vsce-publish git-push"
     },
     "extensionDependencies": [],
     "dependencies": {
