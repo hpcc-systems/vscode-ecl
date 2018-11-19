@@ -24,7 +24,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "scripts": {
-    "clean": "rimraf out",
+    "clean": "rimraf out lib* dist types",
     "compile": "tsc",
     "compile-watch": "npm run compile -- -watch",
     "build": "npm run compile",
@@ -36,15 +36,15 @@
     "git-push": "git push --follow-tags upstream master",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "vsce-publish": "vsce publish",
-    "publish": "run-s standard-version vsce-publish git-push"
+    "vsce-package": "vsce package",
+    "publish": "run-s standard-version git-push vsce-publish"
   },
   "extensionDependencies": [],
   "dependencies": {
     "@hpcc-js/comms": "2.0.5",
     "@hpcc-js/util": "2.1.2",
-    "es6-promise": "4.2.5",
+    "safe-buffer": "5.1.1",
     "tslib": "1.9.3",
-    "vscode": "1.1.21",
     "vscode-debugadapter": "1.32.1",
     "vscode-debugprotocol": "1.32.0"
   },
@@ -57,10 +57,11 @@
     "standard-version": "4.4.0",
     "tslint": "5.11.0",
     "typescript": "3.1.6",
-    "vsce": "1.52.0"
+    "vsce": "1.53.0",
+    "vscode": "^1.1.5"
   },
   "engines": {
-    "vscode": "1.28.2"
+    "vscode": "^1.27.0"
   },
   "activationEvents": [
     "onLanguage:ecl",
