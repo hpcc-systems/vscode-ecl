@@ -7,16 +7,10 @@
         "sourceMap": true,
         "declaration": true,
         "declarationDir": "./types",
+        "strict": true,
         "noImplicitAny": false,
-        "noEmitOnError": false,
-        "noUnusedLocals": true,
-        "strictNullChecks": false,
-        "importHelpers": true,
-        "skipLibCheck": true,
-        "noImplicitThis": true,
         "lib": [
-            "es6",
-            "dom"
+            "es6"
         ]
     },
     "include": [

@@ -1,15 +1,14 @@
 import * as vscode from "vscode";
-import { ECLCommands } from "./eclCommand";
-import { ECLConfigurationProvider } from "./eclConfigProvider";
-import { ECLDiagnostic } from "./eclDiagnostic";
-import { ECLEditor } from "./eclEditor";
-import { ECLStatusBar } from "./eclStatus";
-import { ECLTree } from "./eclTree";
-import { ECLWatch } from "./eclWatch";
+import { ECLCommands } from "./command";
+import { ECLConfigurationProvider } from "./configProvider";
+import { ECLDiagnostic } from "./diagnostic";
+import { ECLEditor } from "./editor";
+import { ECLStatusBar } from "./status";
+import { ECLTree } from "./tree";
 import { initLogger, Level } from "./util";
+import { ECLWatch } from "./watch";
 
 const eclConfig = vscode.workspace.getConfiguration("ecl");
-
 initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
 
 export function activate(ctx: vscode.ExtensionContext): void {

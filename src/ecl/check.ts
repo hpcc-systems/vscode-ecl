@@ -3,8 +3,8 @@ import { scopedLogger } from "@hpcc-js/util";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { eclDiagnostic } from "./eclDiagnostic";
-import { eclStatusBar } from "./eclStatus";
+import { eclDiagnostic } from "./diagnostic";
+import { eclStatusBar } from "./status";
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
 

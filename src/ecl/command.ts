@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { checkTextDocument, checkWorkspace } from "./eclCheck";
-import { eclDiagnostic } from "./eclDiagnostic";
-import { encodeLocation } from "./eclWatch";
+import { checkTextDocument, checkWorkspace } from "./check";
+import { eclDiagnostic } from "./diagnostic";
+import { encodeLocation } from "./watch";
 
 export let eclCommands: ECLCommands;
 export class ECLCommands {
