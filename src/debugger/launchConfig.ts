@@ -87,7 +87,7 @@ export class LaunchConfig {
         });
         return acService.VerifyUser({
             application: "vscode-ecl",
-            version: undefined
+            version: ""
         });
     }
 
@@ -97,7 +97,7 @@ export class LaunchConfig {
                 reject("timeout");
             }, timeout);
         });
-        const queryPromise = this.verifyUser(this._config.user, this._config.password);
+        const queryPromise = this.verifyUser(this._config.user!, this._config.password!);
         return Promise.race([timeoutPrommise, queryPromise])
             .then(r => {
                 return LaunchConfigState.Ok;

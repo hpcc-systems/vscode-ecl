@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { checkTextDocument } from "./eclCheck";
-import { ECLDefinitionProvider } from "./eclDeclaration";
-import { ECL_MODE } from "./eclMode";
-import { ECLCompletionItemProvider } from "./eclSuggest";
+import { checkTextDocument } from "./check";
+import { ECLDefinitionProvider } from "./declaration";
+import { ECL_MODE } from "./mode";
+import { ECLCompletionItemProvider } from "./suggest";
 
 let eclEditor: ECLEditor;
 export class ECLEditor {

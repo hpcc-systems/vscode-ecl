@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { checkTextDocument } from "./eclCheck";
+import { checkTextDocument } from "./check";
 
 let eclDiagnosticCollection: vscode.DiagnosticCollection;
 let _diagnosticCache: { [key: string]: vscode.Diagnostic[] | undefined } = {};
@@ -18,7 +18,7 @@ export class ECLDiagnostic {
             this.delete(event.uri);
         }, null, this._ctx.subscriptions);
 
-        vscode.window.onDidChangeActiveTextEditor((event: vscode.TextEditor) => {
+        vscode.window.onDidChangeActiveTextEditor((event: vscode.TextEditor | undefined) => {
             if (event && event.document && this._activeTextEditor !== event.document.uri) {
                 this._activeTextEditor = event.document.uri;
                 if (_diagnosticCache[this._activeTextEditor.toString()]) {

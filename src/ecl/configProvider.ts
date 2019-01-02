@@ -1,6 +1,6 @@
 import { scopedLogger } from "@hpcc-js/util";
 import * as vscode from "vscode";
-import { LaunchConfig } from "./debugger/launchConfig";
+import { LaunchConfig } from "../debugger/launchConfig";
 
 const logger = scopedLogger("eclConfigProvide.ts");
 
@@ -13,7 +13,7 @@ export let eclConfigurationProvider: ECLConfigurationProvider;
 export class ECLConfigurationProvider implements vscode.DebugConfigurationProvider {
     protected _ctx: vscode.ExtensionContext;
     protected _credentials: { [configName: string]: Credentials } = {};
-    protected _currentConfig: vscode.DebugConfiguration;
+    protected _currentConfig?: vscode.DebugConfiguration;
 
     constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
@@ -63,7 +63,7 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
             prompt: `User ID (${debugConfiguration.name})`,
             password: false,
             value: credentials.user
-        });
+        }) || "";
     }
 
     async promptPassword(debugConfiguration: vscode.DebugConfiguration): Promise<boolean> {
@@ -72,7 +72,7 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
             prompt: `Password (${debugConfiguration.name})`,
             password: true,
             value: credentials.password
-        });
+        }) || "";
         return false;
     }
 

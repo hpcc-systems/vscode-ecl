@@ -1,12 +1,10 @@
 {
+  "private": true,
   "name": "ecl",
   "version": "1.0.10",
   "publisher": "hpcc-systems",
   "displayName": "ECL Language",
   "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
-  "author": {
-    "name": "HPCC Systems"
-  },
   "icon": "images/eclIcon.png",
   "categories": [
     "Programming Languages",
@@ -14,17 +12,9 @@
     "Linters",
     "Debuggers"
   ],
-  "galleryBanner": {
-    "color": "#CFB69A",
-    "theme": "light"
-  },
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hpcc-systems/vscode-ecl.git"
-  },
+  "main": "./out/src/extension",
   "scripts": {
-    "clean": "rimraf out lib* dist types",
+    "clean": "rimraf out lib* dist types *.vsix",
     "compile": "tsc",
     "compile-watch": "npm run compile -- -watch",
     "build": "npm run compile",
@@ -39,35 +29,50 @@
     "vsce-package": "vsce package",
     "publish": "run-s standard-version git-push vsce-publish"
   },
-  "extensionDependencies": [],
   "dependencies": {
-    "@hpcc-js/comms": "2.0.5",
-    "@hpcc-js/util": "2.1.2",
-    "safe-buffer": "5.1.1",
+    "@hpcc-js/comms": "2.0.9",
+    "@hpcc-js/util": "2.1.5",
+    "@hpcc-js/loader": "2.1.3",
+    "@hpcc-js/marshaller": "2.8.1",
+    "diff": "3.5.0",
     "tslib": "1.9.3",
     "vscode-debugadapter": "1.32.1",
     "vscode-debugprotocol": "1.32.0"
   },
   "devDependencies": {
+    "@types/diff": "3.5.2",
     "@types/mocha": "5.2.5",
     "@types/node": "8.9.3",
     "mocha": "5.2.0",
-    "npm-run-all": "4.1.3",
+    "npm-run-all": "4.1.5",
     "rimraf": "2.6.2",
     "standard-version": "4.4.0",
-    "tslint": "5.11.0",
-    "typescript": "3.1.6",
-    "vsce": "1.53.0",
-    "vscode": "^1.1.5"
+    "tslint": "5.12.0",
+    "typescript": "3.2.2",
+    "vsce": "1.54.0",
+    "vscode": "^1.1.22"
+  },
+  "author": {
+    "name": "HPCC Systems"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
     "vscode": "^1.27.0"
   },
+  "galleryBanner": {
+    "color": "#CFB69A",
+    "theme": "light"
+  },
+  "extensionDependencies": [
+    "vscode.json"
+  ],
   "activationEvents": [
     "onLanguage:ecl",
-    "onCommand:ecl.test.file"
+    "onLanguage:json"
   ],
-  "main": "./out/src/eclMain",
   "contributes": {
     "languages": [
       {
@@ -81,6 +86,18 @@
           "ecl"
         ],
         "configuration": "./ecl.configuration.json"
+      },
+      {
+        "id": "json",
+        "extensions": [
+          ".dashy"
+        ]
+      }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": "*.dashy",
+        "url": "./node_modules/@hpcc-js/ddl-shim/src/ddl2Schema.json"
       }
     ],
     "grammars": [
@@ -131,8 +148,62 @@
         "command": "ecl.openWUDetails",
         "title": "ECL: Open Workunit Details",
         "description": "Open ECL Watch Workunit Details page."
+      },
+      {
+        "command": "dashy.view",
+        "title": "View Dashboard",
+        "icon": {
+          "dark": "./images/dashy-view-dark.svg",
+          "light": "./images/dashy-view.svg"
+        }
+      },
+      {
+        "command": "dashy.edit",
+        "title": "Edit Dashboard",
+        "icon": {
+          "dark": "./images/dashy-edit-dark.svg",
+          "light": "./images/dashy-edit.svg"
+        }
       }
     ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceLangId == json && resourceExtname == .dashy",
+          "command": "dashy.view",
+          "group": "navigation@998"
+        },
+        {
+          "when": "resourceLangId == json && resourceExtname == .dashy",
+          "command": "dashy.edit",
+          "group": "navigation@999"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceLangId == json && resourceExtname == .dashy",
+          "command": "dashy.view",
+          "group": "navigation@998"
+        },
+        {
+          "when": "resourceLangId == json && resourceExtname == .dashy",
+          "command": "dashy.edit",
+          "group": "navigation@999"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "resourceLangId == json && resourceExtname == .dashy",
+          "command": "dashy.view",
+          "group": "navigation@998"
+        },
+        {
+          "when": "resourceLangId == json && resourceExtname == .dashy",
+          "command": "dashy.edit",
+          "group": "navigation@999"
+        }
+      ]
+    },
     "keybindings": [
       {
         "command": "ecl.searchTerm",
@@ -160,6 +231,18 @@
         "command": "ecl.showECLWatch",
         "key": "shift+f8",
         "mac": "shift+f8",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "dashy.view",
+        "key": "ctrl+shift+V",
+        "mac": "ctrl+shift+V",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "dashy.edit",
+        "key": "ctrl+alt+shift+V",
+        "mac": "ctrl+alt+shift+V",
         "when": "editorTextFocus"
       }
     ],
@@ -401,6 +484,23 @@
           "type": "boolean",
           "default": false,
           "description": "Debug level logging (requires restart)"
+        },
+        "dashy.libraryLocation": {
+          "type": "string",
+          "enum": [
+            "bundled",
+            "latest",
+            "localPath"
+          ],
+          "default": "bundled",
+          "description": "Dashy library location (bundled, latest, localPath)",
+          "scope": "resource"
+        },
+        "dashy.localPath": {
+          "type": "string",
+          "default": "",
+          "description": "Dashy Library Path (libraryLocation === \"localPath\")",
+          "scope": "resource"
         }
       }
     }

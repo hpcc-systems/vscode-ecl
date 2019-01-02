@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ECL_MODE } from "./eclMode";
+import { ECL_MODE } from "./mode";
 
 export let eclStatusBar: ECLStatusBar;
 export class ECLStatusBar {

@@ -1,12 +1,12 @@
 import { Workunit } from "@hpcc-js/comms";
 import * as vscode from "vscode";
-import { LaunchConfig, LaunchConfigState, LaunchRequestArguments } from "./debugger/launchConfig";
-import { eclCommands } from "./eclCommand";
+import { LaunchConfig, LaunchConfigState, LaunchRequestArguments } from "../debugger/launchConfig";
+import { eclCommands } from "./command";
 
 let eclTree: ECLTree;
 export class ECLNode {
     _tree: ECLTree;
-    _treeItem: vscode.TreeItem;
+    _treeItem?: vscode.TreeItem;
 
     constructor(tree: ECLTree) {
         this._tree = tree;
@@ -66,7 +66,7 @@ class ECLWUNode extends ECLNode {
 class ECLLaunchNode extends ECLNode {
     _rootNode: ECLRootNode;
     _name: string;
-    _config;
+    _config: LaunchRequestArguments;
     _launchConfig: LaunchConfig;
 
     constructor(rootNode: ECLRootNode, name: string, config: LaunchRequestArguments) {
@@ -109,7 +109,7 @@ class ECLLaunchNode extends ECLNode {
 }
 
 class ECLRootNode extends ECLNode {
-    _fsPath: string;
+    _fsPath: string = "";
     _lastRefresh: number = 0;
 
     constructor(tree: ECLTree) {
