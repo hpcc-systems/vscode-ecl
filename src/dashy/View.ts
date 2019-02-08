@@ -3,7 +3,11 @@ import * as vscode from "vscode";
 import { updateWorkspace } from "./diff";
 
 function tidy(ddl: string): string {
-    return JSON.stringify(JSON.parse(ddl), undefined, 4);
+    try {
+        return JSON.stringify(JSON.parse(ddl), undefined, 4);
+    } catch (e) {
+        return ddl;
+    }
 }
 
 export class View {
@@ -78,7 +82,7 @@ export class View {
 
     onSaveDocument() {
         const ddl = this.ddl();
-        if (this._ddl !== ddl) {
+        if (!this._ddl || this._ddl !== ddl) {
             this._ddl = ddl;
             this._panel.webview.html = this.getHtml(ddl);
         }
