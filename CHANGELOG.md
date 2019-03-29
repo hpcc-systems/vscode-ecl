@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [1.1.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.0.12...v1.1.0) (2019-03-29)
+
+
+### Bug Fixes
+
+* **comms:** "rejectUnauthorized" was not being honoured ([91349f5](https://github.com/hpcc-systems/vscode-ecl/commit/91349f5))
+
+
+### Features
+
+* Support XML archive submissions ([162389d](https://github.com/hpcc-systems/vscode-ecl/commit/162389d))
+* **Overview:** Add document symbol support from meta information ([dffb514](https://github.com/hpcc-systems/vscode-ecl/commit/dffb514))
+
+
+
 <a name="1.0.12"></a>
 ## [1.0.12](https://github.com/hpcc-systems/vscode-ecl/compare/v1.0.11...v1.0.12) (2019-01-02)
 
