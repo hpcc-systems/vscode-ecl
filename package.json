@@ -20,7 +20,7 @@
     "build": "npm run compile",
     "watch": "npm run compile -- -watch",
     "lint": "node ./node_modules/tslint/bin/tslint ./src/*.ts ./src/serverAdapter/*.ts ./test/*.ts",
-    "test": "node ./node_modules/vscode/bin/test",
+    "test": "npm run compile",
     "standard-version": "standard-version",
     "vscode:prepublish": "run-s clean compile",
     "git-push": "git push --follow-tags upstream master",
