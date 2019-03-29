@@ -83,7 +83,8 @@ export class LaunchConfig {
         const acService = new AccountService({
             baseUrl: this.espUrl(),
             userID,
-            password
+            password,
+            rejectUnauthorized: this._config.rejectUnauthorized
         });
         return acService.VerifyUser({
             application: "vscode-ecl",

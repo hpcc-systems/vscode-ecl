@@ -47,6 +47,11 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
             debugConfiguration.password = credentials.password;
             return true;
         } catch (e) {
+            if (e.Exception && e.Exception.length) {
+                for (const excpt of e.Exception) {
+                    logger.warning(`${excpt.Code}:  ${excpt.Message}`);
+                }
+            }
             if (e.Exception && e.Exception.length !== undefined && !e.Exception.some(exp => exp.Code === 0)) {
                 debugConfiguration.user = credentials.user;
                 debugConfiguration.password = credentials.password;
