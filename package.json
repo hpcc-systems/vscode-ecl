@@ -38,6 +38,7 @@
     "@hpcc-js/loader": "2.4.0",
     "@hpcc-js/marshaller": "2.11.0",
     "diff": "4.0.1",
+    "tmp": "0.0.33",
     "tslib": "1.9.3",
     "vscode-debugadapter": "1.34.0",
     "vscode-debugprotocol": "1.34.0"
