@@ -2,7 +2,7 @@ import { scopedLogger } from "@hpcc-js/util";
 import * as vscode from "vscode";
 import { LaunchConfig } from "../debugger/launchConfig";
 
-const logger = scopedLogger("eclConfigProvide.ts");
+const logger = scopedLogger("configProvider.ts");
 
 export interface Credentials {
     user: string;

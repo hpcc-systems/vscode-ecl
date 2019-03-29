@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { checkTextDocument } from "./check";
+import { checkTextDocument } from "./ecl/check";
 
 let eclDiagnosticCollection: vscode.DiagnosticCollection;
 let _diagnosticCache: { [key: string]: vscode.Diagnostic[] | undefined } = {};

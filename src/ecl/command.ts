@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
+import { eclDiagnostic } from "../diagnostic";
 import { checkTextDocument, checkWorkspace } from "./check";
 import { selectCTVersion } from "./clientTools";
-import { eclDiagnostic } from "./diagnostic";
 import { encodeLocation } from "./watch";
 
 export let eclCommands: ECLCommands;

@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
+import { ECLDiagnostic } from "../diagnostic";
+import { ECLStatusBar } from "../status";
 import { ECLCommands } from "./command";
 import { ECLConfigurationProvider } from "./configProvider";
-import { ECLDiagnostic } from "./diagnostic";
 import { ECLDocumentSymbolProvider } from "./documentSymbolProvider";
 import { ECLEditor } from "./editor";
-import { ECLStatusBar } from "./status";
 import { ECLTree } from "./tree";
 import { initLogger, Level } from "./util";
 import { ECLWatch } from "./watch";
