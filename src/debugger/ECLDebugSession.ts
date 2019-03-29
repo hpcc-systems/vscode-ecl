@@ -1,10 +1,11 @@
-import { locateAllClientTools, locateClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
+import { EclccErrors, locateAllClientTools, locateClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
 import { IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
 
 import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEvent, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, Variable } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
 import { LaunchConfig, LaunchRequestArguments } from "./launchConfig";
 
+import fs = require("fs");
 import os = require("os");
 import path = require("path");
 
@@ -102,6 +103,14 @@ class WUScope {
     }
 }
 
+function xmlFile(programPath: string): Promise<{ err: EclccErrors, content: string }> {
+    return new Promise((resolve, reject) => {
+        fs.readFile(programPath, "utf8", function (err, content) {
+            resolve({ err: new EclccErrors("", []), content });
+        });
+    });
+}
+
 export class ECLDebugSession extends DebugSession {
     workunit!: Workunit;
     watchHandle!: IObserverHandle;
@@ -152,13 +161,18 @@ export class ECLDebugSession extends DebugSession {
         this.logger.debug("launchRequest:  " + JSON.stringify(args));
         this.launchConfig = new LaunchConfig(args);
         this.sendEvent(new OutputEvent("Fetch build version." + os.EOL));
+        const pathParts = path.parse(this.launchConfig._config.program);
         this.launchConfig.fetchBuild().then(build => {
             this.sendEvent(new OutputEvent("Locating Client Tools." + os.EOL));
             return locateClientTools(this.launchConfig._config.eclccPath, build, this.launchConfig._config.workspace, this.launchConfig.includeFolders(), this.launchConfig.legacyMode());
         }).then((clientTools) => {
             this.sendEvent(new OutputEvent("Client Tools:  " + clientTools.eclccPath + os.EOL));
             this.sendEvent(new OutputEvent("Generating archive." + os.EOL));
-            return clientTools.createArchive(this.launchConfig._config.program);
+            if (pathParts.ext.toLowerCase() === ".xml") {
+                return xmlFile(this.launchConfig._config.program);
+            } else {
+                return clientTools.createArchive(this.launchConfig._config.program);
+            }
         }).then(archive => {
             if (this.launchConfig._config.abortSubmitOnError && archive.err.hasError()) {
                 throw new Error(`ECL Syntax Error(s):\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
@@ -166,20 +180,22 @@ export class ECLDebugSession extends DebugSession {
             return archive;
         }).then(archive => {
             this.sendEvent(new OutputEvent("Creating workunit." + os.EOL));
-            return this.launchConfig.createWorkunit().then((wu) => {
-                this.sendEvent(new Event("WUCreated", { ...this.launchConfig._config, wuid: wu.Wuid }));
-                const pathParts = path.parse(this.launchConfig._config.program);
-                return wu.update({
-                    Jobname: pathParts.name,
-                    QueryText: archive.content,
-                    ApplicationValues: {
-                        ApplicationValue: [{
-                            Application: "vscode-ecl",
-                            Name: "filePath",
-                            Value: this.launchConfig._config.program
-                        }]
-                    }
-                });
+            return this.launchConfig.createWorkunit().then(wu => {
+                return [wu, archive] as [Workunit, any];
+            });
+        }).then(([wu, archive]) => {
+            this.sendEvent(new Event("WUCreated", { ...this.launchConfig._config, wuid: wu.Wuid }));
+            this.sendEvent(new OutputEvent("Updating workunit." + os.EOL));
+            return wu.update({
+                Jobname: pathParts.name,
+                QueryText: archive.content,
+                ApplicationValues: {
+                    ApplicationValue: [{
+                        Application: "vscode-ecl",
+                        Name: "filePath",
+                        Value: this.launchConfig._config.program
+                    }]
+                }
             });
         }).then((workunit) => {
             this.workunit = workunit;
