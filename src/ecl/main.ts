@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { ECLCommands } from "./command";
 import { ECLConfigurationProvider } from "./configProvider";
 import { ECLDiagnostic } from "./diagnostic";
+import { ECLDocumentSymbolProvider } from "./documentSymbolProvider";
 import { ECLEditor } from "./editor";
 import { ECLStatusBar } from "./status";
 import { ECLTree } from "./tree";
@@ -26,6 +27,7 @@ export function activate(ctx: vscode.ExtensionContext): void {
     ECLCommands.attach(ctx);
     ECLEditor.attach(ctx);
     ECLStatusBar.attach(ctx);
+    ECLDocumentSymbolProvider.attach(ctx);
     ECLTree.attach(ctx);
     ECLWatch.attach(ctx);
 }
