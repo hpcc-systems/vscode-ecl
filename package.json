@@ -50,7 +50,7 @@
     "tslint": "5.12.0",
     "typescript": "3.2.2",
     "vsce": "1.54.0",
-    "vscode": "^1.1.22"
+    "vscode": "1.1.29"
   },
   "author": {
     "name": "HPCC Systems"
@@ -60,7 +60,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.27.0"
+    "vscode": "^1.31.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
@@ -443,6 +443,7 @@
         },
         "ecl.syntaxCheckOnSave": {
           "type": "boolean",
+          "scope": "resource",
           "default": true,
           "description": "Run 'eclcc -syntax' on save."
         },
@@ -454,6 +455,7 @@
         },
         "ecl.includeFolders": {
           "type": "array",
+          "scope": "resource",
           "items": {
             "type": "string"
           },
@@ -462,45 +464,50 @@
         },
         "ecl.eclccPath": {
           "type": "string",
+          "scope": "resource",
           "default": "",
           "description": "Override eclcc auto detection."
         },
         "ecl.legacyMode": {
           "type": "boolean",
+          "scope": "resource",
           "default": false,
           "description": "Add '-legacy' arguement to eclcc."
         },
         "ecl.WUOpenExternal": {
           "type": "boolean",
+          "scope": "resource",
           "default": true,
           "description": "Open WU in external browser."
         },
         "ecl.WUAutoOpen": {
           "type": "boolean",
+          "scope": "resource",
           "default": false,
           "description": "Automatically open WU on creation."
         },
         "ecl.debugLogging": {
           "type": "boolean",
+          "scope": "resource",
           "default": false,
           "description": "Debug level logging (requires restart)"
         },
         "dashy.libraryLocation": {
           "type": "string",
+          "scope": "resource",
           "enum": [
             "bundled",
             "latest",
             "localPath"
           ],
           "default": "bundled",
-          "description": "Dashy library location (bundled, latest, localPath)",
-          "scope": "resource"
+          "description": "Dashy library location (bundled, latest, localPath)"
         },
         "dashy.localPath": {
           "type": "string",
+          "scope": "resource",
           "default": "",
-          "description": "Dashy Library Path (libraryLocation === \"localPath\")",
-          "scope": "resource"
+          "description": "Dashy Library Path (libraryLocation === \"localPath\")"
         }
       }
     }
