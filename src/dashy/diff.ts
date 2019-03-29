@@ -63,11 +63,11 @@ class Edit {
     }
 }
 
-function parseUniDiffs(diffOutput: jsDiff.IUniDiff[]): Edit[] {
+function parseUniDiffs(diffOutput: jsDiff.ParsedDiff[]): Edit[] {
     const edits: Edit[] = [];
-    diffOutput.forEach((uniDiff: jsDiff.IUniDiff) => {
+    diffOutput.forEach((uniDiff: jsDiff.ParsedDiff) => {
         let edit: Edit;
-        uniDiff.hunks.forEach((hunk: jsDiff.IHunk) => {
+        uniDiff.hunks.forEach((hunk: jsDiff.Hunk) => {
             let startLine = hunk.oldStart;
             hunk.lines.forEach((line) => {
                 switch (line.substr(0, 1)) {
@@ -97,7 +97,7 @@ function compare(oldStr: string, newStr: string): Edit[] {
         oldStr = oldStr.split("\r\n").join("\n");
         newStr = newStr.split("\r\n").join("\n");
     }
-    const unifiedDiffs: jsDiff.IUniDiff = jsDiff.structuredPatch("", "", oldStr, newStr, "", "");
+    const unifiedDiffs: jsDiff.ParsedDiff = jsDiff.structuredPatch("", "", oldStr, newStr, "", "");
     return parseUniDiffs([unifiedDiffs]);
 }
 

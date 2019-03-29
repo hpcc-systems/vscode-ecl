@@ -1,5 +1,4 @@
 .vscode/**/*
-node_modules/@hpcc-js/**/dist/index.es6.js
 node_modules/@hpcc-js/**/dist/*.map
 node_modules/@hpcc-js/**/types/**/*
 node_modules/codemirror/**/*
