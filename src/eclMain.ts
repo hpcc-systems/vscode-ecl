@@ -1,11 +1,4 @@
 import * as vscode from "vscode";
-import { ECLCommands } from "./eclCommand";
-import { ECLConfigurationProvider } from "./eclConfigProvider";
-import { ECLDiagnostic } from "./eclDiagnostic";
-import { ECLEditor } from "./eclEditor";
-import { ECLStatusBar } from "./eclStatus";
-import { ECLTree } from "./eclTree";
-import { ECLWatch } from "./eclWatch";
 import { initLogger, Level } from "./util";
 
 const eclConfig = vscode.workspace.getConfiguration("ecl");
@@ -13,24 +6,7 @@ const eclConfig = vscode.workspace.getConfiguration("ecl");
 initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
 
 export function activate(ctx: vscode.ExtensionContext): void {
-    vscode.window.showInformationMessage(`This extension is now deprecated as it has been relocated to "hpcc-systems"`, "more info").then((m => {
+    vscode.window.showErrorMessage(`This extension is no longer supported as it has been relocated to "hpcc-systems"`, "more info").then((m => {
         vscode.commands.executeCommand("vscode.open", vscode.Uri.parse("https://marketplace.visualstudio.com/items?itemName=GordonSmith.ecl"));
     }));
-
-    // ctx.subscriptions.push(vscode.languages.registerHoverProvider(ECL_MODE, new ECLHoverProvider()));
-    // ctx.subscriptions.push(vscode.languages.registerReferenceProvider(ECL_MODE, new ECLReferenceProvider()));
-    // ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(ECL_MODE, new ECLDocumentFormattingEditProvider()));
-    // ctx.subscriptions.push(vscode.languages.registerDocumentSymbolProvider(ECL_MODE, new ECLDocumentSymbolProvider()));
-    // ctx.subscriptions.push(vscode.languages.registerWorkspaceSymbolProvider(new ECLWorkspaceSymbolProvider()));
-    // ctx.subscriptions.push(vscode.languages.registerRenameProvider(ECL_MODE, new ECLRenameProvider()));
-    // ctx.subscriptions.push(vscode.languages.registerSignatureHelpProvider(ECL_MODE, new ECLSignatureHelpProvider(), '(', ','));
-    // ctx.subscriptions.push(vscode.languages.registerCodeActionsProvider(ECL_MODE, new EclCodeActionProvider()));
-
-    ECLConfigurationProvider.attach(ctx);
-    ECLDiagnostic.attach(ctx);
-    ECLCommands.attach(ctx);
-    ECLEditor.attach(ctx);
-    ECLStatusBar.attach(ctx);
-    ECLTree.attach(ctx);
-    ECLWatch.attach(ctx);
 }
