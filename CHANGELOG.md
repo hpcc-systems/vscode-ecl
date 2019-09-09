@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.2](https://github.com/hpcc-systems/vscode-ecl/compare/v1.1.1...v1.1.2) (2019-09-09)
+
+
+### Bug Fixes
+
+* **package:** Update default icon ([2bffd6b](https://github.com/hpcc-systems/vscode-ecl/commit/2bffd6b))
+* **problems:** Error parse failed when path contained a space. ([bcdd5bf](https://github.com/hpcc-systems/vscode-ecl/commit/bcdd5bf))
+* **publish:** Add (R) to company name ([bc86ca3](https://github.com/hpcc-systems/vscode-ecl/commit/bc86ca3))
+
+
+
 ## [1.1.1](https://github.com/hpcc-systems/vscode-ecl/compare/v1.1.0...v1.1.1) (2019-03-29)
 
 
