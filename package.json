@@ -33,28 +33,25 @@
     "publish": "run-s standard-version git-push vsce-publish"
   },
   "dependencies": {
-    "@hpcc-js/comms": "2.4.0",
-    "@hpcc-js/util": "2.4.0",
-    "@hpcc-js/loader": "2.4.0",
-    "@hpcc-js/marshaller": "2.11.0",
-    "diff": "4.0.1",
-    "tmp": "0.0.33",
-    "tslib": "1.9.3",
-    "vscode-debugadapter": "1.34.0",
-    "vscode-debugprotocol": "1.34.0"
+    "@hpcc-js/comms": "^2.10.3",
+    "@hpcc-js/loader": "^2.10.2",
+    "@hpcc-js/marshaller": "^2.17.0",
+    "@hpcc-js/util": "^2.8.2",
+    "tslib": "^1.10.0",
+    "vscode-debugadapter": "^1.36.0",
+    "vscode-debugprotocol": "^1.36.0"
   },
   "devDependencies": {
-    "@types/diff": "4.0.2",
-    "@types/mocha": "5.2.6",
-    "@types/node": "8.9.3",
-    "mocha": "6.0.2",
-    "npm-run-all": "4.1.5",
-    "rimraf": "2.6.2",
-    "standard-version": "5.0.2",
-    "tslint": "5.14.0",
-    "typescript": "3.3.3",
-    "vsce": "1.58.0",
-    "vscode": "^1.1.33"
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^8.10.53",
+    "mocha": "^6.2.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.7.1",
+    "standard-version": "^5.0.2",
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.2",
+    "vsce": "^1.66.0",
+    "vscode": "^1.1.36"
   },
   "author": {
     "name": "HPCC Systems®"
@@ -270,15 +267,15 @@
         }
       ]
     },
+    "breakpoints": [
+      {
+        "language": "ecl"
+      }
+    ],
     "debuggers": [
       {
         "type": "ecl",
         "label": "ECL",
-        "enableBreakpointsFor": {
-          "languageIds": [
-            "ecl"
-          ]
-        },
         "program": "./out/src/debugger/ECLDebug.js",
         "runtime": "node",
         "configurationAttributes": {

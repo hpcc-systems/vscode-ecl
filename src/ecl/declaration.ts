@@ -13,17 +13,14 @@ export class ECLDefinitionProvider implements vscode.DefinitionProvider {
                 const endCharPos = qualifiedIDBoundary(lineText, wordAtPosition.end.character, false);
                 const qualifiedID = lineText.substring(startCharPos, endCharPos + 1);
 
-                if (vscode.workspace.rootPath) {
-                    let metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
-                    let eclDef = metaWorkspace.resolveQualifiedID(document.fileName, qualifiedID, document.offsetAt(position));
-                    if (!eclDef && vscode.workspace.workspaceFolders) {
-                        for (const wuf of vscode.workspace.workspaceFolders) {
-                            if (wuf.uri.fsPath !== vscode.workspace.rootPath) {
-                                metaWorkspace = attachWorkspace(wuf.uri.fsPath);
-                                eclDef = metaWorkspace.resolveQualifiedID(document.fileName, qualifiedID, document.offsetAt(position));
-                                if (eclDef) {
-                                    break;
-                                }
+                if (vscode.workspace.workspaceFolders) {
+                    let eclDef;
+                    for (const wuf of vscode.workspace.workspaceFolders) {
+                        if (wuf.uri.fsPath !== vscode.workspace.rootPath) {
+                            const metaWorkspace = attachWorkspace(wuf.uri.fsPath);
+                            eclDef = metaWorkspace.resolveQualifiedID(document.fileName, qualifiedID, document.offsetAt(position));
+                            if (eclDef) {
+                                break;
                             }
                         }
                     }
