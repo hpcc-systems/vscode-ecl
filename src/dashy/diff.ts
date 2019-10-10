@@ -1,6 +1,6 @@
 //  Ported from https://github.com/Microsoft/vscode-go/blob/master/src/diffUtils.ts
 
-import jsDiff = require("diff");
+import * as jsDiff from "diff";
 import { Position, Range, TextDocument, TextEdit, TextEditorEdit, Uri, workspace, WorkspaceEdit } from "vscode";
 
 enum EditTypes { EDIT_DELETE, EDIT_INSERT, EDIT_REPLACE }

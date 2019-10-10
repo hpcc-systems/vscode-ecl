@@ -1,18 +1,16 @@
-.vscode/**/*
-node_modules/@hpcc-js/**/dist/*.map
-node_modules/@hpcc-js/**/types/**/*
-node_modules/codemirror/**/*
-node_modules/dagre/**/*
-node_modules/lodash/**/*
-node_modules/@phosphor/**/*
-node_modules/graphlib/**/*
-node_modules/preact/**/*
-node_modules/es6-promise/**/*
-node_modules/d3-*/**/*
-src/**/*
-test/**/*
-types/**/*
-.gitignore
-.travis.yml
-.vscodeignore
-package-lock.json
+# Ignore everything
+*
+*/**
+
+# Whitelist required files
+!dist/**/*
+!images/**/*
+!snippets/**/*
+!syntaxes/**/*
+
+!.vscodeignore
+!CHANGELOG.md
+!ecl.configuration.json
+!LICENSE
+!package.json
+!README.md
