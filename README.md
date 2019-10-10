@@ -63,7 +63,7 @@ Submitting or debugging ECL using VS-Code requires specifying the target environ
     "name": "localhost-hthor",
     "type": "ecl",
     "request": "launch",
-    "mode": "submit",
+    "mode": "submit", // "submit" | "compile" | "publish"
     "workspace": "${workspaceRoot}",
     "program": "${file}",
     "protocol": "http",
