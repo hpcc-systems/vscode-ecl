@@ -3,7 +3,7 @@ import { setTimeout } from "timers";
 import { DebugProtocol } from "vscode-debugprotocol";
 
 // This interface should always match the schema found in `package.json`.
-export type LaunchMode = "submit" | "compile" | "debug";
+export type LaunchMode = "submit" | "compile" | "publish" | "debug";
 export type LaunchProtocol = "http" | "https";
 export type LaunchLegacyMode = "true" | "false" | "";
 
@@ -54,6 +54,7 @@ export class LaunchConfig {
     action(): WUUpdate.Action {
         switch (this._config.mode) {
             case "compile":
+            case "publish":
                 return WUUpdate.Action.Compile;
             case "debug":
                 return WUUpdate.Action.Debug;
@@ -61,6 +62,10 @@ export class LaunchConfig {
             default:
                 return WUUpdate.Action.Run;
         }
+    }
+
+    isPublish() {
+        return this._config.mode === "publish";
     }
 
     legacyMode(): boolean | undefined {

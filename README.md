@@ -56,7 +56,7 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
 #### Launch Settings
 
-Submitting or debugging ECL using VS-Code requires specifiying the target environment within the VS Code `launch.json` (pressing `F5` will prompt you to auto create a skeleton file if none exists):
+Submitting or debugging ECL using VS-Code requires specifying the target environment within the VS Code `launch.json` (pressing `F5` will prompt you to auto create a skeleton file if none exists):
 
 ```javascript
 {

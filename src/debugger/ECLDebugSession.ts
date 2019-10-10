@@ -208,6 +208,12 @@ export class ECLDebugSession extends DebugSession {
                 this.sendEvent(new InitializedEvent());
                 this.logger.debug("InitializeEvent");
             });
+            if (this.launchConfig.isPublish()) {
+                this.workunit.watchUntilComplete().then(() => {
+                    this.logger.debug("Publish");
+                    this.workunit.publish();
+                });
+            }
         }).catch((e) => {
             this.sendEvent(new OutputEvent(`Launch failed - ${e}${os.EOL}`));
             this.sendEvent(new TerminatedEvent());

@@ -309,6 +309,7 @@
                 "enum": [
                   "submit",
                   "compile",
+                  "publish",
                   "debug"
                 ],
                 "default": "submit"
