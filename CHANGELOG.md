@@ -1,6 +1,13 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.2.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.1.5...v1.2.0) (2019-10-10)
+
+
+### Features
+
+* **build:** Bundle extension ([8d6074e](https://github.com/hpcc-systems/vscode-ecl/commit/8d6074e1b9a2a482ce76fe8ff582ad99a6847043))
 
 ## [1.1.5](https://github.com/hpcc-systems/vscode-ecl/compare/v1.1.4...v1.1.5) (2019-09-10)
 
