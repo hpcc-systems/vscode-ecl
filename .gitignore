@@ -1,4 +1,5 @@
-out
+dist
+lib*
 node_modules
 types
 .vscode-test

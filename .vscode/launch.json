@@ -17,10 +17,11 @@
             // path to VSCode executable
             "runtimeExecutable": "${execPath}",
             "args": [
+                "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceRoot}"
             ],
             "outFiles": [
-                "${workspaceRoot}/out/src/**/*.js"
+                "${workspaceRoot}/dist/*.js"
             ],
             "stopOnEntry": false,
             "sourceMaps": true
@@ -29,13 +30,13 @@
             "name": "Launch Server Adapter",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/out/src/debugger/ECLDebug.js",
+            "program": "${workspaceRoot}/dist/debugger.js",
             "stopOnEntry": false,
             "args": [
                 "--server=4711"
             ],
             "outFiles": [
-                "${workspaceRoot}/out/src/**/*.js"
+                "${workspaceRoot}/dist/*.js"
             ],
             "sourceMaps": true,
             "cwd": "${workspaceRoot}"

@@ -1,20 +1,23 @@
 {
     "compilerOptions": {
-        "rootDir": ".",
+        "rootDir": "./src",
         "module": "commonjs",
+        "moduleResolution": "node",
         "target": "es6",
-        "outDir": "out",
+        "outDir": "lib-cjs",
         "sourceMap": true,
-        "declaration": true,
-        "declarationDir": "./types",
         "strict": true,
         "noImplicitAny": false,
+        "importHelpers": true,
         "lib": [
             "es6",
             "dom"
         ]
     },
     "include": [
-        "./src"
+        "./src/**/*.ts",
+        "./node_modules/vscode/vscode.d.ts",
+        "./node_modules/vscode-debugadapter/lib/*",
+        "./node_modules/vscode/lib/*"
     ]
 }

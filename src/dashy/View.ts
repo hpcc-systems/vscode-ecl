@@ -172,13 +172,6 @@ export class View {
     getLibraryHTML(): string {
         const config = vscode.workspace.getConfiguration("dashy", this._td.uri);
         switch (config.get("libraryLocation")) {
-            case "latest":
-                return `<link rel="stylesheet" href="https://unpkg.com/@hpcc-js/common/font-awesome/css/font-awesome.min.css">
-                    <script src="https://unpkg.com/@hpcc-js/loader" type="text/javascript" charset="utf-8"></script>
-                    <script>
-                        var hpccLoader = window["@hpcc-js/loader"];
-                        var require = hpccLoader.unpkg();
-                    </script>`;
             case "localPath":
                 const localPath = vscode.Uri.file(config.get("localPath", `${this._node_modulesUri}/@hpcc-js`));
                 const localPathUri = localPath.with({ scheme: "vscode-resource" });
@@ -188,13 +181,13 @@ export class View {
                         var hpccLoader = window["@hpcc-js/loader"];
                         var require = hpccLoader.dev();
                     </script>`;
-            case "bundled":
+            case "latest":
             default:
-                return `<link rel="stylesheet" href="${this._node_modulesUri}/@hpcc-js/common/font-awesome/css/font-awesome.min.css">
-                    <script src="${this._node_modulesUri}/@hpcc-js/loader/dist/index.min.js" type="text/javascript" charset="utf-8"></script>
+                return `<link rel="stylesheet" href="https://unpkg.com/@hpcc-js/common/font-awesome/css/font-awesome.min.css">
+                    <script src="https://unpkg.com/@hpcc-js/loader" type="text/javascript" charset="utf-8"></script>
                     <script>
                         var hpccLoader = window["@hpcc-js/loader"];
-                        var require = hpccLoader.cdn("${this._node_modulesUri}/@hpcc-js");
+                        var require = hpccLoader.unpkg();
                     </script>`;
         }
     }

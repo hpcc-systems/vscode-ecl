@@ -5,9 +5,9 @@ import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEv
 import { DebugProtocol } from "vscode-debugprotocol";
 import { LaunchConfig, LaunchRequestArguments } from "./launchConfig";
 
-import fs = require("fs");
-import os = require("os");
-import path = require("path");
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 
 export type XGMMLGraphItem = XGMMLGraph | XGMMLSubgraph | XGMMLVertex | XGMMLEdge;
 
