@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { checkTextDocument, checkWorkspace } from "./check";
+import { selectCTVersion } from "./clientTools";
 import { eclDiagnostic } from "./diagnostic";
 import { encodeLocation } from "./watch";
 
@@ -16,6 +17,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showECLWatch", this.showECLWatch));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openWUDetails", this.openWUDetails));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {

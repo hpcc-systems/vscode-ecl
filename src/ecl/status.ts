@@ -1,20 +1,21 @@
-import * as vscode from "vscode";
+import { ExtensionContext, languages, StatusBarAlignment, StatusBarItem, ThemeColor, window } from "vscode";
 import { ECL_MODE } from "./mode";
 
 export let eclStatusBar: ECLStatusBar;
 export class ECLStatusBar {
-    _ctx: vscode.ExtensionContext;
-    _statusBarEntry: vscode.StatusBarItem;
+    _ctx: ExtensionContext;
+    _statusBarEntry: StatusBarItem;
 
-    private constructor(ctx: vscode.ExtensionContext) {
+    private constructor(ctx: ExtensionContext) {
         this._ctx = ctx;
 
-        this._statusBarEntry = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
+        this._statusBarEntry = window.createStatusBarItem(StatusBarAlignment.Left, Number.MIN_VALUE);
+        this._statusBarEntry.command = "ecl.selectCTVersion";
 
         this.onActiveWatcher();
     }
 
-    static attach(ctx: vscode.ExtensionContext): ECLStatusBar {
+    static attach(ctx: ExtensionContext): ECLStatusBar {
         if (!eclStatusBar) {
             eclStatusBar = new ECLStatusBar(ctx);
         }
@@ -22,14 +23,14 @@ export class ECLStatusBar {
     }
 
     onActiveWatcher() {
-        vscode.window.onDidChangeActiveTextEditor(event => {
-            if (event && vscode.window.activeTextEditor) {
+        window.onDidChangeActiveTextEditor(event => {
+            if (event && window.activeTextEditor) {
                 if (!this._statusBarEntry) {
                     return;
                 }
-                if (!vscode.window.activeTextEditor) {
+                if (!window.activeTextEditor) {
                     this._statusBarEntry.hide();
-                } else if (vscode.languages.match(ECL_MODE, vscode.window.activeTextEditor.document)) {
+                } else if (languages.match(ECL_MODE, window.activeTextEditor.document)) {
                     this._statusBarEntry.show();
                 } else {
                     this._statusBarEntry.hide();

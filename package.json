@@ -170,6 +170,11 @@
         "description": "Open ECL Watch Workunit Details page."
       },
       {
+        "command": "ecl.selectCTVersion",
+        "title": "ECL: Select Client Tools Version",
+        "description": "Select version from available options."
+      },
+      {
         "command": "dashy.view",
         "title": "View Dashboard",
         "icon": {
