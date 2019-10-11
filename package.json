@@ -15,7 +15,7 @@
   "main": "./dist/extension.js",
   "scripts": {
     "clean": "rimraf out lib* dist types *.vsix",
-    "copy-resources": "cpx ./node_modules/@hpcc-js/ddl-shim/src/ddl2Schema.json ./dist",
+    "copy-resources": "cpx ./node_modules/@hpcc-js/ddl-shim/schema/v2.json ./dist",
     "compile": "tsc",
     "compile-watch": "npm run compile -- -watch",
     "compile-es6": "tsc --module es6 --outDir ./lib-es6",
@@ -42,9 +42,9 @@
     "publish": "run-s standard-version git-push vsce-publish"
   },
   "devDependencies": {
-    "@hpcc-js/comms": "^2.10.5",
-    "@hpcc-js/loader": "^2.10.7",
-    "@hpcc-js/marshaller": "^2.19.1",
+    "@hpcc-js/comms": "^2.11.0",
+    "@hpcc-js/loader": "^2.11.0",
+    "@hpcc-js/marshaller": "^2.19.2",
     "@hpcc-js/util": "^2.8.3",
     "@types/mocha": "^5.2.7",
     "@types/node": "^8.10.54",
@@ -117,7 +117,7 @@
     "jsonValidation": [
       {
         "fileMatch": "*.dashy",
-        "url": "./dist/ddl2Schema.json"
+        "url": "./dist/v2.json"
       }
     ],
     "grammars": [

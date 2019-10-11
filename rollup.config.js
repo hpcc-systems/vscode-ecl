@@ -36,7 +36,6 @@ const plugins = [
     alias({
     }),
     nodeResolve({
-        mainFields: ["module-node", "module", "main", "browser"],
         preferBuiltins: true
     }),
     commonjs({
