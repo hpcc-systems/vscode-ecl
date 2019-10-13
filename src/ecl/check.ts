@@ -1,8 +1,9 @@
-import { attachWorkspace, IECLErrorWarning, locateClientTools } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
+import { attachWorkspace, IECLErrorWarning } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
 import { scopedLogger } from "@hpcc-js/util";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
+import { locateClientTools } from "./clientTools"; //  npm link ../jpcc-js/hpcc-js-comms
 import { eclDiagnostic } from "./diagnostic";
 import { eclStatusBar } from "./status";
 
@@ -38,14 +39,10 @@ function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): P
     const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
     const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
     const includeFolders = calcIncludeFolders(currentWorkspacePath);
-    return locateClientTools(eclConfig["eclccPath"], "", currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then((clientTools): Promise<CheckResponse> => {
+    return locateClientTools("", currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then(clientTools => {
         if (!clientTools) {
-            eclStatusBar.showEclStatus("Unknown", "eclcc:  Unable to locate eclcc");
             throw new Error();
         } else {
-            clientTools.version().then(version => {
-                eclStatusBar.showEclStatus(`${version}`, clientTools.eclccPath);
-            });
             logger.debug(`syntaxCheck-promise:  ${fileUri.fsPath}`);
             return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then((errors) => {
                 if (errors.hasUnknown()) {
