@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.3.0...v1.4.0) (2020-01-10)
+
+
+### Features
+
+* **ClientTools:** Add quick select specific eclcc version ([0810aa4](https://github.com/hpcc-systems/vscode-ecl/commit/0810aa4418115fc91fe236bf409dd6afa775141b))
+
 ## [1.3.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.2.1...v1.3.0) (2019-10-11)
 
 
