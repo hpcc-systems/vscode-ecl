@@ -15,7 +15,6 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheckClear", this.syntaxCheckClear));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showECLWatch", this.showECLWatch));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openWUDetails", this.openWUDetails));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
     }
@@ -56,15 +55,6 @@ export class ECLCommands {
             const searchTerm = editor.document.getText(range);
             vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`https://hpccsystems.com/training/documentation/ecl-language-reference/html/${searchTerm}.html`));
         }
-    }
-
-    showECLWatch() {
-        /*
-        return vscode.commands.executeCommand("vscode.previewHtml", eclWatchUri, vscode.ViewColumn.Two, "ECL Watch").then((success) => {
-        }, (reason) => {
-            vscode.window.showErrorMessage(reason);
-        });
-        */
     }
 
     openWUDetails(url: string, wuid: string) {

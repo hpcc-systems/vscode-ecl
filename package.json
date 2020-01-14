@@ -136,43 +136,43 @@
     "commands": [
       {
         "command": "ecl.syntaxCheck",
-        "title": "ECL: Check Syntax",
+        "title": "ECL: Syntax Check",
         "description": "Save + check syntax of current file."
       },
       {
         "command": "ecl.syntaxCheckAll",
-        "title": "ECL: Check Syntax (all files)",
+        "title": "ECL: Syntax Check all files",
         "description": "Save All + check syntax of all files."
       },
       {
         "command": "ecl.syntaxCheckClear",
-        "title": "ECL: Clear all reported problems",
-        "description": "Clear all reported ECL problems."
-      },
-      {
-        "command": "ecl.showECLWatch",
-        "title": "ECL: Show Workunits",
-        "description": "Show workunits associated with current file."
+        "title": "ECL: Syntax Clear",
+        "description": "Clear all previously reported ECL Syntax Check results."
       },
       {
         "command": "ecl.showLanguageReference",
-        "title": "ECL: Language Reference (online)",
-        "description": "Visit the language reference website."
+        "title": "ECL: Language Reference Website",
+        "description": "Opens the ECL language reference website in external browser."
       },
       {
         "command": "ecl.searchTerm",
-        "title": "ECL: Search the currently selected term.",
-        "description": "Utilises the HPCC Search functionality on the website for documentation."
+        "title": "ECL: Language Reference Lookup",
+        "description": "For the currently selected text, search the online ECL language reference."
       },
       {
         "command": "ecl.openWUDetails",
-        "title": "ECL: Open Workunit Details",
-        "description": "Open ECL Watch Workunit Details page."
+        "title": "ECL: Workunit Details",
+        "description": "Opens ECL Watch Workunit Details for the selected Workunit."
       },
       {
         "command": "ecl.selectCTVersion",
         "title": "ECL: Select Client Tools Version",
-        "description": "Select version from available options."
+        "description": "Select Client Tools Version from available options."
+      },
+      {
+        "command": "ecl.createTerminal",
+        "title": "ECL: Command Prompt",
+        "description": "Opens ECL Client Tools Terminal Session."
       },
       {
         "command": "dashy.view",
@@ -251,12 +251,6 @@
         "command": "ecl.syntaxCheckClear",
         "key": "ctrl+f7",
         "mac": "ctrl+f7"
-      },
-      {
-        "command": "ecl.showECLWatch",
-        "key": "shift+f8",
-        "mac": "shift+f8",
-        "when": "editorTextFocus"
       },
       {
         "command": "dashy.view",
@@ -404,15 +398,15 @@
         },
         "initialConfigurations": [
           {
-            "name": "localhost-hthor",
+            "name": "play-hthor-submit",
             "type": "ecl",
             "request": "launch",
             "mode": "submit",
             "workspace": "${workspaceRoot}",
             "program": "${file}",
-            "protocol": "http",
-            "serverAddress": "localhost",
-            "port": 8010,
+            "protocol": "https",
+            "serverAddress": "play.hpccsystems.com",
+            "port": 18010,
             "rejectUnauthorized": false,
             "targetCluster": "hthor",
             "eclccPath": "${config:ecl.eclccPath}",
@@ -420,7 +414,7 @@
             "includeFolders": "${config:ecl.includeFolders}",
             "legacyMode": "${config:ecl.legacyMode}",
             "resultLimit": 100,
-            "user": "",
+            "user": "vscode_user",
             "password": ""
           }
         ],
@@ -445,7 +439,31 @@
               "includeFolders": "^\"\\${config:ecl.includeFolders}\"",
               "legacyMode": "^\"\\${config:ecl.legacyMode}\"",
               "resultLimit": 100,
-              "user": "",
+              "user": "vscode_user",
+              "password": ""
+            }
+          },
+          {
+            "label": "ECL:  play.hpccsystems.com - hthor",
+            "description": "Submits ECL to public demo servers, hthor.",
+            "body": {
+              "name": "play-hthor-submit",
+              "type": "ecl",
+              "request": "launch",
+              "mode": "submit",
+              "workspace": "^\"\\${workspaceRoot}\"",
+              "program": "^\"\\${file}\"",
+              "protocol": "https",
+              "serverAddress": "play.hpccsystems.com",
+              "port": 18010,
+              "rejectUnauthorized": false,
+              "targetCluster": "hthor",
+              "eclccPath": "^\"\\${config:ecl.eclccPath}\"",
+              "eclccArgs": [],
+              "includeFolders": "^\"\\${config:ecl.includeFolders}\"",
+              "legacyMode": "^\"\\${config:ecl.legacyMode}\"",
+              "resultLimit": 100,
+              "user": "vscode_user",
               "password": ""
             }
           }
@@ -486,7 +504,7 @@
             "type": "string"
           },
           "default": [],
-          "description": "External folders use by IMPORT."
+          "description": "Additional folders to use when resolving IMPORT statements."
         },
         "ecl.eclccPath": {
           "type": "string",
@@ -498,25 +516,25 @@
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "Add '-legacy' arguement to eclcc."
+          "description": "Add '-legacy' argument to eclcc."
         },
         "ecl.WUOpenExternal": {
           "type": "boolean",
           "scope": "resource",
           "default": true,
-          "description": "Open WU in external browser."
+          "description": "Open Workunits in external browser."
         },
         "ecl.WUAutoOpen": {
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "Automatically open WU on creation."
+          "description": "Automatically open Workunits on creation."
         },
         "ecl.debugLogging": {
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "Debug level logging (requires restart)"
+          "description": "Debug level logging (requires restart)."
         },
         "dashy.libraryLocation": {
           "type": "string",
