@@ -14,6 +14,32 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 * In VS-Code, open the command palette (`ctrl/cmd + shift + p`) and select `Install Extension`.  Enter `ecl` to filter the available extensions and choose `ECL Language by HPCC Systems`.
 * Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download/archive)
 
+## ECL Commands
+
+The following ECL specific commands are available.  Note:  These commands will **not** be active until an ECL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd + shift + p` and type `ECL` this will present a filtered list of the ECL specific commands:
+
+### Global:
+
+* Syntax Check all files **[shift + F7]** - _Save All + check syntax of all files._
+* Syntax Clear **[ctrl + F7]** - _Clear all previously reported ECL Syntax Check results._
+* Language Reference Website - _Opens the ECL language reference website in external browser._
+* Terminal - _Opens ECL Client Tools Terminal Session._
+
+### Within the ECL Code Editor:
+
+* Syntax Check **[F7]** - _Save + check syntax of current file._
+* Language Reference Lookup **[shift + F1]** - _For the currently selected text, search the online ECL language reference._
+
+### Within the ECL Activity Pane:
+_Right click on item_
+
+* Workunit Details - _Opens ECL Watch Workunit Details for the selected Workunit._
+
+### Within the Status Bar
+_Click on ECL Client Tools Version_
+
+* Select Client Tools Version: Select Client Tools Version from available options.
+
 ## VS-Code Settings
 
 The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`ctrl/cmd + ,`) or directly in your current workspace (`.vscode/settings.json`):
@@ -76,32 +102,6 @@ Submitting ECL using VS-Code requires specifying the target environment within t
   "password": ""
 }
 ```
-
-## ECL Commands
-
-The following ECL specific commands are available.  Note:  These commands will **not** be active until an ECL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd + shift + p` and type `ECL` this will present a filtered list of the ECL specific commands:
-
-### Global:
-
-* Syntax Check all files **[shift + F7]** - _Save All + check syntax of all files._
-* Syntax Clear **[ctrl + F7]** - _Clear all previously reported ECL Syntax Check results._
-* Language Reference Website - _Opens the ECL language reference website in external browser._
-* Command Prompt - _Opens ECL Client Tools Terminal Session._
-
-### Within the ECL Code Editor:
-
-* Syntax Check **[F7]** - _Save + check syntax of current file._
-* Language Reference Lookup **[shift + F1]** - _For the currently selected text, search the online ECL language reference._
-
-### Within the ECL Activity Pane:
-_Right click on item_
-
-* Workunit Details - _Opens ECL Watch Workunit Details for the selected Workunit._
-
-### Within the Status Bar
-_Click on ECL Client Tools Version_
-
-* Select Client Tools Version: Select Client Tools Version from available options.
 
 ## Building and Debugging the Extension
 

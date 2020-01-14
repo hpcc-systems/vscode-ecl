@@ -171,7 +171,7 @@
       },
       {
         "command": "ecl.createTerminal",
-        "title": "ECL: Command Prompt",
+        "title": "ECL: Terminal",
         "description": "Opens ECL Client Tools Terminal Session."
       },
       {
