@@ -5,6 +5,7 @@ import { ECLDiagnostic } from "./diagnostic";
 import { ECLDocumentSymbolProvider } from "./documentSymbolProvider";
 import { ECLEditor } from "./editor";
 import { ECLStatusBar } from "./status";
+import { ECLTerminal } from "./terminal";
 import { ECLTree } from "./tree";
 import { initLogger, Level } from "./util";
 import { ECLWatch } from "./watch";
@@ -30,4 +31,5 @@ export function activate(ctx: vscode.ExtensionContext): void {
     ECLDocumentSymbolProvider.attach(ctx);
     ECLTree.attach(ctx);
     ECLWatch.attach(ctx);
+    ECLTerminal.attach(ctx);
 }
