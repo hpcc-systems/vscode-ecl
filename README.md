@@ -1,31 +1,26 @@
 # ECL for Visual Studio Code
+_For list of latest changes, please see the  [Change Log](https://github.com/hpcc-systems/vscode-ecl/blob/master/CHANGELOG.md) at the main [GitHub](https://github.com/hpcc-systems/vscode-ecl) repository._
 
-Read the [Release Notes](https://github.com/hpcc-systems/vscode-ecl/releases) to know what has changed over the last few versions of this extension.
+This extension adds rich language support for [HPCC Systems](https://hpccsystems.com/) [ECL language](https://hpccsystems.com/training/documentation/ecl-language-reference/html) (for the [HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform)) to VS Code, including:
 
-This extension adds rich language support for the ECL language to VS Code, including:
-
-- Syntax highlighting
-- Auto completion
-- F7 Syntax check
-- shift+F7 Syntax check all
-- cmd/ctrl+F7 Syntax check clear all reported problems
-- F12 "Goto definition"
-- Basic workunit support
-- Multi root workspaces ([vscode docs](https://code.visualstudio.com/docs/editor/multi-root-workspaces)):  No need to manually include folders.
-- Debugging
+* Syntax highlighting
+* Auto completion
+* Client tools discovery and integration
+* HPCC-Platform server support
 
 ## Installation
 
-- Install Visual Studio Code. 
-- In VS-Code, open the command palette (`ctrl/cmd+shift+p`) and select `Install Extension`.  Enter 'ecl' to filter the available extensions and choose `ecl`.
-- Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download/developer-tools/client-tools)
+* Install Visual Studio Code. 
+* In VS-Code, open the command palette (`ctrl/cmd + shift + p`) and select `Install Extension`.  Enter `ecl` to filter the available extensions and choose `ECL Language by HPCC Systems`.
+* Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download/archive)
 
-### VS-Code Settings
+## VS-Code Settings
 
-The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`ctrl/cmd+,`) or workspace settings (`.vscode/settings.json`):
+The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`ctrl/cmd + ,`) or directly in your current workspace (`.vscode/settings.json`):
 
 ```javascript
-  // Syntax check args.
+
+  // eclcc syntax check arguments.
   "ecl.syntaxArgs": ["-syntax"],
 
   // Run 'eclcc -syntax' on save.
@@ -34,78 +29,100 @@ The following Visual Studio Code settings are available for the ECL extension.  
   // Run 'eclcc -syntax' on load.
   "ecl.syntaxCheckOnLoad": true
 
-// External folders used by IMPORT
+  // Additional folders to use when resolving IMPORT statements.
   "ecl.includeFolders": []
 
-  // Override eclcc auto detection
+  // Override eclcc auto detection.
   "ecl.eclccPath": ""
 
-  // Add '-legacy' arguement to eclcc.
+  // Add '-legacy' argument to eclcc.
   "ecl.legacyMode": false
 
-  // Open workunits in external browser.
+  // Open Workunits in external browser.
   "ecl.WUOpenExternal": true
 
-  // Automatically open WU in browser on creation.
+  // Automatically open Workunits on creation.
   "ecl.WUAutoOpen": false
 
-  // Debug logging.
+  // Debug level logging (requires restart).
   "ecl.debugLogging": false
   
 ```
 
-#### Launch Settings
+## Launch Settings
 
-Submitting or debugging ECL using VS-Code requires specifying the target environment within the VS Code `launch.json` (pressing `F5` will prompt you to auto create a skeleton file if none exists):
+Submitting ECL using VS-Code requires specifying the target environment within the VS Code `launch.json` (pressing `F5` will prompt you to auto create a skeleton file if none exists):
 
 ```javascript
+// Default ECL Launch Configuration
 {
-    "name": "localhost-hthor",
-    "type": "ecl",
-    "request": "launch",
-    "mode": "submit", // "submit" | "compile" | "publish"
-    "workspace": "${workspaceRoot}",
-    "program": "${file}",
-    "protocol": "http",
-    "serverAddress": "localhost",
-    "port": 8010,
-    "abortSubmitOnError": true,
-    "rejectUnauthorized": false,
-    "targetCluster": "hthor",
-    "eclccPath": "${config:ecl.eclccPath}",
-    "eclccArgs": [],
-    "includeFolders": "${config:ecl.includeFolders}",
-    "legacyMode": "${config:ecl.legacyMode}",
-    "resultLimit": 100,
-    "user": "",     //  Optional (vscode will prompt as needed)
-    "password": ""  //  Optional (vscode will prompt as needed)
+  "name": "play-hthor-submit",
+  "type": "ecl",
+  "request": "launch",
+  "mode": "submit",
+  "workspace": "${workspaceRoot}",
+  "program": "${file}",
+  "protocol": "https",
+  "serverAddress": "play.hpccsystems.com",
+  "port": 18010,
+  "rejectUnauthorized": false,
+  "targetCluster": "hthor",
+  "eclccPath": "${config:ecl.eclccPath}",
+  "eclccArgs": [],
+  "includeFolders": "${config:ecl.includeFolders}",
+  "legacyMode": "${config:ecl.legacyMode}",
+  "resultLimit": 100,
+  "user": "vscode_user",
+  "password": ""
 }
 ```
 
+## ECL Commands
+
+The following ECL specific commands are available.  Note:  These commands will **not** be active until an ECL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd + shift + p` and type `ECL` this will present a filtered list of the ECL specific commands:
+
+### Global:
+
+* Syntax Check all files **[shift + F7]** - _Save All + check syntax of all files._
+* Syntax Clear **[ctrl + F7]** - _Clear all previously reported ECL Syntax Check results._
+* Language Reference Website - _Opens the ECL language reference website in external browser._
+* Command Prompt - _Opens ECL Client Tools Terminal Session._
+
+### Within the ECL Code Editor:
+
+* Syntax Check **[F7]** - _Save + check syntax of current file._
+* Language Reference Lookup **[shift + F1]** - _For the currently selected text, search the online ECL language reference._
+
+### Within the ECL Activity Pane:
+_Right click on item_
+
+* Workunit Details - _Opens ECL Watch Workunit Details for the selected Workunit._
+
+### Within the Status Bar
+_Click on ECL Client Tools Version_
+
+* Select Client Tools Version: Select Client Tools Version from available options.
+
 ## Building and Debugging the Extension
 
-You can set up a development environment for debugging the extension during extension development.
-
-First make sure you do not have the extension installed in `~/.vscode/extensions`.  Then clone the repo somewhere else on your machine, run `npm install` and open a development instance of Code.
+To set up a development environment for debugging the ECL for VS Code extension:
 
 ```bash
-rm -rf ~/.vscode/extensions/GordonSmith.ecl
-cd ~
+cd /Some/Dev/Folder/
 git clone https://github.com/hpcc-systems/vscode-ecl
 cd vscode-ecl
 npm install
-code .
 ```
 
-You can now go to the Debug viewlet and select `Launch Extension` then hit run (`F5`).
+At which point you can open the `vscode-ecl` folder within VS Code.  
 
-In the `[Extension Development Host]` instance, open your ECL folder.
+Next start the background build process by running the following command within a terminal session:
 
-You can now hit breakpoints and step through the extension.
+```bash
+npm run watch
+```
 
-If you make edits in the extension `.ts` files, just reload (`cmd-r`) the `[Extension Development Host]` instance of Code to load in the new extension code.  The debugging instance will automatically reattach.
-
-To debug the debugger, see [the debugAdapter readme](src/debugAdapter/Readme.md).
+At which point you can edit the sources and launch debug sessions via **F5** and included launch configurations.
 
 ## License
 [Apache-2.0](LICENSE)
