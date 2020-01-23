@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.4.1...v1.5.0) (2020-01-23)
+
+
+### Features
+
+* **terminal:** Add command to open ECL Terminal ([6f6e1d3](https://github.com/hpcc-systems/vscode-ecl/commit/6f6e1d32ba3252739db8902a25023e11d7e7510b))
+* **terminal:** Add command to open ECL Terminal ([5281c58](https://github.com/hpcc-systems/vscode-ecl/commit/5281c5817ba59db8d5c0eafb0682a5a66745ef99))
+
 ### [1.4.1](https://github.com/hpcc-systems/vscode-ecl/compare/v1.4.0...v1.4.1) (2020-01-10)
 
 ## [1.4.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.3.0...v1.4.0) (2020-01-10)
