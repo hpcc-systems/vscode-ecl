@@ -1,5 +1,3 @@
-![Node.js CI](https://github.com/hpcc-systems/vscode-ecl/workflows/Node.js%20CI/badge.svg)
-
 # ECL for Visual Studio Code
 _For list of latest changes, please see the  [Change Log](https://github.com/hpcc-systems/vscode-ecl/blob/master/CHANGELOG.md) at the main [GitHub](https://github.com/hpcc-systems/vscode-ecl) repository._
 

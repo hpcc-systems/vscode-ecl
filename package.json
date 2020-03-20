@@ -39,7 +39,7 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "vsce-publish": "vsce publish",
     "vsce-package": "vsce package",
-    "publish": "run-s standard-version git-push vsce-publish"
+    "tag": "run-s standard-version git-push"
   },
   "devDependencies": {
     "@hpcc-js/comms": "^2.13.1",
