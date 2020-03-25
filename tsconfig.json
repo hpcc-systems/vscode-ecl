@@ -6,9 +6,14 @@
         "target": "es6",
         "outDir": "lib-cjs",
         "sourceMap": true,
-        "strict": true,
         "noImplicitAny": false,
+        "noEmitOnError": false,
+        "noUnusedLocals": true,
+        "strictNullChecks": false,
         "importHelpers": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true,
         "lib": [
             "es6",
             "dom"

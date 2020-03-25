@@ -42,21 +42,22 @@
     "tag": "run-s standard-version git-push"
   },
   "devDependencies": {
-    "@hpcc-js/comms": "^2.13.1",
-    "@hpcc-js/loader": "^2.13.2",
-    "@hpcc-js/marshaller": "^2.23.1",
-    "@hpcc-js/util": "^2.11.0",
+    "@hpcc-js/comms": "^2.13.3",
+    "@hpcc-js/loader": "^2.14.1",
+    "@hpcc-js/marshaller": "^2.23.4",
+    "@hpcc-js/observable-md": "^2.1.1",
+    "@hpcc-js/util": "^2.11.2",
+    "@rollup/plugin-alias": "^3.0.1",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^12",
+    "@types/node": "^12.12.34",
     "copyfiles": "^2.2.0",
     "diff": "^4.0.2",
     "mocha": "^7.1.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "rollup": "^1",
-    "@rollup/plugin-alias": "^3.0.1",
-    "@rollup/plugin-commonjs": "^11.0.2",
-    "@rollup/plugin-node-resolve": "^7.1.1",
     "rollup-plugin-postcss": "^2.5.0",
     "rollup-plugin-sourcemaps": "^0.5.0",
     "standard-version": "^7.1.0",
@@ -87,6 +88,7 @@
   ],
   "activationEvents": [
     "onLanguage:ecl",
+    "onLanguage:omd",
     "onLanguage:json"
   ],
   "contributes": {
@@ -104,12 +106,21 @@
         "configuration": "./ecl.configuration.json"
       },
       {
+        "id": "omd",
+        "aliases": [
+          "Observable Markdown"
+        ],
+        "extensions": [
+          "omd"
+        ]
+      },
+      {
         "id": "json",
         "aliases": [
           "Dashy"
         ],
         "extensions": [
-          ".dashy"
+          "dashy"
         ]
       }
     ],
@@ -124,6 +135,11 @@
         "language": "ecl",
         "scopeName": "source.ecl",
         "path": "./syntaxes/ecl.tmLanguage.json"
+      },
+      {
+        "language": "omd",
+        "scopeName": "text.html.markdown",
+        "path": "./syntaxes/omd.tmLanguage"
       }
     ],
     "snippets": [
@@ -174,6 +190,22 @@
         "description": "Opens ECL Client Tools Terminal Session."
       },
       {
+        "command": "omd.view",
+        "title": "View ECL Markdown",
+        "icon": {
+          "dark": "./images/omd-view-dark.svg",
+          "light": "./images/omd-view.svg"
+        }
+      },
+      {
+        "command": "omd.export",
+        "title": "Export ECL Markdown to HTML",
+        "icon": {
+          "dark": "./images/omd-export-dark.svg",
+          "light": "./images/omd-export.svg"
+        }
+      },
+      {
         "command": "dashy.view",
         "title": "View Dashboard",
         "icon": {
@@ -193,6 +225,16 @@
     "menus": {
       "explorer/context": [
         {
+          "when": "resourceLangId == omd && resourceExtname == .omd",
+          "command": "omd.view",
+          "group": "navigation@998"
+        },
+        {
+          "when": "resourceLangId == omd && resourceExtname == .omd",
+          "command": "omd.export",
+          "group": "navigation@999"
+        },
+        {
           "when": "resourceLangId == json && resourceExtname == .dashy",
           "command": "dashy.view",
           "group": "navigation@998"
@@ -205,6 +247,16 @@
       ],
       "editor/context": [
         {
+          "when": "resourceLangId == omd && resourceExtname == .omd",
+          "command": "omd.view",
+          "group": "navigation@998"
+        },
+        {
+          "when": "resourceLangId == omd && resourceExtname == .omd",
+          "command": "omd.export",
+          "group": "navigation@999"
+        },
+        {
           "when": "resourceLangId == json && resourceExtname == .dashy",
           "command": "dashy.view",
           "group": "navigation@998"
@@ -216,6 +268,11 @@
         }
       ],
       "editor/title": [
+        {
+          "when": "resourceLangId == omd && resourceExtname == .omd",
+          "command": "omd.view",
+          "group": "navigation@998"
+        },
         {
           "when": "resourceLangId == json && resourceExtname == .dashy",
           "command": "dashy.view",
@@ -250,6 +307,12 @@
         "command": "ecl.syntaxCheckClear",
         "key": "ctrl+f7",
         "mac": "ctrl+f7"
+      },
+      {
+        "command": "omd.view",
+        "key": "ctrl+shift+V",
+        "mac": "ctrl+shift+V",
+        "when": "editorTextFocus"
       },
       {
         "command": "dashy.view",

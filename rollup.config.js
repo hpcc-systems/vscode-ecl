@@ -32,6 +32,10 @@ export function external(id) {
     return isVSCode(id) || isNode(id);
 }
 
+export function external2(id) {
+    return isVSCode(id) || isNode(id) || isHpcc(id);
+}
+
 const plugins = [
     alias({
     }),
@@ -65,6 +69,16 @@ export default [{
     output: [{
         file: "./dist/debugger.js",
         format: "commonjs",
+        sourcemap: true,
+        name: pkg.name
+    }],
+    plugins
+}, {
+    input: "lib-es6/observable",
+    external: external2,
+    output: [{
+        file: "./dist/observable.js",
+        format: "amd",
         sourcemap: true,
         name: pkg.name
     }],
