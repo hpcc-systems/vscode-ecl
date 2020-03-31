@@ -40,6 +40,16 @@
             ],
             "sourceMaps": true,
             "cwd": "${workspaceRoot}"
-        }
+        },
+        {
+            "name": "test.html",
+            "type": "chrome",
+            "request": "launch",
+            "url": "file:///${workspaceRoot}/test.html",
+            "runtimeArgs": [
+                "--disable-web-security"
+            ],
+            "webRoot": "${workspaceRoot}"
+        },
     ]
 }

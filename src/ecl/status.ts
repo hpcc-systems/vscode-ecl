@@ -1,4 +1,4 @@
-import { ExtensionContext, languages, StatusBarAlignment, StatusBarItem, ThemeColor, window } from "vscode";
+import { ExtensionContext, languages, StatusBarAlignment, StatusBarItem, window } from "vscode";
 import { ECL_MODE } from "./mode";
 
 export let eclStatusBar: ECLStatusBar;

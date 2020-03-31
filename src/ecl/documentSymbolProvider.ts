@@ -1,8 +1,5 @@
 import { attachWorkspace, Definition, ECLScope, Import, Source, Workspace } from "@hpcc-js/comms";
-import { scopedLogger } from "@hpcc-js/util";
 import * as vscode from "vscode";
-
-const logger = scopedLogger("documentSymbolProvider.ts");
 
 const knownTypes = {};
 
