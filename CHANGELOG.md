@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.0.2...v1.6.0) (2020-03-31)
+
+
+### Features
+
+* **build:** Bundle extension ([8d6074e](https://github.com/hpcc-systems/vscode-ecl/commit/8d6074e1b9a2a482ce76fe8ff582ad99a6847043))
+* **ClientTools:** Add quick select specific eclcc version ([0810aa4](https://github.com/hpcc-systems/vscode-ecl/commit/0810aa4418115fc91fe236bf409dd6afa775141b))
+* **omd:** Add initial support for ObservableMD documents ([4e00f2b](https://github.com/hpcc-systems/vscode-ecl/commit/4e00f2b7fad94f4ee2d6d8f44f8b92ada0d354d2))
+* **Overview:** Add document symbol support from meta information ([dffb514](https://github.com/hpcc-systems/vscode-ecl/commit/dffb51470c433565af3074dcd18a4db6808800c1))
+* **terminal:** Add command to open ECL Terminal ([6f6e1d3](https://github.com/hpcc-systems/vscode-ecl/commit/6f6e1d32ba3252739db8902a25023e11d7e7510b))
+* **terminal:** Add command to open ECL Terminal ([5281c58](https://github.com/hpcc-systems/vscode-ecl/commit/5281c5817ba59db8d5c0eafb0682a5a66745ef99))
+* Add "publish" action ([d7bd786](https://github.com/hpcc-systems/vscode-ecl/commit/d7bd786247e5b7e3f8b67e8a4445edbae80b0a04))
+* Support XML archive submissions ([162389d](https://github.com/hpcc-systems/vscode-ecl/commit/162389d5064e784a360dee25f9d5abf2c8e56908))
+
+
+### Bug Fixes
+
+* **build:** Add missing dependency "tmp" ([8c2fdf3](https://github.com/hpcc-systems/vscode-ecl/commit/8c2fdf32dee74e7d3b052d05865c97afe92c413b))
+* **comms:** "rejectUnauthorized" was not being honoured ([91349f5](https://github.com/hpcc-systems/vscode-ecl/commit/91349f5a4bd8552e74415a450a5c31f10d735684))
+* **config:** Ubuntu fails to retrieve config setting ([7d557e8](https://github.com/hpcc-systems/vscode-ecl/commit/7d557e8f445a096f72c1a9cf0ed7199f66f4e425))
+* **credentials:** Credential prompt fails ([58acb39](https://github.com/hpcc-systems/vscode-ecl/commit/58acb393c2a7ff36d34fd23167ed8356872d39a6))
+* **package:** Update default icon ([2bffd6b](https://github.com/hpcc-systems/vscode-ecl/commit/2bffd6be0ee8470b03de22972cde8af847be0dc7))
+* **problems:** Error parse failed when path contained a space. ([bcdd5bf](https://github.com/hpcc-systems/vscode-ecl/commit/bcdd5bf95a37c6c1065344bd7b245ac7addfa400))
+* **publish:** Add (R) to company name ([bc86ca3](https://github.com/hpcc-systems/vscode-ecl/commit/bc86ca349befd4a4ff8037687e5c2e0a2eea960d))
+*  Missing comms dependency ([bbd7ba0](https://github.com/hpcc-systems/vscode-ecl/commit/bbd7ba08ec73bfba45d28582ab7901f35e151d6b))
+* Invalid hot key mapping ([904a8f3](https://github.com/hpcc-systems/vscode-ecl/commit/904a8f36931c9fb016864296aba7c89176deb325))
+
 ### [1.5.1](https://github.com/hpcc-systems/vscode-ecl/compare/v1.5.0...v1.5.1) (2020-03-20)
 
 ## [1.5.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.4.1...v1.5.0) (2020-01-23)
