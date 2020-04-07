@@ -42,10 +42,10 @@
     "tag": "run-s standard-version git-push"
   },
   "devDependencies": {
-    "@hpcc-js/comms": "^2.13.3",
-    "@hpcc-js/loader": "^2.14.1",
-    "@hpcc-js/marshaller": "^2.23.4",
-    "@hpcc-js/observable-md": "^2.1.1",
+    "@hpcc-js/comms": "^2.13.4",
+    "@hpcc-js/loader": "^2.15.1",
+    "@hpcc-js/marshaller": "^2.23.6",
+    "@hpcc-js/observable-md": "^2.2.1",
     "@hpcc-js/util": "^2.11.2",
     "@rollup/plugin-alias": "^3.0.1",
     "@rollup/plugin-commonjs": "^11.0.2",
@@ -62,12 +62,12 @@
     "rollup-plugin-sourcemaps": "^0.5.0",
     "standard-version": "^7.1.0",
     "tslib": "^1.11.1",
-    "tslint": "^6.1.0",
+    "tslint": "^6.1.1",
     "typescript": "^3.8.3",
-    "vsce": "^1.74.0",
+    "vsce": "^1.75.0",
     "vscode": "^1.1.36",
-    "vscode-debugadapter": "^1.39.1",
-    "vscode-debugprotocol": "^1.39.0"
+    "vscode-debugadapter": "^1.40.0",
+    "vscode-debugprotocol": "^1.40.0"
   },
   "author": {
     "name": "HPCC Systems®"
@@ -445,6 +445,11 @@
                 "description": "Max result limit for workunit results",
                 "default": 100
               },
+              "timeoutSecs": {
+                "type": "number",
+                "description": "Default timeout (secs)",
+                "default": 60
+              },
               "user": {
                 "type": "string",
                 "description": "User ID",
@@ -476,6 +481,7 @@
             "includeFolders": "${config:ecl.includeFolders}",
             "legacyMode": "${config:ecl.legacyMode}",
             "resultLimit": 100,
+            "timeoutSecs": 60,
             "user": "vscode_user",
             "password": ""
           }
@@ -501,6 +507,7 @@
               "includeFolders": "^\"\\${config:ecl.includeFolders}\"",
               "legacyMode": "^\"\\${config:ecl.legacyMode}\"",
               "resultLimit": 100,
+              "timeoutSecs": 60,
               "user": "vscode_user",
               "password": ""
             }
@@ -525,6 +532,7 @@
               "includeFolders": "^\"\\${config:ecl.includeFolders}\"",
               "legacyMode": "^\"\\${config:ecl.legacyMode}\"",
               "resultLimit": 100,
+              "timeoutSecs": 60,
               "user": "vscode_user",
               "password": ""
             }

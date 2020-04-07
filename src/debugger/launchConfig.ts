@@ -29,6 +29,7 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
     includeFolders?: string;
     legacyMode?: LaunchLegacyMode;
     resultLimit?: number;
+    timeoutSecs?: number;
     user?: string;
     password?: string;
 }
@@ -46,6 +47,7 @@ export class LaunchConfig {
             includeFolders: args.includeFolders ? args.includeFolders : "",
             legacyMode: args.legacyMode || "",
             resultLimit: args.resultLimit || 100,
+            timeoutSecs: args.timeoutSecs || 60,
             user: args.user || "",
             password: args.password || ""
         };
@@ -89,7 +91,8 @@ export class LaunchConfig {
             baseUrl: this.espUrl(),
             userID,
             password,
-            rejectUnauthorized: this._config.rejectUnauthorized
+            rejectUnauthorized: this._config.rejectUnauthorized,
+            timeoutSecs: this._config.timeoutSecs
         });
         return acService.VerifyUser({
             application: "vscode-ecl",
@@ -119,7 +122,8 @@ export class LaunchConfig {
                 baseUrl: this.espUrl(),
                 userID: this._config.user,
                 password: this._config.password,
-                rejectUnauthorized: this._config.rejectUnauthorized
+                rejectUnauthorized: this._config.rejectUnauthorized,
+                timeoutSecs: this._config.timeoutSecs
             });
             this._buildPromise = activity.refresh().then(activity => {
                 return activity.Build;
@@ -133,7 +137,8 @@ export class LaunchConfig {
             baseUrl: this.espUrl(),
             userID: this._config.user,
             password: this._config.password,
-            rejectUnauthorized: this._config.rejectUnauthorized
+            rejectUnauthorized: this._config.rejectUnauthorized,
+            timeoutSecs: this._config.timeoutSecs
         });
     }
 
@@ -142,7 +147,8 @@ export class LaunchConfig {
             baseUrl: this.espUrl(),
             userID: this._config.user,
             password: this._config.password,
-            rejectUnauthorized: this._config.rejectUnauthorized
+            rejectUnauthorized: this._config.rejectUnauthorized,
+            timeoutSecs: this._config.timeoutSecs
         }, opts);
     }
 

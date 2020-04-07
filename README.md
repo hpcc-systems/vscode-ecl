@@ -98,6 +98,7 @@ Submitting ECL using VS-Code requires specifying the target environment within t
   "includeFolders": "${config:ecl.includeFolders}",
   "legacyMode": "${config:ecl.legacyMode}",
   "resultLimit": 100,
+  "timeoutSecs": 60,
   "user": "vscode_user",
   "password": ""
 }
