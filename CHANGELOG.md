@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.6.0...v1.7.0) (2020-04-07)
+
+
+### Features
+
+* **comms:** Add timeout option ([a65ae4f](https://github.com/hpcc-systems/vscode-ecl/commit/a65ae4f79f45e9551b52b2114ed08a21e3cd1ae7))
+
 ## [1.6.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.0.2...v1.6.0) (2020-03-31)
 
 
