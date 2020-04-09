@@ -11,6 +11,10 @@ import * as path from "path";
 
 export type XGMMLGraphItem = XGMMLGraph | XGMMLSubgraph | XGMMLVertex | XGMMLEdge;
 
+function now() {
+    return new Date(Date.now()).toISOString();
+}
+
 class VSCodeServerWriter implements Writer {
     private _owner: DebugSession;
 
@@ -160,14 +164,15 @@ export class ECLDebugSession extends DebugSession {
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
         this.logger.debug("launchRequest:  " + JSON.stringify(args));
         this.launchConfig = new LaunchConfig(args);
-        this.sendEvent(new OutputEvent("Fetch build version." + os.EOL));
+        this.sendEvent(new OutputEvent(`${now()} Fetch build version.${os.EOL}`));
         const pathParts = path.parse(this.launchConfig._config.program);
+        let failedWU: Workunit;
         this.launchConfig.fetchBuild().then(build => {
-            this.sendEvent(new OutputEvent("Locating Client Tools." + os.EOL));
+            this.sendEvent(new OutputEvent(`${now()} Locating Client Tools.${os.EOL}`));
             return locateClientTools(this.launchConfig._config.eclccPath, build, this.launchConfig._config.workspace, this.launchConfig.includeFolders(), this.launchConfig.legacyMode());
         }).then((clientTools) => {
-            this.sendEvent(new OutputEvent("Client Tools:  " + clientTools.eclccPath + os.EOL));
-            this.sendEvent(new OutputEvent("Generating archive." + os.EOL));
+            this.sendEvent(new OutputEvent(`${now()} Client Tools:  ${clientTools.eclccPath}.${os.EOL}`));
+            this.sendEvent(new OutputEvent(`${now()} Generating archive.${os.EOL}`));
             if (pathParts.ext.toLowerCase() === ".xml") {
                 return xmlFile(this.launchConfig._config.program);
             } else {
@@ -177,32 +182,47 @@ export class ECLDebugSession extends DebugSession {
             if (this.launchConfig._config.abortSubmitOnError && archive.err.hasError()) {
                 throw new Error(`ECL Syntax Error(s):\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
             }
+            this.sendEvent(new OutputEvent(`${now()} Archive Size: ${archive.content.length}.${os.EOL}`));
             return archive;
         }).then(archive => {
-            this.sendEvent(new OutputEvent("Creating workunit." + os.EOL));
+            this.sendEvent(new OutputEvent(`${now()} Creating workunit.${os.EOL}`));
             return this.launchConfig.createWorkunit().then(wu => {
+                failedWU = wu;
                 return [wu, archive] as [Workunit, any];
             });
         }).then(([wu, archive]) => {
             this.sendEvent(new Event("WUCreated", { ...this.launchConfig._config, wuid: wu.Wuid }));
-            this.sendEvent(new OutputEvent("Updating workunit." + os.EOL));
-            return wu.update({
-                Jobname: pathParts.name,
-                QueryText: archive.content,
-                ApplicationValues: {
-                    ApplicationValue: [{
-                        Application: "vscode-ecl",
-                        Name: "filePath",
-                        Value: this.launchConfig._config.program
-                    }]
+            return new Promise<Workunit>(async (resolve, reject) => {
+                const attempts = 3;
+                let lastError;
+                for (let retry = 1; retry <= attempts; ++retry) {
+                    this.sendEvent(new OutputEvent(`${now()} Updating workunit (${retry} of ${attempts}).${os.EOL}`));
+                    await wu.update({
+                        Jobname: pathParts.name,
+                        QueryText: archive.content,
+                        ApplicationValues: {
+                            ApplicationValue: [{
+                                Application: "vscode-ecl",
+                                Name: "filePath",
+                                Value: this.launchConfig._config.program
+                            }]
+                        }
+                    }).then(wu => {
+                        retry = attempts + 1;
+                        resolve(wu);
+                    }).catch(e => {
+                        lastError = e || lastError;
+                    });
                 }
+                reject(lastError);
             });
         }).then((workunit) => {
             this.workunit = workunit;
-            this.sendEvent(new OutputEvent("Submitting workunit:  " + workunit.Wuid + os.EOL));
+            this.sendEvent(new OutputEvent(`${now()} Submitting workunit:  ${workunit.Wuid}.${os.EOL}`));
             return workunit.submit(this.launchConfig._config.targetCluster, this.launchConfig.action(), this.launchConfig._config.resultLimit);
         }).then(() => {
-            this.sendEvent(new OutputEvent("Submitted:  " + this.launchConfig.wuDetailsUrl(this.workunit.Wuid) + os.EOL));
+            this.sendEvent(new OutputEvent(`${now()} Submitted:  ${this.launchConfig.wuDetailsUrl(this.workunit.Wuid)}.${os.EOL}`));
+            failedWU = undefined;
         }).then(() => {
             this.workunit.watchUntilRunning().then(() => {
                 this.sendEvent(new InitializedEvent());
@@ -215,9 +235,12 @@ export class ECLDebugSession extends DebugSession {
                 });
             }
         }).catch((e) => {
-            this.sendEvent(new OutputEvent(`Launch failed - ${e}${os.EOL}`));
+            this.sendEvent(new OutputEvent(`${now()} Launch failed - ${e}.${os.EOL}`));
             this.sendEvent(new TerminatedEvent());
             this.logger.debug("InitializeEvent");
+            if (failedWU) {
+                failedWU.setToFailed();
+            }
         });
 
         this.sendResponse(response);
