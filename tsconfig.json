@@ -1,22 +1,22 @@
 {
     "compilerOptions": {
         "rootDir": "./src",
-        "module": "commonjs",
+        "module": "es6",
         "moduleResolution": "node",
-        "target": "es6",
-        "outDir": "lib-cjs",
+        "target": "ES2019",
+        "outDir": "lib-es6",
         "sourceMap": true,
         "noImplicitAny": false,
         "noEmitOnError": false,
-        "noUnusedLocals": true,
+        "noUnusedLocals": false,
         "strictNullChecks": false,
         "importHelpers": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "skipLibCheck": true,
         "lib": [
-            "es6",
-            "dom"
+            "dom",
+            "ES2019"
         ]
     },
     "include": [

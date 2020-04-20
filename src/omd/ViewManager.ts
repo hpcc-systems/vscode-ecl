@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import { View } from "./View";
-import * as fs from 'fs';
+import * as fs from "fs";
 
 let viewManager: ViewManager;
 export class ViewManager {
@@ -47,9 +47,8 @@ export class ViewManager {
                     const runtimePath = vscode.Uri.file(path.join(viewManager._ctx.extensionPath, "dist", "observable.js"));
                     const runtime = fs.readFileSync(runtimePath.fsPath, "utf8");
                     const md = vscode.window.activeTextEditor!.document.getText();
-                    let html = View.html(".", md);
+                    let html = View.html(md);
                     html = html.replace("const vscode = acquireVsCodeApi();", "");
-                    html = html.replace(`"./observable.js"`, `"./${resourceParts.name}"`);
                     html = html.replace(".dev-observablehq--inspect", ".observablehq--inspect");
                     html = html.replace(".showValues(true)", "");
                     html = html.replace(`\

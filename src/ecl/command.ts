@@ -10,9 +10,9 @@ export class ECLCommands {
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheck", this.syntaxCheck));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheckAll", this.syntaxCheckAll));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.syntaxCheckClear", this.syntaxCheckClear));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", this.checkSyntax));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxAll", this.checkSyntaxAll));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxClear", this.checkSyntaxClear));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openWUDetails", this.openWUDetails));
@@ -26,14 +26,14 @@ export class ECLCommands {
         return eclCommands;
     }
 
-    syntaxCheck() {
+    checkSyntax() {
         if (vscode.window.activeTextEditor) {
             vscode.window.activeTextEditor.document.save();
             checkTextDocument(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
         }
     }
 
-    syntaxCheckAll() {
+    checkSyntaxAll() {
         if (vscode.workspace.workspaceFolders) {
             for (const wsf of vscode.workspace.workspaceFolders) {
                 checkWorkspace(wsf);
@@ -41,7 +41,7 @@ export class ECLCommands {
         }
     }
 
-    syntaxCheckClear() {
+    checkSyntaxClear() {
         eclDiagnostic.clear();
     }
 

@@ -1,0 +1,179 @@
+{
+    "scopeName": "source.kel",
+    "fileTypes": [
+        "kel"
+    ],
+    "name": "KEL",
+    "patterns": [
+        {
+            "include": "#expression"
+        },
+        {
+            "name": "entity.name.type.kel",
+            "match": "\\b(?i:(string|integer|real|boolean|date|timestamp|uid|unk))\\b"
+        },
+        {
+            "name": "keyword.name.type.kel",
+            "match": "\\b(?i:(asof|group|using|use|set of|dataset of))\\b"
+        },
+        {
+            "name": "keyword.operator.kel",
+            "match": "\\b(?i:(div|and|not|or|in|>|<|<>|/|\\|+|-|=))\\b"
+        },
+        {
+            "name": "keyword.other.kel",
+            "match": "(?i)(import|permits|package|use|visualize)\\b"
+        },
+        {
+            "name": "keyword.other.kel",
+            "match": "(?i)(function|query):"
+        },
+        {
+            "name": "entity.name.function.kel",
+            "match": "([A-Za-z_]+)\\s*(\\()",
+            "captures": {
+                "1": {
+                    "patterns": [
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#functionsEcl"
+                        },
+                        {
+                            "include": "#functionsEcl"
+                        },
+                        {
+                            "include": "#functionsDate"
+                        },
+                        {
+                            "include": "#functionsAggregate"
+                        },
+                        {
+                            "include": "#functionsDate"
+                        },
+                        {
+                            "include": "#functionSequence"
+                        },
+                        {
+                            "include": "#functionStats"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "repository": {
+        "functions": {
+            "name": "entity.name.function.kel",
+            "match": "\\b(?i:(entity|association|shell|era|permits|package|all|association|boundsclip|boundsfold|ceiling|contains|default|endswith|exists|floor|known|only|only|only|only|startswith|substr|substr|trimleft|trim|trimboth|trim|trimall|trim|upcase|wordcount|wordcount|word|wordcount|word|wordcount))\\b"
+        },
+        "functionsEcl": {
+            "name": "entity.name.function.ecl",
+            "match": "\\b(?i:(abs|acos|asin|atan|atan|cos|cosh|exists|exp|if|intformat|length|ln|log|map|power|realformat|round|roundup|sin|sinh|sqrt|tan|tanh|topn|trim|truncate))\\b"
+        },
+        "functionsDate": {
+            "name": "entity.name.function.kel",
+            "match": "\\b(?i:(adjustcalendar|convertdateformat|currentdate|era|datefromparts|datesformonthstart|datesformonthend|datesforweekstart|datesforweekend|datetostring|day|dayofweek|dayofyear|daysbetween|dayssince|fromdayssince|fromgregoriandate|fromstringtodate|std|integerfromdate|isdateleapyear|isleapyear|isjulianleapyear|isvaliddate|isvaliddate|month|monthsbetween|today|todayssince|togregoriandate|year|yearsbetween))\\b"
+        },
+        "functionsAggregate": {
+            "name": "entity.name.function.kel",
+            "match": "\\b(?i:(ave|avenz|concat|concat|iqr|iqr|sum|max|max|median|min|min|percentile|quartile|range|real|date|stddev|variance|weightedave|weightedavenz|weightediqr|weightedmedian|weightedpercentile|weightedquartile|min|weightedsum|weightedstddev|weightedvariance))\\b"
+        },
+        "functionSequence": {
+            "name": "entity.name.function.kel",
+            "match": "\\b(?i:(sequence).(dedup|next|previous|nextwhere|previouswhere|allfollowing|allpreceding|allcontiguouslyfollowing|allcontiguouslypreceding))\\b"
+        },
+        "functionStats": {
+            "name": "entity.name.function.kel",
+            "match": "\\b(?i:(stats).(covariance|slope|populationstddev|weightedpopulationstddev|populationvariance|weightedpopulationvariance|samplestddev|weightedsamplestddev|samplevariance|weightedsamplevariance))\\b"
+        },
+        "types": {
+            "name": "entity.name.type.kel",
+            "match": "\\b(?i:(ave|avenz|concat|concat|iqr|iqr|sum|max|max|median|min|min|percentile|quartile|range|real|date|stddev|variance|weightedave|weightedavenz|weightediqr|weightedmedian|weightedpercentile|weightedquartile|min|weightedsum|weightedstddev|weightedvariance))\\b"
+        },
+        "expression": {
+            "name": "meta.expression.kel",
+            "patterns": [
+                {
+                    "include": "#comment"
+                },
+                {
+                    "include": "#string"
+                },
+                {
+                    "include": "#literal"
+                }
+            ]
+        },
+        "comment": {
+            "name": "comment.kel",
+            "patterns": [
+                {
+                    "include": "#comment-block-doc"
+                },
+                {
+                    "include": "#comment-block"
+                },
+                {
+                    "include": "#comment-line"
+                }
+            ]
+        },
+        "comment-block": {
+            "begin": "/\\*",
+            "end": "\\*/",
+            "name": "comment.block.kel"
+        },
+        "comment-block-doc": {
+            "begin": "/\\*\\*(?!/)",
+            "end": "\\*/",
+            "name": "comment.block.documentation.kel"
+        },
+        "comment-line": {
+            "match": "(//).*$\\n?",
+            "name": "comment.line.kel"
+        },
+        "string": {
+            "name": "string.kel",
+            "patterns": [
+                {
+                    "include": "#qstring-single"
+                }
+            ]
+        },
+        "qstring-single": {
+            "begin": "'",
+            "end": "\\'|(?:[^\\\\\\n]$)",
+            "name": "string.single.kel",
+            "patterns": [
+                {
+                    "include": "#string-character-escape"
+                }
+            ]
+        },
+        "string-character-escape": {
+            "match": "\\\\(x\\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)",
+            "name": "constant.character.escape.kel"
+        },
+        "literal": {
+            "name": "literal.kel",
+            "patterns": [
+                {
+                    "include": "#numeric-literal"
+                },
+                {
+                    "include": "#boolean-literal"
+                }
+            ]
+        },
+        "numeric-literal": {
+            "match": "\\b(?<=[^$])((0(x|X)[0-9a-fA-F]+)|(0(o|O)[0-7]+)|(0(b|B)(0|1)+)|(([0-9]+(\\.[0-9]+)?))([eE]([+-]?)[0-9]+(\\.[0-9]+)?)?)\\b",
+            "name": "constant.numeric.kel"
+        },
+        "boolean-literal": {
+            "match": "\\b(?i:(false|true))\\b",
+            "name": "constant.language.boolean.kel"
+        }
+    }
+}

@@ -1,7 +1,10 @@
-dist
-lib*
-node_modules
-types
+/dist
+/grammar
+/lib*
+/node_modules
+/types
 .vscode-test
 *.vsix
 *.log
+*.interp
+*.tokens
