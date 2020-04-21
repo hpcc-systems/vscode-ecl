@@ -1,115 +1,1532 @@
 {
-    ".source.ecl": {
-        "import": {
-            "prefix": "im",
-            "body": "IMPORT ${1:module};",
-            "description": "Import a module"
-        },
-        "import with alias": {
-            "prefix": "imas",
-            "body": "IMPORT ${1:module} AS ${2:alias};",
-            "description": "Import a module using an alias"
-        },
-        "enum": {
-            "prefix": "en",
-            "body": "ENUM(${2:type}, Unknown = 0, ${3:name});"
-        },
-        "dataset": {
-            "prefix": "ds",
-            "body": "DATASET([${1:item}], ${2:record});"
-        },
-        "output": {},
-        "Record Structure": {
-            "prefix": "record",
-            "body": [
-                "RECORD",
-                "	${1:type} ${2:name}",
-                "END;"
-            ]
-        },
-        "transform": {
-            "prefix": "transform",
-            "body": [
-                "TRANSFORM",
-                "	SELF := ${1:arg}",
-                "END;"
-            ]
-        },
-        "inline transform": {
-            "prefix": "inline transform",
-            "body": "TRANSFORM(${1:type}, SELF := LEFT)"
-        },
-        "macro": {
-            "prefix": "macro",
-            "body": [
-                "MACRO",
-                "	// TODO:",
-                "ENDMACRO;"
-            ]
-        },
-        "project": {
-            "prefix": "project",
-            "body": "PROJECT(${1:recordSet}, ${2:record})"
-        },
-        "join": {
-            "prefix": "jo",
-            "body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition});"
-        },
-        "join transform": {
-            "prefix": "jot",
-            "body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition}, ${4:transform});"
-        },
-        "if": {
-            "prefix": "if",
-            "body": [
-                "IF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
-            ]
-        },
-        "iff": {
-            "prefix": "iff",
-            "body": [
-                "IFF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
-            ],
-            "description": "The IFF function performs the same functionality as IF, but ensures that an expression containing complex boolean logic is evaluated exactly as it appears."
-        },
-        "map": {
-            "prefix": "map",
-            "body": [
-                "MAP(${1:firstValue} => ${2:firstReturn},",
-                "	 ${3:secondValue} => ${4:secondReturn},",
-                "	 ${5:elseReturn});"
-            ],
-            "description": "The MAP function evaluates the list of expressions and returns the value associated with the first true expression. If none of them match, the elsevalue is returned. MAP may be thought of as an \"IF ... ELSIF ... ELSIF ... ELSE\" type of structure."
-        },
-        "case": {
-            "prefix": "case",
-            "body": [
-                "CASE(${1:expression},",
-                "	  ${2:v1} => ${3:r1},",
-                "     ${3:optionalElseReturn});"
-            ],
-            "description": "The CASE function evaluates the expression and returns the value whose caseval matches the expression result. If none match, it returns the elsevalue."
-        },
-        "choose": {
-            "prefix": "choose",
-            "body": "CHOOSE(${1:expression},${2:v1}, ${3:v2});",
-            "description": "The CHOOSE function evaluates the expression and returns the value parameter whose ordinal position in the list of parameters corresponds to the result of the expression. If none match, it returns the elsevalue. All values and the elsevalue must be of the same type."
-        },
-        "set": {
-            "prefix": "set",
-            "body": "SET(${1:recordset}, ${2:fieldName})"
-        },
-        "dedup": {
-            "prefix": "dedup",
-            "body": "DEDUP(${1:recordSet});"
-        },
-        "seqential": {
-            "prefix": "seq",
-            "body": [
-                "SEQUENTIAL(${1:action1},",
-                "			${2:action2},",
-                "			${3:action3});"
-            ]
-        }
+    //  Import  ---
+    "import": {
+        "prefix": [
+            "im",
+            "IMPORT"
+        ],
+        "body": "IMPORT ${1:module};",
+        "description": "Import a module"
+    },
+    "import with alias": {
+        "prefix": [
+            "imas",
+            "IMPORT AS"
+        ],
+        "body": "IMPORT ${1:module} AS ${2:alias};",
+        "description": "Import a module using an alias"
+    },
+    //  Scopes  ---
+    "SIMPLE SHARED": {
+        "prefix": [
+            "SHARED (attribute)"
+        ],
+        "body": [
+            "SHARED ${1:Value} := ${2:''};\n"
+        ],
+        "description": "Shared Attribute"
+    },
+    "SIMPLE LOCAL": {
+        "prefix": [
+            "LOCAL (attribute)"
+        ],
+        "body": [
+            "LOCAL ${1:Value} := ${2:''};\n"
+        ],
+        "description": "Local Attribute"
+    },
+    "SIMPLE EXPORT": {
+        "prefix": [
+            "EXPORT (attribute)"
+        ],
+        "body": [
+            "EXPORT ${1:Value} := ${2:''};\n"
+        ],
+        "description": "EXPORT Attribute"
+    },
+    "Function Structure": {
+        "prefix": [
+            "FUNCTION"
+        ],
+        "body": [
+            "${1:STRING} ${2:$TM_FILENAME_BASE}(${3:Parms}) := FUNCTION",
+            "  IMPORT ${4:STD} ;\n",
+            "  Result := 'Not Defined Yet';",
+            "  RETURN Result;",
+            "END;\n"
+        ],
+        "description": "EXPORT FUNCTION"
+    },
+    "Module Structure": {
+        "prefix": [
+            "MODULE"
+        ],
+        "body": [
+            "${1:$TM_FILENAME_BASE}(${2:Parms}) := MODULE",
+            "  IMPORT ${3:STD} ;\n",
+            "  EXPORT ${4:Value To Export}",
+            "END;\n"
+        ],
+        "description": "EXPORT MODULE"
+    },
+    //  Simple Types  ---
+    "Value Types Boolean": {
+        "prefix": [
+            "BOOLEAN"
+        ],
+        "body": [
+            "BOOLEAN ${1:MyBoolean}  := ${2:value1}  ${3|condition,TRUE,FALSE, ,>,<,<=,>=,=,!=,BETWEEN, IN,EXISTS()|} ${4:value1};"
+        ],
+        "description": "A Boolean true/false value. TRUE and FALSE are reserved ECL keywords"
+    },
+    "Value Types INTEGER": {
+        "prefix": [
+            "INTEGER"
+        ],
+        "body": [
+            "INTEGER${1| ,01,02,03,04,05,06,07,08|} ${2:MyINTEGER}  := (INTEGER${1})(${3:value});"
+        ],
+        "description": "An n-byte integer value. Valid values for n are: 1, 2, 3, 4, 5, 6, 7,or 8. If n is not specified for the INTEGER"
+    },
+    "Simple Value Types INTEGER": {
+        "prefix": [
+            "INTEGER"
+        ],
+        "body": [
+            "INTEGER ${1:MyINTEGER}  := ${2:value};"
+        ],
+        "description": "Simple: An n-byte integer value. Valid values for n are: 1, 2, 3, 4, 5, 6, 7,or 8. If n is not specified for the INTEGER"
+    },
+    "simple Unsigned": {
+        "prefix": [
+            "UNSIGNED"
+        ],
+        "body": [
+            "UNSIGNED${1:4} ${2:unsighedName} := ${3:value};\n"
+        ],
+        "description": "Unsinged Attribute"
+    },
+    "Value Types REAL": {
+        "prefix": [
+            "REAL"
+        ],
+        "body": [
+            "REAL${1| ,04,08|} ${2:myREAL}  := (REAL${1})(${3:value});"
+        ],
+        "description": "An n-byte standard IEEE floating point value. Valid values for n are: 4 (values to 7 significant digits) or 8"
+    },
+    "Simple Value Types REAL": {
+        "prefix": [
+            "REAL"
+        ],
+        "body": [
+            "REAL ${1:MyREAL}  := ${2:value};"
+        ],
+        "description": "Simple: An n-byte standard IEEE floating point value. Valid values for n are: 4 (values to 7 significant digits) or 8"
+    },
+    "Value Types DECIMAL": {
+        "prefix": [
+            "DECIMAL"
+        ],
+        "body": [
+            "${1|UNSIGNED, |} DECIMAL${2:base-exmaple-5_2-123.45|} ${3:myDECIMAL}  := (DECIMAL${2})(${4:value});"
+        ],
+        "description": "A packed decimal value of n total digits (to a maximum of 32). If the _y value is present, the y defines the number of decimal places in the value"
+    },
+    "Simple Value Types DECIMAL": {
+        "prefix": [
+            "DECIMAL"
+        ],
+        "body": [
+            "DECIMAL ${1:MyDECIMAL}  := ${2:value};"
+        ],
+        "description": "Simple:A packed decimal value of n total digits (to a maximum of 32). If the _y value is present, the y defines the number of decimal places in the value"
+    },
+    "SIMPLE STRING": {
+        "prefix": [
+            "STRING"
+        ],
+        "body": [
+            "STRING${1:length} ${2:strName} := '${3:value}';\n"
+        ],
+        "description": "String Attribute"
+    },
+    "Value Types STRING": {
+        "prefix": [
+            "STRING"
+        ],
+        "body": [
+            "STRING${1:SIZE} ${2:MySTRING}  := (STRING${1})(${3:value});"
+        ],
+        "description": "A character string of n bytes, space padded (not null-terminated). If n is omitted, the string is variable length to the size needed to contain the result of the cast or passed parameter. The upper size limit for any STRING value is 4GB."
+    },
+    "Value Types VARSTRING": {
+        "prefix": [
+            "VARSTRING"
+        ],
+        "body": [
+            "VARSTRING${1:SIZE} ${2:VARSTRING}  := (VARSTRING${1})(${3:VARSTRING});"
+        ],
+        "description": "A null-terminated character string containing n bytes of data.. If n is omitted, the DATA is variable. The upper size limit for any DATA value is 4GB."
+    },
+    "Value Types QSTRING": {
+        "prefix": [
+            "QSTRING"
+        ],
+        "body": [
+            "QSTRING${1:SIZE} ${2:MySTRING}  := (QSTRING${1})(${3:value});"
+        ],
+        "description": "A data-compressed variation of STRING that uses only 6-bits per character to reduce storage requirements for large strings. The character set is limited to capital letters A-Z, the numbers 0-9, the blank space, and the following set of special characters: ! \" # $ % & ' ( ) * + , - . / ; < = > ? @ [ \\ ] ^ _ The upper size limit for any STRING value is 4GB."
+    },
+    "Value Types DATA": {
+        "prefix": [
+            "DATA"
+        ],
+        "body": [
+            "DATA${1:SIZE} ${2:MyDATA}  := (DATA${1})(${3:value});"
+        ],
+        "description": "A (packed hexadecimal) data block of n bytes, zero padded (not space-padded). If n is omitted, the DATA is variable. The upper size limit for any DATA value is 4GB."
+    },
+    "Value Types TYPEOF": {
+        "prefix": [
+            "TYPEOF"
+        ],
+        "body": [
+            "TYPEOF(${1:expression})"
+        ],
+        "description": "The TYPEOF declaration allows you to define an Attribute or parameter whose value type is (just like) the expression"
+    },
+    "Value Types RECORDOF": {
+        "prefix": [
+            "RECORDOF"
+        ],
+        "body": [
+            "RECORDOF(${1:recordset}, ${2|looked up at compile time,TRUE,FALSE})"
+        ],
+        "description": "The RECORDOF declaration specifies use of just the record layout of the recordset in those situations where you need to inherit the structure of the fields but not their default values, such as child DATASET declarations"
+    },
+    "Value Types SET OF": {
+        "prefix": [
+            "SET OF"
+        ],
+        "body": [
+            "SET OF ${1|TYPE,BOOLEAN,INTEGER,UNSIGNED,REAL,DECIMAL,STRING,QSTRING,DATA,VARSTRING,VARUNICODE,UNSIGNED REAL,UNSIGNED DECIMAL|} ${2:mySet}  := [${3:Value1},${4:Value2}];"
+        ],
+        "description": "The SET OF value type defines Attributes that are a set of data elements. All elements of the set must be of the same yype."
+    },
+    "enum": {
+        "prefix": [
+            "en",
+            "ENUM"
+        ],
+        "body": "ENUM(${2:type}, Unknown = 0, ${3:name});"
+    },
+    //  Record / Dataset  ---
+    "dataset": {
+        "prefix": [
+            "ds",
+            "DATASET"
+        ],
+        "body": "DATASET([${1:item}], ${2:record});",
+        "description": "one-line inline dataset"
+    },
+    "DATASET INLINE": {
+        "prefix": [
+            "RECORD (dataset + inline data)",
+            "DATASET (record + inline data)"
+        ],
+        "body": [
+            "Rec := RECORD",
+            "\t",
+            "END\n",
+            "myDataset := DATASET([ {  ,  , },",
+            "                       {  ,  , },",
+            "                       {  ,  , },",
+            "                       {  ,  , },",
+            "                     ], Rec);"
+        ],
+        "description": "Shell of an inline dataset"
+    },
+    "DATASET File": {
+        "prefix": [
+            "DATASET (from file)"
+        ],
+        "body": [
+            "DATASET(${1:filenameString},${2:namesRecord},${3|THOR,FLAT,CSV(HEADING(1)\\,SEPARATOR(['\\t'\\,'\\,'\\,'\\|'])\\,TERMINATOR(['\\n'\\,'\\n\\r'])),XML('root/elem'),JSON('/')|} ${5| ,\\,LOOKUP,OPT,UNSORTED,ENCRYPT(keyValue)|}$0);"
+        ],
+        "description": "From File: Dataset Definition"
+    },
+    "DATASET Workunit": {
+        "prefix": [
+            "DATASET (workunit)"
+        ],
+        "body": [
+            "DATASET(WORKUNIT(${1:WORKUNIT},${2:ResultName}),${3:RecordStruct});"
+        ],
+        "description": "From WUID: Dataset Definition from named output"
+    },
+    "Record Structure": {
+        "prefix": [
+            "RECORD"
+        ],
+        "body": [
+            "RECORD",
+            "\t${1:type} ${2:name}",
+            "END;"
+        ],
+        "description": "Body of record structure layout for a dataset"
+    },
+    "record_full": {
+        "prefix": [
+            "RECORD (maxlength)"
+        ],
+        "body": [
+            "${1:myRecord} := RECORD ${2:,MAXLENGTH(${3:length})}",
+            "\t",
+            "END;"
+        ],
+        "description": "Fully define a record structure layout for a dataset"
+    },
+    "Field Inheritance": {
+        "prefix": [
+            "RECORD (inherit dataset)"
+        ],
+        "body": [
+            " ${1|Intersection:R1 AND R2,Union:R1 OR R2,Difference:R1 AND NOT R2,Exception:R1 AND NOT F1,Exception:R1 AND NOT [F1, F2]|}"
+        ],
+        "description": "Inheritance of a Layout of a dataset"
+    },
+    //  Dataset  ---
+    "transform": {
+        "prefix": [
+            "TRANSFORM"
+        ],
+        "body": [
+            "TRANSFORM",
+            "\tSELF := ${1:arg}",
+            "END;"
+        ],
+        "description": "Body of a transform statement"
+    },
+    "inline transform": {
+        "prefix": [
+            "TRANSFORM (inline)"
+        ],
+        "body": "TRANSFORM(${1:type}, SELF := LEFT)",
+        "description": "Simple in line transform statement"
+    },
+    "project": {
+        "prefix": [
+            "PROJECT"
+        ],
+        "body": "PROJECT(${1:recordSet}, ${2:record})",
+        "description": "Simple project to cast into new record structure with no custom mapping"
+    },
+    "dedup": {
+        "prefix": [
+            "DEDUP"
+        ],
+        "body": "DEDUP(${1:recordSet});",
+        "description": "Simple Dedup of a dataset by all columns in the record structure"
+    },
+    "Dedup_Sort_Distibute": {
+        "prefix": [
+            "DEDUP (sort, distribute)"
+        ],
+        "body": [
+            "  DEDUP(SORT(DISTRIBUTE(${1:DATASET},HASH64(${2:Criteria})),${2}${3:,AdditionalSortCriteria},LOCAL),${2},LOCAL);"
+        ],
+        "description": "Distribute Sort and Dedup a dataset"
+    },
+    "Dedup_Sort": {
+        "prefix": [
+            "DEDUP (sort)"
+        ],
+        "body": [
+            "  DEDUP(SORT(${1:DATASET},${2:DedupCriteria}${3:,SortCriteria},${4|LOCAL,FEW,UNORDERED,ORDERED(TRUE),ORDERED(FALSE),PARALLEL,STABLE, |} ),${2},${5|LOCAL,MANY,ALL,HASH,UNORDERED,ORDERED(TRUE),ORDERED(FALSE),BEST(YourCriteria),PARALLEL,STABLE, |}${6:,KEEP(1)});"
+        ],
+        "description": "Long:Sort and Dedup a dataset"
+    },
+    "Dedup": {
+        "prefix": [
+            "DEDUP (advanced)"
+        ],
+        "body": [
+            "  DEDUP(${1:DATASET},${2|EXPECT , |}${3:DedupCriteria},${4|LOCAL,MANY,ALL,UNORDERED,ORDERED(TRUE),HASH,ORDERED(FALSE),BEST(YourCriteria),PARALLEL,STABLE, |}${5:,KEEP(1)});"
+        ],
+        "description": "Dedup a dataset"
+    },
+    "join": {
+        "prefix": [
+            "JOIN (no transform)"
+        ],
+        "body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition});",
+        "description": "Simple inner join no transform"
+    },
+    "join transform": {
+        "prefix": [
+            "JOIN (tranform)"
+        ],
+        "body": "JOIN(${1:leftRecordSet}, ${2:rightRecordSet}, ${3:joinCondition}, ${4:transform});",
+        "description": "Simple join with a transform"
+    },
+    "Left Inner Join Structure": {
+        "prefix": [
+            "JOIN (left inner)"
+        ],
+        "body": [
+            "${1:ResultName} := JOIN(${2:LEFT_DATASET},${3:RIGHT_DATASET}, ",
+            " LEFT.${4:LEFT_CONDITION_1}  =  RIGHT.${5:RIGHT_CONDITION_1} AND ",
+            " LEFT.${6:LEFT_CONDITION_2}  =  RIGHT.${7:RIGHT_CONDITION_2} AND ",
+            " LEFT.${8:LEFT_CONDITION_3}  =  RIGHT.${8:RIGHT_CONDITION_3} AND ",
+            " ,transform(${9:Record_Structure}, ",
+            "            SELF.${10:AssignmentTo1} := LEFT.${11:AssignmentFrom1}; ",
+            "            SELF.${12:AssignmentTo1} := LEFT.${13:AssignmentFrom1}; ",
+            "            SELF.${14:AssignmentTo1} := LEFT.${15:AssignmentFrom1}; ",
+            "            SELF := LEFT; ",
+            "            SELF := RIGHT;",
+            "            SELF := [];",
+            "),INNER,LOCAL);\n"
+        ],
+        "description": "left inner join with 3 Conditions"
+    },
+    "LEFT OUTER Join Structure": {
+        "prefix": [
+            "JOIN (left outer)"
+        ],
+        "body": [
+            "${1:ResultName} := JOIN(${2:LEFT_DATASET},${3:RIGHT_DATASET}, ",
+            " LEFT.${4:LEFT_CONDITION_1}   = RIGHT.${5:RIGHT_CONDITION_1} AND ",
+            " LEFT.${6:LEFT_CONDITION_2}   = RIGHT.${7:RIGHT_CONDITION_2} AND ",
+            " LEFT.${8:LEFT_CONDITION_3}   = RIGHT.${8:RIGHT_CONDITION_3} AND ",
+            " ,TRANSFORM(${9:Record_Structure},",
+            "            SELF := LEFT; ",
+            "),LEFT OUTER,LOCAL);\n"
+        ],
+        "description": "left Outer join with 3 Conditions"
+    },
+    "Custom Join Structure": {
+        "prefix": [
+            "JOIN (skinny)"
+        ],
+        "body": [
+            "${1:ResultName} := JOIN(${2:LEFT_DATASET},${3:RIGHT_DATASET}, ",
+            " LEFT.${4:LEFT_CONDITION_1} = RIGHT.${5:RIGHT_CONDITION_1} AND ",
+            " ,transform(${6:Record_Structure}, \n${7:Place Assignments Here}",
+            "            SELF := ${8:DefaultSide};",
+            "),${9:JoinType},${10:LOCAL,HASH,SMART,ALL,ETC});\n"
+        ],
+        "description": "skinny join template"
+    },
+    "Output File": {
+        "prefix": [
+            "OUTPUT"
+        ],
+        "body": [
+            "OUTPUT(${1:DATASET},,'~thor::base::${2:filepath}::$CURRENT_YEAR$CURRENT_MONTH$CURRENT_DATE::${3:filename}',thor,compressed,overwrite,expire(${4:days}),named('${5:outputName}'));\n"
+        ],
+        "description": "Output a dataset to a logical file"
+    },
+    "Output First": {
+        "prefix": [
+            "OUTPUT (first 750)"
+        ],
+        "body": [
+            "OUTPUT(${1:DATASET}[..750],named('${2:outputName}'));\n"
+        ],
+        "description": "Output the first 750 lines of a dataset for viewing"
+    },
+    //  Other  ---
+    "if": {
+        "prefix": [
+            "IF"
+        ],
+        "body": [
+            "IF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
+        ]
+    },
+    "iff": {
+        "prefix": [
+            "IFF"
+        ],
+        "body": [
+            "IFF(${1:expression}, ${2:trueResult}, ${3:falseResult});"
+        ],
+        "description": "The IFF function performs the same functionality as IF, but ensures that an expression containing complex boolean logic is evaluated exactly as it appears."
+    },
+    "map": {
+        "prefix": [
+            "MAP"
+        ],
+        "body": [
+            "MAP(${1:firstValue}  => ${2:firstReturn},",
+            "    ${3:secondValue} => ${4:secondReturn},",
+            "    ${5:elseReturn});"
+        ],
+        "description": "The MAP function evaluates the list of expressions and returns the value associated with the first true expression. If none of them match, the elsevalue is returned. MAP may be thought of as an \"IF ... ELSIF ... ELSIF ... ELSE\" type of structure."
+    },
+    "case": {
+        "prefix": [
+            "CASE"
+        ],
+        "body": [
+            "CASE(${1:expression},",
+            "     ${2:v1} => ${3:r1},",
+            "     ${3:optionalElseReturn});"
+        ],
+        "description": "The CASE function evaluates the expression and returns the value whose caseval matches the expression result. If none match, it returns the elsevalue."
+    },
+    "choose": {
+        "prefix": [
+            "CHOOSE"
+        ],
+        "body": "CHOOSE(${1:expression},${2:v1}, ${3:v2});",
+        "description": "The CHOOSE function evaluates the expression and returns the value parameter whose ordinal position in the list of parameters corresponds to the result of the expression. If none match, it returns the elsevalue. All values and the elsevalue must be of the same type."
+    },
+    "set": {
+        "prefix": [
+            "SET"
+        ],
+        "body": "SET(${1:recordset}, ${2:fieldName})"
+    },
+    "IN_Operator": {
+        "prefix": [
+            "IN"
+        ],
+        "body": [
+            "IN [${1:Val1}${2:,val2}${3:,val3}]"
+        ],
+        "description": "The IN operator is shorthand for a collection of OR conditions."
+    },
+    "BETWEEN_Operator": {
+        "prefix": [
+            "BETWEEN"
+        ],
+        "body": [
+            "BETWEEN ${1:Val1} and ${2:val2}"
+        ],
+        "description": "The BETWEEN operator is shorthand for an inclusive range check using standard comparison operators."
+    },
+    //  Macro  ---
+    "macro": {
+        "prefix": [
+            "MACRO"
+        ],
+        "body": [
+            "MACRO",
+            "\t// TODO:",
+            "ENDMACRO;"
+        ]
+    },
+    "Macro Structure": {
+        "prefix": [
+            "MACRO"
+        ],
+        "body": [
+            "${1:$TM_FILENAME_BASE}(${2:Parms}, RESULTVAL) := MACRO",
+            "  IMPORT ${3:STD} ;\n",
+            "  RESULTVAL := 0;",
+            "ENDMACRO;"
+        ],
+        "description": "EXPORT MACRO"
+    },
+    "Function Macro Structure": {
+        "prefix": [
+            "FUNCTIONMACRO"
+        ],
+        "body": [
+            "${1:$TM_FILENAME_BASE}(${2:Parms}) := FUNCTIONMACRO",
+            "  IMPORT ${3:STD} ;\n",
+            "  Result := 0;\n",
+            "  RETURN Result;",
+            "ENDMACRO;"
+        ],
+        "description": "EXPORT FUNCTION MACRO"
+    },
+    //  Processing  ---
+    "seqential": {
+        "prefix": [
+            "SEQUENTIAL"
+        ],
+        "body": [
+            "SEQUENTIAL(${1:action1},",
+            "           ${2:action2},",
+            "           ${3:action3});"
+        ]
+    },
+    "ORDERED": {
+        "prefix": [
+            "ORDERED"
+        ],
+        "body": [
+            "ORDERED(${1:action1},",
+            "        ${2:action2},",
+            "        ${3:action3});"
+        ]
+    },
+    "PARALLEL": {
+        "prefix": [
+            "PARALLEL"
+        ],
+        "body": [
+            "PARALLEL(${1:action1},",
+            "         ${2:action2},",
+            "         ${3:action3});"
+        ]
+    },
+    //  STD.File  ---
+    "STD.File.CompareFiles": {
+        "prefix": [
+            "STD.File.CompareFiles"
+        ],
+        "body": [
+            "STD.File.CompareFiles( '${1:file1}', '${2:file2}', ${3|logicalonly,TRUE,FALSE|}, ${4|usecrcs,TRUE,FALSE|});"
+        ],
+        "description": "The CompareFiles function compares file1 against file2 and returns the following values"
+    },
+    "STD.File.DeleteLogicalFile": {
+        "prefix": [
+            "STD.File.DeleteLogicalFile"
+        ],
+        "body": [
+            "STD.File.DeleteLogicalFile(( '${1:file1}', ${2|ifexists,TRUE,FALSE|});"
+        ],
+        "description": "The DeleteLogicalFile function removes the named file from disk if exists"
+    },
+    "STD.File.LogicalFileList": {
+        "prefix": [
+            "STD.File.LogicalFileList"
+        ],
+        "body": [
+            "STD.File.LogicalFileList(( '${1:*filename*}', ${2|Includenormal,TRUE,FALSE|}, ${3|Includesuper,TRUE,FALSE|}, ${4|Unknownszeror,TRUE,FALSE|},'${5|sourceDali,addCustom.prod_thor_dali,addCustom.Dev_thor_dali, |}');"
+        ],
+        "description": "The LogicalFileList function returns a list of the logical files in the environment files as a dataset in the format listed"
+    },
+    "STD.File.FileExists(": {
+        "prefix": [
+            "STD.File.FileExists"
+        ],
+        "body": [
+            "STD.File.FileExists((( '${1:filename}', ${2|Physicalcheck,TRUE,FALSE|});"
+        ],
+        "description": "The FileExists function returns TRUE if the specified filename is present in the Distributed File Utility (DFU)."
+    },
+    "STD.File.ForeignLogicalFileName": {
+        "prefix": [
+            "STD.File.ForeignLogicalFileName"
+        ],
+        "body": [
+            "STD.File.ForeignLogicalFileName('${1:*filename*}','${2|sourceDali,addCustom.prod_thor_dali,addCustom.Dev_thor_dali, |}', ${3|Absolutepath,TRUE,FALSE|}, ${4|Unknownszeror,TRUE,FALSE|} , ${5|OmitClusterPrefix,TRUE,FALSE|});"
+        ],
+        "description": "The ForeignLogicalFileName function returns either a foreign logical file name"
+    },
+    "STD.File.GetLogicalFileAttribute": {
+        "prefix": [
+            "STD.File.GetLogicalFileAttribute("
+        ],
+        "body": [
+            "STD.File.GetLogicalFileAttribute('${1:~filename}', ${2|Choose_an_Attribute,'recordSize','recordCount','size','clusterName','directory','numparts','owner','description','ECL','partmask','numparts','name','modified','protected','format','job','checkSum','kind','csvSeparate','csvTerminate','csvEscape','headerLength','footerLength','rowtag','workunit','accessed','expireDays','maxRecordSize','csvQuote','blockCompressed','compressedSize','fileCrc','formatCrc'|});"
+        ],
+        "description": "The GetLogicalFileAttribute function returns the value of the attrname for the specified logicalfilename."
+    },
+    "STD.File.ProtectLogicalFile((": {
+        "prefix": [
+            "STD.File.ProtectLogicalFile(("
+        ],
+        "body": [
+            "STD.File.ProtectLogicalFile(((( '${1:logicalfilename}', ${2|flag,TRUE,FALSE|});"
+        ],
+        "description": "The ProtectLogicalFile function toggles protection on and off for the specified logicalfilename."
+    },
+    "STD.File.RenameLogicalFile": {
+        "prefix": [
+            "STD.File.RenameLogicalFile"
+        ],
+        "body": [
+            "STD.File.RenameLogicalFile( '${1:filename}', '${2:newname}', ${3|allowOverwrite,TRUE,FALSE|});"
+        ],
+        "description": "The RenameLogicalFile function changes the logical filename to the newname"
+    },
+    "STD.File.SetFileDescription": {
+        "prefix": [
+            "STD.File.SetFileDescription"
+        ],
+        "body": [
+            "STD.File.SetFileDescription( '${1:filename}', ${2|flag,TRUE,FALSE|});"
+        ],
+        "description": "The SetFileDescription function changes the description information stored by the DFU"
+    },
+    "STD.File.SetReadOnly": {
+        "prefix": [
+            "STD.File.SetReadOnly"
+        ],
+        "body": [
+            "STD.File.SetReadOnly( '${1:filename}', ${2|flag,TRUE,FALSE|});"
+        ],
+        "description": "The SetReadOnly function toggles the read-only attribute of the filename. If the flag is TRUE, read-only is set on."
+    },
+    "STD.File.VerifyFile": {
+        "prefix": [
+            "STD.File.VerifyFile"
+        ],
+        "body": [
+            "STD.File.VerifyFile( '${1:filename}', ${2|usecrcs,TRUE,FALSE|});"
+        ],
+        "description": "The VerifyFile function toggles the read-only attribute of the filename. If the flag is TRUE, read-only is set on."
+    },
+    "STD.File.CreateSuperFile": {
+        "prefix": [
+            "STD.File.CreateSuperFile"
+        ],
+        "body": [
+            "STD.File.CreateSuperFile( '${1:superfileName}', ${2|sub-files must be sequentially ordered,TRUE,FALSE|}, ${3|allowExist,TRUE,FALSE|});"
+        ],
+        "description": "The CreateSuperFile function creates an empty superfile. This function is not included in a superfile transaction"
+    },
+    "STD.File.SuperFileExists": {
+        "prefix": [
+            "STD.File.SuperFileExists"
+        ],
+        "body": [
+            "STD.File.SuperFileExists( '${1:superfileName}');"
+        ],
+        "description": "The SuperFileExists function returns TRUE if the specified filename is present in the Distributed File Utility (DFU)"
+    },
+    "STD.File.DeleteSuperFile": {
+        "prefix": [
+            "STD.File.DeleteSuperFile"
+        ],
+        "body": [
+            "STD.File.DeleteSuperFile( '${1:superfileName}', ${2|subdeleteflag,TRUE,FALSE|});"
+        ],
+        "description": "The DeleteSuperFile function deletes the superfile"
+    },
+    "STD.File.GetSuperFileSubCount": {
+        "prefix": [
+            "STD.File.GetSuperFileSubCount"
+        ],
+        "body": [
+            "STD.File.GetSuperFileSubCount( '${1:superfileName}');"
+        ],
+        "description": "The GetSuperFileSubCount function returns the number of sub-files comprising the superfile"
+    },
+    "STD.File.GetSuperFileSubName": {
+        "prefix": [
+            "STD.File.GetSuperFileSubName"
+        ],
+        "body": [
+            "STD.File.GetSuperFileSubName( '${1:superfileName}', ${2|subfileIndex,1,2,3,4,5,6,7,8,9|}, ${3|absolutepath,TRUE,FALSE|});"
+        ],
+        "description": "The GetSuperFileSubName function returns the number of sub-files comprising the superfile"
+    },
+    "STD.File.LogicalFileSuperOwners": {
+        "prefix": [
+            "STD.File.LogicalFileSuperOwners"
+        ],
+        "body": [
+            "STD.File.LogicalFileSuperOwners('${1:superfileName}');"
+        ],
+        "description": "The LogicalFileSuperOwners function returns a list of the logical filenames of all the SuperFiles that contain the filename as a sub-file."
+    },
+    "STD.File.LogicalFileSuperSubList": {
+        "prefix": [
+            "STD.File.LogicalFileSuperSubList("
+        ],
+        "body": [
+            "STD.File.LogicalFileSuperSubList(),"
+        ],
+        "description": "The LogicalFileSuperSubList function returns a list of the logical filenames of all the SuperFiles and their component sub-files"
+    },
+    "STD.File.SuperFileContents": {
+        "prefix": [
+            "STD.File.SuperFileContents"
+        ],
+        "body": [
+            "STD.File.SuperFileContents('${1:superfileName}', ${2|recurse,TRUE,FALSE|});"
+        ],
+        "description": "The SuperFileContents function returns a list of the logical filenames of all the sub-files in the filename."
+    },
+    "STD.File.FindSuperFileSubName": {
+        "prefix": [
+            "STD.File.FindSuperFileSubName"
+        ],
+        "body": [
+            "STD.File.FindSuperFileSubName( '${1:superfileName}', '${2:subfileName}');"
+        ],
+        "description": "The FindSuperFileSubName function returns the ordinal position of the specified subfile in the superfile."
+    },
+    "STD.File.StartSuperFileTransaction": {
+        "prefix": [
+            "STD.File.StartSuperFileTransaction"
+        ],
+        "body": [
+            "STD.File.StartSuperFileTransaction(),"
+        ],
+        "description": "The StartSuperFileTransaction function begins a transaction frame for superfile maintenance. The transaction frame is terminated by calling the FinishSuperFileTransaction function."
+    },
+    "STD.File.AddSuperFile": {
+        "prefix": [
+            "STD.File.AddSuperFile"
+        ],
+        "body": [
+            "STD.File.AddSuperFile('${1:superfileName}', '${2:subfileName}', ${3|atpos,1,2,3,4,5,6,7,8,9|}, ${4|addcontents,TRUE,FALSE|}, ${5|strict,TRUE,FALSE|});"
+        ],
+        "description": "The AddSuperFile function adds the subfile to the list of files comprising the superfile."
+    },
+    "STD.File.RemoveSuperFile": {
+        "prefix": [
+            "STD.File.RemoveSuperFile"
+        ],
+        "body": [
+            "STD.File.RemoveSuperFile('${1:superfileName}', '${2:subfileName}', ${3|delatpos,1,2,3,4,5,6,7,8,9|}, ${4|removecontents,TRUE,FALSE|});"
+        ],
+        "description": "The RemoveSuperFile function removes the subfile from the list of files comprising the superfile."
+    },
+    "STD.File.ClearSuperFile": {
+        "prefix": [
+            "STD.File.RemoveSuperFile"
+        ],
+        "body": [
+            "STD.File.RemoveSuperFile('${1:superfileName}', ${2|delete,TRUE,FALSE|});"
+        ],
+        "description": "The ClearSuperFile function removes all sub-files from the list of files comprising the superfile."
+    },
+    "STD.File.RemoveOwnedSubFiles": {
+        "prefix": [
+            "STD.File.RemoveOwnedSubFiles"
+        ],
+        "body": [
+            "STD.File.RemoveOwnedSubFiles('${1:superfileName}', ${2|delete,TRUE,FALSE|});"
+        ],
+        "description": "The RemoveOwnedSubFiles function removes all owned sub-files from the specified superfile."
+    },
+    "STD.File.SwapSuperFile": {
+        "prefix": [
+            "STD.File.SwapSuperFile"
+        ],
+        "body": [
+            "STD.File.SwapSuperFile('${1:superfileName}','${2:superfileName}');"
+        ],
+        "description": "The SwapSuperFile( function removes all owned sub-files from the specified superfile."
+    },
+    "STD.File.ReplaceSuperFile": {
+        "prefix": [
+            "STD.File.ReplaceSuperFile"
+        ],
+        "body": [
+            "STD.File.ReplaceSuperFile('${1:superfileName}','${2:subfile1}','${3:subfile2}');"
+        ],
+        "description": "The ReplaceSuperFile function removes the subfile1 from the list of files comprising the superfile and replaces it with subfile2."
+    },
+    "STD.File.FinishSuperFileTransaction": {
+        "prefix": [
+            "STD.File.FinishSuperFileTransaction"
+        ],
+        "body": [
+            "STD.File.FinishSuperFileTransaction()"
+        ],
+        "description": "The FinishSuperFileTransaction function terminates a superfile maintenance transaction frame."
+    },
+    "STD.File.MoveExternalFile": {
+        "prefix": [
+            "STD.File.MoveExternalFile"
+        ],
+        "body": [
+            "STD.File.MoveExternalFile( '${1:IP/DNS}', '${2:frompath}', '${3:topath}' );"
+        ],
+        "description": "The MoveExternalFile function moves the single physical file specified by the frompath to the topath."
+    },
+    "STD.File.DeleteExternalFile": {
+        "prefix": [
+            "STD.File.DeleteExternalFile"
+        ],
+        "body": [
+            "STD.File.DeleteExternalFile( '${1:IP/DNS}', '${2:frompath}');"
+        ],
+        "description": "The DeleteExternalFile function removes the single physical file specified by the path from the location."
+    },
+    "STD.File.CreateExternalDirectory": {
+        "prefix": [
+            "STD.File.CreateExternalDirectory"
+        ],
+        "body": [
+            "STD.File.CreateExternalDirectory( '${1:IP/DNS}', '${2:frompath}');"
+        ],
+        "description": "The CreateExternalDirectory function creates the path on the location (if it does not already exist)."
+    },
+    "STD.File.RemoteDirectory": {
+        "prefix": [
+            "STD.File.RemoteDirectory"
+        ],
+        "body": [
+            "STD.File.RemoteDirectory( '${1:IP/DNS}', '${2:directory}', '${3:searchStr*}', ${4|recurse,TRUE,FALSE|});"
+        ],
+        "description": "The RemoteDirectory function returns a list of files as a dataset in the format listed above from the specified"
+    },
+    "STD.File.Copy": {
+        "prefix": [
+            "STD.File.Copy (advanced)"
+        ],
+        "body": [
+            "STD.File.Copy( '${1:sourceLogicalName}', '${2|destinationGroup,~AddCustomDevTargetsHere~,~AddCustomProdTargetsHere~, |}',",
+            "               '${3:destinationLogicalName}', '${4|sourceDali,addCustom.prod_thor_dali,addCustom.Dev_thor_dali, |}',",
+            "                ${5:int~timeOutSetting}, ${6:null~espServerIPPort}, ${7:int~maxConnections}, ${8|allowOverwrite,TRUE,FALSE|},",
+            "                ${9|replicate,TRUE,FALSE|},${10|asSuperfile,TRUE,FALSE|},${11|compress,TRUE,FALSE|},${12|forcePush,TRUE,FALSE|},",
+            "                ${13:int~transferBufferSize},${14|preserveCompression,TRUE,FALSE|},${15|noSplit,TRUE,FALSE|},${16:int~expireDays},'${17:dfu_wuid_attribute_name}');"
+        ],
+        "description": "The Copy function takes a logical file and copies it to another logical file. This may be done within the same cluster, or to another cluster, or to a cluster in a completely separate Dali"
+    },
+    "STD.File.CopyShort": {
+        "prefix": [
+            "STD.File.Copy"
+        ],
+        "body": [
+            "STD.File.Copy( '${1:sourceLogicalName}', '${2|destinationGroup,~AddCustomDevTargetsHere~,~AddCustomProdTargetsHere~, |}',",
+            "               '${3:destinationLogicalName}', '${4|sourceDali,addCustom.prod_thor_dali,addCustom.Dev_thor_dali, |}',,,,${5|allowOverwrite,TRUE,FALSE|},,${6|asSuperfile,TRUE,FALSE|},${7|compress,TRUE,FALSE|},,,,,${8:int~expireDays});"
+        ],
+        "description": "Short: The Copy function takes a logical file and copies it to another logical file. This may be done within the same cluster, or to another cluster, or to a cluster in a completely separate Dali"
+    },
+    "STD.File.DeSpray": {
+        "prefix": [
+            "STD.File.DeSpray"
+        ],
+        "body": [
+            "STD.File.DeSpray( '${1:logicalname,}', '${2:destinationIP}', '${3:destinationpath}', '${4:int~timeout}', '${5:str~espserverIPport}', '${6:int~maxConnections}', ${7|allowoverwrite,TRUE,FALSE|}),"
+        ],
+        "description": "The DeSpray function takes a logical file and desprays it (combines all parts on each supercomputer node into a single physical file) to the landing zone"
+    },
+    "STD.File.RemotePull": {
+        "prefix": [
+            "STD.File.RemotePull"
+        ],
+        "body": [
+            "STD.File.RemotePull( '${1:remoteURL,}', '${2:sourcelogicalname}' , '${3| ,destinationGroup,~AddCustomDevTargetsHere~,~AddCustomProdTargetsHere~, |}',",
+            "                     '${4:destinationlogicalname}', '${5:int~timeout}', '${6:int~maxConnections}', ${7|allowoverwrite,TRUE,FALSE|}),",
+            "                      ${8|replicate,TRUE,FALSE|},${9|asSuperfile,TRUE,FALSE|},${10|forcePush,TRUE,FALSE|},${11:int~transferBufferSize},",
+            "                      ${12|wrap the file parts,TRUE,FALSE|},${13|compress,TRUE,FALSE|},${14|noSplit,TRUE,FALSE|},${15:int~expireDays}   "
+        ],
+        "description": "The RemotePull function executes on the remoteURL, copying the sourcelogicalname from the local environment that instantiated the operation to the remote environment's destinationGroup cluster"
+    },
+    "STD.File.Replicate": {
+        "prefix": [
+            "STD.File.Replicate"
+        ],
+        "body": [
+            "STD.File.Replicate( '${1:filename,}', '${2:int~timeout}', '${5:str~espserverIPport}'),"
+        ],
+        "description": "The Replicate function copies the individual parts of the filename to the mirror disks for the cluster Typically this means that the file part on one nodes C drive is copied to its neighbors D drive"
+    },
+    "STD.File.SprayFixed": {
+        "prefix": [
+            "STD.File.SprayFixed"
+        ],
+        "body": [
+            "STD.File.SprayFixed( '${1:sourceIP}','${2:sourcepath}','${3:int~RecSize}','${4|destinationGroup,~AddCustomDevTargetsHere~,~AddCustomProdTargetsHere~, |}',",
+            "                     '${5:destinationlogicalname}', ${6:int~timeOutSetting}, ${7:null~espServerIPPort}, ${8:int~maxConnections}, ${9|allowOverwrite,TRUE,FALSE|},",
+            "                      ${10|replicate,TRUE,FALSE|},${11|compress,TRUE,FALSE|},${12|failIfNoSourceFile,TRUE,FALSE|},",
+            "                      ${13:int~expireDays},${14:dfuServerQueue},${15|noSplit,TRUE,FALSE|},'${16:dfu_wuid_attribute_name}');"
+        ],
+        "description": "The SprayFixed function takes fixed-format file from the landing zone and distributes it across the nodes of the destination supercomputer"
+    },
+    "STD.File.SprayFixedShort": {
+        "prefix": [
+            "STD.File.SprayFixed"
+        ],
+        "body": [
+            "STD.File.SprayFixed( '${1:sourceIP}','${2:sourcepath}','${3:int~RecSize}','${4|destinationGroup,~AddCustomDevTargetsHere~,~AddCustomProdTargetsHere~, |}','${5:destinationlogicalname}',,,,,,${6|compress,TRUE,FALSE|},,${7:int~expireDays});"
+        ],
+        "description": "Short: The SprayFixed function takes fixed-format file from the landing zone and distributes it across the nodes of the destination supercomputer"
+    },
+    "STD.File.SprayDelimited": {
+        "prefix": [
+            "STD.File.SprayDelimited (advanced)"
+        ],
+        "body": [
+            "STD.File.SprayDelimited( '${1:sourceIP}','${2:sourcepath}','${3:int~sourceMaxRecordSize}','${4:sourceCsvSeparate}','${5:sourceCsvTerminate}','${6:sourceCsvQuote}','${7|destinationGroup,~AddCustomDevTargetsHere~,~AddCustomProdTargetsHere~, |}',",
+            "                         '${8:destinationlogicalname}', ${9:int~timeOutSetting}, ${10:null~espServerIPPort}, ${11:int~maxConnections}, ${12|allowOverwrite,TRUE,FALSE|},",
+            "                          ${13|replicate,TRUE,FALSE|},${14|compress,TRUE,FALSE|}, ${15:null~sourceCsvEscape}, ${16|failIfNoSourceFile,TRUE,FALSE|},",
+            "                          ${17|recordStructurePresent,TRUE,FALSE|},${18:quotedTerminator},${19:encoding},${20:int~expireDays},${21:dfuServerQueue},${22|noSplit,TRUE,FALSE|},'${23:dfu_wuid_attribute_name});"
+        ],
+        "description": "The SprayDelimited function takes a variable length file from the landing zone and distributes it across the nodes of the destination supercomputer"
+    },
+    "STD.File.SprayDelimitedSHORT": {
+        "prefix": [
+            "STD.File.SprayDelimited"
+        ],
+        "body": [
+            "STD.File.SprayDelimited('${1:sourceIP}','${2:sourcepath}','${3:int~sourceMaxRecordSize}','${4:sourceCsvSeparate}','${5:sourceCsvTerminate}','${6:sourceCsvQuote}','${7|destinationGroup,~AddCustomDevTargetsHere~,~AddCustomProdTargetsHere~, |}','${8:destinationlogicalname}',,,,${9|allowOverwrite,TRUE,FALSE|},${10|replicate,TRUE,FALSE|},${11|compress,TRUE,FALSE|},,,,,,,${12:int~expireDays});"
+        ],
+        "description": "SHORT: The SprayDelimited function takes a variable length file from the landing zone and distributes it across the nodes of the destination supercomputer"
+    },
+    "STD.File.WaitDfuWorkunit": {
+        "prefix": [
+            "STD.File.WaitDfuWorkunit"
+        ],
+        "body": [
+            "STD.File.WaitDfuWorkunit('${1:dfuwuid}','${2:int~timeout}','${3:espserverIPport}');"
+        ],
+        "description": "The WaitDfuWorkunit function waits for the specified DFU workunit to finish."
+    },
+    "STD.File.GetEspUrl": {
+        "prefix": [
+            "STD.File.GetEspUrl"
+        ],
+        "body": [
+            "STD.File.GetEspUrl(${1:username},${2:password});"
+        ],
+        "description": "The GetEspUrl function returns the full URL to an ESP server process."
+    },
+    //  STD.Str  ---
+    "STD.Str.CleanSpaces": {
+        "prefix": [
+            "STD.Str.CleanSpaces"
+        ],
+        "body": [
+            "STD.Str.CleanSpaces(${1:LEFT.Value});"
+        ],
+        "description": "All variations of the CleanSpaces function return the source string with all instances of multiple adjacent space."
+    },
+    "STD.Str.CompareIgnoreCase": {
+        "prefix": [
+            "STD.Str.CompareIgnoreCase"
+        ],
+        "body": [
+            "STD.Str.CompareIgnoreCase(${1:source},${2:source2});"
+        ],
+        "description": "The CompareIgnoreCase functions return zero (0) if the source1 and source2 strings contain the same data"
+    },
+    "STD.Str.Contains": {
+        "prefix": [
+            "STD.Str.Contains"
+        ],
+        "body": [
+            "STD.Str.Contains(${1:source},${2:pattern},${3|nocase,true,false|});"
+        ],
+        "description": "The Contains functions return true if all the characters in the pattern appear in the source, otherwise they return false."
+    },
+    "STD.Str.CountWords": {
+        "prefix": [
+            "STD.Str.CountWords"
+        ],
+        "body": [
+            "STD.Str.CountWords(${1:source},${2:separator},${3|allow_blank,true,false|});"
+        ],
+        "description": "The CountWords function returns the number of words in the source string based on the specified separator."
+    },
+    "STD.Str.DecodeBase64": {
+        "prefix": [
+            "STD.Str.DecodeBase64"
+        ],
+        "body": [
+            "STD.Str.DecodeBase64(${1:source});"
+        ],
+        "description": "The DecodeBase64 function returns a DATA value containing the decoded binary data."
+    },
+    "STD.Str.EncodeBase64": {
+        "prefix": [
+            "EncodeBase64"
+        ],
+        "body": [
+            "STD.Str.STD.Str.EncodeBase64(${1:source});"
+        ],
+        "description": "The EncodeBase64 function returns a STRING containing the binary data encoded in Base64."
+    },
+    "STD.Str.EndsWith": {
+        "prefix": [
+            "STD.Str.EndsWith"
+        ],
+        "body": [
+            "STD.Str.EndsWith(${1:source},${2:suffix});"
+        ],
+        "description": "The EndsWith function returns TRUE if the src ends with the text in the suffix parameter."
+    },
+    "STD.Str.EqualIgnoreCase": {
+        "prefix": [
+            "STD.Str.EqualIgnoreCase"
+        ],
+        "body": [
+            "STD.Str.EqualIgnoreCase(${1:source},${2:suffix});"
+        ],
+        "description": "The EqualIgnoreCase function return TRUE if the source1 and source2 strings contain the same data, ignoring any case of letters."
+    },
+    "STD.Str.ExcludeFirstWord": {
+        "prefix": [
+            "STD.Str.ExcludeFirstWord"
+        ],
+        "body": [
+            "STD.Str.ExcludeFirstWord(${1:source});"
+        ],
+        "description": "The ExcludeFirstWord function returns the text string with the first word removed"
+    },
+    "STD.Str.ExcludeLastWord": {
+        "prefix": [
+            "STD.Str.ExcludeLastWord"
+        ],
+        "body": [
+            "STD.Str.ExcludeLastWord(${1:source});"
+        ],
+        "description": "The ExcludeLastWord function returns the text string with the Last word removed"
+    },
+    "STD.Str.ExcludeNthWord": {
+        "prefix": [
+            "STD.Str.ExcludeNthWord"
+        ],
+        "body": [
+            "STD.Str.ExcludeNthWord(${1:source},${2|instance,1,2,3,4,5,6,7,8,9|});"
+        ],
+        "description": "The ExcludeNthWord function returns the text string with the nth word removed"
+    },
+    "STD.Str.Extract": {
+        "prefix": [
+            "STD.Str.Extract"
+        ],
+        "body": [
+            "STD.Str.Extract(${1:source},${2|instance,1,2,3,4,5,6,7,8,9|});"
+        ],
+        "description": "The Extract function returns the data at the ordinal position specified by the instance"
+    },
+    "STD.Str.Filter": {
+        "prefix": [
+            "STD.Str.Filter"
+        ],
+        "body": [
+            "STD.Str.Filter(${1:source}, ${2:filterstring});"
+        ],
+        "description": "The StringFilter functions return the source string with all the characters except those in the filterstring removed"
+    },
+    "STD.Str.FilterOut": {
+        "prefix": [
+            "STD.Str.FilterOut"
+        ],
+        "body": [
+            "STD.Str.FilterOut(${1:source}, ${2:filterstring});"
+        ],
+        "description": "The FilterOut functions return the source string with all the characters in the filterstring removed"
+    },
+    "STD.Str.Find": {
+        "prefix": [
+            "STD.Str.Find"
+        ],
+        "body": [
+            "STD.Str.Find(${1:source}, ${2:filterstring},${3|instance,1,2,3,4,5,6,7,8,9|});"
+        ],
+        "description": "The Find functions return the source string with all the characters in the filterstring removed"
+    },
+    "STD.Str.FindCount": {
+        "prefix": [
+            "STD.Str.FindCount"
+        ],
+        "body": [
+            "STD.Str.FindCount(${1:source}, ${2:filterstring});"
+        ],
+        "description": "The FindCount function returns the number of non-overlapping instances of the sought string within the src string."
+    },
+    "STD.Str.FindReplace": {
+        "prefix": [
+            "STD.Str.FindReplace"
+        ],
+        "body": [
+            "STD.Str.FindReplace(${1:source}, ${2:filterstring}, ${3:replacement});"
+        ],
+        "description": "The FindReplace function returns the number of non-overlapping instances of the sought string within the src string."
+    },
+    "STD.Str.FindWord": {
+        "prefix": [
+            "STD.Str.FindWord"
+        ],
+        "body": [
+            "STD.Str.FindWord(${1:source}, ${2:word}, ${3|ignore_case,TRUE,FALSE|});"
+        ],
+        "description": "The FindWord functions return TRUE if the word string is found in src string.."
+    },
+    "STD.Str.Reverse": {
+        "prefix": [
+            "STD.Str.Reverse"
+        ],
+        "body": [
+            "STD.Str.Reverse(${1:source});"
+        ],
+        "description": "The Reverse functions return the source string with all characters in reverse order."
+    },
+    "STD.Str.SplitWords": {
+        "prefix": [
+            "STD.Str.SplitWords"
+        ],
+        "body": [
+            "STD.Str.SplitWords(${1:source}, ${2:separator}, ${3|allow_blank,TRUE,FALSE|});"
+        ],
+        "description": "The SplitWords function returns the list of words in the src string split out by the specified separator."
+    },
+    "STD.Str.StartsWith": {
+        "prefix": [
+            "STD.Str.StartsWith"
+        ],
+        "body": [
+            "STD.Str.StartsWith(${1:source}, ${2:prefix});"
+        ],
+        "description": "The StartsWith function returns TRUE if the src starts with the text in the prefix parameter"
+    },
+    "STD.Str.ToLowerCase": {
+        "prefix": [
+            "STD.Str.ToLowerCase"
+        ],
+        "body": [
+            "STD.Str.ToLowerCase(${1:source});"
+        ],
+        "description": "The ToLowerCase functions return the source string with all upper case characters converted to lower case"
+    },
+    "STD.Str.ToTitleCase": {
+        "prefix": [
+            "STD.Str.ToTitleCase"
+        ],
+        "body": [
+            "STD.Str.ToTitleCase(${1:source});"
+        ],
+        "description": "The ToTitleCase functions return the source string with the first letter of each word in upper case and all other letters lower case"
+    },
+    "STD.Str.ToUpperCase": {
+        "prefix": [
+            "STD.Str.ToUpperCase"
+        ],
+        "body": [
+            "STD.Str.ToUpperCase(${1:source});"
+        ],
+        "description": "The ToUpperCase functions return the source string with all lower case characters converted to upper case"
+    },
+    "STD.Str.Translate": {
+        "prefix": [
+            "STD.Str.Translate"
+        ],
+        "body": [
+            "STD.Str.Translate(${1:source},${2:search},${3:replacement});"
+        ],
+        "description": "The Translate functions return the src string with the replacement character substituted for all characters in the src"
+    },
+    "STD.Str.WildMatch": {
+        "prefix": [
+            "STD.Str.WildMatch"
+        ],
+        "body": [
+            "STD.Str.WildMatch(${1:source},${2:pattern,},${3|nocase,TRUE,FALSE|});"
+        ],
+        "description": "The WildMatch functions return the src string with the replacement character substituted for all characters in the src"
+    },
+    "STD.Str.WordCount": {
+        "prefix": [
+            "STD.Str.WordCount"
+        ],
+        "body": [
+            "STD.Str.WordCount(${1:source});"
+        ],
+        "description": "The WordCount function returns the number of words in the source string."
+    },
+    //  STD.Uni  ---
+    "STD.Uni.CompareAtStrength": {
+        "prefix": [
+            "STD.Uni.CompareAtStrength"
+        ],
+        "body": [
+            "STD.Uni.CompareAtStrength(${1:source1},${2:source2},${3|strength,1,2,3,4,5|});"
+        ],
+        "description": "The CompareAtStrength functions return zero (0) if the source1 and source2 strings contain the same data"
+    },
+    //  STD.Date  ---
+    "STD.Date.Year": {
+        "prefix": [
+            "STD.Date.Year"
+        ],
+        "body": [
+            "STD.Date.Year(${1:date});"
+        ],
+        "description": "The Year function returns the Year number from the date value.."
+    },
+    "STD.Date.Month": {
+        "prefix": [
+            "STD.Date.Month"
+        ],
+        "body": [
+            "STD.Date.Month(${1:date});"
+        ],
+        "description": "The Month function returns the month number from the date value"
+    },
+    "STD.Date.Day": {
+        "prefix": [
+            "STD.Date.Day"
+        ],
+        "body": [
+            "STD.Date.Day(${1:date});"
+        ],
+        "description": "The Day function returns the Day number from the date value"
+    },
+    "STD.Date.Hour": {
+        "prefix": [
+            "STD.Date.Hour"
+        ],
+        "body": [
+            "STD.Date.Hour(${1:time});"
+        ],
+        "description": "The Hour function returns the hour from the time value"
+    },
+    "STD.Date.Minute": {
+        "prefix": [
+            "STD.Date.Minute"
+        ],
+        "body": [
+            "STD.Date.Minute(${1:time});"
+        ],
+        "description": "The Minute function returns the minute from the time value."
+    },
+    "STD.Date.Second": {
+        "prefix": [
+            "STD.Date.Second"
+        ],
+        "body": [
+            "STD.Date.Second(${1:time});"
+        ],
+        "description": "The Second function returns the second from the time value."
+    },
+    "STD.Date.TimeFromParts": {
+        "prefix": [
+            "STD.Date.TimeFromParts"
+        ],
+        "body": [
+            "STD.Date.TimeFromParts(${1:hour0-23},${2:minute0-59},${3:second0-59});"
+        ],
+        "description": "The TimeFromParts function returns a Date_t value from the hour, minute, and second parameters"
+    },
+    "STD.Date.DateFromParts": {
+        "prefix": [
+            "STD.Date.DateFromParts"
+        ],
+        "body": [
+            "STD.Date.DateFromParts(${1:year0-9999},${2:month1-12},${3:day1-31});"
+        ],
+        "description": "The DateFromParts function returns a Date_t value from the year, month, and day parameters"
+    },
+    "STD.Date.IsLeapYear": {
+        "prefix": [
+            "STD.Date.IsLeapYear"
+        ],
+        "body": [
+            "STD.Date.IsLeapYear(${1:int~year});"
+        ],
+        "description": "The IsLeapYear function returns TRUE if the year is a leap year in the Gregorian (or proleptic Gregorian) calendar"
+    },
+    "STD.Date.IsDateLeapYear": {
+        "prefix": [
+            "STD.Date.IsDateLeapYear"
+        ],
+        "body": [
+            "STD.Date.IsDateLeapYear(${1:uint-date});"
+        ],
+        "description": "The IsDateLeapYear function returns TRUE if the year represented in the date is a leap year in the Gregorian"
+    },
+    "STD.Date.IsValidDate": {
+        "prefix": [
+            "STD.Date.IsValidDate."
+        ],
+        "body": [
+            "STD.Date.IsValidDate(${1:uint-date}, ${2|yearLowerBound,1800|}, ${3|yearUpperBound],2100|});"
+        ],
+        "description": "The IsValidDate function returns TRUE if the date is valid, both by range-checking the year and by validating"
+    },
+    "STD.Date.IsValidTime": {
+        "prefix": [
+            "STD.Date.IsValidTime"
+        ],
+        "body": [
+            "STD.Date.IsValidTime(${1:uint-time});"
+        ],
+        "description": "The IsValidTime function returns TRUE if the time is valid, by validating each of the individual components"
+    },
+    "STD.Date.FromStringToDate": {
+        "prefix": [
+            "STD.Date.Year"
+        ],
+        "body": [
+            "STD.Date.Year(${1:FromStringToDate},${2|format,'%m/%d/%Y','%d/%m/%Y','%Y-%m-%d',%d-%b-%Y',%Y%j,%Y%m%d,%d%m%Y,%m%d%y,'%d-%b-%Y'|});"
+        ],
+        "description": "The FromStringToDate function converts a string to a Date_t using the relevant string format"
+    },
+    "STD.Date.IsValidGregorianDate": {
+        "prefix": [
+            "STD.Date.IsValidGregorianDate"
+        ],
+        "body": [
+            "STD.Date.IsValidGregorianDate(${1:date});"
+        ],
+        "description": "The IsValidGregorianDate function returns TRUE if the date is valid in the Gregorian calendar."
+    },
+    "STD.Date.ToGregorianYMD": {
+        "prefix": [
+            "STD.Date.ToGregorianYMD"
+        ],
+        "body": [
+            "STD.Date.ToGregorianYMD(${1:daysSince31stDec1BC});"
+        ],
+        "description": ""
+    },
+    "STD.Date.FromGregorianYMD": {
+        "prefix": [
+            "STD.Date.FromGregorianYMD"
+        ],
+        "body": [
+            "STD.Date.FromGregorianYMD(${1:year},${2:month},${3:day});"
+        ],
+        "description": ""
+    },
+    "STD.Date.Today": {
+        "prefix": [
+            "STD.Date.Today"
+        ],
+        "body": [
+            "STD.Date.Today();"
+        ],
+        "description": "Todays Date"
+    },
+    "STD.Date.CurrentDate": {
+        "prefix": [
+            "STD.Date.CurrentDate"
+        ],
+        "body": [
+            "STD.Date.CurrentDate(${1|Local_Time,True,FALSE|});"
+        ],
+        "description": "The CurrentDate function returns the current date. If the in_local_time parameter is TRUE the returned value is local"
+    },
+    "STD.Date.CurrentTime": {
+        "prefix": [
+            "STD.Date.CurrentTime"
+        ],
+        "body": [
+            "STD.Date.CurrentTime(${1|Local_Time,True,FALSE|});"
+        ],
+        "description": "The CurrentTime function returns the current time. If the in_local_time parameter is TRUE the returned value is local to the cluster computing the time, if FALSE then the UTC is returned"
+    },
+    "STD.Date.DayOfWeek": {
+        "prefix": [
+            "STD.Date.DayOfWeek"
+        ],
+        "body": [
+            "STD.Date.DayOfWeek(${1:date});"
+        ],
+        "description": "The DayOfWeek function returns a number representing the day of the week for the given date"
+    },
+    "STD.Date.DayOfYear": {
+        "prefix": [
+            "STD.Date.DayOfYear"
+        ],
+        "body": [
+            "STD.Date.DayOfYear(${1:date});"
+        ],
+        "description": "The DayOfYear function returns a number representing the day of the year for the given date."
+    },
+    "STD.Date.DaysBetween": {
+        "prefix": [
+            "STD.Date.DaysBetween"
+        ],
+        "body": [
+            "STD.Date.DaysBetween(${1:fromDate},${2|ToDate,STD.DATE.TODAY()|});"
+        ],
+        "description": "The DaysBetween function calculates the number of whole days between two dates"
+    },
+    "STD.Date.MonthsBetween": {
+        "prefix": [
+            "STD.Date.MonthsBetween"
+        ],
+        "body": [
+            "STD.Date.MonthsBetween(${1:fromDate},${2|ToDate,STD.DATE.TODAY()|});"
+        ],
+        "description": "The MonthsBetween function calculates the number of whole months between two dates"
+    },
+    "STD.Date.STD.Date.AdjustDate": {
+        "prefix": [
+            "STD.Date.AdjustDate"
+        ],
+        "body": [
+            "STD.Date.STD.Date.AdjustDate(${1:date}$,{2:year_delta},${3:month_delta},${4:day_delta});"
+        ],
+        "description": "The AdjustDate function adjusts a date by incrementing or decrementing year, month, and/or day values. The date must be in the Gregorian calendar after the year 1600"
+    },
+    //  STD.System  ---
+    "STD.System.Group": {
+        "prefix": [
+            "STD.System.Group"
+        ],
+        "body": [
+            "STD.System.Group();"
+        ],
+        "description": "The Group function returns the name of the node group running the workunit.This name is used in ECL code to specify the target CLUSTER for an OUTPUT action or a PERSISTed attribute"
+    },
+    "STD.System.DaliServer": {
+        "prefix": [
+            "STD.System.GroupDaliServer"
+        ],
+        "body": [
+            "STD.System.DaliServer();"
+        ],
+        "description": "The Daliserver function returns the IP and port of the system data store (Dali) server for the environment running the workunit"
+    },
+    "STD.System.Debug.Sleep": {
+        "prefix": [
+            "STD.System.Debug.Sleep"
+        ],
+        "body": [
+            "STD.System.Debug.Sleep(${1:milliseconds});"
+        ],
+        "description": "The Sleep function pauses processing for duration milliseconds."
+    },
+    "Short:STD.System.Email.SendEmail": {
+        "prefix": [
+            "STD.System.Email.SendEmail"
+        ],
+        "body": [
+            "STD.System.Email.SendEmail(${1:sendto},${2:subject},${3:body},,,'$TM_FILENAME_BASE.SendEmail@HPCCSystems.com');"
+        ],
+        "description": "SHORT:The SendEmail function sends an email message."
+    },
+    "STD.System.Email.SendEmail": {
+        "prefix": [
+            "STD.System.Email.SendEmail (advanced)"
+        ],
+        "body": [
+            "STD.System.Email.SendEmail(${1:sendto},${2:subject},${3:body},${4:server},${5:int~port},${6:'$TM_FILENAME_BASE.SendEmail@HPCCSystems.com'});"
+        ],
+        "description": "The SendEmail function sends an email message."
+    },
+    "Short:STD.System.Email.SendEmailAttachData": {
+        "prefix": [
+            "STD.System.Email.SendEmailAttachData"
+        ],
+        "body": [
+            "STD.System.Email.SendEmailAttachData(${1:sendto},${2:subject},${3:body},${4:DATA attachment},'text/plain; charset=ISO-8859-3','attachment.dat',,,'$TM_FILENAME_BASE.SendEmail@HPCCSystems.com');"
+        ],
+        "description": "Short:The SendEmailAttachData function sends an email message with a binary attachment.."
+    },
+    "STD.System.Email.SendEmailAttachData": {
+        "prefix": [
+            "STD.System.Email.SendEmailAttachData (advanced)"
+        ],
+        "body": [
+            "STD.System.Email.SendEmailAttachData(${1:sendto},${2:subject},${3:body},${4:DATA attachment},${5:'text/plain; charset=ISO-8859-3'},${6:'default_attachment.dat'},${7:server},${8:int~port},${9:'$TM_FILENAME_BASE.SendEmail@HPCCSystems.com'});"
+        ],
+        "description": "The SendEmailAttachData function sends an email message with a binary attachment.."
+    },
+    "Short:STD.System.Email.SendEmailAttachText": {
+        "prefix": [
+            "STD.System.Email.SendEmailAttachText"
+        ],
+        "body": [
+            "STD.System.Email.SendEmailAttachText(${1:sendto},${2:subject},${3:body},${4:DATA attachment},'text/plain; charset=ISO-8859-3','attachment.txt',,,'$TM_FILENAME_BASE.SendEmail@HPCCSystems.com');"
+        ],
+        "description": "Short:The SendEmailAttachText function sends an email message with a text attachment.."
+    },
+    "STD.System.Email.SendEmailAttachText": {
+        "prefix": [
+            "STD.System.Email.SendEmailAttachText (advanced)"
+        ],
+        "body": [
+            "STD.System.Email.SendEmailAttachText(${1:sendto},${2:subject},${3:body},${4:DATA attachment},${5:'text/plain; charset=ISO-8859-3'},${6:'default_attachment.txt'},${7:server},${8:int~port},${9:'$TM_FILENAME_BASE.SendEmail@HPCCSystems.com'});"
+        ],
+        "description": "The SendEmailAttachText function sends an email message with a text attachment.."
     }
 }
