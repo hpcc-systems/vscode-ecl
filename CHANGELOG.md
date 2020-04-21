@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.7.1...v1.8.0) (2020-04-21)
+
+
+### Features
+
+* **snippets:**  Enhanced Snippets ([7b30368](https://github.com/hpcc-systems/vscode-ecl/commit/7b30368bf7a4c8617cb9b6b812d9eac7df428aac))
+
 ### [1.7.1](https://github.com/hpcc-systems/vscode-ecl/compare/v1.7.0...v1.7.1) (2020-04-09)
 
 
