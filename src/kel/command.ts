@@ -1,7 +1,9 @@
-import * as path from "path";
+import { scopedLogger } from "@hpcc-js/util";
 import * as vscode from "vscode";
 import { locateClientTools, selectCTVersion } from "./clientTools";
 import { Diagnostic } from "./diagnostic";
+
+const logger = scopedLogger("kel/command.ts");
 
 function mapSeverityToVSCodeSeverity(sev: string) {
     switch (sev) {
@@ -43,12 +45,16 @@ export class Commands {
     checkSyntax(doc?: vscode.TextDocument) {
         if (doc) {
             doc.save();
+            logger.debug("checkSyntax-start");
             this._diagnostic.set(doc.uri, [checking]);
             locateClientTools().then(clientTools => {
                 if (!clientTools) {
+                    logger.debug("checkSyntax-noClientTools");
                     this._diagnostic.set(doc.uri, [noClientTools]);
                 } else {
+                    logger.debug("checkSyntax-check-start");
                     clientTools.checkSyntax(doc.uri.fsPath).then(response => {
+                        logger.debug("checkSyntax-check-response");
                         const mappedErrors: { [fp: string]: vscode.Diagnostic[] } = {};
                         mappedErrors[doc.uri.fsPath] = [];
                         response.errors.all().forEach(error => {
@@ -67,6 +73,7 @@ export class Commands {
                             console.log(uri, uri2);
                             this._diagnostic.set(uri, mappedErrors[fp]);
                         }
+                        logger.debug("checkSyntax-check-response-end");
                     });
                 }
             })
