@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 export class ECLDefinitionProvider implements vscode.DefinitionProvider {
 
     definitionLocation(document: vscode.TextDocument, position: vscode.Position, includeDocs = true): Promise<ECLScope | undefined> {
+        const wsFolder = vscode.workspace.getWorkspaceFolder(document.uri);
         return new Promise<ECLScope | undefined>((resolve, reject) => {
             const wordAtPosition = document.getWordRangeAtPosition(position);
             if (wordAtPosition) {
@@ -13,12 +14,12 @@ export class ECLDefinitionProvider implements vscode.DefinitionProvider {
                 const endCharPos = qualifiedIDBoundary(lineText, wordAtPosition.end.character, false);
                 const qualifiedID = lineText.substring(startCharPos, endCharPos + 1);
 
-                if (vscode.workspace.rootPath) {
-                    let metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
+                if (wsFolder) {
+                    let metaWorkspace = attachWorkspace(wsFolder.uri.fsPath);
                     let eclDef = metaWorkspace.resolveQualifiedID(document.fileName, qualifiedID, document.offsetAt(position));
                     if (!eclDef && vscode.workspace.workspaceFolders) {
                         for (const wuf of vscode.workspace.workspaceFolders) {
-                            if (wuf.uri.fsPath !== vscode.workspace.rootPath) {
+                            if (wuf.uri !== wsFolder.uri) {
                                 metaWorkspace = attachWorkspace(wuf.uri.fsPath);
                                 eclDef = metaWorkspace.resolveQualifiedID(document.fileName, qualifiedID, document.offsetAt(position));
                                 if (eclDef) {

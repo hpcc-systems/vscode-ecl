@@ -9,14 +9,12 @@ function encode(str: string) {
 }
 
 export class View {
-    private _distUri: vscode.Uri;
+
     _td: vscode.TextDocument;
     _edit: boolean;
     _panel: vscode.WebviewPanel;
 
     constructor(private _ctx: vscode.ExtensionContext, td: vscode.TextDocument, edit: boolean = false) {
-        const dist = vscode.Uri.file(path.join(this._ctx.extensionPath, "dist"));
-        this._distUri = dist.with({ scheme: "vscode-resource" });
         this._td = td;
         this._edit = edit;
         const baseName = path.basename(td.fileName);
@@ -75,7 +73,7 @@ export class View {
         this._panel.reveal();
     }
 
-    static html(distUri, md): string {
+    static html(md): string {
 
         return `\
 <!DOCTYPE html>
@@ -88,8 +86,6 @@ export class View {
     <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/loader/dist/index.min.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var hpccLoader = window["@hpcc-js/loader"];
-        var paths = {
-        }
     </script>
     <style>
     body {
@@ -110,11 +106,10 @@ export class View {
     <script>
     var app;
     const vscode = acquireVsCodeApi();
-    hpccLoader.amd("", true, paths).then(function (require) {
-        require(["${distUri}/observable.js"], function (observableMod) {
-            app = new observableMod.ObservableWidget()
+    hpccLoader.amd().then(function (require) {
+        require(["@hpcc-js/observable-md"], function (observableMod) {
+            app = new observableMod.ObservableMD()
                 .target("placeholder")
-                .showValues(true)
                 .markdown(\`${encode(md)}\`)
             ;
             doResize();
@@ -132,32 +127,6 @@ export class View {
     }
 
     getHtml(md: string): string {
-        return View.html(this._distUri, md);
-    }
-
-    getDashyHTML(ddl: string) {
-        return `hpccMarshaller.Dashy.create("placeholder", ${ddl}).then(dashy => {
-            app = dashy;
-            var ec = dashy.elementContainer();
-            var validate = ec.validate;
-            ec.validate = function() {
-                const retVal = validate.apply(this, arguments);
-                vscode.postMessage({
-                    command: "changed",
-                    ddl: dashy.save()
-                });
-                return retVal;
-            };
-            vscode.postMessage({
-                command: "loaded",
-                ddl: dashy.save()
-            });
-        });`;
-    }
-
-    getDashboardHTML(ddl: string) {
-        return `hpccMarshaller.Dashboard.create("placeholder", ${ddl}).then(dashboard => {
-            app = dashboard;
-        });`;
+        return View.html(md);
     }
 }

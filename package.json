@@ -16,18 +16,15 @@
   "scripts": {
     "clean": "rimraf out lib* dist types *.vsix",
     "copy-resources": "copyfiles -f ./node_modules/@hpcc-js/ddl-shim/schema/v2.json ./dist",
+    "gen-grammar": "wsl -e ./scripts/grammar-generate.sh",
     "compile": "tsc",
     "compile-watch": "npm run compile -- -watch",
     "compile-es6": "tsc --module es6 --outDir ./lib-es6",
     "compile-es6-watch": "npm run compile-es6 -- -w",
-    "compile-umd": "tsc --module umd --outDir ./lib-umd",
-    "compile-umd-watch": "npm run compile-umd -- -w",
-    "bundle": "rollup -c",
-    "bundle-watch": "npm run bundle -- -w",
-    "minimize": "terser dist/extension.js -c -m --source-map \"content='dist/extension.js.map',url='extension.min.js.map'\" -o dist/extension.min.js",
-    "build": "npm run copy-resources && npm run compile-es6 && npm run bundle",
-    "watch": "run-p compile-es6-watch bundle-watch",
-    "stamp": "node node_modules/@hpcc-js/bundle/src/stamp.js",
+    "bundle": "webpack --mode production",
+    "bundle-watch": "webpack --mode development --watch",
+    "build": "run-s copy-resources compile-es6 bundle",
+    "watch": "npm-run-all compile-es6 --parallel compile-es6-watch bundle-watch",
     "lint": "tslint --project . src/**/*.ts",
     "test": "npm run compile",
     "dev-link": "rimraf ./node_modules/@hpcc-js && mklink /J .\\node_modules\\@hpcc-js ..\\hpcc-js\\packages",
@@ -47,19 +44,17 @@
     "@hpcc-js/marshaller": "^2.23.6",
     "@hpcc-js/observable-md": "^2.2.1",
     "@hpcc-js/util": "^2.11.2",
-    "@rollup/plugin-alias": "^3.0.1",
-    "@rollup/plugin-commonjs": "^11.0.2",
-    "@rollup/plugin-node-resolve": "^7.1.1",
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.12.34",
+    "adm-zip": "^0.4.14",
+    "antlr4": "^4.8.0",
     "copyfiles": "^2.2.0",
     "diff": "^4.0.2",
     "mocha": "^7.1.1",
     "npm-run-all": "^4.1.5",
+    "original-fs": "^1.1.0",
     "rimraf": "^3.0.2",
-    "rollup": "^1",
-    "rollup-plugin-postcss": "^2.5.0",
-    "rollup-plugin-sourcemaps": "^0.5.0",
+    "source-map-loader": "^0.2.4",
     "standard-version": "^7.1.0",
     "tslib": "^1.11.1",
     "tslint": "^6.1.1",
@@ -67,7 +62,9 @@
     "vsce": "^1.75.0",
     "vscode": "^1.1.36",
     "vscode-debugadapter": "^1.40.0",
-    "vscode-debugprotocol": "^1.40.0"
+    "vscode-debugprotocol": "^1.40.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
   "author": {
     "name": "HPCC Systems®"
@@ -88,6 +85,7 @@
   ],
   "activationEvents": [
     "onLanguage:ecl",
+    "onLanguage:kel",
     "onLanguage:omd",
     "onLanguage:json"
   ],
@@ -106,21 +104,32 @@
         "configuration": "./ecl.configuration.json"
       },
       {
-        "id": "omd",
-        "aliases": [
-          "Observable Markdown"
+        "id": "kel",
+        "extensions": [
+          "kel"
         ],
+        "aliases": [
+          "KEL",
+          "kel"
+        ],
+        "configuration": "./kel.configuration.json"
+      },
+      {
+        "id": "omd",
         "extensions": [
           "omd"
+        ],
+        "aliases": [
+          "Observable Markdown"
         ]
       },
       {
         "id": "json",
-        "aliases": [
-          "Dashy"
-        ],
         "extensions": [
           "dashy"
+        ],
+        "aliases": [
+          "Dashy"
         ]
       }
     ],
@@ -137,6 +146,11 @@
         "path": "./syntaxes/ecl.tmLanguage.json"
       },
       {
+        "language": "kel",
+        "scopeName": "source.kel",
+        "path": "./syntaxes/kel.tmLanguage.json"
+      },
+      {
         "language": "omd",
         "scopeName": "text.html.markdown",
         "path": "./syntaxes/omd.tmLanguage"
@@ -150,17 +164,17 @@
     ],
     "commands": [
       {
-        "command": "ecl.syntaxCheck",
+        "command": "ecl.checkSyntax",
         "title": "ECL: Syntax Check",
         "description": "Save + check syntax of current file."
       },
       {
-        "command": "ecl.syntaxCheckAll",
+        "command": "ecl.checkSyntaxAll",
         "title": "ECL: Syntax Check all files",
         "description": "Save All + check syntax of all files."
       },
       {
-        "command": "ecl.syntaxCheckClear",
+        "command": "ecl.checkSyntaxClear",
         "title": "ECL: Syntax Clear",
         "description": "Clear all previously reported ECL Syntax Check results."
       },
@@ -188,6 +202,26 @@
         "command": "ecl.createTerminal",
         "title": "ECL: Terminal",
         "description": "Opens ECL Client Tools Terminal Session."
+      },
+      {
+        "command": "kel.checkSyntax",
+        "title": "KEL: Syntax Check",
+        "description": "Save + check syntax of current file."
+      },
+      {
+        "command": "kel.generate",
+        "title": "KEL: Generate",
+        "description": "Generate source from KEL file."
+      },
+      {
+        "command": "kel.reveal",
+        "title": "KEL: Reveal Generated ECL in File Explorer",
+        "description": "Reveals Generated ECL in File Explorer."
+      },
+      {
+        "command": "kel.selectCTVersion",
+        "title": "KEL: Select Client Tools Version",
+        "description": "Select Client Tools Version from available options."
       },
       {
         "command": "omd.view",
@@ -247,6 +281,21 @@
       ],
       "editor/context": [
         {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "ecl.checkSyntax",
+          "group": "navigation@998"
+        },
+        {
+          "when": "resourceLangId == kel && resourceExtname == .kel",
+          "command": "kel.checkSyntax",
+          "group": "navigation@998"
+        },
+        {
+          "when": "resourceLangId == kel && resourceExtname == .kel",
+          "command": "kel.generate",
+          "group": "navigation@999"
+        },
+        {
           "when": "resourceLangId == omd && resourceExtname == .omd",
           "command": "omd.view",
           "group": "navigation@998"
@@ -293,20 +342,32 @@
         "when": "editorTextFocus"
       },
       {
-        "command": "ecl.syntaxCheck",
+        "command": "ecl.checkSyntax",
         "key": "f7",
         "mac": "f7",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus && editorLangId == ecl"
       },
       {
-        "command": "ecl.syntaxCheckAll",
+        "command": "ecl.checkSyntaxAll",
         "key": "shift+f7",
         "mac": "shift+f7"
       },
       {
-        "command": "ecl.syntaxCheckClear",
+        "command": "ecl.checkSyntaxClear",
         "key": "ctrl+f7",
         "mac": "ctrl+f7"
+      },
+      {
+        "command": "kel.checkSyntax",
+        "key": "f7",
+        "mac": "f7",
+        "when": "editorTextFocus && editorLangId == kel"
+      },
+      {
+        "command": "kel.generate",
+        "key": "f5",
+        "mac": "f5",
+        "when": "editorTextFocus && editorLangId == kel"
       },
       {
         "command": "omd.view",
@@ -349,6 +410,132 @@
         "language": "ecl"
       }
     ],
+    "configuration": {
+      "type": "object",
+      "title": "ECL",
+      "properties": {
+        "ecl.syntaxArgs": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "-syntax"
+          ],
+          "description": "eclcc syntax check arguments."
+        },
+        "ecl.syntaxCheckOnSave": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": true,
+          "description": "Run 'eclcc -syntax' on save."
+        },
+        "ecl.syntaxCheckOnLoad": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": true,
+          "description": "Run 'eclcc -syntax' on load."
+        },
+        "ecl.includeFolders": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Additional folders to use when resolving IMPORT statements."
+        },
+        "ecl.eclccPath": {
+          "type": "string",
+          "scope": "resource",
+          "default": "",
+          "description": "Override eclcc auto detection."
+        },
+        "ecl.legacyMode": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false,
+          "description": "Add '-legacy' argument to eclcc."
+        },
+        "ecl.WUOpenExternal": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": true,
+          "description": "Open Workunits in external browser."
+        },
+        "ecl.WUAutoOpen": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false,
+          "description": "Automatically open Workunits on creation."
+        },
+        "ecl.debugLogging": {
+          "type": "boolean",
+          "scope": "application",
+          "default": false,
+          "description": "Debug level logging (requires restart)."
+        },
+        "dashy.libraryLocation": {
+          "type": "string",
+          "scope": "resource",
+          "enum": [
+            "latest",
+            "localPath"
+          ],
+          "default": "latest",
+          "description": "Dashy library location (bundled, latest, localPath)"
+        },
+        "dashy.localPath": {
+          "type": "string",
+          "scope": "resource",
+          "default": "",
+          "description": "Dashy Library Path (libraryLocation === \"localPath\")"
+        },
+        "kel.javaArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Java runtime arguments (e.g. -Xmx12G).",
+          "default": []
+        },
+        "kel.kelPath": {
+          "type": "string",
+          "scope": "resource",
+          "default": "",
+          "description": "Override KEL auto detection."
+        },
+        "kel.syntaxCheckOnSave": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": true,
+          "description": "Check syntax on save."
+        },
+        "kel.generateLocation": {
+          "type": "string",
+          "scope": "resource",
+          "enum": [
+            "Same Folder",
+            "Child Folder"
+          ],
+          "default": "Same Folder",
+          "description": "Generated ECL location."
+        },
+        "kel.generateOnSave": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false,
+          "description": "Generate ECL on save."
+        },
+        "kel.syntaxCheckOnLoad": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false,
+          "description": "Check syntax on load."
+        }
+      }
+    },
     "debuggers": [
       {
         "type": "ecl",
@@ -539,90 +726,6 @@
           }
         ]
       }
-    ],
-    "configuration": {
-      "type": "object",
-      "title": "ECL configuration",
-      "properties": {
-        "ecl.syntaxArgs": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          },
-          "default": [
-            "-syntax"
-          ],
-          "description": "eclcc syntax check arguments."
-        },
-        "ecl.syntaxCheckOnSave": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": true,
-          "description": "Run 'eclcc -syntax' on save."
-        },
-        "ecl.syntaxCheckOnLoad": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": true,
-          "description": "Run 'eclcc -syntax' on load."
-        },
-        "ecl.includeFolders": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          },
-          "default": [],
-          "description": "Additional folders to use when resolving IMPORT statements."
-        },
-        "ecl.eclccPath": {
-          "type": "string",
-          "scope": "resource",
-          "default": "",
-          "description": "Override eclcc auto detection."
-        },
-        "ecl.legacyMode": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": false,
-          "description": "Add '-legacy' argument to eclcc."
-        },
-        "ecl.WUOpenExternal": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": true,
-          "description": "Open Workunits in external browser."
-        },
-        "ecl.WUAutoOpen": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": false,
-          "description": "Automatically open Workunits on creation."
-        },
-        "ecl.debugLogging": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": false,
-          "description": "Debug level logging (requires restart)."
-        },
-        "dashy.libraryLocation": {
-          "type": "string",
-          "scope": "resource",
-          "enum": [
-            "latest",
-            "localPath"
-          ],
-          "default": "latest",
-          "description": "Dashy library location (bundled, latest, localPath)"
-        },
-        "dashy.localPath": {
-          "type": "string",
-          "scope": "resource",
-          "default": "",
-          "description": "Dashy Library Path (libraryLocation === \"localPath\")"
-        }
-      }
-    }
+    ]
   }
 }

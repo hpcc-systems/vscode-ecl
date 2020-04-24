@@ -1,8 +1,8 @@
 import { ExtensionContext, languages, StatusBarAlignment, StatusBarItem, window } from "vscode";
-import { ECL_MODE } from "../mode";
+import { KEL_MODE } from "../mode";
 
-export let eclStatusBar: ECLStatusBar;
-export class ECLStatusBar {
+export let kelStatusBar: StatusBar;
+export class StatusBar {
     _ctx: ExtensionContext;
     _statusBarEntry: StatusBarItem;
 
@@ -10,16 +10,16 @@ export class ECLStatusBar {
         this._ctx = ctx;
 
         this._statusBarEntry = window.createStatusBarItem(StatusBarAlignment.Left, Number.MIN_VALUE);
-        this._statusBarEntry.command = "ecl.selectCTVersion";
+        this._statusBarEntry.command = "kel.selectCTVersion";
 
         this.onActiveWatcher();
     }
 
-    static attach(ctx: ExtensionContext): ECLStatusBar {
-        if (!eclStatusBar) {
-            eclStatusBar = new ECLStatusBar(ctx);
+    static attach(ctx: ExtensionContext): StatusBar {
+        if (!kelStatusBar) {
+            kelStatusBar = new StatusBar(ctx);
         }
-        return eclStatusBar;
+        return kelStatusBar;
     }
 
     onActiveWatcher() {
@@ -30,7 +30,7 @@ export class ECLStatusBar {
                 }
                 if (!window.activeTextEditor) {
                     this._statusBarEntry.hide();
-                } else if (languages.match(ECL_MODE, window.activeTextEditor.document)) {
+                } else if (languages.match(KEL_MODE, window.activeTextEditor.document)) {
                     this._statusBarEntry.show();
                 } else {
                     this._statusBarEntry.hide();
@@ -46,7 +46,7 @@ export class ECLStatusBar {
         }
     }
 
-    showEclStatus(message: string, tooltip?: string) {
+    showKelStatus(message: string, tooltip?: string) {
         this._statusBarEntry.text = message;
         this._statusBarEntry.tooltip = tooltip;
         this._statusBarEntry.show();

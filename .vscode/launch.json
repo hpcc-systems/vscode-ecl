@@ -24,7 +24,8 @@
                 "${workspaceRoot}/dist/*.js"
             ],
             "stopOnEntry": false,
-            "sourceMaps": true
+            "sourceMaps": true,
+            "internalConsoleOptions": "neverOpen"
         },
         {
             "name": "Launch Server Adapter",

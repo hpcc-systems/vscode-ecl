@@ -90,11 +90,12 @@ export class ECLDocumentSymbolProvider implements vscode.DocumentSymbolProvider 
     provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.ProviderResult<vscode.SymbolInformation[] | vscode.DocumentSymbol[]> {
         let retVal: vscode.DocumentSymbol[] = [];
         let metaWorkspace: undefined | Workspace;
-        if (vscode.workspace.rootPath) {
-            metaWorkspace = attachWorkspace(vscode.workspace.rootPath);
+        const wsFolder = vscode.workspace.getWorkspaceFolder(document.uri);
+        if (wsFolder) {
+            metaWorkspace = attachWorkspace(wsFolder.uri.fsPath);
         } else if (vscode.workspace.workspaceFolders) {
             for (const wuf of vscode.workspace.workspaceFolders) {
-                if (wuf.uri.fsPath !== vscode.workspace.rootPath) {
+                if (wuf.uri !== wsFolder.uri) {
                     metaWorkspace = attachWorkspace(wuf.uri.fsPath);
                     break;
                 }

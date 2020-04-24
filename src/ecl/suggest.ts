@@ -33,7 +33,7 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
     }
 
     public provideCompletionItemsInternal(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, config: vscode.WorkspaceConfiguration): Thenable<vscode.CompletionItem[]> {
-
+        const wsFolder = vscode.workspace.getWorkspaceFolder(document.uri);
         return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
 
             const lineText = document.lineAt(position.line).text;
@@ -57,12 +57,12 @@ export class ECLCompletionItemProvider implements vscode.CompletionItemProvider 
             const partialID = lineText.substring(startCharPos, position.character + 1);
 
             let completionItems;
-            if (vscode.workspace.rootPath) {
-                completionItems = this.resolvePartialID(vscode.workspace.rootPath, document.fileName, partialID, document.offsetAt(position));
+            if (wsFolder) {
+                completionItems = this.resolvePartialID(wsFolder.uri.fsPath, document.fileName, partialID, document.offsetAt(position));
             }
             if (!completionItems && vscode.workspace.workspaceFolders) {
                 for (const wuf of vscode.workspace.workspaceFolders) {
-                    if (wuf.uri.fsPath !== vscode.workspace.rootPath) {
+                    if (wuf.uri !== wsFolder.uri) {
                         completionItems = this.resolvePartialID(wuf.uri.fsPath, document.fileName, partialID, document.offsetAt(position));
                         if (completionItems) {
                             break;

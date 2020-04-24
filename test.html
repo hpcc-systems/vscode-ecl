@@ -8,9 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/loader/dist/index.min.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var hpccLoader = window["@hpcc-js/loader"];
-        var paths = {
-            "observable": "./dist/observable"
-        }
     </script>
     <style>
         body {
@@ -42,9 +39,9 @@
     <script>
         var app;
 
-        hpccLoader.amd("", true, paths).then(function (require) {
-            require(["observable"], function (observableMod) {
-                app = new observableMod.ObservableWidget()
+        hpccLoader.amd().then(function (require) {
+            require(["@hpcc-js/observable-md"], function (observableMod) {
+                app = new observableMod.ObservableMD()
                     .target("placeholder")
                     .markdown(`# ECL Markdown
 _Tech preview of ECL interactive notebooks._
