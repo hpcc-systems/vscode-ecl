@@ -14,33 +14,35 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 * In VS-Code, open the command palette (`ctrl/cmd + shift + p`) and select `Install Extension`.  Enter `ecl` to filter the available extensions and choose `ECL Language by HPCC Systems`.
 * Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download/archive)
 
-## ECL Commands
+## ECL
+
+### ECL Commands
 
 The following ECL specific commands are available.  Note:  These commands will **not** be active until an ECL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd + shift + p` and type `ECL` this will present a filtered list of the ECL specific commands:
 
-### Global:
+#### Global:
 
 * Syntax Check all files **[shift + F7]** - _Save All + check syntax of all files._
 * Syntax Clear **[ctrl + F7]** - _Clear all previously reported ECL Syntax Check results._
 * Language Reference Website - _Opens the ECL language reference website in external browser._
 * Terminal - _Opens ECL Client Tools Terminal Session._
 
-### Within the ECL Code Editor:
+#### Within the ECL Code Editor:
 
 * Syntax Check **[F7]** - _Save + check syntax of current file._
 * Language Reference Lookup **[shift + F1]** - _For the currently selected text, search the online ECL language reference._
 
-### Within the ECL Activity Pane:
+#### Within the ECL Activity Pane:
 _Right click on item_
 
 * Workunit Details - _Opens ECL Watch Workunit Details for the selected Workunit._
 
-### Within the Status Bar
+#### Within the Status Bar
 _Click on ECL Client Tools Version_
 
 * Select Client Tools Version: Select Client Tools Version from available options.
 
-## VS-Code Settings
+#### ECL Settings
 
 The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`ctrl/cmd + ,`) or directly in your current workspace (`.vscode/settings.json`):
 
@@ -75,7 +77,7 @@ The following Visual Studio Code settings are available for the ECL extension.  
   
 ```
 
-## Launch Settings
+#### ECL Launch Settings
 
 Submitting ECL using VS-Code requires specifying the target environment within the VS Code `launch.json` (pressing `F5` will prompt you to auto create a skeleton file if none exists):
 
@@ -124,6 +126,48 @@ npm run watch
 ```
 
 At which point you can edit the sources and launch debug sessions via **F5** and included launch configurations.
+
+## KEL
+_KEL is an optional language that can generate ECL._
+
+### KEL Commands
+
+The following KEL specific commands are available.  Note:  These commands will **not** be active until a KEL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd + shift + p` and type `KEL` this will present a filtered list of the KEL specific commands:
+
+#### Within the KEL Code Editor:
+
+* Syntax Check **[F7]** - _Save + check syntax of current file._
+* Generate ECL **[Ff]** - _Save + generate ECL files._
+
+#### Within the Status Bar
+_Click on KEL Client Tools Version_
+
+* Select Client Tools Version - Select Client Tools Version from available options.
+
+#### KEL Settings
+
+The following Visual Studio Code settings are available for the KEL extension.  These can be set in user preferences (`ctrl/cmd + ,`) or directly in your current workspace (`.vscode/settings.json`):
+
+```javascript
+  // Java runtime arguments (e.g. -Xmx12G).
+  "kel.javaArgs": []
+
+  // Override KEL auto detection
+  "kel.kelPath": ""
+
+  // Check syntax on save.
+  "kel.syntaxCheckOnSave": true
+
+  // Generated ECL location (Same Folder | Child Folder)."
+  "kel.generateLocation": "Same Folder"
+
+  // "Generate ECL on save."
+  "kel.generateOnSave": false
+
+  // Check syntax on load.
+  "kel.syntaxCheckOnLoad": false
+ 
+```
 
 ## License
 [Apache-2.0](LICENSE)
