@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.2](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.1...v1.9.2) (2020-04-24)
+
+
+### Bug Fixes
+
+* **KEL:** Check syntax was throwing away the errors. ([a6aeb9a](https://github.com/hpcc-systems/vscode-ecl/commit/a6aeb9a67e0985791474c1171ac974052973bd29))
+
 ### [1.9.1](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.0...v1.9.1) (2020-04-24)
 
 
