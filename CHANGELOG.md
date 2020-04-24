@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.8.0...v1.9.0) (2020-04-24)
+
+
+### Features
+
+* **KEL:** Add initial KEL support ([c4cf428](https://github.com/hpcc-systems/vscode-ecl/commit/c4cf4289f289837695b23ba6affbae0161689776))
+
 ## [1.8.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.7.1...v1.8.0) (2020-04-21)
 
 
