@@ -8,7 +8,7 @@ import * as os from "os";
 import * as fs from "fs";
 import * as AdmZip from "adm-zip";
 
-const logger = scopedLogger("kelcc.ts");
+const logger = scopedLogger("kel/clientTools.ts");
 
 class KelccErrors extends Errors {
 
@@ -17,6 +17,7 @@ class KelccErrors extends Errors {
         if (stdErr && stdErr.length) {
             for (const errLine of stdErr.split(os.EOL)) {
                 // Windows Only  ---
+                logger.debug("errLine:  " + errLine);
                 let match = /((?:[a-zA-Z]:)?(?:\\[a-z  A-Z0-9_.-]+)+\.[a-zA-Z0-9]+):(\d+),(\d+):(.*) ([A-Z]\d+) - (.*)$/.exec(errLine);
                 if (match) {
                     const [, filePath, row, _col, severity, code, _msg] = match;
@@ -147,12 +148,15 @@ class KELClientTools extends ClientTools {
             let stdOut = "";
             let stdErr = "";
             child.stdout.on("data", (data) => {
+                logger.debug("stdout: " + data);
                 stdOut += data.toString();
             });
             child.stderr.on("data", (data) => {
+                logger.debug("stderr: " + data);
                 stdErr += data.toString();
             });
             child.on("error", e => {
+                logger.debug("error: " + e.message);
                 window.showErrorMessage(e.message);
             });
             child.on("close", (_code, _signal) => {
