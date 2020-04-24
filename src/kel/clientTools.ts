@@ -148,21 +148,18 @@ class KELClientTools extends ClientTools {
             let stdOut = "";
             let stdErr = "";
             child.stdout.on("data", (data) => {
-                logger.debug("stdout: " + data);
                 stdOut += data.toString();
             });
             child.stderr.on("data", (data) => {
-                logger.debug("stderr: " + data);
                 stdErr += data.toString();
             });
             child.on("error", e => {
-                logger.debug("error: " + e.message);
                 window.showErrorMessage(e.message);
             });
             child.on("close", (_code, _signal) => {
                 resolve({
                     stdout: stdOut.trim(),
-                    stderr: ""
+                    stderr: stdErr.trim()
                 });
             });
         });

@@ -26,10 +26,10 @@ export function parse(doc: vscode.TextDocument): Parsed {
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
     try {
+        parser.program();
         //  TODO
-        // const tree = parser.program();
-        // const program = new KELParserVisitor();
-        // antlr4.tree.ParseTreeWalker.DEFAULT.walk(program, tree);
+        // const visitor = new KELParserVisitor();
+        // antlr4.tree.ParseTreeWalker.DEFAULT.walk(visitor, tree);
     } catch (e) {
         console.log(e);
     }
