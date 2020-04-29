@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.3](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.2...v1.9.3) (2020-04-29)
+
+
+### Bug Fixes
+
+* **DebugSession:** Enable debug logging ([be0e785](https://github.com/hpcc-systems/vscode-ecl/commit/be0e7856581f7da910b170592058ff0f673336b7))
+
 ### [1.9.2](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.1...v1.9.2) (2020-04-24)
 
 
