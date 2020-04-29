@@ -22,7 +22,7 @@ class VSCodeServerWriter implements Writer {
         this._owner = owner;
     }
     write(dateTime: string, level: Level, id: string, msg: string) {
-        this._owner.sendEvent(new OutputEvent(`[${dateTime}] ${Level[level].toUpperCase()} ${id}:  ${msg}`));
+        this._owner.sendEvent(new OutputEvent(`${dateTime} ${Level[level].toUpperCase()} ${id}:  ${msg}.${os.EOL}`));
     }
 }
 
@@ -162,6 +162,9 @@ export class ECLDebugSession extends DebugSession {
     }
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
+        if (args.debugLogging) {
+            logger.level(Level.debug);
+        }
         this.logger.debug("launchRequest:  " + JSON.stringify(args));
         this.launchConfig = new LaunchConfig(args);
         this.sendEvent(new OutputEvent(`${now()} Fetch build version.${os.EOL}`));
@@ -225,6 +228,7 @@ export class ECLDebugSession extends DebugSession {
             failedWU = undefined;
         }).then(() => {
             this.workunit.watchUntilRunning().then(() => {
+                this.sendEvent(new OutputEvent(`${now()} Started:  ${this.workunit.Wuid}.${os.EOL}`));
                 this.sendEvent(new InitializedEvent());
                 this.logger.debug("InitializeEvent");
             });
@@ -251,7 +255,7 @@ export class ECLDebugSession extends DebugSession {
         if (this.workunit.isComplete() || !this.workunit.isDebugging()) {
             return Promise.resolve();
         }
-        this.sendEvent(new OutputEvent(`Aborting debug session:  ${this.workunit.Wuid}${os.EOL}`));
+        this.sendEvent(new OutputEvent(`${now()} Aborting debug session:  ${this.workunit.Wuid}.${os.EOL}`));
         return this.workunit.debugQuit().then(() => {
             return this.workunit.abort();
         }).then(() => {
@@ -268,7 +272,7 @@ export class ECLDebugSession extends DebugSession {
                 this.watchHandle.release();
                 delete this.watchHandle;
             }
-            this.sendEvent(new OutputEvent(`Monitoring end:  ${this.workunit.Wuid}${os.EOL}`));
+            this.sendEvent(new OutputEvent(`${now()} Finished:  ${this.workunit.Wuid}.${os.EOL}`));
             delete this.workunit;
             this.logger.debug("DisconnectResponse");
             super.disconnectRequest(response, args);
@@ -277,13 +281,13 @@ export class ECLDebugSession extends DebugSession {
 
     protected configurationDoneRequest(response: DebugProtocol.ConfigurationDoneResponse, args: DebugProtocol.ConfigurationDoneArguments): void {
         this.logger.debug("ConfigurationDoneRequest");
-        this.sendEvent(new OutputEvent(`Monitoring:  ${this.workunit.Wuid}.${os.EOL}`));
+        this.sendEvent(new OutputEvent(`${now()} Monitoring:  ${this.workunit.Wuid} - attach.${os.EOL}`));
         this.watchHandle = this.workunit.watch((changes) => {
             const debugState: any = this.workunit.DebugState;
             let id = debugState.edgeId || debugState.nodeId || debugState.graphId;
             id = id ? `(${id})` : "";
             const debugMsg = this.workunit.isDebugging() ? `(${debugState.sequence}) - ${debugState.state}${id}` : "";
-            const monitorMsg = `${this.workunit.Wuid}:  ${this.workunit.State}${debugMsg}${os.EOL}`;
+            const monitorMsg = `${now()} Monitoring:  ${this.workunit.Wuid} - ${this.workunit.State}${debugMsg}.${os.EOL}`;
             if (this.prevMonitorMessage !== monitorMsg) {
                 this.prevMonitorMessage = monitorMsg;
                 this.sendEvent(new OutputEvent(monitorMsg));

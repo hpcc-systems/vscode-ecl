@@ -93,6 +93,8 @@ export class ECLConfigurationProvider implements vscode.DebugConfigurationProvid
     }
 
     async resolveDebugConfiguration?(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: vscode.DebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration> {
+        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        debugConfiguration.debugLogging = eclConfig.get<boolean>("debugLogging")
         this._currentConfig = debugConfiguration;
         if (debugConfiguration.user && debugConfiguration.password) {
             return debugConfiguration;
