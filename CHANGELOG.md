@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.4](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.3...v1.9.4) (2020-04-29)
+
+
+### Bug Fixes
+
+* **DebugSession:** Workaround VSCode regression ([2ae0b45](https://github.com/hpcc-systems/vscode-ecl/commit/2ae0b45886eaec5d6564156217e1c0c9153860ee)), closes [#177](https://github.com/hpcc-systems/vscode-ecl/issues/177)
+
 ### [1.9.3](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.2...v1.9.3) (2020-04-29)
 
 
