@@ -15,6 +15,7 @@ export enum LaunchConfigState {
 }
 
 export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
+    debugLogging?: boolean;
     mode?: LaunchMode;
     program: string;
     workspace: string;
