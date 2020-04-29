@@ -155,7 +155,6 @@ export class ECLDebugSession extends DebugSession {
             response.body.supportsStepInTargetsRequest = false;
             response.body.supportsGotoTargetsRequest = false;
             response.body.supportsCompletionsRequest = false;
-            response.body.supportsConfigurationDoneRequest = true;
         }
         this.sendResponse(response);
         this.logger.debug("InitializeResponse");
@@ -350,14 +349,16 @@ export class ECLDebugSession extends DebugSession {
                 response.body = {
                     breakpoints
                 };
-                this.sendResponse(response);
                 this.logger.debug("SetBreakPointsRequest");
+                this.sendResponse(response);
             });
         } else {
-            this.sendResponse(response);
+            response.body = {
+                breakpoints: []
+            };
             this.logger.debug("SetBreakPointsRequest");
+            this.sendResponse(response);
         }
-
     }
 
     protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
