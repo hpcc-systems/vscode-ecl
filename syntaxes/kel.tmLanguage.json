@@ -10,23 +10,15 @@
         },
         {
             "name": "entity.name.type.kel",
-            "match": "\\b(?i:(string|integer|real|boolean|date|timestamp|uid|unk))\\b"
+            "match": "\\b(?i:(boolean|date|integer|real|string|timestamp|uid|unk))\\b"
         },
         {
-            "name": "keyword.name.type.kel",
-            "match": "\\b(?i:(asof|group|using|use|set of|dataset of))\\b"
+            "name": "entity.other.kel",
+            "match": "\\b(?i:(asof|fdc|filter|flat|format|global|kelbase|kelquery|link|null|resources|using))\\b"
         },
         {
             "name": "keyword.operator.kel",
-            "match": "\\b(?i:(div|and|not|or|in|>|<|<>|/|\\|+|-|=))\\b"
-        },
-        {
-            "name": "keyword.other.kel",
-            "match": "(?i)(import|permits|package|use|visualize)\\b"
-        },
-        {
-            "name": "keyword.other.kel",
-            "match": "(?i)(function|query):"
+            "match": "\\b(?i:(%|\\*|\\+|-|/|and|div|in|not|or))\\b"
         },
         {
             "name": "entity.name.function.kel",
@@ -39,18 +31,6 @@
                         },
                         {
                             "include": "#functionsEcl"
-                        },
-                        {
-                            "include": "#functionsEcl"
-                        },
-                        {
-                            "include": "#functionsDate"
-                        },
-                        {
-                            "include": "#functionsAggregate"
-                        },
-                        {
-                            "include": "#functionsDate"
                         },
                         {
                             "include": "#functionSequence"
@@ -66,31 +46,19 @@
     "repository": {
         "functions": {
             "name": "entity.name.function.kel",
-            "match": "\\b(?i:(entity|association|shell|era|permits|package|all|association|boundsclip|boundsfold|ceiling|contains|default|endswith|exists|floor|known|only|only|only|only|startswith|substr|substr|trimleft|trim|trimboth|trim|trimall|trim|upcase|wordcount|wordcount|word|wordcount|word|wordcount))\\b"
+            "match": "\\b(?i:(adjustcalendar|all|association|ave|avenz|boundsclip|boundsfold|ceiling|concat|contains|convertdateformat|count|currentdate|datefromparts|datesformonthend|datesformonthstart|datesforweekend|datesforweekstart|datetostring|day|dayofweek|dayofyear|daysbetween|dayssince1900|default|endswith|entity|era|era|floor|fromdayssince1900|fromgregoriandate|fromstringtodate|function|import|integerfromdate|iqr|isdateleapyear|isjulianleapyear|isleapyear|isvaliddate|known|max|median|min|month|monthsbetween|only|package|percentile|permits|quartile|query|range|rank|rankdown|sequence.allcontiguouslyfollowing|sequence.allcontiguouslypreceding|sequence.allfollowing|sequence.allpreceding|sequence.dedup|sequence.next|sequence.nextwhere|sequence.previous|sequence.previouswhere|shell|startswith|stats.covariance|stats.populationstddev|stats.populationvariance|stats.samplestddev|stats.samplevariance|stats.slope|stats.weightedpopulationstddev|stats.weightedpopulationvariance|stats.weightedsamplestddev|stats.weightedsamplevariance|std|stddev|substr|sum|today|todayssince1900|togregoriandate|trimall|trimboth|trimleft|upcase|use|variance|visualize|weightedave|weightedavenz|weightedcount|weightediqr|weightedmedian|weightedpercentile|weightedquartile|weightedrank|weightedrankdown|weightedstddev|weightedsum|weightedvariance|word|wordcount|year|yearsbetween))\\b"
         },
         "functionsEcl": {
             "name": "entity.name.function.ecl",
-            "match": "\\b(?i:(abs|acos|asin|atan|atan|cos|cosh|exists|exp|if|intformat|length|ln|log|map|power|realformat|round|roundup|sin|sinh|sqrt|tan|tanh|topn|trim|truncate))\\b"
-        },
-        "functionsDate": {
-            "name": "entity.name.function.kel",
-            "match": "\\b(?i:(adjustcalendar|convertdateformat|currentdate|era|datefromparts|datesformonthstart|datesformonthend|datesforweekstart|datesforweekend|datetostring|day|dayofweek|dayofyear|daysbetween|dayssince|fromdayssince|fromgregoriandate|fromstringtodate|std|integerfromdate|isdateleapyear|isleapyear|isjulianleapyear|isvaliddate|isvaliddate|month|monthsbetween|today|todayssince|togregoriandate|year|yearsbetween))\\b"
-        },
-        "functionsAggregate": {
-            "name": "entity.name.function.kel",
-            "match": "\\b(?i:(ave|avenz|concat|concat|iqr|iqr|sum|max|max|median|min|min|percentile|quartile|range|real|date|stddev|variance|weightedave|weightedavenz|weightediqr|weightedmedian|weightedpercentile|weightedquartile|min|weightedsum|weightedstddev|weightedvariance))\\b"
+            "match": "\\b(?i:(abs|acos|asin|atan|atan2|cos|cosh|exists|exp|if|intformat|length|ln|log|map|power|realformat|round|roundup|sin|sinh|sqrt|tan|tanh|topn|trim|truncate))\\b"
         },
         "functionSequence": {
             "name": "entity.name.function.kel",
-            "match": "\\b(?i:(sequence).(dedup|next|previous|nextwhere|previouswhere|allfollowing|allpreceding|allcontiguouslyfollowing|allcontiguouslypreceding))\\b"
+            "match": "\\b(?i:(sequence).(allcontiguouslyfollowing|allcontiguouslypreceding|allfollowing|allpreceding|dedup|next|nextwhere|previous|previouswhere))\\b"
         },
         "functionStats": {
             "name": "entity.name.function.kel",
-            "match": "\\b(?i:(stats).(covariance|slope|populationstddev|weightedpopulationstddev|populationvariance|weightedpopulationvariance|samplestddev|weightedsamplestddev|samplevariance|weightedsamplevariance))\\b"
-        },
-        "types": {
-            "name": "entity.name.type.kel",
-            "match": "\\b(?i:(ave|avenz|concat|concat|iqr|iqr|sum|max|max|median|min|min|percentile|quartile|range|real|date|stddev|variance|weightedave|weightedavenz|weightediqr|weightedmedian|weightedpercentile|weightedquartile|min|weightedsum|weightedstddev|weightedvariance))\\b"
+            "match": "\\b(?i:(stats).(covariance|populationstddev|populationvariance|samplestddev|samplevariance|slope|weightedpopulationstddev|weightedpopulationvariance|weightedsamplestddev|weightedsamplevariance))\\b"
         },
         "expression": {
             "name": "meta.expression.kel",
