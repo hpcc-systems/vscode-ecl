@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.5](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.4...v1.9.5) (2020-05-11)
+
+
+### Bug Fixes
+
+* **KEL:** Improve syntax lexing ([34e7d03](https://github.com/hpcc-systems/vscode-ecl/commit/34e7d0302632e92100492a63e5f22202e0f5944f))
+
 ### [1.9.4](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.3...v1.9.4) (2020-04-29)
 
 
