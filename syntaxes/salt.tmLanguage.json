@@ -1,0 +1,135 @@
+{
+    "scopeName": "source.salt",
+    "fileTypes": [
+        "salt"
+    ],
+    "name": "SALT",
+    "patterns": [
+        {
+            "include": "#expression"
+        },
+		{
+            "name": "entity.name.type.salt",
+            "match": "\\b(?i:(data|string|qstring|varstring|varunicode|unicode|utf8))\\d+\\b"
+        },
+        {
+            "name": "keyword.operator.salt",
+            "match": "\\b(?i:(==|=|<>|!=|>=|<=|>|<))\\b"
+        },
+        {
+            "match": "([A-Za-z_]+)\\s*(\\()",
+            "captures": {
+                "1": {
+                    "patterns": [
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#functions2"
+                        },
+                        {
+                            "include": "#keywords"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "repository": {
+        "functions": {
+            "name": "entity.name.function.salt",
+            "match": "\\b(?i:(asoffield|attributefile|besttype|blocklink|blockthreshold|cleave|clusterhealth|concept|config|dataset|datasettype|datefield|distribution|docfield|efficacy|errinfo|externalfile|field|fieldtype|fieldtypedetect|filename|format|fuzzy|hack|idchildren|idfield|idname|idparents|idspace|iduncle|incremental|ingestfile|ingestmode|ingeststatus|latlong|linkpath|matchstrategy|module|namescope|nines|numberfield|options|penalty|population|process|rangefield|records|recordtype|relationship|ridfield|sourcefield|sourceridfield|threshold|virtualfield))\\b"
+        },
+        "functions2": {
+            "name": "entity.name.function.salt",
+            "match": "\\b(?i:(yearshift))\\d*\\b"
+        },
+        "keywords": {
+            "name": "keyword.other.salt",
+            "match": "\\b(?i:(abbr|acronym|add|adjust_concept_weight|age|aggressiveslice|all|allifalphas|allifcustom|allifnumerics|allow|also|always|apposition|attributesonly|bag_scale|bagofwords|basis|blank|blocklink_parents|blockthreshold|bucket|buckets|caps|carry|changetype|chars|child|clean|code|commonest|completefullmatch|concat|concept|condition|configparam|consistent|context|counts|cross|csv|custinfo|custom|customclean|custominternaljoin|date|dates|dd|dedup|defaultvalue|delimiter|derived|direct|diskrelations|distance|distribution|dive|divisions|drop_ambiguous|earliest|edit1|edit2|editx|effectivedates|efilesearch|enforce|enum|eof|event|exclude|exclusive|exists|explode|extend|fail|fallback|fast|fed|field|first|fix|fixed|flag|flat|force|forces|from|fuzzy|fuzzyoptional|fuzzyweight|generation|global_scale|hasbase|headersearch|hybrid|hyphen1|hyphen2|iddone|idfield|idname|ignore|ignorelp|improve_ef_weights|inc_lp_exact|include|incremental|initial|inrange|joins/persist|keep|keyinfix|keyprefix|keysuperfile|last|lat|left|lefttrim|lengths|like|link|linkblockbreakerscansplit|list|long|longest|many|mapping|match|max|maxblocksize|maxrecs|maxspc|maxuniq|mddm|mean|medium|message|min|minimum|minpop|minrecs|mm|most|move_header_keys|multi|multiparent|multiple|named|never|new|nneq|no_editdistance_stringlengths|no_parallel_match|no_scale|no_unordered|nocase|nofail|nofuzzy|noincremental|noinitial|nomatchcode|noncontiguous|none|noquotes|normal|noslice|notag|null|nullable|nulls|numerics|old|on_child_adjustment|onfail|only|optional|or|owned|pad|parse|partition|parts|pcnt|penalty|permit|permits|permitted|phonetic|postprocess|precision|prefix|prevents|priority|prop|quote|radius|range|rangefield_upgrade|re|recall|recent|recorddate|regex|reject|replace|required|right|rollup|rs|rst|saltmodule|salttoolsmodule|samplesize|scale|scaled|score|search|searchon|seendates|segment|segtype|sep|slicedistance|slicethreshold|slow|soft1|sometimes|spaces|split|split_combineallscores|spray|stddev|stem|strict|supports|switch0|switchn|symmetric|tag|term|threshold|timestamp|track|trigram|type|unique|unscaled|use_combined_matchcodes|use_match_candidates_optimization|usehipie|useon|usesuperfiles|valid|values|voted|weight|weighted|wheel|whole|wild|with_sort_on_weight|within|words|workman|xlinkusing|yyyy|yyyymm|yyyymmdd|yyyymmddhhmmss))\\b"
+        },
+        "expression": {
+            "name": "meta.expression.salt",
+            "patterns": [
+                {
+                    "include": "#comment"
+                },
+                {
+                    "include": "#string"
+                },
+                {
+                    "include": "#literal"
+                }
+            ]
+        },
+        "comment": {
+            "name": "comment.salt",
+            "patterns": [
+                {
+                    "include": "#comment-block-doc"
+                },
+                {
+                    "include": "#comment-block"
+                },
+                {
+                    "include": "#comment-line"
+                }
+            ]
+        },
+        "comment-block": {
+            "begin": "/\\*",
+            "end": "\\*/",
+            "name": "comment.block.salt"
+        },
+        "comment-block-doc": {
+            "begin": "/\\*\\*(?!/)",
+            "end": "\\*/",
+            "name": "comment.block.documentation.salt"
+        },
+        "comment-line": {
+            "match": "(//).*$\\n?",
+            "name": "comment.line.salt"
+        },
+        "string": {
+            "name": "string.salt",
+            "patterns": [
+                {
+                    "include": "#qstring-single"
+                }
+            ]
+        },
+        "qstring-single": {
+            "begin": "'",
+            "end": "\\'|(?:[^\\\\\\n]$)",
+            "name": "string.single.salt",
+            "patterns": [
+                {
+                    "include": "#string-character-escape"
+                }
+            ]
+        },
+        "string-character-escape": {
+            "match": "\\\\(x\\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)",
+            "name": "constant.character.escape.salt"
+        },
+        "literal": {
+            "name": "literal.salt",
+            "patterns": [
+                {
+                    "include": "#numeric-literal"
+                },
+                {
+                    "include": "#boolean-literal"
+                }
+            ]
+        },
+        "numeric-literal": {
+            "match": "\\b(?<=[^$])((0(x|X)[0-9a-fA-F]+)|(0(o|O)[0-7]+)|(0(b|B)(0|1)+)|(([0-9]+(\\.[0-9]+)?))([eE]([+-]?)[0-9]+(\\.[0-9]+)?)?)\\b",
+            "name": "constant.numeric.salt"
+        },
+        "boolean-literal": {
+            "match": "\\b(?i:(false|true))\\b",
+            "name": "constant.language.boolean.salt"
+        }
+    }
+}
