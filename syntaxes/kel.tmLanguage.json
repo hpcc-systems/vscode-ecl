@@ -21,7 +21,6 @@
             "match": "\\b(?i:(%|\\*|\\+|-|/|and|div|in|not|or))\\b"
         },
         {
-            "name": "entity.name.function.kel",
             "match": "([A-Za-z_]+)\\s*(\\()",
             "captures": {
                 "1": {

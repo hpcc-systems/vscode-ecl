@@ -61,7 +61,6 @@
             "match": "\\b(?i:(std).(file|date|str|math|metaphone|metaphone3|uni|audit|blas|system.(debug|email|job|log|thorlib|util|workunit)))\\b"
         },
         {
-            "name": "entity.name.function.ecl",
             "match": "([A-Za-z_]+)\\s*(\\()",
             "captures": {
                 "1": {
