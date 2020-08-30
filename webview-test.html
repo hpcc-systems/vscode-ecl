@@ -1,0 +1,2077 @@
+<html
+    style="--vscode-font-family:&quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, sans-serif; --vscode-font-weight:normal; --vscode-font-size:13px; --vscode-editor-font-family:Consolas, &quot;Courier New&quot;, monospace; --vscode-editor-font-weight:normal; --vscode-editor-font-size:14px; --vscode-foreground:#cccccc; --vscode-errorForeground:#f48771; --vscode-descriptionForeground:rgba(204, 204, 204, 0.7); --vscode-icon-foreground:#c5c5c5; --vscode-focusBorder:#007fd4; --vscode-textSeparator-foreground:rgba(255, 255, 255, 0.18); --vscode-textLink-foreground:#3794ff; --vscode-textLink-activeForeground:#3794ff; --vscode-textPreformat-foreground:#d7ba7d; --vscode-textBlockQuote-background:rgba(127, 127, 127, 0.1); --vscode-textBlockQuote-border:rgba(0, 122, 204, 0.5); --vscode-textCodeBlock-background:rgba(10, 10, 10, 0.4); --vscode-widget-shadow:#000000; --vscode-input-background:#3c3c3c; --vscode-input-foreground:#cccccc; --vscode-inputOption-activeBorder:rgba(0, 122, 204, 0); --vscode-inputOption-activeBackground:rgba(0, 127, 212, 0.4); --vscode-inputOption-activeForeground:#ffffff; --vscode-input-placeholderForeground:#a6a6a6; --vscode-inputValidation-infoBackground:#063b49; --vscode-inputValidation-infoBorder:#007acc; --vscode-inputValidation-warningBackground:#352a05; --vscode-inputValidation-warningBorder:#b89500; --vscode-inputValidation-errorBackground:#5a1d1d; --vscode-inputValidation-errorBorder:#be1100; --vscode-dropdown-background:#3c3c3c; --vscode-dropdown-foreground:#f0f0f0; --vscode-dropdown-border:#3c3c3c; --vscode-checkbox-background:#3c3c3c; --vscode-checkbox-foreground:#f0f0f0; --vscode-checkbox-border:#3c3c3c; --vscode-button-foreground:#ffffff; --vscode-button-background:#0e639c; --vscode-button-hoverBackground:#1177bb; --vscode-button-secondaryForeground:#ffffff; --vscode-button-secondaryBackground:#3a3d41; --vscode-button-secondaryHoverBackground:#45494e; --vscode-badge-background:#4d4d4d; --vscode-badge-foreground:#ffffff; --vscode-scrollbar-shadow:#000000; --vscode-scrollbarSlider-background:rgba(121, 121, 121, 0.4); --vscode-scrollbarSlider-hoverBackground:rgba(100, 100, 100, 0.7); --vscode-scrollbarSlider-activeBackground:rgba(191, 191, 191, 0.4); --vscode-progressBar-background:#0e70c0; --vscode-editorError-foreground:#f48771; --vscode-editorWarning-foreground:#cca700; --vscode-editorInfo-foreground:#75beff; --vscode-editorHint-foreground:rgba(238, 238, 238, 0.7); --vscode-editor-background:#1e1e1e; --vscode-editor-foreground:#d4d4d4; --vscode-editorWidget-background:#252526; --vscode-editorWidget-foreground:#cccccc; --vscode-editorWidget-border:#454545; --vscode-quickInput-background:#252526; --vscode-quickInput-foreground:#cccccc; --vscode-quickInputTitle-background:rgba(255, 255, 255, 0.1); --vscode-pickerGroup-foreground:#3794ff; --vscode-pickerGroup-border:#3f3f46; --vscode-editor-selectionBackground:#264f78; --vscode-editor-inactiveSelectionBackground:#3a3d41; --vscode-editor-selectionHighlightBackground:rgba(173, 214, 255, 0.15); --vscode-editor-findMatchBackground:#515c6a; --vscode-editor-findMatchHighlightBackground:rgba(234, 92, 0, 0.33); --vscode-editor-findRangeHighlightBackground:rgba(58, 61, 65, 0.4); --vscode-searchEditor-findMatchBackground:rgba(234, 92, 0, 0.22); --vscode-editor-hoverHighlightBackground:rgba(38, 79, 120, 0.25); --vscode-editorHoverWidget-background:#252526; --vscode-editorHoverWidget-foreground:#cccccc; --vscode-editorHoverWidget-border:#454545; --vscode-editorHoverWidget-statusBarBackground:#2c2c2d; --vscode-editorLink-activeForeground:#4e94ce; --vscode-editorLightBulb-foreground:#ffcc00; --vscode-editorLightBulbAutoFix-foreground:#75beff; --vscode-diffEditor-insertedTextBackground:rgba(155, 185, 85, 0.2); --vscode-diffEditor-removedTextBackground:rgba(255, 0, 0, 0.2); --vscode-diffEditor-diagonalFill:rgba(204, 204, 204, 0.2); --vscode-list-focusBackground:#062f4a; --vscode-list-activeSelectionBackground:#094771; --vscode-list-activeSelectionForeground:#ffffff; --vscode-list-inactiveSelectionBackground:#37373d; --vscode-list-hoverBackground:#2a2d2e; --vscode-list-dropBackground:#383b3d; --vscode-list-highlightForeground:#0097fb; --vscode-list-invalidItemForeground:#b89500; --vscode-list-errorForeground:#f88070; --vscode-list-warningForeground:#cca700; --vscode-listFilterWidget-background:#653723; --vscode-listFilterWidget-outline:rgba(0, 0, 0, 0); --vscode-listFilterWidget-noMatchesOutline:#be1100; --vscode-list-filterMatchBackground:rgba(234, 92, 0, 0.33); --vscode-tree-indentGuidesStroke:#585858; --vscode-list-deemphasizedForeground:#8c8c8c; --vscode-menu-foreground:#cccccc; --vscode-menu-background:#252526; --vscode-menu-selectionForeground:#ffffff; --vscode-menu-selectionBackground:#094771; --vscode-menu-separatorBackground:#bbbbbb; --vscode-editor-snippetTabstopHighlightBackground:rgba(124, 124, 124, 0.3); --vscode-editor-snippetFinalTabstopHighlightBorder:#525252; --vscode-breadcrumb-foreground:rgba(204, 204, 204, 0.8); --vscode-breadcrumb-background:#1e1e1e; --vscode-breadcrumb-focusForeground:#e0e0e0; --vscode-breadcrumb-activeSelectionForeground:#e0e0e0; --vscode-breadcrumbPicker-background:#252526; --vscode-merge-currentHeaderBackground:rgba(64, 200, 174, 0.5); --vscode-merge-currentContentBackground:rgba(64, 200, 174, 0.2); --vscode-merge-incomingHeaderBackground:rgba(64, 166, 255, 0.5); --vscode-merge-incomingContentBackground:rgba(64, 166, 255, 0.2); --vscode-merge-commonHeaderBackground:rgba(96, 96, 96, 0.4); --vscode-merge-commonContentBackground:rgba(96, 96, 96, 0.16); --vscode-editorOverviewRuler-currentContentForeground:rgba(64, 200, 174, 0.5); --vscode-editorOverviewRuler-incomingContentForeground:rgba(64, 166, 255, 0.5); --vscode-editorOverviewRuler-commonContentForeground:rgba(96, 96, 96, 0.4); --vscode-editorOverviewRuler-findMatchForeground:rgba(209, 134, 22, 0.49); --vscode-editorOverviewRuler-selectionHighlightForeground:rgba(160, 160, 160, 0.8); --vscode-minimap-findMatchHighlight:#d18616; --vscode-minimap-selectionHighlight:#264f78; --vscode-minimap-errorHighlight:rgba(255, 18, 18, 0.7); --vscode-minimap-warningHighlight:#cca700; --vscode-minimapSlider-background:rgba(121, 121, 121, 0.2); --vscode-minimapSlider-hoverBackground:rgba(100, 100, 100, 0.35); --vscode-minimapSlider-activeBackground:rgba(191, 191, 191, 0.2); --vscode-problemsErrorIcon-foreground:#f48771; --vscode-problemsWarningIcon-foreground:#cca700; --vscode-problemsInfoIcon-foreground:#75beff; --vscode-editor-lineHighlightBorder:#282828; --vscode-editor-rangeHighlightBackground:rgba(255, 255, 255, 0.04); --vscode-editor-symbolHighlightBackground:rgba(234, 92, 0, 0.33); --vscode-editorCursor-foreground:#aeafad; --vscode-editorWhitespace-foreground:rgba(227, 228, 226, 0.16); --vscode-editorIndentGuide-background:#404040; --vscode-editorIndentGuide-activeBackground:#707070; --vscode-editorLineNumber-foreground:#858585; --vscode-editorActiveLineNumber-foreground:#c6c6c6; --vscode-editorLineNumber-activeForeground:#c6c6c6; --vscode-editorRuler-foreground:#5a5a5a; --vscode-editorCodeLens-foreground:#999999; --vscode-editorBracketMatch-background:rgba(0, 100, 0, 0.1); --vscode-editorBracketMatch-border:#888888; --vscode-editorOverviewRuler-border:rgba(127, 127, 127, 0.3); --vscode-editorGutter-background:#1e1e1e; --vscode-editorUnnecessaryCode-opacity:rgba(0, 0, 0, 0.67); --vscode-editorOverviewRuler-rangeHighlightForeground:rgba(0, 122, 204, 0.6); --vscode-editorOverviewRuler-errorForeground:rgba(255, 18, 18, 0.7); --vscode-editorOverviewRuler-warningForeground:#cca700; --vscode-editorOverviewRuler-infoForeground:#75beff; --vscode-editorOverviewRuler-bracketMatchForeground:#a0a0a0; --vscode-symbolIcon-arrayForeground:#cccccc; --vscode-symbolIcon-booleanForeground:#cccccc; --vscode-symbolIcon-classForeground:#ee9d28; --vscode-symbolIcon-colorForeground:#cccccc; --vscode-symbolIcon-constantForeground:#cccccc; --vscode-symbolIcon-constructorForeground:#b180d7; --vscode-symbolIcon-enumeratorForeground:#ee9d28; --vscode-symbolIcon-enumeratorMemberForeground:#75beff; --vscode-symbolIcon-eventForeground:#ee9d28; --vscode-symbolIcon-fieldForeground:#75beff; --vscode-symbolIcon-fileForeground:#cccccc; --vscode-symbolIcon-folderForeground:#cccccc; --vscode-symbolIcon-functionForeground:#b180d7; --vscode-symbolIcon-interfaceForeground:#75beff; --vscode-symbolIcon-keyForeground:#cccccc; --vscode-symbolIcon-keywordForeground:#cccccc; --vscode-symbolIcon-methodForeground:#b180d7; --vscode-symbolIcon-moduleForeground:#cccccc; --vscode-symbolIcon-namespaceForeground:#cccccc; --vscode-symbolIcon-nullForeground:#cccccc; --vscode-symbolIcon-numberForeground:#cccccc; --vscode-symbolIcon-objectForeground:#cccccc; --vscode-symbolIcon-operatorForeground:#cccccc; --vscode-symbolIcon-packageForeground:#cccccc; --vscode-symbolIcon-propertyForeground:#cccccc; --vscode-symbolIcon-referenceForeground:#cccccc; --vscode-symbolIcon-snippetForeground:#cccccc; --vscode-symbolIcon-stringForeground:#cccccc; --vscode-symbolIcon-structForeground:#cccccc; --vscode-symbolIcon-textForeground:#cccccc; --vscode-symbolIcon-typeParameterForeground:#cccccc; --vscode-symbolIcon-unitForeground:#cccccc; --vscode-symbolIcon-variableForeground:#75beff; --vscode-editor-foldBackground:rgba(38, 79, 120, 0.3); --vscode-editorGutter-foldingControlForeground:#c5c5c5; --vscode-editor-onTypeRenameBackground:rgba(255, 0, 0, 0.3); --vscode-editorSuggestWidget-background:#252526; --vscode-editorSuggestWidget-border:#454545; --vscode-editorSuggestWidget-foreground:#d4d4d4; --vscode-editorSuggestWidget-selectedBackground:#062f4a; --vscode-editorSuggestWidget-highlightForeground:#0097fb; --vscode-editor-wordHighlightBackground:rgba(87, 87, 87, 0.72); --vscode-editor-wordHighlightStrongBackground:rgba(0, 73, 114, 0.72); --vscode-editorOverviewRuler-wordHighlightForeground:rgba(160, 160, 160, 0.8); --vscode-editorOverviewRuler-wordHighlightStrongForeground:rgba(192, 160, 192, 0.8); --vscode-peekViewTitle-background:#1e1e1e; --vscode-peekViewTitleLabel-foreground:#ffffff; --vscode-peekViewTitleDescription-foreground:rgba(204, 204, 204, 0.7); --vscode-peekView-border:#007acc; --vscode-peekViewResult-background:#252526; --vscode-peekViewResult-lineForeground:#bbbbbb; --vscode-peekViewResult-fileForeground:#ffffff; --vscode-peekViewResult-selectionBackground:rgba(51, 153, 255, 0.2); --vscode-peekViewResult-selectionForeground:#ffffff; --vscode-peekViewEditor-background:#001f33; --vscode-peekViewEditorGutter-background:#001f33; --vscode-peekViewResult-matchHighlightBackground:rgba(234, 92, 0, 0.3); --vscode-peekViewEditor-matchHighlightBackground:rgba(255, 143, 0, 0.6); --vscode-editorMarkerNavigationError-background:#f48771; --vscode-editorMarkerNavigationWarning-background:#cca700; --vscode-editorMarkerNavigationInfo-background:#75beff; --vscode-editorMarkerNavigation-background:#2d2d30; --vscode-tab-activeBackground:#1e1e1e; --vscode-tab-unfocusedActiveBackground:#1e1e1e; --vscode-tab-inactiveBackground:#2d2d2d; --vscode-tab-unfocusedInactiveBackground:#2d2d2d; --vscode-tab-activeForeground:#ffffff; --vscode-tab-inactiveForeground:rgba(255, 255, 255, 0.5); --vscode-tab-unfocusedActiveForeground:rgba(255, 255, 255, 0.5); --vscode-tab-unfocusedInactiveForeground:rgba(255, 255, 255, 0.25); --vscode-tab-activeModifiedBorder:#3399cc; --vscode-tab-inactiveModifiedBorder:rgba(51, 153, 204, 0.5); --vscode-tab-unfocusedActiveModifiedBorder:rgba(51, 153, 204, 0.5); --vscode-tab-unfocusedInactiveModifiedBorder:rgba(51, 153, 204, 0.25); --vscode-tab-border:#252526; --vscode-editorPane-background:#1e1e1e; --vscode-editorGroupHeader-tabsBackground:#252526; --vscode-editorGroupHeader-noTabsBackground:#1e1e1e; --vscode-editorGroup-border:#444444; --vscode-editorGroup-dropBackground:rgba(83, 89, 93, 0.5); --vscode-imagePreview-border:rgba(128, 128, 128, 0.35); --vscode-panel-background:#1e1e1e; --vscode-panel-border:rgba(128, 128, 128, 0.35); --vscode-panelTitle-activeForeground:#e7e7e7; --vscode-panelTitle-inactiveForeground:rgba(231, 231, 231, 0.6); --vscode-panelTitle-activeBorder:#e7e7e7; --vscode-panel-dropBorder:#e7e7e7; --vscode-panelSection-dropBackground:rgba(83, 89, 93, 0.5); --vscode-panelSectionHeader-background:rgba(128, 128, 128, 0.2); --vscode-panelSection-border:rgba(128, 128, 128, 0.35); --vscode-statusBar-foreground:#ffffff; --vscode-statusBar-noFolderForeground:#ffffff; --vscode-statusBar-background:#007acc; --vscode-statusBar-noFolderBackground:#68217a; --vscode-statusBarItem-activeBackground:rgba(255, 255, 255, 0.18); --vscode-statusBarItem-hoverBackground:rgba(255, 255, 255, 0.12); --vscode-statusBarItem-prominentForeground:#ffffff; --vscode-statusBarItem-prominentBackground:rgba(0, 0, 0, 0.5); --vscode-statusBarItem-prominentHoverBackground:rgba(0, 0, 0, 0.3); --vscode-activityBar-background:#333333; --vscode-activityBar-foreground:#ffffff; --vscode-activityBar-inactiveForeground:rgba(255, 255, 255, 0.4); --vscode-activityBar-activeBorder:#ffffff; --vscode-activityBar-dropBorder:#ffffff; --vscode-activityBarBadge-background:#007acc; --vscode-activityBarBadge-foreground:#ffffff; --vscode-statusBarItem-remoteBackground:#16825d; --vscode-statusBarItem-remoteForeground:#ffffff; --vscode-extensionBadge-remoteBackground:#007acc; --vscode-extensionBadge-remoteForeground:#ffffff; --vscode-sideBar-background:#252526; --vscode-sideBarTitle-foreground:#bbbbbb; --vscode-sideBar-dropBackground:rgba(83, 89, 93, 0.5); --vscode-sideBarSectionHeader-background:rgba(0, 0, 0, 0); --vscode-sideBarSectionHeader-border:rgba(204, 204, 204, 0.2); --vscode-titleBar-activeForeground:#cccccc; --vscode-titleBar-inactiveForeground:rgba(204, 204, 204, 0.6); --vscode-titleBar-activeBackground:#3c3c3c; --vscode-titleBar-inactiveBackground:rgba(60, 60, 60, 0.6); --vscode-menubar-selectionForeground:#cccccc; --vscode-menubar-selectionBackground:rgba(255, 255, 255, 0.1); --vscode-notifications-foreground:#cccccc; --vscode-notifications-background:#252526; --vscode-notificationLink-foreground:#3794ff; --vscode-notificationCenterHeader-background:#303031; --vscode-notifications-border:#303031; --vscode-notificationsErrorIcon-foreground:#f48771; --vscode-notificationsWarningIcon-foreground:#cca700; --vscode-notificationsInfoIcon-foreground:#75beff; --vscode-editorGutter-commentRangeForeground:#c5c5c5; --vscode-editor-stackFrameHighlightBackground:rgba(255, 255, 0, 0.2); --vscode-editor-focusedStackFrameHighlightBackground:rgba(122, 189, 122, 0.3); --vscode-terminal-foreground:#cccccc; --vscode-terminal-selectionBackground:rgba(255, 255, 255, 0.25); --vscode-terminal-border:rgba(128, 128, 128, 0.35); --vscode-statusBar-debuggingBackground:#cc6633; --vscode-statusBar-debuggingForeground:#ffffff; --vscode-settings-headerForeground:#e7e7e7; --vscode-settings-modifiedItemIndicator:#0c7d9d; --vscode-settings-dropdownBackground:#3c3c3c; --vscode-settings-dropdownForeground:#f0f0f0; --vscode-settings-dropdownBorder:#3c3c3c; --vscode-settings-dropdownListBorder:#454545; --vscode-settings-checkboxBackground:#3c3c3c; --vscode-settings-checkboxForeground:#f0f0f0; --vscode-settings-checkboxBorder:#3c3c3c; --vscode-settings-textInputBackground:#292929; --vscode-settings-textInputForeground:#cccccc; --vscode-settings-numberInputBackground:#292929; --vscode-settings-numberInputForeground:#cccccc; --vscode-debugExceptionWidget-border:#a31515; --vscode-debugExceptionWidget-background:#420b0d; --vscode-editorGutter-modifiedBackground:#0c7d9d; --vscode-editorGutter-addedBackground:#587c0c; --vscode-editorGutter-deletedBackground:#94151b; --vscode-minimapGutter-modifiedBackground:#0c7d9d; --vscode-minimapGutter-addedBackground:#587c0c; --vscode-minimapGutter-deletedBackground:#94151b; --vscode-editorOverviewRuler-modifiedForeground:rgba(12, 125, 157, 0.6); --vscode-editorOverviewRuler-addedForeground:rgba(88, 124, 12, 0.6); --vscode-editorOverviewRuler-deletedForeground:rgba(148, 21, 27, 0.6); --vscode-debugIcon-breakpointForeground:#e51400; --vscode-debugIcon-breakpointDisabledForeground:#848484; --vscode-debugIcon-breakpointUnverifiedForeground:#848484; --vscode-debugIcon-breakpointCurrentStackframeForeground:#ffcc00; --vscode-debugIcon-breakpointStackframeForeground:#89d185; --vscode-debugToolBar-background:#333333; --vscode-debugIcon-startForeground:#89d185; --vscode-debugIcon-pauseForeground:#75beff; --vscode-debugIcon-stopForeground:#f48771; --vscode-debugIcon-disconnectForeground:#f48771; --vscode-debugIcon-restartForeground:#89d185; --vscode-debugIcon-stepOverForeground:#75beff; --vscode-debugIcon-stepIntoForeground:#75beff; --vscode-debugIcon-stepOutForeground:#75beff; --vscode-debugIcon-continueForeground:#75beff; --vscode-debugIcon-stepBackForeground:#75beff; --vscode-debugTokenExpression-name:#c586c0; --vscode-debugTokenExpression-value:rgba(204, 204, 204, 0.6); --vscode-debugTokenExpression-string:#ce9178; --vscode-debugTokenExpression-boolean:#4e94ce; --vscode-debugTokenExpression-number:#b5cea8; --vscode-debugTokenExpression-error:#f48771; --vscode-debugView-exceptionLabelForeground:#cccccc; --vscode-debugView-exceptionLabelBackground:#6c2022; --vscode-debugView-stateLabelForeground:#cccccc; --vscode-debugView-stateLabelBackground:rgba(136, 136, 136, 0.27); --vscode-debugView-valueChangedHighlight:#569cd6; --vscode-debugConsole-infoForeground:#75beff; --vscode-debugConsole-warningForeground:#cca700; --vscode-debugConsole-errorForeground:#f48771; --vscode-debugConsole-sourceForeground:#cccccc; --vscode-debugConsoleInputIcon-foreground:#cccccc; --vscode-extensionButton-prominentBackground:#327e36; --vscode-extensionButton-prominentForeground:#ffffff; --vscode-extensionButton-prominentHoverBackground:#28632b; --vscode-notebook-cellBorderColor:rgba(128, 128, 128, 0.14); --vscode-notebook-focusedEditorBorder:#007fd4; --vscode-notebookStatusSuccessIcon-foreground:#89d185; --vscode-notebookStatusErrorIcon-foreground:#f48771; --vscode-notebookStatusRunningIcon-foreground:#cccccc; --vscode-notebook-outputContainerBackgroundColor:rgba(128, 128, 128, 0.14); --vscode-notebook-cellToolbarSeparator:rgba(128, 128, 128, 0.35); --vscode-notebook-focusedCellBackground:rgba(128, 128, 128, 0.14); --vscode-notebook-cellHoverBackground:rgba(128, 128, 128, 0.07); --vscode-notebook-focusedCellBorder:rgba(255, 255, 255, 0.12); --vscode-notebook-cellStatusBarItemHoverBackground:rgba(255, 255, 255, 0.15); --vscode-notebook-cellInsertionIndicator:#007fd4; --vscode-notebookScrollbarSlider-background:rgba(121, 121, 121, 0.4); --vscode-notebookScrollbarSlider-hoverBackground:rgba(100, 100, 100, 0.7); --vscode-notebookScrollbarSlider-activeBackground:rgba(191, 191, 191, 0.4); --vscode-notebook-symbolHighlightBackground:rgba(255, 255, 255, 0.04); --vscode-scm-providerBorder:#454545; --vscode-terminal-ansiBlack:#000000; --vscode-terminal-ansiRed:#cd3131; --vscode-terminal-ansiGreen:#0dbc79; --vscode-terminal-ansiYellow:#e5e510; --vscode-terminal-ansiBlue:#2472c8; --vscode-terminal-ansiMagenta:#bc3fbc; --vscode-terminal-ansiCyan:#11a8cd; --vscode-terminal-ansiWhite:#e5e5e5; --vscode-terminal-ansiBrightBlack:#666666; --vscode-terminal-ansiBrightRed:#f14c4c; --vscode-terminal-ansiBrightGreen:#23d18b; --vscode-terminal-ansiBrightYellow:#f5f543; --vscode-terminal-ansiBrightBlue:#3b8eea; --vscode-terminal-ansiBrightMagenta:#d670d6; --vscode-terminal-ansiBrightCyan:#29b8db; --vscode-terminal-ansiBrightWhite:#e5e5e5; --vscode-gitDecoration-addedResourceForeground:#81b88b; --vscode-gitDecoration-modifiedResourceForeground:#e2c08d; --vscode-gitDecoration-deletedResourceForeground:#c74e39; --vscode-gitDecoration-untrackedResourceForeground:#73c991; --vscode-gitDecoration-ignoredResourceForeground:#8c8c8c; --vscode-gitDecoration-conflictingResourceForeground:#6c6cc4; --vscode-gitDecoration-submoduleResourceForeground:#8db9e2;">
+
+<head>
+    <style data-merge-styles="true"></style>
+    <style data-merge-styles="true"></style>
+    <style data-merge-styles="true"></style>
+    <style data-merge-styles="true"></style>
+    <style data-merge-styles="true"></style>
+    <style id="_defaultStyles">
+        body {
+            background-color: black;
+            color: var(--vscode-editor-foreground);
+            font-family: var(--vscode-font-family);
+            font-weight: var(--vscode-font-weight);
+            font-size: var(--vscode-font-size);
+            margin: 0;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        a {
+            color: var(--vscode-textLink-foreground);
+        }
+
+        a:hover {
+            color: var(--vscode-textLink-activeForeground);
+        }
+
+        a:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 1px solid -webkit-focus-ring-color;
+            outline-offset: -1px;
+        }
+
+        code {
+            color: var(--vscode-textPreformat-foreground);
+        }
+
+        blockquote {
+            background: var(--vscode-textBlockQuote-background);
+            border-color: var(--vscode-textBlockQuote-border);
+        }
+
+        kbd {
+            color: var(--vscode-editor-foreground);
+            border-radius: 3px;
+            vertical-align: middle;
+            padding: 1px 3px;
+
+            background-color: hsla(0, 0%, 50%, .17);
+            border: 1px solid rgba(71, 71, 71, .4);
+            border-bottom-color: rgba(88, 88, 88, .4);
+            box-shadow: inset 0 -1px 0 rgba(88, 88, 88, .4);
+        }
+
+        .vscode-light kbd {
+            background-color: hsla(0, 0%, 87%, .5);
+            border: 1px solid hsla(0, 0%, 80%, .7);
+            border-bottom-color: hsla(0, 0%, 73%, .7);
+            box-shadow: inset 0 -1px 0 hsla(0, 0%, 73%, .7);
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background-color: var(--vscode-editor-background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--vscode-scrollbarSlider-background);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--vscode-scrollbarSlider-hoverBackground);
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background-color: var(--vscode-scrollbarSlider-activeBackground);
+        }
+    </style>
+    <script id="_vscodeApiScript">
+        const acquireVsCodeApi = (function () {
+            const originalPostMessage = window.parent.postMessage.bind(window.parent);
+            const targetOrigin = '*';
+            let acquired = false;
+
+            let state = JSON.parse(decodeURIComponent("%7B%22url%22%3A%22https%3A%2F%2Fplay.hpccsystems.com%3A18010%2F%3FWidget%3DWUDetailsWidget%26Wuid%3DW20200831-142403%22%7D"));
+
+            return () => {
+                if (acquired && !undefined) {
+                    throw new Error('An instance of the VS Code API has already been acquired');
+                }
+                acquired = true;
+                return Object.freeze({
+                    postMessage: function (msg) {
+                        return originalPostMessage({ command: 'onmessage', data: msg }, targetOrigin);
+                    },
+                    setState: function (newState) {
+                        state = newState;
+                        originalPostMessage({ command: 'do-update-state', data: JSON.stringify(newState) }, targetOrigin);
+                        return newState;
+                    },
+                    getState: function () {
+                        return state;
+                    }
+                });
+            };
+        })();
+        delete window.parent;
+        delete window.top;
+        delete window.frameElement;
+    </script>
+    <meta charset="utf-8">
+    <title>HPCC</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        body.vscode-light {}
+
+        body.vscode-dark {}
+
+        body.vscode-high-contrast {}
+    </style>
+    <style data-load-themed-styles="true">
+        .resultContent_5af479dc {
+            display: table-row
+        }
+
+        .resultContent_5af479dc .resultItem_5af479dc {
+            display: table-cell;
+            vertical-align: bottom
+        }
+
+        .peoplePickerPersona_5af479dc {
+            width: 180px
+        }
+
+        .peoplePickerPersona_5af479dc .ms-Persona-details {
+            width: 100%
+        }
+
+        .peoplePicker_5af479dc .ms-BasePicker-text {
+            min-height: 40px
+        }
+
+        .peoplePickerPersonaContent_5af479dc {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            width: 100%;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center
+        }
+    </style>
+    <style data-load-themed-styles="true">
+        .callout_04709642 .ms-Suggestions-itemButton {
+            padding: 0;
+            border: none
+        }
+
+        .callout_04709642 .ms-Suggestions {
+            min-width: 300px
+        }
+    </style>
+    <style data-load-themed-styles="true">
+        .resultContent_20e08911 {
+            display: table-row
+        }
+
+        .resultContent_20e08911 .resultItem_20e08911 {
+            display: table-cell;
+            vertical-align: bottom
+        }
+
+        .peoplePickerPersona_20e08911 {
+            width: 180px
+        }
+
+        .peoplePickerPersona_20e08911 .ms-Persona-details {
+            width: 100%
+        }
+
+        .peoplePicker_20e08911 .ms-BasePicker-text {
+            min-height: 40px
+        }
+
+        .peoplePickerPersonaContent_20e08911 {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            width: 100%;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 7px 12px
+        }
+    </style>
+    <style data-load-themed-styles="true">
+        .root_9ed634c8 {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            margin: 0;
+            padding: 0
+        }
+
+        .root_9ed634c8 * {
+            overflow: visible
+        }
+
+        .root_9ed634c8 ::-moz-focus-inner {
+            border: 0
+        }
+
+        .root_9ed634c8 * {
+            outline: transparent
+        }
+
+        .root_9ed634c8 * {
+            position: relative
+        }
+
+        .ms-Fabric--isFocusVisible .root_9ed634c8 :focus:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            pointer-events: none;
+            border: 1px solid #e0e0e0
+        }
+
+        .picker_9ed634c8 {
+            color: #727272;
+            font-size: 14px;
+            position: relative
+        }
+
+        html[dir=ltr] .picker_9ed634c8 {
+            text-align: left
+        }
+
+        html[dir=rtl] .picker_9ed634c8 {
+            text-align: right
+        }
+
+        .holder_9ed634c8 {
+            -webkit-overflow-scrolling: touch;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            display: none
+        }
+
+        .picker_9ed634c8.pickerIsOpened_9ed634c8 .holder_9ed634c8 {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            display: inline-block
+        }
+
+        .pickerIsOpened_9ed634c8 {
+            position: relative
+        }
+
+        .frame_9ed634c8 {
+            position: relative
+        }
+
+        .wrap_9ed634c8 {
+            min-height: 212px;
+            padding: 12px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-sizing: content-box;
+            box-sizing: content-box
+        }
+
+        .wrap_9ed634c8.goTodaySpacing_9ed634c8 {
+            min-height: 228px
+        }
+
+        .dayPicker_9ed634c8 {
+            display: block
+        }
+
+        .header_9ed634c8 {
+            position: relative;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            height: 28px;
+            line-height: 44px;
+            width: 100%
+        }
+
+        .divider_9ed634c8 {
+            top: 0;
+            margin-top: -12px;
+            margin-bottom: -12px
+        }
+
+        html[dir=ltr] .divider_9ed634c8 {
+            border-right: 1px solid #1c1c1c
+        }
+
+        html[dir=rtl] .divider_9ed634c8 {
+            border-left: 1px solid #1c1c1c
+        }
+
+        .decade_9ed634c8,
+        .monthAndYear_9ed634c8,
+        .year_9ed634c8 {
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            font-size: 14px;
+            font-weight: 400;
+            font-weight: 600;
+            color: #cccccc;
+            padding: 0 5px
+        }
+
+        .currentDecade_9ed634c8:hover,
+        .currentYear_9ed634c8:hover,
+        .monthAndYear_9ed634c8:hover {
+            cursor: default
+        }
+
+        .table_9ed634c8 {
+            text-align: center;
+            border-collapse: collapse;
+            border-spacing: 0;
+            table-layout: fixed;
+            font-size: inherit;
+            margin-top: 4px;
+            width: 197px
+        }
+
+        .table_9ed634c8 td {
+            margin: 0;
+            padding: 0
+        }
+
+        .dayWrapper_9ed634c8,
+        .weekday_9ed634c8 {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            line-height: 28px;
+            font-size: 12px;
+            font-size: 15px;
+            font-weight: 400;
+            color: #cccccc;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            cursor: default
+        }
+
+        .dayWrapper_9ed634c8 ::-moz-focus-inner,
+        .weekday_9ed634c8 ::-moz-focus-inner {
+            border: 0
+        }
+
+        .dayWrapper_9ed634c8 *,
+        .weekday_9ed634c8 * {
+            outline: transparent
+        }
+
+        .dayWrapper_9ed634c8 *,
+        .weekday_9ed634c8 * {
+            position: relative
+        }
+
+        .ms-Fabric--isFocusVisible .dayWrapper_9ed634c8 :focus:after,
+        .ms-Fabric--isFocusVisible .weekday_9ed634c8 :focus:after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            bottom: -2px;
+            left: -2px;
+            pointer-events: none;
+            border: 1px solid #e0e0e0
+        }
+
+        .day_9ed634c8 {
+            width: 24px;
+            height: 24px;
+            border-radius: 2px;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            border: none;
+            padding: 0;
+            background-color: transparent;
+            line-height: 100%;
+            font-size: inherit;
+            color: inherit;
+            font-weight: inherit
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+
+            .daySelection_9ed634c8 .day_9ed634c8:active,
+            .daySelection_9ed634c8 .day_9ed634c8:hover {
+                outline: 1px solid Highlight;
+                -ms-high-contrast-adjust: none
+            }
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .daySelection_9ed634c8 .day_9ed634c8:active {
+                color: Highlight;
+                -ms-high-contrast-adjust: none
+            }
+        }
+
+        .dayIsToday_9ed634c8 {
+            border-radius: 100%
+        }
+
+        .dayIsToday_9ed634c8,
+        .dayIsToday_9ed634c8:hover {
+            position: relative;
+            background-color: #1d1d1d
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+
+            .dayIsToday_9ed634c8,
+            .dayIsToday_9ed634c8:hover {
+                background-color: Highlight;
+                -ms-high-contrast-adjust: none
+            }
+        }
+
+        .dayIsToday_9ed634c8:hover,
+        .dayIsToday_9ed634c8:hover:hover {
+            border-radius: 100%
+        }
+
+        .dayIsDisabled_9ed634c8:before {
+            border-top-color: #f0f0f0
+        }
+
+        .dayIsUnfocused_9ed634c8 {
+            color: #e0e0e0;
+            font-weight: 400
+        }
+
+        .dayIsFocused_9ed634c8:hover,
+        .dayIsUnfocused_9ed634c8:hover {
+            cursor: pointer;
+            background: #1d1d1d;
+            color: #9b9b9b
+        }
+
+        .daySelection_9ed634c8.dayIsHighlighted_9ed634c8:hover,
+        .pickerIsFocused_9ed634c8 .dayIsHighlighted_9ed634c8.daySelection_9ed634c8 {
+            cursor: pointer;
+            background-color: #1c1c1c;
+            border-radius: 2px
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+
+            .daySelection_9ed634c8.dayIsHighlighted_9ed634c8:hover,
+            .pickerIsFocused_9ed634c8 .dayIsHighlighted_9ed634c8.daySelection_9ed634c8 {
+                outline: 2px solid Highlight
+            }
+
+            .daySelection_9ed634c8.dayIsHighlighted_9ed634c8:hover :not(.dayIsToday_9ed634c8) span,
+            .pickerIsFocused_9ed634c8 .dayIsHighlighted_9ed634c8.daySelection_9ed634c8 :not(.dayIsToday_9ed634c8) span {
+                color: Highlight;
+                -ms-high-contrast-adjust: none
+            }
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .dayIsHighlighted_9ed634c8 button.dayIsToday_9ed634c8 {
+                border-radius: 100%
+            }
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .dayIsHighlighted_9ed634c8 button.dayIsToday_9ed634c8 span {
+                color: Window;
+                -ms-high-contrast-adjust: none
+            }
+        }
+
+        .dayIsFocused_9ed634c8:active,
+        .dayIsHighlighted_9ed634c8 {
+            background-color: #aaceec
+        }
+
+        .dayIsFocused_9ed634c8:active.day_9ed634c8,
+        .dayIsHighlighted_9ed634c8.day_9ed634c8 {
+            color: #9b9b9b;
+            background-color: #1c1c1c
+        }
+
+        .dayIsHighlighted_9ed634c8.dayDisabled_9ed634c8,
+        .dayIsHighlighted_9ed634c8.dayDisabled_9ed634c8:hover {
+            background: #f0f0f0
+        }
+
+        .dayBackground_9ed634c8,
+        .dayBackground_9ed634c8:active,
+        .dayBackground_9ed634c8:hover {
+            border-radius: 2px
+        }
+
+        .dayHover_9ed634c8,
+        .dayHover_9ed634c8:hover {
+            cursor: pointer;
+            background: #1d1d1d;
+            color: #9b9b9b
+        }
+
+        .dayPress_9ed634c8,
+        .dayPress_9ed634c8:hover {
+            cursor: pointer;
+            color: #9b9b9b;
+            background-color: #1c1c1c
+        }
+
+        .dayPress_9ed634c8 .dayIsToday_9ed634c8,
+        .dayPress_9ed634c8:hover .dayIsToday_9ed634c8 {
+            background: #0e70c0;
+            border-radius: 100%
+        }
+
+        .dayIsFocused_9ed634c8:active,
+        .dayIsHighlighted_9ed634c8,
+        .dayIsHighlighted_9ed634c8:active,
+        .dayIsHighlighted_9ed634c8:hover,
+        .dayIsUnfocused_9ed634c8:active,
+        .weekBackground_9ed634c8,
+        .weekBackground_9ed634c8:active,
+        .weekBackground_9ed634c8:hover {
+            background-color: #1c1c1c;
+            color: #9b9b9b
+        }
+
+        .dayIsToday_9ed634c8,
+        .dayIsToday_9ed634c8.day_9ed634c8:active,
+        .pickerIsFocused_9ed634c8 .dayIsToday_9ed634c8 {
+            position: relative;
+            color: #1e1e1e;
+            font-weight: 600;
+            background: #0e70c0;
+            border-radius: 100%
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+
+            .dayIsToday_9ed634c8,
+            .dayIsToday_9ed634c8.day_9ed634c8:active,
+            .pickerIsFocused_9ed634c8 .dayIsToday_9ed634c8 {
+                background-color: Highlight;
+                color: HighlightText;
+                -ms-high-contrast-adjust: none
+            }
+        }
+
+        .showWeekNumbers_9ed634c8 .weekNumbers_9ed634c8 {
+            border-right: 1px solid #1c1c1c;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 28px;
+            padding: 0
+        }
+
+        .showWeekNumbers_9ed634c8 .weekNumbers_9ed634c8 .dayWrapper_9ed634c8 {
+            color: #e0e0e0
+        }
+
+        .showWeekNumbers_9ed634c8 .weekNumbers_9ed634c8 .dayWrapper_9ed634c8.weekIsHighlighted_9ed634c8 {
+            color: #cccccc
+        }
+
+        .showWeekNumbers_9ed634c8 .table_9ed634c8 {
+            width: 225px
+        }
+
+        .showWeekNumbers_9ed634c8 .table_9ed634c8 .dayWrapper_9ed634c8,
+        .showWeekNumbers_9ed634c8 .table_9ed634c8 .weekday_9ed634c8 {
+            width: 30px
+        }
+
+        .showWeekNumbersRTL_9ed634c8 .weekNumbers_9ed634c8 {
+            border-left: 1px solid #1c1c1c;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        .showWeekNumbersRTL_9ed634c8 .weekNumbers_9ed634c8 .dayWrapper_9ed634c8 {
+            color: #e0e0e0
+        }
+
+        .showWeekNumbersRTL_9ed634c8 .weekNumbers_9ed634c8 .dayWrapper_9ed634c8.weekIsHighlighted_9ed634c8 {
+            color: #cccccc
+        }
+
+        .showWeekNumbersRTL_9ed634c8 .table_9ed634c8 {
+            width: 225px
+        }
+
+        .showWeekNumbersRTL_9ed634c8 .table_9ed634c8 .dayWrapper_9ed634c8,
+        .showWeekNumbersRTL_9ed634c8 .table_9ed634c8 .weekday_9ed634c8 {
+            width: 30px
+        }
+
+        .decadeComponents_9ed634c8,
+        .monthComponents_9ed634c8,
+        .yearComponents_9ed634c8 {
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -ms-flex-item-align: end;
+            align-self: flex-end
+        }
+
+        .closeButton_9ed634c8,
+        .nextDecade_9ed634c8,
+        .nextMonth_9ed634c8,
+        .nextYear_9ed634c8,
+        .prevDecade_9ed634c8,
+        .prevMonth_9ed634c8,
+        .prevYear_9ed634c8 {
+            width: 28px;
+            height: 28px;
+            display: block;
+            text-align: center;
+            line-height: 28px;
+            text-align: center;
+            font-size: 12px;
+            color: #cccccc;
+            border-radius: 2px;
+            position: relative;
+            background-color: transparent;
+            border: none;
+            padding: 0
+        }
+
+        .closeButton_9ed634c8:hover,
+        .nextDecade_9ed634c8:hover,
+        .nextMonth_9ed634c8:hover,
+        .nextYear_9ed634c8:hover,
+        .prevDecade_9ed634c8:hover,
+        .prevMonth_9ed634c8:hover,
+        .prevYear_9ed634c8:hover {
+            color: #9b9b9b;
+            cursor: pointer;
+            outline: 1px solid transparent
+        }
+
+        .nextDecadeIsDisabled_9ed634c8,
+        .nextMonthIsDisabled_9ed634c8,
+        .nextYearIsDisabled_9ed634c8,
+        .prevDecadeIsDisabled_9ed634c8,
+        .prevMonthIsDisabled_9ed634c8,
+        .prevYearIsDisabled_9ed634c8 {
+            color: #181818;
+            pointer-events: none
+        }
+
+        .headerToggleView_9ed634c8 {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 4px 8px
+        }
+
+        .headerToggleView_9ed634c8:hover {
+            color: #727272;
+            cursor: pointer
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .headerToggleView_9ed634c8:hover {
+                outline: 1px solid highlight
+            }
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .headerToggleView_9ed634c8:hover:active {
+                color: highlight
+            }
+        }
+
+        .currentDecade_9ed634c8,
+        .currentYear_9ed634c8 {
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            padding: 0 5px;
+            font-size: 14px;
+            font-weight: 400;
+            font-weight: 600;
+            color: #cccccc;
+            height: 28px;
+            line-height: 28px
+        }
+
+        html[dir=ltr] .currentDecade_9ed634c8,
+        html[dir=ltr] .currentYear_9ed634c8 {
+            margin-left: 5px
+        }
+
+        html[dir=rtl] .currentDecade_9ed634c8,
+        html[dir=rtl] .currentYear_9ed634c8 {
+            margin-right: 5px
+        }
+
+        .optionGrid_9ed634c8 {
+            position: relative;
+            height: 210px;
+            width: 196px;
+            margin: 4px 0 0 0
+        }
+
+        html[dir=rtl] .optionGrid_9ed634c8 {
+            margin: 4px 0 0 0
+        }
+
+        .monthOption_9ed634c8,
+        .yearOption_9ed634c8 {
+            width: 60px;
+            height: 60px;
+            line-height: 100%;
+            cursor: pointer;
+            margin: 0 10px 10px 0;
+            font-size: 13px;
+            font-weight: 400;
+            color: #cccccc;
+            text-align: center;
+            border: none;
+            padding: 0;
+            background-color: transparent;
+            border-radius: 2px
+        }
+
+        html[dir=ltr] .monthOption_9ed634c8,
+        html[dir=ltr] .yearOption_9ed634c8 {
+            float: left
+        }
+
+        html[dir=rtl] .monthOption_9ed634c8,
+        html[dir=rtl] .yearOption_9ed634c8 {
+            float: right
+        }
+
+        html[dir=rtl] .monthOption_9ed634c8,
+        html[dir=rtl] .yearOption_9ed634c8 {
+            margin: 0 0 10px 10px
+        }
+
+        .monthOption_9ed634c8:hover,
+        .yearOption_9ed634c8:hover {
+            color: #9b9b9b;
+            background-color: #1d1d1d;
+            outline: 1px solid transparent
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+
+            .monthOption_9ed634c8:hover,
+            .yearOption_9ed634c8:hover {
+                outline-color: highlight
+            }
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+
+            .monthOption_9ed634c8:active,
+            .yearOption_9ed634c8:active {
+                color: highlight
+            }
+        }
+
+        .monthOption_9ed634c8.isHighlighted_9ed634c8,
+        .yearOption_9ed634c8.isHighlighted_9ed634c8 {
+            background-color: #1c1c1c;
+            color: #9b9b9b
+        }
+
+        .dayIsDisabled_9ed634c8,
+        .monthOptionIsDisabled_9ed634c8,
+        .yearOptionIsDisabled_9ed634c8 {
+            color: #181818;
+            pointer-events: none
+        }
+
+        .goToday_9ed634c8 {
+            bottom: 0;
+            color: #0e70c0;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 400;
+            color: #cccccc;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+            background-color: transparent;
+            border: none;
+            position: absolute !important;
+            -webkit-box-sizing: content-box;
+            box-sizing: content-box
+        }
+
+        [dir=ltr] .goToday_9ed634c8 {
+            right: 13px
+        }
+
+        [dir=rtl] .goToday_9ed634c8 {
+            left: 13px
+        }
+
+        .goToday_9ed634c8:hover {
+            color: #0e70c0;
+            outline: 1px solid transparent
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .goToday_9ed634c8:hover {
+                outline-color: highlight
+            }
+        }
+
+        .goToday_9ed634c8:active {
+            color: #0a5591
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .goToday_9ed634c8:active {
+                color: highlight
+            }
+        }
+
+        .goToTodayIsDisabled_9ed634c8 {
+            color: #181818;
+            pointer-events: none
+        }
+
+        .goTodayInlineMonth_9ed634c8 {
+            top: 212px
+        }
+
+        .wrap_9ed634c8.goTodaySpacing_9ed634c8 {
+            padding-bottom: 28px
+        }
+
+        .root_9ed634c8.isPickingYears_9ed634c8 .dayPicker_9ed634c8,
+        .root_9ed634c8.isPickingYears_9ed634c8 .monthComponents_9ed634c8 {
+            display: none
+        }
+
+        .root_9ed634c8.isPickingYears_9ed634c8 .monthPicker_9ed634c8 {
+            display: none
+        }
+
+        .root_9ed634c8.isPickingYears_9ed634c8 .yearPicker_9ed634c8 {
+            display: block
+        }
+
+        @media (min-device-width:460px) {
+            .wrap_9ed634c8 {
+                padding: 12px
+            }
+
+            .dayPicker_9ed634c8,
+            .monthPicker_9ed634c8 {
+                min-height: 200px
+            }
+
+            .header_9ed634c8 {
+                height: 28px;
+                line-height: 28px;
+                width: 100%
+            }
+
+            .dayWrapper_9ed634c8,
+            .weekday_9ed634c8 {
+                width: 28px;
+                height: 28px;
+                line-height: 28px;
+                font-size: 12px
+            }
+
+            .closeButton_9ed634c8,
+            .nextDecade_9ed634c8,
+            .nextMonth_9ed634c8,
+            .nextYear_9ed634c8,
+            .prevDecade_9ed634c8,
+            .prevMonth_9ed634c8,
+            .prevYear_9ed634c8 {
+                font-size: 12px;
+                width: 28px;
+                height: 28px;
+                line-height: 28px
+            }
+
+            .holder_9ed634c8 {
+                display: inline-block;
+                height: auto;
+                overflow: hidden
+            }
+
+            .decade_9ed634c8,
+            .monthAndYear_9ed634c8,
+            .year_9ed634c8 {
+                font-size: 14px;
+                color: #cccccc
+            }
+
+            .yearComponents_9ed634c8 {
+                margin-left: 1px
+            }
+
+            .goToday_9ed634c8 {
+                padding: 0 3px
+            }
+
+            [dir=ltr] .goToday_9ed634c8 {
+                right: 20px
+            }
+
+            [dir=rtl] .goToday_9ed634c8 {
+                left: 20px
+            }
+
+            .showWeekNumbers_9ed634c8 .table_9ed634c8 .dayWrapper_9ed634c8,
+            .showWeekNumbers_9ed634c8 .table_9ed634c8 .weekday_9ed634c8 {
+                width: 28px
+            }
+
+            .showWeekNumbersRTL_9ed634c8 .table_9ed634c8 .dayWrapper_9ed634c8,
+            .showWeekNumbersRTL_9ed634c8 .table_9ed634c8 .weekday_9ed634c8 {
+                width: 28px
+            }
+
+            .monthPickerVisible_9ed634c8 .wrap_9ed634c8 {
+                padding: 12px
+            }
+
+            .monthPickerVisible_9ed634c8 .dayPicker_9ed634c8 {
+                margin: -10px 0;
+                padding: 10px 0
+            }
+
+            .monthPickerVisible_9ed634c8 .dayPicker_9ed634c8 {
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                width: 212px;
+                min-height: 200px
+            }
+
+            .monthPickerVisible_9ed634c8 .monthPicker_9ed634c8 {
+                display: block
+            }
+
+            .monthPickerVisible_9ed634c8 .optionGrid_9ed634c8 {
+                height: 150px;
+                width: 196px
+            }
+
+            .monthPickerVisible_9ed634c8 .toggleMonthView_9ed634c8 {
+                display: none
+            }
+
+            .monthPickerVisible_9ed634c8 .currentDecade_9ed634c8,
+            .monthPickerVisible_9ed634c8 .currentYear_9ed634c8 {
+                font-size: 14px;
+                margin: 0;
+                height: 28px;
+                line-height: 28px;
+                display: inline-block
+            }
+
+            .monthPickerVisible_9ed634c8 .monthOption_9ed634c8,
+            .monthPickerVisible_9ed634c8 .yearOption_9ed634c8 {
+                width: 40px;
+                height: 40px;
+                line-height: 100%;
+                font-size: 12px;
+                margin: 0 12px 16px 0
+            }
+
+            html[dir=rtl] .monthPickerVisible_9ed634c8 .monthOption_9ed634c8,
+            html[dir=rtl] .monthPickerVisible_9ed634c8 .yearOption_9ed634c8 {
+                margin: 0 0 16px 12px
+            }
+
+            .monthPickerVisible_9ed634c8 .monthOption_9ed634c8:hover,
+            .monthPickerVisible_9ed634c8 .yearOption_9ed634c8:hover {
+                outline: 1px solid transparent
+            }
+
+            .monthPickerVisible_9ed634c8 .monthOption_9ed634c8:nth-child(4n+4),
+            .monthPickerVisible_9ed634c8 .yearOption_9ed634c8:nth-child(4n+4) {
+                margin: 0 0 16px 0
+            }
+
+            html[dir=rtl] .monthPickerVisible_9ed634c8 .monthOption_9ed634c8:nth-child(4n+4),
+            html[dir=rtl] .monthPickerVisible_9ed634c8 .yearOption_9ed634c8:nth-child(4n+4) {
+                margin: 0 0 16px 0
+            }
+
+            .monthPickerVisible_9ed634c8 .goToday_9ed634c8 {
+                font-size: 12px;
+                height: 28px;
+                line-height: 28px;
+                padding: 0 10px
+            }
+
+            [dir=ltr] .monthPickerVisible_9ed634c8 .goToday_9ed634c8 {
+                right: 8px
+            }
+
+            [dir=rtl] .monthPickerVisible_9ed634c8 .goToday_9ed634c8 {
+                left: 8px
+            }
+
+            html[dir=ltr] .monthPickerVisible_9ed634c8 .goToday_9ed634c8 {
+                text-align: right
+            }
+
+            html[dir=rtl] .monthPickerVisible_9ed634c8 .goToday_9ed634c8 {
+                text-align: left
+            }
+
+            .monthPickerVisible_9ed634c8 .root_9ed634c8.isPickingYears_9ed634c8 .dayPicker_9ed634c8,
+            .monthPickerVisible_9ed634c8 .root_9ed634c8.isPickingYears_9ed634c8 .monthComponents_9ed634c8 {
+                display: block
+            }
+
+            .monthPickerVisible_9ed634c8 .root_9ed634c8.isPickingYears_9ed634c8 .monthPicker_9ed634c8 {
+                display: none
+            }
+
+            .monthPickerVisible_9ed634c8 .root_9ed634c8.isPickingYears_9ed634c8 .yearPicker_9ed634c8 {
+                display: block
+            }
+
+            .calendarsInline_9ed634c8 .wrap_9ed634c8 {
+                padding: 12px
+            }
+
+            .calendarsInline_9ed634c8 .holder_9ed634c8 {
+                height: auto
+            }
+
+            html[dir=ltr] .calendarsInline_9ed634c8 .table_9ed634c8 {
+                margin-right: 12px
+            }
+
+            html[dir=rtl] .calendarsInline_9ed634c8 .table_9ed634c8 {
+                margin-left: 12px
+            }
+
+            .calendarsInline_9ed634c8 .dayPicker_9ed634c8 {
+                width: auto
+            }
+
+            html[dir=ltr] .calendarsInline_9ed634c8 .monthPicker_9ed634c8 {
+                margin-left: 12px
+            }
+
+            html[dir=rtl] .calendarsInline_9ed634c8 .monthPicker_9ed634c8 {
+                margin-right: 12px
+            }
+
+            html[dir=ltr] .calendarsInline_9ed634c8 .yearPicker_9ed634c8 {
+                margin-left: 12px
+            }
+
+            html[dir=rtl] .calendarsInline_9ed634c8 .yearPicker_9ed634c8 {
+                margin-right: 12px
+            }
+
+            .calendarsInline_9ed634c8 .goToday_9ed634c8 {
+                padding: 0 10px
+            }
+
+            [dir=ltr] .calendarsInline_9ed634c8 .goToday_9ed634c8 {
+                right: 14px
+            }
+
+            [dir=rtl] .calendarsInline_9ed634c8 .goToday_9ed634c8 {
+                left: 14px
+            }
+
+            html[dir=ltr] .calendarsInline_9ed634c8 .monthComponents_9ed634c8 {
+                margin-right: 12px
+            }
+
+            html[dir=rtl] .calendarsInline_9ed634c8 .monthComponents_9ed634c8 {
+                margin-left: 12px
+            }
+
+            .monthPickerOnly_9ed634c8 .wrap_9ed634c8 {
+                padding: 12px
+            }
+
+            .monthPickerAsOverlay_9ed634c8 .wrap_9ed634c8 {
+                padding-bottom: 28px;
+                margin-bottom: 6px
+            }
+
+            .monthPickerAsOverlay_9ed634c8 .holder_9ed634c8 {
+                height: 240px;
+                min-height: 240px
+            }
+
+            .monthPickerAsOverlay_9ed634c8 .holderWithButton_9ed634c8 {
+                padding-top: 6px;
+                height: auto
+            }
+        }
+
+        @media (max-device-width:459px) {
+
+            .calendarsInline_9ed634c8 .monthPicker_9ed634c8,
+            .calendarsInline_9ed634c8 .yearPicker_9ed634c8 {
+                display: none
+            }
+
+            .yearComponents_9ed634c8 {
+                margin-top: 2px
+            }
+        }
+
+        .goToday_9ed634c8 {
+            width: auto
+        }
+
+        .closeButton_9ed634c8,
+        .nextDecade_9ed634c8,
+        .nextMonth_9ed634c8,
+        .nextYear_9ed634c8,
+        .prevDecade_9ed634c8,
+        .prevMonth_9ed634c8,
+        .prevYear_9ed634c8 {
+            display: inline-block
+        }
+
+        .closeButton_9ed634c8:hover,
+        .nextDecade_9ed634c8:hover,
+        .nextMonth_9ed634c8:hover,
+        .nextYear_9ed634c8:hover,
+        .prevDecade_9ed634c8:hover,
+        .prevMonth_9ed634c8:hover,
+        .prevYear_9ed634c8:hover {
+            background-color: #1d1d1d;
+            color: #9b9b9b
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+
+            .closeButton_9ed634c8:hover,
+            .nextDecade_9ed634c8:hover,
+            .nextMonth_9ed634c8:hover,
+            .nextYear_9ed634c8:hover,
+            .prevDecade_9ed634c8:hover,
+            .prevMonth_9ed634c8:hover,
+            .prevYear_9ed634c8:hover {
+                outline: 1px solid Highlight
+            }
+        }
+
+        .closeButton_9ed634c8:active,
+        .nextDecade_9ed634c8:active,
+        .nextMonth_9ed634c8:active,
+        .nextYear_9ed634c8:active,
+        .prevDecade_9ed634c8:active,
+        .prevMonth_9ed634c8:active,
+        .prevYear_9ed634c8:active {
+            background-color: #1c1c1c
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+
+            .closeButton_9ed634c8:active,
+            .nextDecade_9ed634c8:active,
+            .nextMonth_9ed634c8:active,
+            .nextYear_9ed634c8:active,
+            .prevDecade_9ed634c8:active,
+            .prevMonth_9ed634c8:active,
+            .prevYear_9ed634c8:active {
+                color: highlight
+            }
+        }
+
+        .monthIsHighlighted_9ed634c8 {
+            background-color: #1c1c1c;
+            color: #9b9b9b
+        }
+
+        .monthIsHighlighted_9ed634c8.monthOption_9ed634c8:hover {
+            background-color: #1c1c1c
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .monthIsHighlighted_9ed634c8 {
+                color: highlight;
+                border: 2px solid highlight;
+                border-radius: 2px
+            }
+
+            .monthIsHighlighted_9ed634c8:hover {
+                outline: 0 !important
+            }
+        }
+
+        .monthIsCurrentMonth_9ed634c8 {
+            color: #1e1e1e;
+            background-color: #1c1c1c
+        }
+
+        .monthIsCurrentMonth_9ed634c8.monthOption_9ed634c8:hover {
+            color: #1e1e1e;
+            background-color: #1d1d1d
+        }
+
+        .monthOption_9ed634c8:active {
+            background-color: #1c1c1c;
+            color: #9b9b9b
+        }
+
+        .yearIsHighlighted_9ed634c8 {
+            background-color: #1c1c1c;
+            color: #9b9b9b
+        }
+
+        .yearIsHighlighted_9ed634c8.yearOption_9ed634c8:hover {
+            background-color: #1d1d1d
+        }
+
+        .yearIsCurrentYear_9ed634c8 {
+            color: #1e1e1e;
+            background-color: #1c1c1c
+        }
+
+        .yearIsCurrentYear_9ed634c8.yearOption_9ed634c8:hover {
+            color: #1e1e1e;
+            background-color: #1d1d1d
+        }
+
+        .yearOption_9ed634c8:active {
+            background-color: #1c1c1c;
+            color: #9b9b9b
+        }
+
+        .topLeftCornerDate_9ed634c8 {
+            border-top-left-radius: 2px
+        }
+
+        .topRightCornerDate_9ed634c8 {
+            border-top-right-radius: 2px
+        }
+
+        .bottomLeftCornerDate_9ed634c8 {
+            border-bottom-left-radius: 2px
+        }
+
+        .bottomRightCornerDate_9ed634c8 {
+            border-bottom-right-radius: 2px
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .weekBackground_9ed634c8 {
+                border-top: 1px solid highlight;
+                border-bottom: 1px solid highlight
+            }
+
+            .weekBackground_9ed634c8.bottomRightCornerDate_9ed634c8.topRightCornerDate_9ed634c8 {
+                border-right: 1px solid highlight;
+                border-left: none;
+                padding-left: 1px
+            }
+
+            .weekBackground_9ed634c8.bottomLeftCornerDate_9ed634c8.topLeftCornerDate_9ed634c8 {
+                border-left: 1px solid highlight;
+                border-right: none;
+                padding-right: 1px
+            }
+
+            .weekBackground_9ed634c8 :not(.dayIsToday_9ed634c8) span {
+                color: highlight
+            }
+
+            .weekSelection_9ed634c8.dayHover_9ed634c8 {
+                border-top: 1px solid highlight;
+                border-bottom: 1px solid highlight
+            }
+
+            .weekSelection_9ed634c8.dayHover_9ed634c8.bottomLeftCornerDate_9ed634c8.topLeftCornerDate_9ed634c8 {
+                border-left: 1px solid highlight;
+                padding-right: 1px
+            }
+
+            .weekSelection_9ed634c8.dayHover_9ed634c8.bottomRightCornerDate_9ed634c8.topRightCornerDate_9ed634c8 {
+                border-right: 1px solid highlight;
+                padding-left: 1px
+            }
+
+            .weekSelection_9ed634c8.dayHover_9ed634c8.dayPress_9ed634c8 :not(.dayIsToday_9ed634c8) span {
+                color: highlight
+            }
+
+            .monthSelection_9ed634c8.dayHover_9ed634c8.bottomLeftCornerDate_9ed634c8,
+            .monthSelection_9ed634c8.dayHover_9ed634c8.topLeftCornerDate_9ed634c8 {
+                border-left: 1px solid highlight;
+                padding-right: 1px
+            }
+
+            .monthSelection_9ed634c8.dayHover_9ed634c8.bottomRightCornerDate_9ed634c8,
+            .monthSelection_9ed634c8.dayHover_9ed634c8.topRightCornerDate_9ed634c8 {
+                border-right: 1px solid highlight;
+                padding-left: 1px
+            }
+
+            .monthSelection_9ed634c8.dayIsFocused_9ed634c8.dayHover_9ed634c8.topDate_9ed634c8,
+            .monthSelection_9ed634c8.dayIsUnfocused_9ed634c8.dayHover_9ed634c8.topDate_9ed634c8 {
+                border-top: 1px solid highlight;
+                padding-bottom: 1px
+            }
+
+            .monthSelection_9ed634c8.dayIsFocused_9ed634c8.dayHover_9ed634c8.rightDate_9ed634c8,
+            .monthSelection_9ed634c8.dayIsUnfocused_9ed634c8.dayHover_9ed634c8.rightDate_9ed634c8 {
+                border-right: 1px solid highlight;
+                padding-left: 1px
+            }
+
+            .monthSelection_9ed634c8.dayIsFocused_9ed634c8.dayHover_9ed634c8.bottomDate_9ed634c8,
+            .monthSelection_9ed634c8.dayIsUnfocused_9ed634c8.dayHover_9ed634c8.bottomDate_9ed634c8 {
+                border-bottom: 1px solid highlight;
+                padding-top: 1px
+            }
+
+            .monthSelection_9ed634c8.dayIsFocused_9ed634c8.dayHover_9ed634c8.leftdate_9ed634c8,
+            .monthSelection_9ed634c8.dayIsUnfocused_9ed634c8.dayHover_9ed634c8.leftdate_9ed634c8 {
+                border-left: 1px solid highlight;
+                padding-right: 1px
+            }
+
+            .monthSelection_9ed634c8.dayIsFocused_9ed634c8.dayHover_9ed634c8.dayPress_9ed634c8 :not(.dayIsToday_9ed634c8) span,
+            .monthSelection_9ed634c8.dayIsUnfocused_9ed634c8.dayHover_9ed634c8.dayPress_9ed634c8 :not(.dayIsToday_9ed634c8) span {
+                color: highlight
+            }
+        }
+
+        .pickerText_ea445e6f {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            border: 1px solid #f0f0f0;
+            min-width: 180px;
+            padding: 1px;
+            min-height: 32px
+        }
+
+        .pickerText_ea445e6f:hover {
+            border-color: #aaceec
+        }
+
+        .pickerInput_ea445e6f {
+            height: 34px;
+            border: none;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            outline: 0;
+            padding: 0 6px 0;
+            margin: 1px
+        }
+
+        .pickerInput_ea445e6f::-ms-clear {
+            display: none
+        }
+
+        .root_de4504ca {
+            min-width: 260px
+        }
+
+        .suggestionsItem_de4504ca {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: stretch;
+            -ms-flex-align: stretch;
+            align-items: stretch;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+            position: relative;
+            overflow: hidden
+        }
+
+        .suggestionsItem_de4504ca:hover {
+            background: #1d1d1d
+        }
+
+        .suggestionsItem_de4504ca:hover .closeButton_de4504ca {
+            display: block
+        }
+
+        .suggestionsItem_de4504ca.suggestionsItemIsSuggested_de4504ca {
+            background: #1c1c1c
+        }
+
+        .suggestionsItem_de4504ca.suggestionsItemIsSuggested_de4504ca:hover {
+            background: #181818
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .suggestionsItem_de4504ca.suggestionsItemIsSuggested_de4504ca:hover {
+                background: Highlight;
+                color: HighlightText
+            }
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .suggestionsItem_de4504ca.suggestionsItemIsSuggested_de4504ca {
+                background: Highlight;
+                color: HighlightText;
+                -ms-high-contrast-adjust: none
+            }
+        }
+
+        .suggestionsItem_de4504ca.suggestionsItemIsSuggested_de4504ca .closeButton_de4504ca:hover {
+            background: #f0f0f0;
+            color: #cccccc
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .suggestionsItem_de4504ca.suggestionsItemIsSuggested_de4504ca .itemButton_de4504ca {
+                color: HighlightText
+            }
+        }
+
+        .suggestionsItem_de4504ca .closeButton_de4504ca {
+            display: none;
+            color: #e0e0e0
+        }
+
+        .suggestionsItem_de4504ca .closeButton_de4504ca:hover {
+            background: #1c1c1c
+        }
+
+        .actionButton_de4504ca {
+            background-color: transparent;
+            border: 0;
+            cursor: pointer;
+            margin: 0;
+            position: relative;
+            border-top: 1px solid #1c1c1c;
+            height: 40px;
+            width: 100%;
+            font-size: 12px
+        }
+
+        [dir=ltr] .actionButton_de4504ca {
+            padding-left: 8px
+        }
+
+        [dir=rtl] .actionButton_de4504ca {
+            padding-right: 8px
+        }
+
+        html[dir=ltr] .actionButton_de4504ca {
+            text-align: left
+        }
+
+        html[dir=rtl] .actionButton_de4504ca {
+            text-align: right
+        }
+
+        .actionButton_de4504ca:hover {
+            background-color: #1c1c1c;
+            cursor: pointer
+        }
+
+        .actionButton_de4504ca:active,
+        .actionButton_de4504ca:focus {
+            background-color: #aaceec
+        }
+
+        .actionButton_de4504ca .ms-Button-icon {
+            font-size: 16px;
+            width: 25px
+        }
+
+        .actionButton_de4504ca .ms-Button-label {
+            margin: 0 4px 0 9px
+        }
+
+        html[dir=rtl] .actionButton_de4504ca .ms-Button-label {
+            margin: 0 9px 0 4px
+        }
+
+        .buttonSelected_de4504ca {
+            background-color: #aaceec
+        }
+
+        .suggestionsTitle_de4504ca {
+            padding: 0 12px;
+            color: #0e70c0;
+            font-size: 12px;
+            line-height: 40px;
+            border-bottom: 1px solid #1c1c1c
+        }
+
+        .suggestionsContainer_de4504ca {
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: 300px;
+            border-bottom: 1px solid #1c1c1c
+        }
+
+        .suggestionsNone_de4504ca {
+            text-align: center;
+            color: #797775;
+            font-size: 12px;
+            line-height: 30px
+        }
+
+        .suggestionsSpinner_de4504ca {
+            margin: 5px 0;
+            white-space: nowrap;
+            line-height: 20px;
+            font-size: 12px
+        }
+
+        html[dir=ltr] .suggestionsSpinner_de4504ca {
+            padding-left: 14px
+        }
+
+        html[dir=rtl] .suggestionsSpinner_de4504ca {
+            padding-right: 14px
+        }
+
+        html[dir=ltr] .suggestionsSpinner_de4504ca {
+            text-align: left
+        }
+
+        html[dir=rtl] .suggestionsSpinner_de4504ca {
+            text-align: right
+        }
+
+        .suggestionsSpinner_de4504ca .ms-Spinner-circle {
+            display: inline-block;
+            vertical-align: middle
+        }
+
+        .suggestionsSpinner_de4504ca .ms-Spinner-label {
+            display: inline-block;
+            margin: 0 10px 0 16px;
+            vertical-align: middle
+        }
+
+        html[dir=rtl] .suggestionsSpinner_de4504ca .ms-Spinner-label {
+            margin: 0 16px 0 10px
+        }
+
+        .itemButton_de4504ca.itemButton_de4504ca {
+            width: 100%;
+            padding: 0;
+            min-width: 0;
+            height: 100%
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .itemButton_de4504ca.itemButton_de4504ca {
+                color: WindowText
+            }
+        }
+
+        .itemButton_de4504ca.itemButton_de4504ca:hover {
+            color: #9b9b9b
+        }
+
+        .closeButton_de4504ca.closeButton_de4504ca {
+            padding: 0 4px;
+            height: auto;
+            width: 32px
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .closeButton_de4504ca.closeButton_de4504ca {
+                color: WindowText
+            }
+        }
+
+        .closeButton_de4504ca.closeButton_de4504ca:hover {
+            background: #181818;
+            color: #9b9b9b
+        }
+
+        .suggestionsAvailable_de4504ca {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0
+        }
+
+        .pickerText_558a651f {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            border: 1px solid #f0f0f0;
+            min-width: 180px;
+            min-height: 30px
+        }
+
+        .pickerText_558a651f:hover {
+            border-color: #cccccc
+        }
+
+        .pickerText_558a651f.inputFocused_558a651f {
+            position: relative;
+            border-color: #0e70c0
+        }
+
+        .pickerText_558a651f.inputFocused_558a651f:after {
+            pointer-events: none;
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: -1px;
+            bottom: -1px;
+            right: -1px;
+            border: 2px solid #0e70c0
+        }
+
+        .pickerInput_558a651f {
+            height: 34px;
+            border: none;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            outline: 0;
+            padding: 0 6px 0;
+            -ms-flex-item-align: end;
+            align-self: flex-end
+        }
+
+        .pickerItems_558a651f {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            max-width: 100%
+        }
+
+        .screenReaderOnly_558a651f {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0
+        }
+
+        .suggestionsContainer_70d55d93 {
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: 300px
+        }
+
+        .suggestionsContainer_70d55d93 .ms-Suggestion-item:hover {
+            background-color: #1d1d1d;
+            cursor: pointer
+        }
+
+        .suggestionsContainer_70d55d93 .is-suggested {
+            background-color: #d0e4f5
+        }
+
+        .suggestionsContainer_70d55d93 .is-suggested:hover {
+            background-color: #aaceec;
+            cursor: pointer
+        }
+
+        .root_11837c87 {
+            min-width: 260px
+        }
+
+        .actionButton_11837c87 {
+            background: 0 0;
+            background-color: transparent;
+            border: 0;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            width: 100%;
+            font-size: 12px
+        }
+
+        html[dir=ltr] .actionButton_11837c87 {
+            text-align: left
+        }
+
+        html[dir=rtl] .actionButton_11837c87 {
+            text-align: right
+        }
+
+        .actionButton_11837c87:hover {
+            background-color: #1d1d1d;
+            cursor: pointer
+        }
+
+        .actionButton_11837c87:active,
+        .actionButton_11837c87:focus {
+            background-color: #aaceec
+        }
+
+        .actionButton_11837c87 .ms-Button-icon {
+            font-size: 16px;
+            width: 25px
+        }
+
+        .actionButton_11837c87 .ms-Button-label {
+            margin: 0 4px 0 9px
+        }
+
+        html[dir=rtl] .actionButton_11837c87 .ms-Button-label {
+            margin: 0 9px 0 4px
+        }
+
+        .buttonSelected_11837c87 {
+            background-color: #d0e4f5
+        }
+
+        .buttonSelected_11837c87:hover {
+            background-color: #aaceec;
+            cursor: pointer
+        }
+
+        .suggestionsTitle_11837c87 {
+            font-size: 12px
+        }
+
+        .suggestionsSpinner_11837c87 {
+            margin: 5px 0;
+            white-space: nowrap;
+            line-height: 20px;
+            font-size: 12px
+        }
+
+        html[dir=ltr] .suggestionsSpinner_11837c87 {
+            padding-left: 14px
+        }
+
+        html[dir=rtl] .suggestionsSpinner_11837c87 {
+            padding-right: 14px
+        }
+
+        html[dir=ltr] .suggestionsSpinner_11837c87 {
+            text-align: left
+        }
+
+        html[dir=rtl] .suggestionsSpinner_11837c87 {
+            text-align: right
+        }
+
+        .suggestionsSpinner_11837c87 .ms-Spinner-circle {
+            display: inline-block;
+            vertical-align: middle
+        }
+
+        .suggestionsSpinner_11837c87 .ms-Spinner-label {
+            display: inline-block;
+            margin: 0 10px 0 16px;
+            vertical-align: middle
+        }
+
+        html[dir=rtl] .suggestionsSpinner_11837c87 .ms-Spinner-label {
+            margin: 0 16px 0 10px
+        }
+
+        .itemButton_11837c87 {
+            height: 100%;
+            width: 100%;
+            padding: 7px 12px
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .itemButton_11837c87 {
+                color: WindowText
+            }
+        }
+
+        .screenReaderOnly_11837c87 {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0
+        }
+
+        .personaContainer_01e36bd0 {
+            border-radius: 15px;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            background: #f3f8fc;
+            margin: 4px;
+            cursor: default;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            vertical-align: middle;
+            position: relative
+        }
+
+        .personaContainer_01e36bd0::-moz-focus-inner {
+            border: 0
+        }
+
+        .personaContainer_01e36bd0 {
+            outline: transparent
+        }
+
+        .personaContainer_01e36bd0 {
+            position: relative
+        }
+
+        .ms-Fabric--isFocusVisible .personaContainer_01e36bd0:focus:after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            bottom: -2px;
+            left: -2px;
+            pointer-events: none;
+            border: 1px solid #e0e0e0
+        }
+
+        .personaContainer_01e36bd0 .ms-Persona-primaryText {
+            color: #0a5591;
+            font-size: 14px;
+            font-weight: 400
+        }
+
+        .personaContainer_01e36bd0 .ms-Persona-primaryText.hover_01e36bd0 {
+            color: #0a5591
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .personaContainer_01e36bd0 .ms-Persona-primaryText {
+                color: HighlightText
+            }
+        }
+
+        .personaContainer_01e36bd0 .actionButton_01e36bd0:hover {
+            background: #aaceec
+        }
+
+        .personaContainer_01e36bd0 .actionButton_01e36bd0 .ms-Button-icon {
+            color: #0a5591
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .personaContainer_01e36bd0 .actionButton_01e36bd0 .ms-Button-icon {
+                color: HighlightText
+            }
+        }
+
+        .personaContainer_01e36bd0:hover {
+            background: #d0e4f5
+        }
+
+        .personaContainer_01e36bd0:hover .ms-Persona-primaryText {
+            color: #0a5591;
+            font-size: 14px;
+            font-weight: 400
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .personaContainer_01e36bd0:hover .ms-Persona-primaryText {
+                color: HighlightText
+            }
+        }
+
+        .personaContainer_01e36bd0.personaContainerIsSelected_01e36bd0 {
+            background: #0e70c0
+        }
+
+        .personaContainer_01e36bd0.personaContainerIsSelected_01e36bd0 .ms-Persona-primaryText {
+            color: #1e1e1e
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .personaContainer_01e36bd0.personaContainerIsSelected_01e36bd0 .ms-Persona-primaryText {
+                color: HighlightText
+            }
+        }
+
+        .personaContainer_01e36bd0.personaContainerIsSelected_01e36bd0 .actionButton_01e36bd0 {
+            color: #1e1e1e
+        }
+
+        .personaContainer_01e36bd0.personaContainerIsSelected_01e36bd0 .actionButton_01e36bd0 .ms-Button-icon {
+            color: #0a5591
+        }
+
+        .personaContainer_01e36bd0.personaContainerIsSelected_01e36bd0 .actionButton_01e36bd0 .ms-Button-icon:hover {
+            background: #0a5591
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .personaContainer_01e36bd0.personaContainerIsSelected_01e36bd0 .actionButton_01e36bd0 .ms-Button-icon {
+                color: HighlightText
+            }
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .personaContainer_01e36bd0.personaContainerIsSelected_01e36bd0 {
+                border-color: Highlight;
+                background: Highlight;
+                -ms-high-contrast-adjust: none
+            }
+        }
+
+        .personaContainer_01e36bd0.validationError_01e36bd0 .ms-Persona-primaryText {
+            color: #e81123
+        }
+
+        .personaContainer_01e36bd0.validationError_01e36bd0 .ms-Persona-initials {
+            font-size: 20px
+        }
+
+        @media screen and (-ms-high-contrast:active) {
+            .personaContainer_01e36bd0 {
+                border: 1px solid WindowText
+            }
+        }
+
+        .personaContainer_01e36bd0 .itemContent_01e36bd0 {
+            -webkit-box-flex: 0;
+            -ms-flex: 0 1 auto;
+            flex: 0 1 auto;
+            min-width: 0;
+            max-width: 100%
+        }
+
+        .personaContainer_01e36bd0 .removeButton_01e36bd0 {
+            border-radius: 15px;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            width: 33px;
+            height: 33px;
+            -ms-flex-preferred-size: 32px;
+            flex-basis: 32px
+        }
+
+        .personaContainer_01e36bd0 .expandButton_01e36bd0 {
+            border-radius: 15px 0 0 15px;
+            height: 33px;
+            width: 44px;
+            padding-right: 16px;
+            position: inherit;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            margin-right: -17px
+        }
+
+        .personaContainer_01e36bd0 .personaWrapper_01e36bd0 {
+            position: relative;
+            display: inherit
+        }
+
+        .personaContainer_01e36bd0 .personaWrapper_01e36bd0 .ms-Persona-details {
+            padding: 0 8px
+        }
+
+        .personaContainer_01e36bd0 .personaDetails_01e36bd0 {
+            -webkit-box-flex: 0;
+            -ms-flex: 0 1 auto;
+            flex: 0 1 auto
+        }
+
+        .itemContainer_01e36bd0 {
+            display: inline-block;
+            vertical-align: top
+        }
+
+        body,
+        #placeholder {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="vscode-dark" data-vscode-theme-kind="vscode-dark" data-vscode-theme-name="Dark+ (default dark)">
+    <div id="placeholder">
+    </div>
+    <script nonce="zes9uXypVmEN3lSoLeogIeTyRgDkjQUE" src="./dist/eclwatch.js"></script>
+
+</body>
+
+</html>

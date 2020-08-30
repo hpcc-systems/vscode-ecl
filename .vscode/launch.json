@@ -11,6 +11,20 @@
     ],
     "configurations": [
         {
+            "name": "play-hthor-submit",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "https",
+            "serverAddress": "play.hpccsystems.com",
+            "port": 18010,
+            "targetCluster": "hthor",
+            "rejectUnauthorized": false,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "vscode_user",
+            "password": ""
+        },
+        {
             "name": "Launch Extension",
             "type": "extensionHost",
             "request": "launch",
@@ -48,6 +62,16 @@
             "type": "chrome",
             "request": "launch",
             "url": "file:///${workspaceRoot}/webview-test.html",
+            "runtimeArgs": [
+                "--disable-web-security"
+            ],
+            "webRoot": "${workspaceRoot}"
+        },
+        {
+            "name": "index",
+            "type": "chrome",
+            "request": "launch",
+            "url": "file:///${workspaceRoot}/index.html",
             "runtimeArgs": [
                 "--disable-web-security"
             ],

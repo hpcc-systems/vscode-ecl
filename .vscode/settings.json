@@ -10,5 +10,7 @@
 		"out/": true
 	},
 	"editor.insertSpaces": true,
-	"ecl.debugLogging": true
+	"ecl.debugLogging": true,
+	"ecl.launchConfiguration": "play-hthor-submit (vscode-ecl)",
+	"ecl.targetCluster": {}
 }

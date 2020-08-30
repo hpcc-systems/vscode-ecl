@@ -39,25 +39,26 @@
     "tag": "run-s standard-version git-push"
   },
   "devDependencies": {
-    "@fluentui/react": "^7.137.1",
-    "@hpcc-js/comms": "^2.27.0",
-    "@hpcc-js/dgrid": "^2.8.34",
-    "@hpcc-js/loader": "^2.41.0",
-    "@hpcc-js/marshaller": "^2.23.51",
-    "@hpcc-js/observable-md": "^2.18.0",
+    "@fluentui/react": "^7.145.0",
+    "@hpcc-js/comms": "^2.29.0",
+    "@hpcc-js/dgrid": "^2.8.35",
+    "@hpcc-js/loader": "^2.43.0",
+    "@hpcc-js/marshaller": "^2.23.53",
+    "@hpcc-js/observable-md": "^2.19.0",
     "@hpcc-js/util": "^2.26.0",
     "@material-ui/core": "^4.11.0",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^12.12.58",
-    "@types/vscode": "^1.48.0",
+    "@types/node": "^12.12.66",
+    "@types/vscode": "^1.14.0",
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",
     "adm-zip": "^0.4.16",
     "antlr4": "^4.8.0",
-    "copyfiles": "^2.3.0",
+    "copy-to-clipboard": "^3.3.1",
+    "copyfiles": "^2.4.0",
     "css-loader": "^4.3.0",
     "diff": "^4.0.2",
-    "eslint": "^7.9.0",
+    "eslint": "^7.10.0",
     "mocha": "^7.2.0",
     "npm-run-all": "^4.1.5",
     "original-fs": "^1.1.0",
@@ -66,13 +67,14 @@
     "rimraf": "^3.0.2",
     "source-map-loader": "^0.2.4",
     "standard-version": "^9.0.0",
-    "style-loader": "^1.2.1",
-    "tslib": "^1.13.0",
+    "style-loader": "^1.3.0",
+    "tslib": "^1.14.0",
     "typescript": "^3.9.7",
-    "vsce": "^1.79.4",
-    "vscode-debugadapter": "^1.41.1",
-    "vscode-debugprotocol": "^1.41.0",
-    "webpack": "^4.44.1",
+    "use-resize-observer": "^6.1.0",
+    "vsce": "^1.81.1",
+    "vscode-debugadapter": "^1.42.1",
+    "vscode-debugprotocol": "^1.42.0",
+    "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
   },
   "author": {
@@ -83,7 +85,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.48.0"
+    "vscode": "^1.50.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
@@ -269,6 +271,15 @@
       },
       {
         "command": "hpccPlatform.eclwatch",
+        "title": "ECL Watch",
+        "description": "Open ECL Watch in external browser.",
+        "icon": {
+          "light": "resources/light/globe.svg",
+          "dark": "resources/dark/globe.svg"
+        }
+      },
+      {
+        "command": "ecl.watch.lite.openECLWatchExternal",
         "title": "ECL Watch",
         "description": "Open ECL Watch in external browser.",
         "icon": {
@@ -502,6 +513,11 @@
           "command": "hpccPlatform.switch",
           "when": "view == hpccPlatform",
           "group": "navigation@60"
+        },
+        {
+          "command": "ecl.watch.lite.openECLWatchExternal",
+          "when": "view == ecl.watch.lite && ecl.watch.lite.hasWuid",
+          "group": "navigation@100"
         }
       ],
       "view/item/context": [
@@ -590,6 +606,14 @@
           "name": "HPCC Platform",
           "icon": "resources/ecl-explorer.svg",
           "contextualTitle": "HPCC Platform",
+          "when": "resourceLangId == ecl"
+        }
+      ],
+      "ecl-watch-lite": [
+        {
+          "type": "webview",
+          "id": "ecl.watch.lite",
+          "name": "",
           "when": "resourceLangId == ecl"
         }
       ]
@@ -858,7 +882,7 @@
         },
         "initialConfigurations": [
           {
-            "name": "play-hthor-submit",
+            "name": "play.hpccsystems.com",
             "type": "ecl",
             "request": "launch",
             "protocol": "https",
@@ -874,10 +898,10 @@
         ],
         "configurationSnippets": [
           {
-            "label": "ECL:  localhost-hthor",
+            "label": "ECL:  localhost",
             "description": "A new configuration to submit ECL to localhost, hthor.",
             "body": {
-              "name": "localhost-hthor-submit",
+              "name": "localhost",
               "type": "ecl",
               "request": "launch",
               "protocol": "http",
@@ -892,10 +916,10 @@
             }
           },
           {
-            "label": "ECL:  play.hpccsystems.com - hthor",
+            "label": "ECL:  play.hpccsystems.com",
             "description": "Submits ECL to public demo servers, hthor.",
             "body": {
-              "name": "play-hthor-submit",
+              "name": "play.hpccsystems.com",
               "type": "ecl",
               "request": "launch",
               "protocol": "https",
