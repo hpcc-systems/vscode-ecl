@@ -18,7 +18,8 @@
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--disable-extensions",
-                "--extensionDevelopmentPath=${workspaceRoot}"
+                "--extensionDevelopmentPath=${workspaceRoot}",
+                "--enable-proposed-api"
             ],
             "outFiles": [
                 "${workspaceRoot}/dist/*.js"
@@ -32,21 +33,21 @@
             "type": "node",
             "request": "launch",
             "program": "${workspaceRoot}/dist/debugger.js",
-            "stopOnEntry": false,
             "args": [
                 "--server=4711"
             ],
             "outFiles": [
                 "${workspaceRoot}/dist/*.js"
             ],
+            "stopOnEntry": false,
             "sourceMaps": true,
             "cwd": "${workspaceRoot}"
         },
         {
-            "name": "test.html",
+            "name": "webview-test",
             "type": "chrome",
             "request": "launch",
-            "url": "file:///${workspaceRoot}/test.html",
+            "url": "file:///${workspaceRoot}/webview-test.html",
             "runtimeArgs": [
                 "--disable-web-security"
             ],

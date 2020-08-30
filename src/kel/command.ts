@@ -76,7 +76,7 @@ export class Commands {
                         logger.debug("checkSyntax-check-response-end");
                     });
                 }
-            })
+            });
         }
     }
 
@@ -91,7 +91,7 @@ export class Commands {
                 if (clientTools) {
                     clientTools.generate(doc.uri);
                 }
-            })
+            });
         }
     }
 
@@ -106,7 +106,7 @@ export class Commands {
                     const location = clientTools.genFolder(doc.uri);
                     vscode.env.openExternal(vscode.Uri.file(location));
                 }
-            })
+            });
         }
     }
 }

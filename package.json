@@ -1,11 +1,11 @@
 {
   "private": true,
   "name": "ecl",
-  "version": "1.9.5",
+  "version": "2.0.0",
   "publisher": "hpcc-systems",
   "displayName": "ECL Language",
   "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
-  "icon": "images/eclIcon.png",
+  "icon": "resources/eclIcon.png",
   "categories": [
     "Programming Languages",
     "Snippets",
@@ -25,7 +25,8 @@
     "bundle-watch": "webpack --mode development --watch",
     "build": "run-s copy-resources compile-es6 bundle",
     "watch": "npm-run-all compile-es6 --parallel compile-es6-watch bundle-watch",
-    "lint": "tslint --project . src/**/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "lint-fix": "npm run lint -- --fix",
     "test": "npm run compile",
     "dev-link": "rimraf ./node_modules/@hpcc-js && mklink /J .\\node_modules\\@hpcc-js ..\\hpcc-js\\packages",
     "dev-unlink": "rimraf ./node_modules/@hpcc-js",
@@ -33,34 +34,42 @@
     "vscode:prepublish": "run-s clean build",
     "git-push": "git push --follow-tags upstream master",
     "preinstall": "npm run dev-unlink || echo \"Clean Install - ignore previous error!\"",
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "vsce-publish": "vsce publish",
     "vsce-package": "vsce package",
     "tag": "run-s standard-version git-push"
   },
   "devDependencies": {
-    "@hpcc-js/comms": "^2.13.9",
-    "@hpcc-js/loader": "^2.15.13",
-    "@hpcc-js/marshaller": "^2.23.18",
-    "@hpcc-js/observable-md": "^2.2.6",
-    "@hpcc-js/util": "^2.12.0",
+    "@fluentui/react": "^7.137.1",
+    "@hpcc-js/comms": "^2.26.0",
+    "@hpcc-js/dgrid": "^2.8.34",
+    "@hpcc-js/loader": "^2.40.0",
+    "@hpcc-js/marshaller": "^2.23.50",
+    "@hpcc-js/observable-md": "^2.18.0",
+    "@hpcc-js/util": "^2.26.0",
+    "@material-ui/core": "^4.11.0",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^12.12.54",
+    "@types/node": "^12.12.58",
+    "@types/vscode": "^1.48.0",
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
     "adm-zip": "^0.4.16",
     "antlr4": "^4.8.0",
     "copyfiles": "^2.3.0",
+    "css-loader": "^4.3.0",
     "diff": "^4.0.2",
+    "eslint": "^7.9.0",
     "mocha": "^7.2.0",
     "npm-run-all": "^4.1.5",
     "original-fs": "^1.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "rimraf": "^3.0.2",
     "source-map-loader": "^0.2.4",
     "standard-version": "^9.0.0",
+    "style-loader": "^1.2.1",
     "tslib": "^1.13.0",
-    "tslint": "^6.1.3",
     "typescript": "^3.9.7",
-    "vsce": "^1.78.0",
-    "vscode": "^1.1.36",
+    "vsce": "^1.79.4",
     "vscode-debugadapter": "^1.41.1",
     "vscode-debugprotocol": "^1.41.0",
     "webpack": "^4.44.1",
@@ -74,12 +83,13 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.31.0"
+    "vscode": "^1.48.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
     "theme": "light"
   },
+  "enableProposedApi": false,
   "extensionDependencies": [
     "vscode.json"
   ],
@@ -162,97 +172,195 @@
         "path": "./snippets/ecl.json"
       }
     ],
+    "viewsWelcome": [],
     "commands": [
       {
+        "command": "ecl.submit",
+        "category": "ECL",
+        "title": "Submit",
+        "description": "Submit ECL to HPCC Platform.",
+        "icon": {
+          "light": "resources/light/play.svg",
+          "dark": "resources/dark/play.svg"
+        }
+      },
+      {
+        "command": "ecl.compile",
+        "category": "ECL",
+        "title": "Compile",
+        "description": "Compile ECL on the HPCC Platform.",
+        "icon": {
+          "light": "resources/light/file-binary.svg",
+          "dark": "resources/dark/file-binary.svg"
+        }
+      },
+      {
         "command": "ecl.checkSyntax",
-        "title": "ECL: Syntax Check",
+        "category": "ECL",
+        "title": "Syntax Check",
         "description": "Save + check syntax of current file."
       },
       {
         "command": "ecl.checkSyntaxAll",
-        "title": "ECL: Syntax Check all files",
+        "category": "ECL",
+        "title": "Syntax Check all files",
         "description": "Save All + check syntax of all files."
       },
       {
         "command": "ecl.checkSyntaxClear",
-        "title": "ECL: Syntax Clear",
+        "category": "ECL",
+        "title": "Syntax Clear",
         "description": "Clear all previously reported ECL Syntax Check results."
       },
       {
         "command": "ecl.showLanguageReference",
-        "title": "ECL: Language Reference Website",
+        "category": "ECL",
+        "title": "Language Reference Website",
         "description": "Opens the ECL language reference website in external browser."
       },
       {
         "command": "ecl.searchTerm",
-        "title": "ECL: Language Reference Lookup",
+        "category": "ECL",
+        "title": "Language Reference Lookup",
         "description": "For the currently selected text, search the online ECL language reference."
       },
       {
-        "command": "ecl.openWUDetails",
-        "title": "ECL: Workunit Details",
-        "description": "Opens ECL Watch Workunit Details for the selected Workunit."
+        "command": "ecl.openECLWatch",
+        "category": "ECL",
+        "title": "Open ECL Watch",
+        "description": "Opens ECL Watch Page."
+      },
+      {
+        "command": "ecl.openECLWatchExternal",
+        "category": "ECL",
+        "title": "Launch ECL Watch",
+        "description": "Opens ECL Watch Page in an external browser.",
+        "icon": {
+          "light": "resources/light/globe.svg",
+          "dark": "resources/dark/globe.svg"
+        }
       },
       {
         "command": "ecl.selectCTVersion",
-        "title": "ECL: Select Client Tools Version",
+        "category": "ECL",
+        "title": "Select Client Tools Version",
         "description": "Select Client Tools Version from available options."
       },
       {
         "command": "ecl.createTerminal",
-        "title": "ECL: Terminal",
+        "category": "ECL",
+        "title": "Terminal",
         "description": "Opens ECL Client Tools Terminal Session."
       },
       {
+        "command": "hpccPlatform.refresh",
+        "title": "Refresh",
+        "description": "Refresh Tree.",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "hpccPlatform.eclwatch",
+        "title": "ECL Watch",
+        "description": "Open ECL Watch in external browser.",
+        "icon": {
+          "light": "resources/light/globe.svg",
+          "dark": "resources/dark/globe.svg"
+        }
+      },
+      {
+        "command": "hpccPlatform.pin",
+        "title": "Pin launch configutation",
+        "description": "Pin launch configutation to current document."
+      },
+      {
+        "command": "hpccPlatform.switch",
+        "title": "Switch HPCC Platform",
+        "description": "Switch to different HPCC Platform instance.",
+        "icon": {
+          "light": "resources/light/server-process.svg",
+          "dark": "resources/dark/server-process.svg"
+        }
+      },
+      {
+        "command": "hpccPlatform.switchTargetCluster",
+        "title": "Switch Target Cluster",
+        "description": "Switch Target Cluster."
+      },
+      {
+        "command": "hpccPlatform.myWorkunits",
+        "title": "My workunits",
+        "description": "Showing \"my\" workunits.",
+        "icon": {
+          "light": "resources/light/person.svg",
+          "dark": "resources/dark/person.svg"
+        }
+      },
+      {
+        "command": "hpccPlatform.allWorkunits",
+        "title": "All workunits",
+        "description": "Showing all workunits.",
+        "icon": {
+          "light": "resources/light/organization.svg",
+          "dark": "resources/dark/organization.svg"
+        }
+      },
+      {
         "command": "kel.checkSyntax",
-        "title": "KEL: Syntax Check",
+        "category": "KEL",
+        "title": "Syntax Check",
         "description": "Save + check syntax of current file."
       },
       {
         "command": "kel.generate",
-        "title": "KEL: Generate",
+        "category": "KEL",
+        "title": "Generate",
         "description": "Generate source from KEL file."
       },
       {
         "command": "kel.reveal",
-        "title": "KEL: Reveal Generated ECL in File Explorer",
+        "category": "KEL",
+        "title": "Reveal Generated ECL in File Explorer",
         "description": "Reveals Generated ECL in File Explorer."
       },
       {
         "command": "kel.selectCTVersion",
-        "title": "KEL: Select Client Tools Version",
+        "category": "KEL",
+        "title": "Select Client Tools Version",
         "description": "Select Client Tools Version from available options."
       },
       {
         "command": "omd.view",
         "title": "View ECL Markdown",
         "icon": {
-          "dark": "./images/omd-view-dark.svg",
-          "light": "./images/omd-view.svg"
+          "dark": "./resources/dark/omd-view.svg",
+          "light": "./resources/light/omd-view.svg"
         }
       },
       {
         "command": "omd.export",
         "title": "Export ECL Markdown to HTML",
         "icon": {
-          "dark": "./images/omd-export-dark.svg",
-          "light": "./images/omd-export.svg"
+          "dark": "./resources/dark/omd-export.svg",
+          "light": "./resources/light/omd-export.svg"
         }
       },
       {
         "command": "dashy.view",
         "title": "View Dashboard",
         "icon": {
-          "dark": "./images/dashy-view-dark.svg",
-          "light": "./images/dashy-view.svg"
+          "dark": "./resources/dark/dashy-view.svg",
+          "light": "./resources/light/dashy-view.svg"
         }
       },
       {
         "command": "dashy.edit",
         "title": "Edit Dashboard",
         "icon": {
-          "dark": "./images/dashy-edit-dark.svg",
-          "light": "./images/dashy-edit.svg"
+          "dark": "./resources/dark/dashy-edit.svg",
+          "light": "./resources/light/dashy-edit.svg"
         }
       }
     ],
@@ -282,8 +390,18 @@
       "editor/context": [
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "ecl.submit",
+          "group": "navigation@900"
+        },
+        {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "ecl.compile",
+          "group": "navigation@910"
+        },
+        {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.checkSyntax",
-          "group": "navigation@998"
+          "group": "navigation@920"
         },
         {
           "when": "resourceLangId == kel && resourceExtname == .kel",
@@ -331,6 +449,60 @@
           "when": "resourceLangId == json && resourceExtname == .dashy",
           "command": "dashy.edit",
           "group": "navigation@999"
+        },
+        {
+          "when": "resourceLangId == ecl",
+          "command": "ecl.submit",
+          "group": "navigation@900"
+        },
+        {
+          "when": "resourceLangId == ecl",
+          "command": "ecl.compile",
+          "group": "navigation@910"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "ecl.submit",
+          "when": "editorTextFocus && editorLangId == ecl",
+          "group": "navigation"
+        },
+        {
+          "command": "hpccPlatform.myWorkunits",
+          "when": "view == hpccPlatform && hpccPlatform.isMyWorkunits",
+          "group": "navigation@10"
+        },
+        {
+          "command": "hpccPlatform.allWorkunits",
+          "when": "view == hpccPlatform && hpccPlatform.isAllWorkunits",
+          "group": "navigation@20"
+        },
+        {
+          "command": "hpccPlatform.refresh",
+          "when": "view == hpccPlatform",
+          "group": "navigation@40"
+        },
+        {
+          "command": "hpccPlatform.eclwatch",
+          "when": "view == hpccPlatform",
+          "group": "navigation@50"
+        },
+        {
+          "command": "hpccPlatform.switch",
+          "when": "view == hpccPlatform",
+          "group": "navigation@60"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "ecl.openECLWatchExternal",
+          "when": "view == hpccPlatform && viewItem == ECLWUNode",
+          "group": "inline"
+        },
+        {
+          "command": "ecl.openECLWatchExternal",
+          "when": "view == hpccPlatform && viewItem == ECLResultNode",
+          "group": "inline"
         }
       ]
     },
@@ -340,6 +512,12 @@
         "key": "shift+f1",
         "mac": "shift+f1",
         "when": "editorTextFocus"
+      },
+      {
+        "command": "ecl.submit",
+        "key": "f5",
+        "mac": "f5",
+        "when": "editorTextFocus && editorLangId == ecl"
       },
       {
         "command": "ecl.checkSyntax",
@@ -388,23 +566,29 @@
         "when": "editorTextFocus"
       }
     ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "ecl-explorer",
-          "title": "hpcc-systems",
-          "icon": "images/ecl-explorer.svg"
-        }
-      ]
-    },
     "views": {
-      "ecl-explorer": [
+      "explorer": [
         {
-          "id": "eclWatch",
-          "name": "ECL Watch"
+          "id": "hpccPlatform",
+          "name": "HPCC Platform",
+          "icon": "resources/ecl-explorer.svg",
+          "contextualTitle": "HPCC Platform",
+          "when": "resourceLangId == ecl"
         }
       ]
     },
+    "viewsContainers": {
+      "activitybar": [],
+      "panel": [
+        {
+          "id": "ecl-watch-lite",
+          "title": "HPCC",
+          "icon": "resources/ecl-explorer.svg",
+          "when": "resourceLangId == ecl"
+        }
+      ]
+    },
+    "customEditors": [],
     "breakpoints": [
       {
         "language": "ecl"
@@ -452,29 +636,41 @@
           "default": "",
           "description": "Override eclcc auto detection."
         },
+        "ecl.eclccLogfile": {
+          "type": "string",
+          "scope": "resource",
+          "default": "",
+          "description": "Write eclcc logfile to specified file."
+        },
         "ecl.legacyMode": {
           "type": "boolean",
           "scope": "resource",
           "default": false,
           "description": "Add '-legacy' argument to eclcc."
         },
-        "ecl.WUOpenExternal": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": true,
-          "description": "Open Workunits in external browser."
-        },
-        "ecl.WUAutoOpen": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": false,
-          "description": "Automatically open Workunits on creation."
-        },
         "ecl.debugLogging": {
           "type": "boolean",
           "scope": "application",
           "default": false,
           "description": "Debug level logging (requires restart)."
+        },
+        "ecl.launchConfiguration": {
+          "type": "string",
+          "scope": "resource",
+          "default": "",
+          "description": "Default launch configuration."
+        },
+        "ecl.targetCluster": {
+          "type": "object",
+          "scope": "resource",
+          "default": {},
+          "description": "Target cluster (per launch configuration)."
+        },
+        "ecl.pinnedLaunchConfigurations": {
+          "type": "object",
+          "scope": "resource",
+          "default": {},
+          "description": "Pinned launch configurations."
         },
         "dashy.libraryLocation": {
           "type": "string",
@@ -545,7 +741,6 @@
         "configurationAttributes": {
           "launch": {
             "required": [
-              "workspace",
               "serverAddress",
               "protocol",
               "port",
@@ -561,11 +756,6 @@
                   "debug"
                 ],
                 "default": "submit"
-              },
-              "workspace": {
-                "type": "string",
-                "description": "Workspace relative path to the program folder (or any file within that folder) when in 'debug' or 'test' mode, and to the pre-built binary file to debug in 'exec' mode.",
-                "default": "${workspaceRoot}"
               },
               "program": {
                 "default": "${file}"
@@ -656,7 +846,6 @@
             "type": "ecl",
             "request": "launch",
             "mode": "submit",
-            "workspace": "${workspaceRoot}",
             "program": "${file}",
             "protocol": "https",
             "serverAddress": "play.hpccsystems.com",
@@ -682,7 +871,6 @@
               "type": "ecl",
               "request": "launch",
               "mode": "submit",
-              "workspace": "^\"\\${workspaceRoot}\"",
               "program": "^\"\\${file}\"",
               "protocol": "http",
               "serverAddress": "localhost",
@@ -707,7 +895,6 @@
               "type": "ecl",
               "request": "launch",
               "mode": "submit",
-              "workspace": "^\"\\${workspaceRoot}\"",
               "program": "^\"\\${file}\"",
               "protocol": "https",
               "serverAddress": "play.hpccsystems.com",

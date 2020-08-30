@@ -136,7 +136,7 @@ class KELClientTools extends ClientTools {
             return {
                 stdout: response.stdout,
                 errors: new KelccErrors(response.stderr, checked)
-            }
+            };
         });
     }
 
@@ -224,7 +224,6 @@ function locateAllClientTools() {
     });
     return allClientToolsCache;
 }
-
 
 function showKelStatus(version: string, overriden: boolean, tooltip: string) {
     kelStatusBar.showKelStatus(`${overriden ? "*" : ""}${version}`, tooltip);

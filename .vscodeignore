@@ -4,7 +4,7 @@
 
 # Whitelist required files
 !dist/**/*
-!images/**/*
+!resources/**/*
 !snippets/**/*
 !syntaxes/**/*
 
