@@ -54,7 +54,10 @@ export class View {
         this._panel = vscode.window.createWebviewPanel(
             "dashy",
             `${this._edit ? "Edit" : "View"} (${baseName})`,
-            vscode.ViewColumn.Beside,
+            {
+                viewColumn: vscode.ViewColumn.Beside,
+                preserveFocus: true
+            },
             {
                 localResourceRoots,
                 enableScripts: true,
@@ -88,7 +91,7 @@ export class View {
         }
     }
 
-    onChangeDocument(changes: vscode.TextDocumentContentChangeEvent[]) {
+    onChangeDocument(changes: readonly vscode.TextDocumentContentChangeEvent[]) {
     }
 
     onWebView(msg: any) {

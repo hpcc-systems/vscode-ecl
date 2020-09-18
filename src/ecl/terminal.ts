@@ -11,7 +11,7 @@ export class ECLTerminal {
             locateClientTools().then(clientTools => {
                 return Promise.all([clientTools.version(), Promise.resolve((clientTools as any).binPath)]);
             }).then(([ver, path]) => {
-                const terminal = (vscode.window as any).createTerminal({
+                const terminal = vscode.window.createTerminal({
                     name: `ECL v${ver.major}.${ver.minor}.${ver.patch}`,
                     env: {
                         PATH: `${path};${process.env.PATH}`

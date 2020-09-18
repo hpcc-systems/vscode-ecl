@@ -8,6 +8,21 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 * Client tools discovery and integration
 * HPCC-Platform server support
 
+## Version 2 Highlights
+
+![Version 2 Highlights](resources\screenshot-v2-whatnew.jpg)
+
+| Command                   | Shortcut | Description                                                      |
+|---------------------------|:--------:|------------------------------------------------------------------|
+|![Submit](resources/light-png/play.png) Submit | F5 | Submit ECL |
+|![Compile](resources/light-png/file-binary.png) Compile | | Compile ECL |
+|![My Workunits](resources/light-png/person.png) My workunits | | Toggle between "My" and "All" Workunits |
+|![All Workunits](resources/light-png/organization.png) All workunits | | Toggle between "My" and "All" Workunits |
+|![ECL Watch](resources/light-png/globe.png) ECL Watch | | Launch ECL Watch |
+|![Switch](resources/light-png/server-process.png) Switch Platform | | Switch HPCC Platform instance |
+
+---
+
 ## Installation
 
 * Install Visual Studio Code. 
@@ -22,25 +37,40 @@ The following ECL specific commands are available.  Note:  These commands will *
 
 #### Global:
 
-* Syntax Check all files **[shift + F7]** - _Save All + check syntax of all files._
-* Syntax Clear **[ctrl + F7]** - _Clear all previously reported ECL Syntax Check results._
-* Language Reference Website - _Opens the ECL language reference website in external browser._
-* Terminal - _Opens ECL Client Tools Terminal Session._
+| Command                   | Shortcut | Description                                                      |
+|---------------------------|:--------:|------------------------------------------------------------------|
+| Syntax Check All Files | shift + F7 | Save All + check syntax of all files. |
+| Syntax Clear | ctrl + F7 | Clear all previously reported ECL Syntax Check results |
+| Language Reference Website | | Opens the ECL language reference website in external browser |
+| Terminal | | Opens ECL Client Tools Terminal Session |
 
 #### Within the ECL Code Editor:
 
-* Syntax Check **[F7]** - _Save + check syntax of current file._
-* Language Reference Lookup **[shift + F1]** - _For the currently selected text, search the online ECL language reference._
+| Command                   | Shortcut | Description                                                      |
+|---------------------------|:--------:|------------------------------------------------------------------|
+|![Submit](resources/light-png/play.png) Submit | F5 | Submit ECL |
+|![Compile](resources/light-png/file-binary.png) Compile | | Compile ECL |
+| Syntax Check | F7 | Save and check syntax of current file |
+| Language Reference Lookup | shift + F1 | For the currently selected text, search the online ECL language reference |
 
-#### Within the ECL Activity Pane:
-_Right click on item_
+#### Within the Workunit Tree:
 
-* Workunit Details - _Opens ECL Watch Workunit Details for the selected Workunit._
+| Command                   | Shortcut | Description                                                      |
+|---------------------------|:--------:|------------------------------------------------------------------|
+|![My Workunits](resources/light-png/person.png) My workunits | | Toggle between "My" and "All" Workunits |
+|![All Workunits](resources/light-png/organization.png) All workunits | | Toggle between "My" and "All" Workunits |
+|![Refresh](resources/light-png/refresh.png) Refresh | | Refresh Tree |
+|![ECL Watch](resources/light-png/globe.png) ECL Watch | | Launch ECL Watch in external browser |
+|![Switch](resources/light-png/server-process.png) Switch Platform | | Switch HPCC Platform instance (launch configuration) | 
 
 #### Within the Status Bar
-_Click on ECL Client Tools Version_
 
-* Select Client Tools Version: Select Client Tools Version from available options.
+| Command                   | Shortcut | Description                                                      |
+|---------------------------|:--------:|------------------------------------------------------------------|
+| Launch Configuration | | Click to select launch configuration |
+| Target Cluster | | Click to select target cluster |
+| Pin | | Pin current launch configuration and target cluster to current document |
+| Client Tools | | Click to select client tools version |
 
 #### ECL Settings
 
@@ -63,18 +93,15 @@ The following Visual Studio Code settings are available for the ECL extension.  
   // Override eclcc auto detection.
   "ecl.eclccPath": ""
 
+  // Write eclcc logfile to specified file.
+  "ecl.eclccLogfile": ""
+
   // Add '-legacy' argument to eclcc.
   "ecl.legacyMode": false
 
-  // Open Workunits in external browser.
-  "ecl.WUOpenExternal": true
-
-  // Automatically open Workunits on creation.
-  "ecl.WUAutoOpen": false
-
   // Debug level logging (requires restart).
   "ecl.debugLogging": false
-  
+
 ```
 
 #### ECL Launch Settings
@@ -88,7 +115,6 @@ Submitting ECL using VS-Code requires specifying the target environment within t
   "type": "ecl",
   "request": "launch",
   "mode": "submit",
-  "workspace": "${workspaceRoot}",
   "program": "${file}",
   "protocol": "https",
   "serverAddress": "play.hpccsystems.com",
@@ -137,7 +163,7 @@ The following KEL specific commands are available.  Note:  These commands will *
 #### Within the KEL Code Editor:
 
 * Syntax Check **[F7]** - _Save + check syntax of current file._
-* Generate ECL **[Ff]** - _Save + generate ECL files._
+* Generate ECL **[F5]** - _Save + generate ECL files._
 
 #### Within the Status Bar
 _Click on KEL Client Tools Version_

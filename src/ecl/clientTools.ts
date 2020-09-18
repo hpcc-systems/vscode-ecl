@@ -1,15 +1,17 @@
-import { ClientTools, locateAllClientTools, locateClientTools as commsLocateClientTools } from "@hpcc-js/comms";
 import { QuickPickItem, window, workspace } from "vscode";
+import * as path from "path";
+import { ClientTools, locateAllClientTools, locateClientTools as commsLocateClientTools } from "@hpcc-js/comms";
 import { eclStatusBar } from "./status";
 
 function showEclStatus(version: string, overriden: boolean, tooltip: string) {
-    eclStatusBar.showEclStatus(`${overriden ? "*" : ""}${version}`, tooltip);
+    eclStatusBar.showClientTools(`${overriden ? "*" : ""}${version}`, tooltip);
 }
 
 export function locateClientTools(build?: string, cwd?: string, includeFolders?: string[], legacyMode?: boolean): Promise<ClientTools> {
     const eclConfig = workspace.getConfiguration("ecl");
-    const eclccPath = eclConfig.get("eclccPath") as string;
-    return commsLocateClientTools(eclccPath, build, cwd, includeFolders, legacyMode).then(clientTools => {
+    const eclccPath = eclConfig.get<string>("eclccPath");
+    const eclccLogfile = eclConfig.get<string>("eclccLogfile");
+    return commsLocateClientTools(eclccPath, build, cwd, includeFolders, legacyMode, eclccLogfile ? [`--logfile=${path.normalize(eclccLogfile)}`] : []).then(clientTools => {
         let eclccPathOverriden = false;
         if (clientTools) {
             if (clientTools.eclccPath === eclccPath) {

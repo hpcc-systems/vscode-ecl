@@ -37,7 +37,10 @@ export class View {
         this._panel = vscode.window.createWebviewPanel(
             "omd",
             `Preview (${baseName})`,
-            vscode.ViewColumn.Beside,
+            {
+                viewColumn: vscode.ViewColumn.Beside,
+                preserveFocus: true
+            },
             {
                 localResourceRoots,
                 enableScripts: true,
@@ -62,7 +65,7 @@ export class View {
         }
     }
 
-    onChangeDocument(changes: vscode.TextDocumentContentChangeEvent[]) {
+    onChangeDocument(changes: readonly vscode.TextDocumentContentChangeEvent[]) {
     }
 
     exists(): boolean {

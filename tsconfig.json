@@ -5,6 +5,7 @@
         "moduleResolution": "node",
         "target": "ES2019",
         "outDir": "lib-es6",
+        "jsx": "react",
         "sourceMap": true,
         "noImplicitAny": false,
         "noEmitOnError": false,
@@ -21,6 +22,7 @@
     },
     "include": [
         "./src/**/*.ts",
+        "./src/**/*.tsx",
         "./node_modules/vscode/vscode.d.ts",
         "./node_modules/vscode-debugadapter/lib/*",
         "./node_modules/vscode/lib/*"

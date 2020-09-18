@@ -25,18 +25,3 @@ export function initLogger(level: Level) {
     logger.writer(new VSCodeWriter());
     logger.level(level);
 }
-
-export class LaunchConfig {
-    _config: any;
-    constructor(config: any) {
-        this._config = config;
-    }
-
-    espUrl() {
-        return `${this._config.protocol}://${this._config.serverAddress}:${this._config.port}`;
-    }
-
-    wuDetailsUrl(wuid: string) {
-        return `${this.espUrl()}/?Wuid=${wuid}&Widget=WUDetailsWidget`;
-    }
-}

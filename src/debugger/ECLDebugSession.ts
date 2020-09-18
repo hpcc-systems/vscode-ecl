@@ -1,13 +1,12 @@
-import { EclccErrors, locateAllClientTools, locateClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
+import { EclccErrors, locateAllClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
 import { IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
 
-import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, InitializedEvent, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, Variable } from "vscode-debugadapter";
+import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, Variable } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { LaunchConfig, LaunchRequestArguments } from "./launchConfig";
+import { LaunchRequestArguments } from "./launchRequestArguments";
 
 import * as fs from "fs";
 import * as os from "os";
-import * as path from "path";
 
 export type XGMMLGraphItem = XGMMLGraph | XGMMLSubgraph | XGMMLVertex | XGMMLEdge;
 
@@ -116,9 +115,9 @@ function xmlFile(programPath: string): Promise<{ err: EclccErrors, content: stri
 }
 
 export class ECLDebugSession extends DebugSession {
-    workunit!: Workunit;
-    watchHandle!: IObserverHandle;
-    launchConfig!: LaunchConfig;
+    private workunit!: Workunit;
+    private watchHandle!: IObserverHandle;
+    private launchConfig!: LaunchRequestArguments;
 
     private prevMonitorMessage?: string;
 
@@ -161,93 +160,8 @@ export class ECLDebugSession extends DebugSession {
     }
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
-        if (args.debugLogging) {
-            logger.level(Level.debug);
-        }
-        this.logger.debug("launchRequest:  " + JSON.stringify(args));
-        this.launchConfig = new LaunchConfig(args);
-        this.sendEvent(new OutputEvent(`${now()} Fetch build version.${os.EOL}`));
-        const pathParts = path.parse(this.launchConfig._config.program);
-        let failedWU: Workunit;
-        this.launchConfig.fetchBuild().then(build => {
-            this.sendEvent(new OutputEvent(`${now()} Locating Client Tools.${os.EOL}`));
-            return locateClientTools(this.launchConfig._config.eclccPath, build, this.launchConfig._config.workspace, this.launchConfig.includeFolders(), this.launchConfig.legacyMode());
-        }).then((clientTools) => {
-            this.sendEvent(new OutputEvent(`${now()} Client Tools:  ${clientTools.eclccPath}.${os.EOL}`));
-            this.sendEvent(new OutputEvent(`${now()} Generating archive.${os.EOL}`));
-            if (pathParts.ext.toLowerCase() === ".xml") {
-                return xmlFile(this.launchConfig._config.program);
-            } else {
-                return clientTools.createArchive(this.launchConfig._config.program);
-            }
-        }).then(archive => {
-            if (this.launchConfig._config.abortSubmitOnError && archive.err.hasError()) {
-                throw new Error(`ECL Syntax Error(s):\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
-            }
-            this.sendEvent(new OutputEvent(`${now()} Archive Size: ${archive.content.length}.${os.EOL}`));
-            return archive;
-        }).then(archive => {
-            this.sendEvent(new OutputEvent(`${now()} Creating workunit.${os.EOL}`));
-            return this.launchConfig.createWorkunit().then(wu => {
-                failedWU = wu;
-                return [wu, archive] as [Workunit, any];
-            });
-        }).then(([wu, archive]) => {
-            this.sendEvent(new Event("WUCreated", { ...this.launchConfig._config, wuid: wu.Wuid }));
-            return new Promise<Workunit>(async (resolve, reject) => {
-                const attempts = 3;
-                let lastError;
-                for (let retry = 1; retry <= attempts; ++retry) {
-                    this.sendEvent(new OutputEvent(`${now()} Updating workunit (${retry} of ${attempts}).${os.EOL}`));
-                    await wu.update({
-                        Jobname: pathParts.name,
-                        QueryText: archive.content,
-                        ApplicationValues: {
-                            ApplicationValue: [{
-                                Application: "vscode-ecl",
-                                Name: "filePath",
-                                Value: this.launchConfig._config.program
-                            }]
-                        }
-                    }).then(wu => {
-                        retry = attempts + 1;
-                        resolve(wu);
-                    }).catch(e => {
-                        lastError = e || lastError;
-                    });
-                }
-                reject(lastError);
-            });
-        }).then((workunit) => {
-            this.workunit = workunit;
-            this.sendEvent(new OutputEvent(`${now()} Submitting workunit:  ${workunit.Wuid}.${os.EOL}`));
-            return workunit.submit(this.launchConfig._config.targetCluster, this.launchConfig.action(), this.launchConfig._config.resultLimit);
-        }).then(() => {
-            this.sendEvent(new OutputEvent(`${now()} Submitted:  ${this.launchConfig.wuDetailsUrl(this.workunit.Wuid)}.${os.EOL}`));
-            failedWU = undefined;
-        }).then(() => {
-            this.workunit.watchUntilRunning().then(() => {
-                this.sendEvent(new OutputEvent(`${now()} Started:  ${this.workunit.Wuid}.${os.EOL}`));
-                this.sendEvent(new InitializedEvent());
-                this.logger.debug("InitializeEvent");
-            });
-            if (this.launchConfig.isPublish()) {
-                this.workunit.watchUntilComplete().then(() => {
-                    this.logger.debug("Publish");
-                    this.workunit.publish();
-                });
-            }
-        }).catch((e) => {
-            this.sendEvent(new OutputEvent(`${now()} Launch failed - ${e}.${os.EOL}`));
-            this.sendEvent(new TerminatedEvent());
-            this.logger.debug("InitializeEvent");
-            if (failedWU) {
-                failedWU.setToFailed();
-            }
-        });
-
-        this.sendResponse(response);
-        this.logger.debug("launchResponse");
+        this.sendEvent(new Event("LaunchRequest", { ...args }));
+        this.sendEvent(new TerminatedEvent());
     }
 
     private disconnectWorkunit() {
@@ -411,7 +325,7 @@ export class ECLDebugSession extends DebugSession {
                 }
                 break;
             case "workunit":
-                this.pushStackFrame(stackFrames, graph, { file: this.launchConfig._config.program, col: debugState.state === "finished" ? Number.MAX_SAFE_INTEGER : 0 });
+                this.pushStackFrame(stackFrames, graph, { file: this.launchConfig.program, col: debugState.state === "finished" ? Number.MAX_SAFE_INTEGER : 0 });
                 break;
             default:
         }

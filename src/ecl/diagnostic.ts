@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { checkTextDocument } from "./check";
 
 let eclDiagnosticCollection: vscode.DiagnosticCollection;
-let _diagnosticCache: { [key: string]: vscode.Diagnostic[] | undefined } = {};
+let _diagnosticCache: { [key: string]: readonly vscode.Diagnostic[] | undefined } = {};
 
 export let eclDiagnostic: ECLDiagnostic;
 export class ECLDiagnostic {

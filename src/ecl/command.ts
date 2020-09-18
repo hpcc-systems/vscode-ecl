@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
+import { LaunchRequestArguments } from "../hpccplatform/launchConfig";
 import { checkTextDocument, checkWorkspace } from "./check";
 import { selectCTVersion } from "./clientTools";
 import { eclDiagnostic } from "./diagnostic";
-import { encodeLocation } from "./watch";
+import { sessionManager } from "../hpccplatform/session";
+import { ECLResultNode, ECLWUNode } from "./eclWatchTree";
 
 export let eclCommands: ECLCommands;
 export class ECLCommands {
@@ -10,13 +12,15 @@ export class ECLCommands {
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSubmit", this.submit));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", this.checkSyntax));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxAll", this.checkSyntaxAll));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxClear", this.checkSyntaxClear));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openWUDetails", this.openWUDetails));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatch", this.openECLWatch));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -45,6 +49,13 @@ export class ECLCommands {
         eclDiagnostic.clear();
     }
 
+    submit() {
+        if (vscode.window.activeTextEditor) {
+            vscode.window.activeTextEditor.document.save();
+            sessionManager.submit(vscode.window.activeTextEditor.document);
+        }
+    }
+
     showLanguageReference() {
         vscode.commands.executeCommand("vscode.open", vscode.Uri.parse("https://hpccsystems.com/training/documentation/ecl-language-reference/html"));
     }
@@ -57,16 +68,15 @@ export class ECLCommands {
         }
     }
 
-    openWUDetails(url: string, wuid: string) {
-        const eclConfig = vscode.workspace.getConfiguration("ecl");
-        if (eclConfig.get<boolean>("WUOpenExternal")) {
-            vscode.env.openExternal(vscode.Uri.parse(url));
-        } else {
-            const uri = encodeLocation(url, wuid);
-            return vscode.commands.executeCommand("vscode.previewHtml", uri, vscode.ViewColumn.Two, wuid).then((success) => {
-            }, (reason) => {
-                vscode.window.showErrorMessage(reason);
-            });
+    openECLWatch(launchRequestArgs: LaunchRequestArguments, title: string, wuid: string, result?: number) {
+
+    }
+
+    openECLWatchExternal(source: ECLWUNode | ECLResultNode) {
+        if (source instanceof ECLWUNode) {
+            vscode.env.openExternal(vscode.Uri.parse(source.url));
+        } else if (source instanceof ECLResultNode) {
+            vscode.env.openExternal(vscode.Uri.parse(source.url));
         }
     }
 }

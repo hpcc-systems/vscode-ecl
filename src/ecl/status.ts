@@ -9,10 +9,10 @@ export class ECLStatusBar {
     private constructor(ctx: ExtensionContext) {
         this._ctx = ctx;
 
-        this._statusBarEntry = window.createStatusBarItem(StatusBarAlignment.Left, Number.MIN_VALUE);
+        this._statusBarEntry = window.createStatusBarItem(StatusBarAlignment.Right, Number.MIN_VALUE - 1);
         this._statusBarEntry.command = "ecl.selectCTVersion";
 
-        this.onActiveWatcher();
+        this.monitor();
     }
 
     static attach(ctx: ExtensionContext): ECLStatusBar {
@@ -22,7 +22,7 @@ export class ECLStatusBar {
         return eclStatusBar;
     }
 
-    onActiveWatcher() {
+    monitor() {
         window.onDidChangeActiveTextEditor(event => {
             if (event && window.activeTextEditor) {
                 if (!this._statusBarEntry) {
@@ -39,14 +39,14 @@ export class ECLStatusBar {
         }, null, this._ctx.subscriptions);
     }
 
-    hideEclStatus() {
+    hideClientTools() {
         if (this._statusBarEntry) {
             this._statusBarEntry.dispose();
             delete this._statusBarEntry;
         }
     }
 
-    showEclStatus(message: string, tooltip?: string) {
+    showClientTools(message: string, tooltip?: string) {
         this._statusBarEntry.text = message;
         this._statusBarEntry.tooltip = tooltip;
         this._statusBarEntry.show();

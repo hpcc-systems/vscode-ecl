@@ -38,7 +38,7 @@ function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): P
     const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
     const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
     const includeFolders = calcIncludeFolders(currentWorkspacePath);
-    return locateClientTools("", currentWorkspacePath, includeFolders, eclConfig["legacyMode"]).then(clientTools => {
+    return locateClientTools("", currentWorkspacePath, includeFolders, eclConfig.get<boolean>("legacyMode")).then(clientTools => {
         if (!clientTools) {
             throw new Error();
         } else {
@@ -71,12 +71,6 @@ function mapSeverityToVSCodeSeverity(sev: string) {
 
 const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...checking...", vscode.DiagnosticSeverity.Information)];
 function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
-    if (uri) {
-        const wsf = vscode.workspace.getWorkspaceFolder(uri);
-        if (wsf) {
-            vscode.window.setStatusBarMessage(`Syntax Check:  ${path.relative(wsf.uri.fsPath, uri.fsPath)}`);
-        }
-    }
     eclDiagnostic.set(uri, checking);
     return check(uri, eclConfig).then(({ errors, checked }) => {
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();

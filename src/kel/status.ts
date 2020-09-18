@@ -9,7 +9,7 @@ export class StatusBar {
     private constructor(ctx: ExtensionContext) {
         this._ctx = ctx;
 
-        this._statusBarEntry = window.createStatusBarItem(StatusBarAlignment.Left, Number.MIN_VALUE);
+        this._statusBarEntry = window.createStatusBarItem(StatusBarAlignment.Right, Number.MIN_VALUE);
         this._statusBarEntry.command = "kel.selectCTVersion";
 
         this.onActiveWatcher();
