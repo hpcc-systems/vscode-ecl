@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.1.6...v2.2.0) (2020-09-18)
+
+
+### Features
+
+*  Insert Record Definition ([166a07a](https://github.com/hpcc-systems/vscode-ecl/commit/166a07a9417505ed0f3bc8e6ede648f318dab1f8))
+
+
+### Bug Fixes
+
+*  Performance issue ([ed338be](https://github.com/hpcc-systems/vscode-ecl/commit/ed338be94948fe823ef069e59b2bf698f27fae13))
+
 ### [2.1.6](https://github.com/hpcc-systems/vscode-ecl/compare/v2.1.5...v2.1.6) (2020-09-18)
 
 ### [2.1.5](https://github.com/hpcc-systems/vscode-ecl/compare/v2.1.4...v2.1.5) (2020-09-18)
