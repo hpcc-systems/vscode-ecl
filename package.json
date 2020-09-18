@@ -672,6 +672,12 @@
           "default": {},
           "description": "Pinned launch configurations."
         },
+        "ecl.WUAutoOpen": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false,
+          "description": "Automatically open Workunits on creation."
+        },
         "dashy.libraryLocation": {
           "type": "string",
           "scope": "resource",

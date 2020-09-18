@@ -31,6 +31,10 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
         sessionManager.onDidCreateWorkunit(wu => {
             vscode.commands.executeCommand("hpccPlatform.focus");
             this.refresh();
+            const eclConfig = vscode.workspace.getConfiguration("ecl");
+            if (eclConfig.get<boolean>("WUAutoOpen")) {
+                vscode.env.openExternal(vscode.Uri.parse(`${wu.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${wu.Wuid}`));
+            }
         });
 
         vscode.commands.registerCommand("hpccPlatform.myWorkunits", async () => {
