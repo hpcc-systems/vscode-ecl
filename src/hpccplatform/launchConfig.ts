@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { locateClientTools, AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, TargetCluster, EclccErrors, IOptions, LogicalFile } from "@hpcc-js/comms";
+import { locateClientTools, AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, TargetCluster, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery } from "@hpcc-js/comms";
 import { scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { eclConfigurationProvider } from "./configProvider";
@@ -287,10 +287,10 @@ export class LaunchConfig {
         return this._buildPromise;
     }
 
-    targetClusters(): Promise<TargetCluster[]> {
+    targetClusters(): Promise<TpLogicalClusterQuery.TpLogicalCluster[]> {
         return this.checkCredentials().then(credentials => {
             const topology = new Topology(this.opts(credentials));
-            return topology.fetchTargetClusters();
+            return topology.fetchLogicalClusters();
         });
     }
 
@@ -415,6 +415,7 @@ export class LaunchConfig {
             logger.debug("InitializeEvent");
             if (failedWU) {
                 failedWU.setToFailed();
+                return failedWU;
             }
             throw e;
         });
