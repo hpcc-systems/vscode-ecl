@@ -10,7 +10,7 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Version 2 Highlights
 
-![Version 2 Highlights](resources\screenshot-v2-whatnew.jpg)
+![Version 2 Highlights](resources/screenshot-v2-whatnew.png)
 
 | Command                   | Shortcut | Description                                                      |
 |---------------------------|:--------:|------------------------------------------------------------------|
