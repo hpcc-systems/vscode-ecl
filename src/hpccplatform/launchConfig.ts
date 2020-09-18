@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { locateClientTools, AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, TargetCluster, EclccErrors, IOptions } from "@hpcc-js/comms";
+import { locateClientTools, AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, TargetCluster, EclccErrors, IOptions, LogicalFile } from "@hpcc-js/comms";
 import { scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { eclConfigurationProvider } from "./configProvider";
@@ -334,6 +334,13 @@ export class LaunchConfig {
     private createWorkunit() {
         return this.checkCredentials().then(credentials => {
             return Workunit.create(this.opts(credentials));
+        });
+    }
+
+    fetchRecordDef(lf: string) {
+        return this.checkCredentials().then(credentials => {
+            const file = LogicalFile.attach(this.opts(credentials), "", lf);
+            return file.fetchInfo().then(info => info.Ecl);
         });
     }
 

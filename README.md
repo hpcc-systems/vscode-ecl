@@ -26,21 +26,21 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 ## Installation
 
 * Install Visual Studio Code. 
-* In VS-Code, open the command palette (`ctrl/cmd + shift + p`) and select `Install Extension`.  Enter `ecl` to filter the available extensions and choose `ECL Language by HPCC Systems`.
+* In VS-Code, open the command palette (`ctrl/cmd+shift+p`) and select `Install Extension`.  Enter `ecl` to filter the available extensions and choose `ECL Language by HPCC Systems`.
 * Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download/archive)
 
 ## ECL
 
 ### ECL Commands
 
-The following ECL specific commands are available.  Note:  These commands will **not** be active until an ECL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd + shift + p` and type `ECL` this will present a filtered list of the ECL specific commands:
+The following ECL specific commands are available.  Note:  These commands will **not** be active until an ECL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd+shift+p` and type `ECL` this will present a filtered list of the ECL specific commands:
 
 #### Global:
 
 | Command                   | Shortcut | Description                                                      |
 |---------------------------|:--------:|------------------------------------------------------------------|
-| Syntax Check All Files | shift + F7 | Save All + check syntax of all files. |
-| Syntax Clear | ctrl + F7 | Clear all previously reported ECL Syntax Check results |
+| Syntax Check All Files | shift+F7 | Save All + check syntax of all files. |
+| Syntax Clear | ctrl+F7 | Clear all previously reported ECL Syntax Check results |
 | Language Reference Website | | Opens the ECL language reference website in external browser |
 | Terminal | | Opens ECL Client Tools Terminal Session |
 
@@ -51,7 +51,8 @@ The following ECL specific commands are available.  Note:  These commands will *
 |![Submit](resources/light-png/play.png) Submit | F5 | Submit ECL |
 |![Compile](resources/light-png/file-binary.png) Compile | | Compile ECL |
 | Syntax Check | F7 | Save and check syntax of current file |
-| Language Reference Lookup | shift + F1 | For the currently selected text, search the online ECL language reference |
+| Language Reference Lookup | shift+F1 | For the currently selected text, search the online ECL language reference |
+| Insert Record Definition | ctrl+I R | Fetches record definition for given logical file |
 
 #### Within the Workunit Tree:
 
@@ -74,7 +75,7 @@ The following ECL specific commands are available.  Note:  These commands will *
 
 #### ECL Settings
 
-The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`ctrl/cmd + ,`) or directly in your current workspace (`.vscode/settings.json`):
+The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`ctrl/cmd+,`) or directly in your current workspace (`.vscode/settings.json`):
 
 ```javascript
 
@@ -101,6 +102,9 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
   // Debug level logging (requires restart).
   "ecl.debugLogging": false
+
+  // Automatically open Workunits on creation.
+  "ecl.WUAutoOpen": false
 
 ```
 
@@ -158,7 +162,7 @@ _KEL is an optional language that can generate ECL._
 
 ### KEL Commands
 
-The following KEL specific commands are available.  Note:  These commands will **not** be active until a KEL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd + shift + p` and type `KEL` this will present a filtered list of the KEL specific commands:
+The following KEL specific commands are available.  Note:  These commands will **not** be active until a KEL file has been opened (as this triggers the extension to load).  To activate a command either use its associated hotkey or press `ctrl/cmd+shift+p` and type `KEL` this will present a filtered list of the KEL specific commands:
 
 #### Within the KEL Code Editor:
 
@@ -172,7 +176,7 @@ _Click on KEL Client Tools Version_
 
 #### KEL Settings
 
-The following Visual Studio Code settings are available for the KEL extension.  These can be set in user preferences (`ctrl/cmd + ,`) or directly in your current workspace (`.vscode/settings.json`):
+The following Visual Studio Code settings are available for the KEL extension.  These can be set in user preferences (`ctrl/cmd+,`) or directly in your current workspace (`.vscode/settings.json`):
 
 ```javascript
   // Java runtime arguments (e.g. -Xmx12G).

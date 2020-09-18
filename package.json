@@ -253,6 +253,12 @@
         "description": "Opens ECL Client Tools Terminal Session."
       },
       {
+        "command": "ecl.insertRecordDef",
+        "category": "ECL",
+        "title": "Insert Record Definition",
+        "description": "Insert logical file record defintition."
+      },
+      {
         "command": "hpccPlatform.refresh",
         "title": "Refresh",
         "description": "Refresh Tree.",
@@ -404,6 +410,11 @@
           "group": "navigation@920"
         },
         {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "ecl.insertRecordDef",
+          "group": "navigation@930"
+        },
+        {
           "when": "resourceLangId == kel && resourceExtname == .kel",
           "command": "kel.checkSyntax",
           "group": "navigation@998"
@@ -534,6 +545,12 @@
         "command": "ecl.checkSyntaxClear",
         "key": "ctrl+f7",
         "mac": "ctrl+f7"
+      },
+      {
+        "command": "ecl.insertRecordDef",
+        "key": "ctrl+i r",
+        "mac": "ctrl+i r",
+        "when": "editorTextFocus && editorLangId == ecl"
       },
       {
         "command": "kel.checkSyntax",
