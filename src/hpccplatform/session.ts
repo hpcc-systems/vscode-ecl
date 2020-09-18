@@ -223,6 +223,8 @@ class SessionManager {
             return this.session.submit(doc.uri.fsPath).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);
                 return wu;
+            }).catch(e => {
+                vscode.window.showErrorMessage(e.message);
             });
         }
     }
@@ -232,6 +234,8 @@ class SessionManager {
             return this.session.compile(doc.uri.fsPath).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);
                 return wu;
+            }).catch(e => {
+                vscode.window.showErrorMessage(e.message);
             });
         }
     }
