@@ -61,6 +61,10 @@ class Session {
     compile(fsPath: string) {
         return this._launchConfig.submit(fsPath, this.targetCluster, "compile");
     }
+
+    fetchRecordDef(lf: string) {
+        return this._launchConfig.fetchRecordDef(lf);
+    }
 }
 
 class SessionManager {
@@ -219,6 +223,8 @@ class SessionManager {
             return this.session.submit(doc.uri.fsPath).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);
                 return wu;
+            }).catch(e => {
+                vscode.window.showErrorMessage(e.message);
             });
         }
     }
@@ -228,6 +234,8 @@ class SessionManager {
             return this.session.compile(doc.uri.fsPath).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);
                 return wu;
+            }).catch(e => {
+                vscode.window.showErrorMessage(e.message);
             });
         }
     }

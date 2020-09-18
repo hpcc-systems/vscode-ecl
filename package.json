@@ -40,10 +40,10 @@
   },
   "devDependencies": {
     "@fluentui/react": "^7.137.1",
-    "@hpcc-js/comms": "^2.26.0",
+    "@hpcc-js/comms": "^2.27.0",
     "@hpcc-js/dgrid": "^2.8.34",
-    "@hpcc-js/loader": "^2.40.0",
-    "@hpcc-js/marshaller": "^2.23.50",
+    "@hpcc-js/loader": "^2.41.0",
+    "@hpcc-js/marshaller": "^2.23.51",
     "@hpcc-js/observable-md": "^2.18.0",
     "@hpcc-js/util": "^2.26.0",
     "@material-ui/core": "^4.11.0",
@@ -253,6 +253,12 @@
         "description": "Opens ECL Client Tools Terminal Session."
       },
       {
+        "command": "ecl.insertRecordDef",
+        "category": "ECL",
+        "title": "Insert Record Definition",
+        "description": "Insert logical file record defintition."
+      },
+      {
         "command": "hpccPlatform.refresh",
         "title": "Refresh",
         "description": "Refresh Tree.",
@@ -404,6 +410,11 @@
           "group": "navigation@920"
         },
         {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "ecl.insertRecordDef",
+          "group": "navigation@930"
+        },
+        {
           "when": "resourceLangId == kel && resourceExtname == .kel",
           "command": "kel.checkSyntax",
           "group": "navigation@998"
@@ -534,6 +545,12 @@
         "command": "ecl.checkSyntaxClear",
         "key": "ctrl+f7",
         "mac": "ctrl+f7"
+      },
+      {
+        "command": "ecl.insertRecordDef",
+        "key": "ctrl+i r",
+        "mac": "ctrl+i r",
+        "when": "editorTextFocus && editorLangId == ecl"
       },
       {
         "command": "kel.checkSyntax",
