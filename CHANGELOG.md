@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.1.2...v2.1.4) (2020-09-18)
+
+
+### Bug Fixes
+
+* **workunit:** Reinstate WU Auto Open ([2f07db5](https://github.com/hpcc-systems/vscode-ecl/commit/2f07db59bba8ca944b6e58f0bd1147a36d1462bb))
+
 ### [2.1.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.1.2...v2.1.3) (2020-09-18)
 
 
