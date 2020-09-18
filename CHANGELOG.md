@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.1.0...v2.1.1) (2020-09-18)
+
+
+### Bug Fixes
+
+* **readme:**  Screenshot not displaying in marketplace ([97b540a](https://github.com/hpcc-systems/vscode-ecl/commit/97b540a97b62493386fcb62e81fc17c1458dd833))
+
 ## [2.1.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.5...v2.1.0) (2020-09-18)
 
 
