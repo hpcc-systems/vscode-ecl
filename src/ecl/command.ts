@@ -21,6 +21,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatch", this.openECLWatch));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -77,6 +78,25 @@ export class ECLCommands {
             vscode.env.openExternal(vscode.Uri.parse(source.url));
         } else if (source instanceof ECLResultNode) {
             vscode.env.openExternal(vscode.Uri.parse(source.url));
+        }
+    }
+
+    async insertRecordDef() {
+        if (vscode.window.activeTextEditor && sessionManager.session) {
+            const editor = vscode.window.activeTextEditor;
+            const position = editor.selection.active;
+            const lf = await vscode.window.showInputBox({
+                prompt: "Logical File"
+            }) || "";
+            if (lf) {
+                sessionManager.session.fetchRecordDef(lf).then(ecl => {
+                    editor.edit(editBuilder => {
+                        editBuilder.insert(position, ecl);
+                    });
+                }).catch(e => {
+                    vscode.window.showErrorMessage(e.message);
+                });
+            }
         }
     }
 }

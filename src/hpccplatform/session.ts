@@ -61,6 +61,10 @@ class Session {
     compile(fsPath: string) {
         return this._launchConfig.submit(fsPath, this.targetCluster, "compile");
     }
+
+    fetchRecordDef(lf: string) {
+        return this._launchConfig.fetchRecordDef(lf);
+    }
 }
 
 class SessionManager {
