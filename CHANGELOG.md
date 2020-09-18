@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.5...v2.1.0) (2020-09-18)
+
+
+### Features
+
+*  Add improved platform support ([22e3cd8](https://github.com/hpcc-systems/vscode-ecl/commit/22e3cd86d0d3fa191b426316bb2b836ca7ca5651)), closes [#191](https://github.com/hpcc-systems/vscode-ecl/issues/191) [#188](https://github.com/hpcc-systems/vscode-ecl/issues/188) [#187](https://github.com/hpcc-systems/vscode-ecl/issues/187) [#190](https://github.com/hpcc-systems/vscode-ecl/issues/190) [#143](https://github.com/hpcc-systems/vscode-ecl/issues/143) [#184](https://github.com/hpcc-systems/vscode-ecl/issues/184)
+
 ### [1.9.5](https://github.com/hpcc-systems/vscode-ecl/compare/v1.9.4...v1.9.5) (2020-05-11)
 
 
