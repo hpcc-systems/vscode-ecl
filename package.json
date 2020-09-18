@@ -32,7 +32,7 @@
     "dev-unlink": "rimraf ./node_modules/@hpcc-js",
     "standard-version": "standard-version",
     "vscode:prepublish": "run-s clean build",
-    "git-push": "git push --follow-tags upstream master",
+    "git-push": "git push --follow-tags upstream candidate-2.x",
     "preinstall": "npm run dev-unlink || echo \"Clean Install - ignore previous error!\"",
     "vsce-publish": "vsce publish",
     "vsce-package": "vsce package",
