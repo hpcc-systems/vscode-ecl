@@ -54,12 +54,12 @@ class Session {
         return this._launchConfig.wuQuery(request);
     }
 
-    submit(fsPath: string) {
-        return this._launchConfig.submit(fsPath, this.targetCluster, "submit");
+    submit(uri: vscode.Uri) {
+        return this._launchConfig.submit(uri, this.targetCluster, "submit");
     }
 
-    compile(fsPath: string) {
-        return this._launchConfig.submit(fsPath, this.targetCluster, "compile");
+    compile(uri: vscode.Uri) {
+        return this._launchConfig.submit(uri, this.targetCluster, "compile");
     }
 
     fetchRecordDef(lf: string) {
@@ -163,7 +163,7 @@ class SessionManager {
                     }
                     if (this.session) {
                         vscode.window.showWarningMessage("Submitting ECL via the Run/Debug page is being depricated.  Please use the new Submit + Compile buttons at the top of the ECL Editor.");
-                        this.session.submit(launchRequestArgs.program).then(wu => {
+                        this.session.submit(vscode.Uri.file(launchRequestArgs.program)).then(wu => {
                             this._onDidCreateWorkunit.fire(wu);
                         });
                     }
@@ -221,7 +221,7 @@ class SessionManager {
 
     submit(doc: vscode.TextDocument) {
         if (this.session) {
-            return this.session.submit(doc.uri.fsPath).then(wu => {
+            return this.session.submit(doc.uri).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);
                 return wu;
             }).catch(e => {
@@ -232,7 +232,7 @@ class SessionManager {
 
     compile(doc: vscode.TextDocument) {
         if (this.session) {
-            return this.session.compile(doc.uri.fsPath).then(wu => {
+            return this.session.compile(doc.uri).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);
                 return wu;
             }).catch(e => {

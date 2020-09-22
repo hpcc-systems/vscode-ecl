@@ -3,6 +3,7 @@ import { locateClientTools, AccountService, Activity, Workunit, WUQuery, WUUpdat
 import { scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { eclConfigurationProvider } from "./configProvider";
+import { calcIncludeFolders } from "../ecl/check";
 
 import * as fs from "fs";
 import * as os from "os";
@@ -347,7 +348,7 @@ export class LaunchConfig {
         });
     }
 
-    async submit(filePath: string, targetCluster: string, mode: LaunchMode) {
+    async submit(fileUri: vscode.Uri, targetCluster: string, mode: LaunchMode) {
         // const args = await this.localResolveDebugConfiguration(filePath);
         // logger.debug("launchRequest:  " + JSON.stringify(args));
         return vscode.window.withProgress({
@@ -355,16 +356,17 @@ export class LaunchConfig {
             title: "Submit ECL",
             cancellable: false
         }, (progress, token) => {
-            const uri = vscode.Uri.file(filePath);
-            const workspace = vscode.workspace.getWorkspaceFolder(uri);
-
+            const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
+            const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
+            const includeFolders = calcIncludeFolders(currentWorkspacePath);
+            const filePath = fileUri.fsPath;
             logger.info(`Fetch build version.${os.EOL}`);
             const pathParts = path.parse(filePath);
             let failedWU: Workunit;
             return this.fetchBuild().then(build => {
                 progress.report({ increment: 10, message: "Locating Client Tools" });
                 logger.info(`Locating Client Tools.${os.EOL}`);
-                return locateClientTools(this.eclccPath, build, workspace.uri.fsPath, this.includeFolders, this.legacyMode);
+                return locateClientTools(this.eclccPath, build, currentWorkspace.uri.fsPath, includeFolders, this.legacyMode);
             }).then((clientTools) => {
                 progress.report({ increment: 10, message: "Creating Archive" });
                 logger.info(`Client Tools:  ${clientTools.eclccPath}.${os.EOL}`);
