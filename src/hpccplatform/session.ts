@@ -162,6 +162,7 @@ class SessionManager {
                         this.switchTo(event.session.name, launchRequestArgs.targetCluster);
                     }
                     if (this.session) {
+                        vscode.window.showWarningMessage("Submitting ECL via the Run/Debug page is being depricated.  Please use the new Submit + Compile buttons at the top of the ECL Editor.");
                         this.session.submit(launchRequestArgs.program).then(wu => {
                             this._onDidCreateWorkunit.fire(wu);
                         });

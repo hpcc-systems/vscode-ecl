@@ -1,4 +1,4 @@
-import { EclccErrors, locateAllClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
+import { locateAllClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
 import { IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
 
 import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, Variable } from "vscode-debugadapter";
@@ -104,14 +104,6 @@ class WUScope {
         this.stack = stack;
         this.type = type;
     }
-}
-
-function xmlFile(programPath: string): Promise<{ err: EclccErrors, content: string }> {
-    return new Promise((resolve, reject) => {
-        fs.readFile(programPath, "utf8", function (err, content) {
-            resolve({ err: new EclccErrors("", []), content });
-        });
-    });
 }
 
 export class ECLDebugSession extends DebugSession {

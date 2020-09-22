@@ -8,26 +8,17 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 * Client tools discovery and integration
 * HPCC-Platform server support
 
-## Version 2 Highlights
+## Version 2 Quick Start
+_Version 2.x introduces a new streamlined submission process.  The "old" Run/Debug pane support has been deprecated and will be removed in the future._
 
-![Version 2 Highlights](resources/screenshot-v2-whatnew.png)
+![Version 2 Quick Start](resources/QuickStart.gif)
 
-| Command                   | Shortcut | Description                                                      |
-|---------------------------|:--------:|------------------------------------------------------------------|
-|![Submit](resources/light-png/play.png) Submit | F5 | Submit ECL |
-|![Compile](resources/light-png/file-binary.png) Compile | | Compile ECL |
-|![My Workunits](resources/light-png/person.png) My workunits | | Toggle between "My" and "All" Workunits |
-|![All Workunits](resources/light-png/organization.png) All workunits | | Toggle between "My" and "All" Workunits |
-|![ECL Watch](resources/light-png/globe.png) ECL Watch | | Launch ECL Watch |
-|![Switch](resources/light-png/server-process.png) Switch Platform | | Switch HPCC Platform instance |
-
----
-
-## Installation
-
-* Install Visual Studio Code. 
-* In VS-Code, open the command palette (`ctrl/cmd+shift+p`) and select `Install Extension`.  Enter `ecl` to filter the available extensions and choose `ECL Language by HPCC Systems`.
-* Locate and install the appropriate ECL Client Tools from [hpccsystems.com](https://hpccsystems.com/download/archive)
+1. Open folder
+2. Open ECL file
+3. Select the target by:
+    *  Clicking the "Launch Configuration" in the status bar
+    *  Optionally clicking on the "Target Cluster" in the status bar
+4. Monitor Workunit in the "Workunit History" pane
 
 ## ECL
 
