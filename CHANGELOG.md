@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.2...v2.2.3) (2020-09-22)
+
+
+### Bug Fixes
+
+* User/PW not prompting on demand ([473ad02](https://github.com/hpcc-systems/vscode-ecl/commit/473ad02c8a7bfaee2872e4201e5a1601d26d52c0))
+
 ### [2.2.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.1...v2.2.2) (2020-09-22)
 
 
