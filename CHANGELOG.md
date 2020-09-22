@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.3...v2.2.4) (2020-09-22)
+
+
+### Bug Fixes
+
+* **workspace:** Auto includes not getting calculated for submit ([636815b](https://github.com/hpcc-systems/vscode-ecl/commit/636815b48133b1448fecc93eb52ed0f7fcaebe6a))
+
 ### [2.2.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.2...v2.2.3) (2020-09-22)
 
 
