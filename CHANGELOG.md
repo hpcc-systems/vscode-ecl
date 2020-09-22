@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.1...v2.2.2) (2020-09-22)
+
+
+### Bug Fixes
+
+*  Add "cmd" to README.md ([67cd7ba](https://github.com/hpcc-systems/vscode-ecl/commit/67cd7baa241ba560d6ca2e334bca11cb67e30b4d))
+*  Added progress indicator for ECl Submission ([08eb769](https://github.com/hpcc-systems/vscode-ecl/commit/08eb769aa486a7cb0453ba0a28cb6141b6b47600))
+
 ### [2.2.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.0...v2.2.1) (2020-09-18)
 
 ## [2.2.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.1.6...v2.2.0) (2020-09-18)
