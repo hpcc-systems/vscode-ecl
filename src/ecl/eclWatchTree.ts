@@ -14,6 +14,7 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
 
     private _treeView: vscode.TreeView<ECLNode>;
     _myWorkunits = true;
+    _rendered = false;
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
@@ -29,11 +30,14 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
         });
 
         sessionManager.onDidCreateWorkunit(wu => {
+            vscode.commands.executeCommand("workbench.files.action.focusFilesExplorer");
             vscode.commands.executeCommand("hpccPlatform.focus");
-            this.refresh();
-            const eclConfig = vscode.workspace.getConfiguration("ecl");
-            if (eclConfig.get<boolean>("WUAutoOpen")) {
-                vscode.env.openExternal(vscode.Uri.parse(`${wu.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${wu.Wuid}`));
+            if (this._rendered) {
+                this.refresh();
+                const eclConfig = vscode.workspace.getConfiguration("ecl");
+                if (eclConfig.get<boolean>("WUAutoOpen")) {
+                    vscode.env.openExternal(vscode.Uri.parse(`${wu.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${wu.Wuid}`));
+                }
             }
         });
 
@@ -87,6 +91,7 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
         if (element) {
             return element.getChildren();
         }
+        this._rendered = true;
 
         this._treeView.title = sessionManager.session.name;
         return sessionManager.wuQuery({

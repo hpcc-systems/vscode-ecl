@@ -347,77 +347,91 @@ export class LaunchConfig {
     async submit(filePath: string, targetCluster: string, mode: LaunchMode) {
         // const args = await this.localResolveDebugConfiguration(filePath);
         // logger.debug("launchRequest:  " + JSON.stringify(args));
+        return vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: "Submit ECL",
+            cancellable: false
+        }, (progress, token) => {
+            const uri = vscode.Uri.file(filePath);
+            const workspace = vscode.workspace.getWorkspaceFolder(uri);
 
-        const uri = vscode.Uri.file(filePath);
-        const workspace = vscode.workspace.getWorkspaceFolder(uri);
-
-        logger.info(`Fetch build version.${os.EOL}`);
-        const pathParts = path.parse(filePath);
-        let failedWU: Workunit;
-        return this.fetchBuild().then(build => {
-            logger.info(`Locating Client Tools.${os.EOL}`);
-            return locateClientTools(this.eclccPath, build, workspace.uri.fsPath, this.includeFolders, this.legacyMode);
-        }).then((clientTools) => {
-            logger.info(`Client Tools:  ${clientTools.eclccPath}.${os.EOL}`);
-            logger.info(`Generating archive.${os.EOL}`);
-            if (pathParts.ext.toLowerCase() === ".xml") {
-                return xmlFile(filePath);
-            } else {
-                return clientTools.createArchive(filePath);
-            }
-        }).then(archive => {
-            if (this.abortSubmitOnError && archive.err.hasError()) {
-                throw new Error(`ECL Syntax Error(s):\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
-            }
-            logger.info(`Archive Size: ${archive.content.length}.${os.EOL}`);
-            return archive;
-        }).then(archive => {
-            logger.info(`Creating workunit.${os.EOL}`);
-            return this.createWorkunit().then(wu => {
-                failedWU = wu;
-                return [wu, archive] as [Workunit, any];
-            });
-        }).then(([wu, archive]) => {
-            // eslint-disable-next-line no-async-promise-executor
-            return new Promise<Workunit>(async (resolve, reject) => {
-                const attempts = 3;
-                let lastError;
-                for (let retry = 1; retry <= attempts; ++retry) {
-                    logger.info(`Updating workunit (${retry} of ${attempts}).${os.EOL}`);
-                    await wu.update({
-                        Jobname: pathParts.name,
-                        QueryText: archive.content,
-                        ApplicationValues: {
-                            ApplicationValue: [{
-                                Application: "vscode-ecl",
-                                Name: "filePath",
-                                Value: filePath
-                            }]
-                        }
-                    }).then(wu => {
-                        retry = attempts + 1;
-                        resolve(wu);
-                    }).catch(e => {
-                        lastError = e || lastError;
-                    });
+            logger.info(`Fetch build version.${os.EOL}`);
+            const pathParts = path.parse(filePath);
+            let failedWU: Workunit;
+            return this.fetchBuild().then(build => {
+                progress.report({ increment: 10, message: "Locating Client Tools" });
+                logger.info(`Locating Client Tools.${os.EOL}`);
+                return locateClientTools(this.eclccPath, build, workspace.uri.fsPath, this.includeFolders, this.legacyMode);
+            }).then((clientTools) => {
+                progress.report({ increment: 10, message: "Creating Archive" });
+                logger.info(`Client Tools:  ${clientTools.eclccPath}.${os.EOL}`);
+                logger.info(`Generating archive.${os.EOL}`);
+                if (pathParts.ext.toLowerCase() === ".xml") {
+                    return xmlFile(filePath);
+                } else {
+                    return clientTools.createArchive(filePath);
                 }
-                reject(lastError);
+            }).then(archive => {
+                progress.report({ increment: 10, message: "Verifying Archive" });
+                if (this.abortSubmitOnError && archive.err.hasError()) {
+                    throw new Error(`ECL Syntax Error(s):\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
+                }
+                logger.info(`Archive Size: ${archive.content.length}.${os.EOL}`);
+                return archive;
+            }).then(archive => {
+                progress.report({ increment: 10, message: "Creating Workunit" });
+                logger.info(`Creating workunit.${os.EOL}`);
+                return this.createWorkunit().then(wu => {
+                    failedWU = wu;
+                    return [wu, archive] as [Workunit, any];
+                });
+            }).then(([wu, archive]) => {
+                // eslint-disable-next-line no-async-promise-executor
+                progress.report({ increment: 10, message: `Updating Workunit ${wu.Wuid}` });
+                // eslint-disable-next-line no-async-promise-executor
+                return new Promise<Workunit>(async (resolve, reject) => {
+                    const attempts = 3;
+                    let lastError;
+                    for (let retry = 1; retry <= attempts; ++retry) {
+                        progress.report({ increment: 3, message: `Updating workunit ${wu.Wuid} (${retry} of ${attempts})` });
+                        logger.info(`Updating workunit (${retry} of ${attempts}).${os.EOL}`);
+                        await wu.update({
+                            Jobname: pathParts.name,
+                            QueryText: archive.content,
+                            ApplicationValues: {
+                                ApplicationValue: [{
+                                    Application: "vscode-ecl",
+                                    Name: "filePath",
+                                    Value: filePath
+                                }]
+                            }
+                        }).then(wu => {
+                            retry = attempts + 1;
+                            resolve(wu);
+                        }).catch(e => {
+                            lastError = e || lastError;
+                        });
+                    }
+                    reject(lastError);
+                });
+            }).then((wu) => {
+                progress.report({ increment: 10, message: `Submitting workunit ${wu.Wuid}` });
+                logger.info(`Submitting workunit:  ${wu.Wuid}.${os.EOL}`);
+                return wu.submit(targetCluster, action(mode), this.resultLimit);
+            }).then((wu) => {
+                progress.report({ increment: 10, message: `Submitted workunit ${wu.Wuid}` });
+                logger.info(`Submitted:  ${this.wuDetailsUrl(wu.Wuid)}.${os.EOL}`);
+                failedWU = undefined;
+                return wu;
+            }).catch((e) => {
+                logger.info(`Launch failed - ${e}.${os.EOL}`);
+                logger.debug("InitializeEvent");
+                if (failedWU) {
+                    failedWU.setToFailed();
+                    return failedWU;
+                }
+                throw e;
             });
-        }).then((workunit) => {
-            logger.info(`Submitting workunit:  ${workunit.Wuid}.${os.EOL}`);
-            return workunit.submit(targetCluster, action(mode), this.resultLimit);
-        }).then((workunit) => {
-            logger.info(`Submitted:  ${this.wuDetailsUrl(workunit.Wuid)}.${os.EOL}`);
-            failedWU = undefined;
-            return workunit;
-        }).catch((e) => {
-            logger.info(`Launch failed - ${e}.${os.EOL}`);
-            logger.debug("InitializeEvent");
-            if (failedWU) {
-                failedWU.setToFailed();
-                return failedWU;
-            }
-            throw e;
         });
     }
 }
