@@ -31,7 +31,7 @@ The following ECL specific commands are available.  Note:  These commands will *
 | Command                   | Shortcut | Description                                                      |
 |---------------------------|:--------:|------------------------------------------------------------------|
 | Syntax Check All Files | shift+F7 | Save All + check syntax of all files. |
-| Syntax Clear | ctrl+F7 | Clear all previously reported ECL Syntax Check results |
+| Syntax Clear | ctrl/cmd+F7 | Clear all previously reported ECL Syntax Check results |
 | Language Reference Website | | Opens the ECL language reference website in external browser |
 | Terminal | | Opens ECL Client Tools Terminal Session |
 
@@ -43,7 +43,7 @@ The following ECL specific commands are available.  Note:  These commands will *
 |![Compile](resources/light-png/file-binary.png) Compile | | Compile ECL |
 | Syntax Check | F7 | Save and check syntax of current file |
 | Language Reference Lookup | shift+F1 | For the currently selected text, search the online ECL language reference |
-| Insert Record Definition | ctrl+I R | Fetches record definition for given logical file |
+| Insert Record Definition | ctrl/cmd+I R | Fetches record definition for given logical file |
 
 #### Within the Workunit Tree:
 
