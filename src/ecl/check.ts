@@ -8,7 +8,7 @@ import { eclDiagnostic } from "./diagnostic";
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
 
-function calcIncludeFolders(wsPath: string): string[] {
+export function calcIncludeFolders(wsPath: string): string[] {
     const dedup: { [key: string]: boolean } = {};
     const retVal: string[] = [];
     function safeAppend(fsPath: string) {
