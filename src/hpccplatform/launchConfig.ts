@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { locateClientTools, AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, TargetCluster, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery } from "@hpcc-js/comms";
+import { locateClientTools, AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery } from "@hpcc-js/comms";
 import { scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { eclConfigurationProvider } from "./configProvider";
@@ -97,9 +97,11 @@ export class LaunchConfig {
     }
 
     get legacyMode() {
-        switch (this.config("legacyMode")) {
+        switch (this.config("legacyMode") as any) {
+            case true:
             case "true":
                 return true;
+            case false:
             case "false":
                 return false;
             case "":
@@ -209,8 +211,8 @@ export class LaunchConfig {
         });
         const queryPromise = this.verifyUser();
         return Promise.race([timeoutPrommise, queryPromise])
-            .then(r => {
-                return LaunchConfigState.Ok;
+            .then(verified => {
+                return verified ? LaunchConfigState.Ok : LaunchConfigState.Credentials;
             }).catch(e => {
                 return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
             });
@@ -236,7 +238,8 @@ export class LaunchConfig {
     }
 
     async checkCredentials(): Promise<Credentials> {
-        switch (await this.ping()) {
+        const pingResult = await this.ping();
+        switch (pingResult) {
             case LaunchConfigState.Ok:
                 return this.credentials();
             case LaunchConfigState.Credentials:
