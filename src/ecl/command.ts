@@ -12,10 +12,11 @@ export class ECLCommands {
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSubmit", this.submit));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", this.checkSyntax));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxAll", this.checkSyntaxAll));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxClear", this.checkSyntaxClear));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submit", this.submit));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.compile", this.compile));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatch", this.openECLWatch));
@@ -54,6 +55,13 @@ export class ECLCommands {
         if (vscode.window.activeTextEditor) {
             vscode.window.activeTextEditor.document.save();
             sessionManager.submit(vscode.window.activeTextEditor.document);
+        }
+    }
+
+    compile() {
+        if (vscode.window.activeTextEditor) {
+            vscode.window.activeTextEditor.document.save();
+            sessionManager.compile(vscode.window.activeTextEditor.document);
         }
     }
 

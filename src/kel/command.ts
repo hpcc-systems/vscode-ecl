@@ -70,7 +70,7 @@ export class Commands {
                         for (const fp in mappedErrors) {
                             const uri = vscode.Uri.file(fp);
                             const uri2 = doc.uri;
-                            console.log(uri, uri2);
+                            // console.log(uri, uri2);
                             this._diagnostic.set(uri, mappedErrors[fp]);
                         }
                         logger.debug("checkSyntax-check-response-end");

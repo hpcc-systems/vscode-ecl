@@ -615,15 +615,22 @@
       "type": "object",
       "title": "ECL",
       "properties": {
-        "ecl.syntaxArgs": {
+        "ecl.eclccArgs": {
           "type": "array",
           "scope": "resource",
           "items": {
             "type": "string"
           },
-          "default": [
-            "-syntax"
-          ],
+          "default": [],
+          "description": "eclcc syntax check arguments."
+        },
+        "ecl.eclccSyntaxArgs": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
           "description": "eclcc syntax check arguments."
         },
         "ecl.syntaxCheckOnSave": {
@@ -653,7 +660,7 @@
           "default": "",
           "description": "Override eclcc auto detection."
         },
-        "ecl.eclccLogfile": {
+        "ecl.eclccLogFile": {
           "type": "string",
           "scope": "resource",
           "default": "",
@@ -770,24 +777,6 @@
               "targetCluster"
             ],
             "properties": {
-              "mode": {
-                "type": "string",
-                "enum": [
-                  "submit",
-                  "compile",
-                  "publish",
-                  "debug"
-                ],
-                "default": "submit"
-              },
-              "program": {
-                "default": "${file}"
-              },
-              "serverAddress": {
-                "type": "string",
-                "description": "Server IP/Domain address.",
-                "default": "127.0.0.1"
-              },
               "protocol": {
                 "type": "string",
                 "description": "Server protocol (http or https).",
@@ -797,10 +786,20 @@
                 ],
                 "default": "http"
               },
+              "serverAddress": {
+                "type": "string",
+                "description": "Server IP/Domain address.",
+                "default": "127.0.0.1"
+              },
               "port": {
                 "type": "number",
                 "description": "The WsWorkunits port.",
                 "default": 8010
+              },
+              "targetCluster": {
+                "type": "string",
+                "description": "Target cluster.",
+                "default": "hthor"
               },
               "abortSubmitOnError": {
                 "type": "boolean",
@@ -812,33 +811,27 @@
                 "description": "Reject unauthorized calls e.g. SSL certificate errors.",
                 "default": false
               },
-              "targetCluster": {
-                "type": "string",
-                "description": "Target cluster.",
-                "default": "hthor"
-              },
               "eclccPath": {
                 "type": "string",
-                "description": "Override eclcc auto detection",
-                "default": "${config:ecl.eclccPath}"
+                "description": "Override eclcc auto detection"
               },
               "eclccArgs": {
                 "type": "array",
                 "items": {
                   "type": "string"
                 },
-                "description": "Build flags, to be passed to the eclcc compiler.",
-                "default": []
+                "description": "Build flags, to be passed to the eclcc compiler."
               },
-              "includeFolders": {
-                "type": "string",
-                "description": "External folders used by IMPORT",
-                "default": "${config:ecl.includeFolders}"
+              "eclccSyntaxArgs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Syntax check arguments, to be passed to the eclcc compiler."
               },
-              "legacyMode": {
+              "eclccLogFile": {
                 "type": "string",
-                "description": "Legacy Mode.",
-                "default": "${config:ecl.legacyMode}"
+                "description": "Override eclcc auto detection"
               },
               "resultLimit": {
                 "type": "number",
@@ -868,17 +861,11 @@
             "name": "play-hthor-submit",
             "type": "ecl",
             "request": "launch",
-            "mode": "submit",
-            "program": "${file}",
             "protocol": "https",
             "serverAddress": "play.hpccsystems.com",
             "port": 18010,
-            "rejectUnauthorized": false,
             "targetCluster": "hthor",
-            "eclccPath": "${config:ecl.eclccPath}",
-            "eclccArgs": [],
-            "includeFolders": "${config:ecl.includeFolders}",
-            "legacyMode": "${config:ecl.legacyMode}",
+            "rejectUnauthorized": false,
             "resultLimit": 100,
             "timeoutSecs": 60,
             "user": "vscode_user",
@@ -893,17 +880,11 @@
               "name": "localhost-hthor-submit",
               "type": "ecl",
               "request": "launch",
-              "mode": "submit",
-              "program": "^\"\\${file}\"",
               "protocol": "http",
               "serverAddress": "localhost",
               "port": 8010,
-              "rejectUnauthorized": false,
               "targetCluster": "hthor",
-              "eclccPath": "^\"\\${config:ecl.eclccPath}\"",
-              "eclccArgs": [],
-              "includeFolders": "^\"\\${config:ecl.includeFolders}\"",
-              "legacyMode": "^\"\\${config:ecl.legacyMode}\"",
+              "rejectUnauthorized": false,
               "resultLimit": 100,
               "timeoutSecs": 60,
               "user": "vscode_user",
@@ -917,17 +898,11 @@
               "name": "play-hthor-submit",
               "type": "ecl",
               "request": "launch",
-              "mode": "submit",
-              "program": "^\"\\${file}\"",
               "protocol": "https",
               "serverAddress": "play.hpccsystems.com",
               "port": 18010,
-              "rejectUnauthorized": false,
               "targetCluster": "hthor",
-              "eclccPath": "^\"\\${config:ecl.eclccPath}\"",
-              "eclccArgs": [],
-              "includeFolders": "^\"\\${config:ecl.includeFolders}\"",
-              "legacyMode": "^\"\\${config:ecl.legacyMode}\"",
+              "rejectUnauthorized": false,
               "resultLimit": 100,
               "timeoutSecs": 60,
               "user": "vscode_user",

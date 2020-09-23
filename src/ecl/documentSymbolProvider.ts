@@ -36,7 +36,7 @@ export class ECLDocumentSymbolProvider implements vscode.DocumentSymbolProvider 
             default:
                 if (!knownTypes[type]) {
                     knownTypes[type] = true;
-                    console.log(`case "${type}":\n    break;`);
+                    // console.log(`case "${type}":\n    break;`);
                 }
         }
         return vscode.SymbolKind.Variable;
@@ -72,7 +72,7 @@ export class ECLDocumentSymbolProvider implements vscode.DocumentSymbolProvider 
     parseDefinitions(document: vscode.TextDocument, parentName: string, defs: Definition[]): vscode.DocumentSymbol[] {
         const retVal: vscode.DocumentSymbol[] = [];
         defs.forEach(def => {
-            console.log(`${def.fullname.toLowerCase()}.indexOf(${parentName.toLowerCase()}) === ${def.fullname.toLowerCase().indexOf(parentName.toLowerCase())}`);
+            // console.log(`${def.fullname.toLowerCase()}.indexOf(${parentName.toLowerCase()}) === ${def.fullname.toLowerCase().indexOf(parentName.toLowerCase())}`);
             if (!parentName || def.fullname.toLowerCase().indexOf(parentName.toLowerCase()) === 0) {
                 const docSymbol = new vscode.DocumentSymbol(def.name, def.type, this.typeToSymbolKind(def.type), this.calcRange(document, def), this.calcSelectionRange(document, def));
                 docSymbol.children = this.parseDefinitions(document, def.fullname, def.definitions);
