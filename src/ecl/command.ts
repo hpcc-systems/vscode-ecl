@@ -85,9 +85,34 @@ export class ECLCommands {
         if (vscode.window.activeTextEditor && sessionManager.session) {
             const editor = vscode.window.activeTextEditor;
             const position = editor.selection.active;
-            const lf = await vscode.window.showInputBox({
-                prompt: "Logical File"
-            }) || "";
+            let items = [];
+            const dedup = {};
+            const eclText = editor.document.getText();
+            const re = /'(~.*)'| '(.*::.*)'/g;
+            let m;
+            do {
+                m = re.exec(eclText);
+                const found = m && (m[1] || m[2]);
+                if (found && !dedup[found]) {
+                    dedup[found] = true;
+                    items.push(found);
+                }
+            } while (m);
+
+            let lf = "...other...";
+            if (items.length > 0) {
+                items = ["...other...", ...items.sort()];
+                lf = await vscode.window.showQuickPick(items, {
+                    placeHolder: "Logical File"
+                });
+            }
+
+            if (lf === "...other...") {
+                lf = await vscode.window.showInputBox({
+                    prompt: "Logical File"
+                });
+            }
+
             if (lf) {
                 sessionManager.session.fetchRecordDef(lf).then(ecl => {
                     editor.edit(editBuilder => {
