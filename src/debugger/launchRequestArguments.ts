@@ -1,8 +1,7 @@
 import { DebugProtocol } from "vscode-debugprotocol";
 
-export type LaunchMode = "submit" | "compile" | "publish" | "debug";
 export type LaunchProtocol = "http" | "https";
-export type LaunchLegacyMode = "true" | "false" | "";
+export type LaunchMode = "submit" | "compile" | "publish" | "debug";
 
 export enum LaunchConfigState {
     Unknown,
@@ -13,20 +12,23 @@ export enum LaunchConfigState {
 
 // This interface should always match the schema found in `package.json`.
 export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
+    //  Implicit
     name: string;
     type: "ecl";
-    mode?: LaunchMode;
-    program: string;
+
+    //  Required
     protocol: LaunchProtocol;
     serverAddress: string;
     port: number;
+    targetCluster: string;
+
+    //  Optional
     abortSubmitOnError?: boolean;
     rejectUnauthorized?: boolean;
-    targetCluster: string;
     eclccPath?: string;
     eclccArgs?: string[];
-    includeFolders?: string;
-    legacyMode?: LaunchLegacyMode;
+    eclccSyntaxArgs?: string[];
+    eclccLogFile?: string
     resultLimit?: number;
     timeoutSecs?: number;
     user?: string;

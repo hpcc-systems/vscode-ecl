@@ -152,7 +152,10 @@ export class ECLDebugSession extends DebugSession {
     }
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): void {
-        this.sendEvent(new Event("LaunchRequest", { ...args }));
+        this.sendEvent(new Event("LaunchRequest", {
+            name: args.name,
+            targetCluster: args.targetCluster
+        }));
         this.sendEvent(new TerminatedEvent());
     }
 
@@ -317,7 +320,8 @@ export class ECLDebugSession extends DebugSession {
                 }
                 break;
             case "workunit":
-                this.pushStackFrame(stackFrames, graph, { file: this.launchConfig.program, col: debugState.state === "finished" ? Number.MAX_SAFE_INTEGER : 0 });
+                //  TODO (if we re-enable the debugger ever)
+                this.pushStackFrame(stackFrames, graph, { file: "this.launchConfig.program", col: debugState.state === "finished" ? Number.MAX_SAFE_INTEGER : 0 });
                 break;
             default:
         }

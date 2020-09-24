@@ -3,63 +3,10 @@ import { scopedLogger } from "@hpcc-js/util";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { locateClientTools } from "./clientTools"; //  npm link ../jpcc-js/hpcc-js-comms
+import { sessionManager } from "../hpccplatform/session";
 import { eclDiagnostic } from "./diagnostic";
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
-
-export function calcIncludeFolders(wsPath: string): string[] {
-    const dedup: { [key: string]: boolean } = {};
-    const retVal: string[] = [];
-    function safeAppend(fsPath: string) {
-        attachWorkspace(fsPath);    //  Just to prime autocompletion  ---
-        if (wsPath !== fsPath && !dedup[fsPath]) {
-            dedup[fsPath] = true;
-            retVal.push(fsPath);
-        }
-    }
-    if (vscode.workspace.workspaceFolders) {
-        for (const wuf of vscode.workspace.workspaceFolders) {
-            safeAppend(wuf.uri.fsPath);
-            const eclConfig = vscode.workspace.getConfiguration("ecl", wuf.uri);
-            for (const fsPath of eclConfig["includeFolders"]) {
-                safeAppend(path.isAbsolute(fsPath) ? fsPath : path.resolve(wsPath, fsPath));
-            }
-        }
-    }
-    return retVal;
-}
-
-interface CheckResponse {
-    errors: IECLErrorWarning[];
-    checked: string[];
-}
-function check(fileUri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<CheckResponse> {
-    const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
-    const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
-    const includeFolders = calcIncludeFolders(currentWorkspacePath);
-    return locateClientTools("", currentWorkspacePath, includeFolders, eclConfig.get<boolean>("legacyMode")).then(clientTools => {
-        if (!clientTools) {
-            throw new Error();
-        } else {
-            logger.debug(`syntaxCheck-promise:  ${fileUri.fsPath}`);
-            return clientTools.syntaxCheck(fileUri.fsPath, eclConfig.get<string[]>("syntaxArgs")).then((errors) => {
-                if (errors.hasUnknown()) {
-                    logger.warning(`syntaxCheck-warning:  ${fileUri.fsPath} ${errors.unknown().toString()}`);
-                }
-                logger.debug(`syntaxCheck-resolve:  ${fileUri.fsPath} ${errors.errors().length} total.`);
-                return { errors: errors.all(), checked: errors.checked() };
-            }).catch(e => {
-                logger.debug(`syntaxCheck-reject:  ${fileUri.fsPath} ${e.msg}`);
-                vscode.window.showInformationMessage(`Syntax check exception:  ${fileUri.fsPath} ${e.msg}`);
-                return Promise.resolve({ errors: [], checked: [] });
-            });
-        }
-    }).catch(e => {
-        vscode.window.showInformationMessage('Unable to locate "eclcc" binary.  Ensure ECL ClientTools is installed.');
-        return Promise.resolve({ errors: [], checked: [] });
-    });
-}
 
 function mapSeverityToVSCodeSeverity(sev: string) {
     switch (sev) {
@@ -72,7 +19,7 @@ function mapSeverityToVSCodeSeverity(sev: string) {
 const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...checking...", vscode.DiagnosticSeverity.Information)];
 function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
     eclDiagnostic.set(uri, checking);
-    return check(uri, eclConfig).then(({ errors, checked }) => {
+    return sessionManager.checkSyntax(uri).then(({ errors, checked }) => {
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
 
         for (const checkedPath of checked) {

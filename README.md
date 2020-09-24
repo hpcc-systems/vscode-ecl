@@ -70,8 +70,17 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
 ```javascript
 
+  // Override eclcc auto detection.
+  "ecl.eclccPath": ""
+
+  // eclcc arguments.
+  "ecl.eclccArgs": [],
+
   // eclcc syntax check arguments.
-  "ecl.syntaxArgs": ["-syntax"],
+  "ecl.eclccSyntaxArgs": [],
+
+  // Write eclcc logfile to specified file.
+  "ecl.eclccLogFile": ""
 
   // Run 'eclcc -syntax' on save.
   "ecl.syntaxCheckOnSave": true
@@ -81,12 +90,6 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
   // Additional folders to use when resolving IMPORT statements.
   "ecl.includeFolders": []
-
-  // Override eclcc auto detection.
-  "ecl.eclccPath": ""
-
-  // Write eclcc logfile to specified file.
-  "ecl.eclccLogfile": ""
 
   // Add '-legacy' argument to eclcc.
   "ecl.legacyMode": false
@@ -103,23 +106,22 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
 Submitting ECL using VS-Code requires specifying the target environment within the VS Code `launch.json` (pressing `F5` will prompt you to auto create a skeleton file if none exists):
 
-```javascript
+```typescript
 // Default ECL Launch Configuration
 {
   "name": "play-hthor-submit",
   "type": "ecl",
   "request": "launch",
-  "mode": "submit",
-  "program": "${file}",
   "protocol": "https",
   "serverAddress": "play.hpccsystems.com",
   "port": 18010,
-  "rejectUnauthorized": false,
   "targetCluster": "hthor",
-  "eclccPath": "${config:ecl.eclccPath}",
+  "abortSubmitOnError": false,
+  "rejectUnauthorized": false,
+  "eclccPath": "",
   "eclccArgs": [],
-  "includeFolders": "${config:ecl.includeFolders}",
-  "legacyMode": "${config:ecl.legacyMode}",
+  "eclccSyntaxArgs": [],
+  "eclccLogFile": "",
   "resultLimit": 100,
   "timeoutSecs": 60,
   "user": "vscode_user",

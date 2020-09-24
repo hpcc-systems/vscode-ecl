@@ -93,7 +93,7 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
         }
         this._rendered = true;
 
-        this._treeView.title = sessionManager.session.name;
+        this._treeView.title = sessionManager.session.id;
         return sessionManager.wuQuery({
             Owner: this._myWorkunits ? sessionManager.session.userID : undefined,
             Sortby: "Wuid",

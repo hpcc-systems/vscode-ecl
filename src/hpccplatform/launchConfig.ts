@@ -1,13 +1,11 @@
 import * as vscode from "vscode";
-import { locateClientTools, AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery } from "@hpcc-js/comms";
-import { scopedLogger } from "@hpcc-js/util";
-import { LaunchConfigState, LaunchMode, LaunchRequestArguments } from "../debugger/launchRequestArguments";
-import { eclConfigurationProvider } from "./configProvider";
-import { calcIncludeFolders } from "../ecl/check";
-
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import { AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools } from "@hpcc-js/comms";
+import { scopedLogger } from "@hpcc-js/util";
+import { LaunchConfigState, LaunchMode, LaunchRequestArguments } from "../debugger/launchRequestArguments";
+import { showEclStatus } from "../ecl/clientTools";
 
 const logger = scopedLogger("launchConfig.ts");
 
@@ -23,6 +21,75 @@ export {
     LaunchRequestArguments
 };
 
+let g_launchConfigurations: { [name: string]: LaunchRequestArguments };
+function gatherServers(wuf?: vscode.WorkspaceFolder) {
+    const eclLaunch = vscode.workspace.getConfiguration("launch", wuf.uri);
+    if (eclLaunch.has("configurations")) {
+        for (const launchConfig of eclLaunch.get<any[]>("configurations")!) {
+            if (launchConfig.type === "ecl" && launchConfig.name) {
+                g_launchConfigurations[`${launchConfig.name}${wuf ? ` (${wuf.name})` : ""}`] = launchConfig;
+            }
+        }
+    }
+}
+
+export function launchConfigurations(refresh = false): string[] {
+    if (!g_launchConfigurations || refresh === true) {
+        g_launchConfigurations = {};
+
+        if (vscode.workspace.workspaceFolders) {
+            for (const wuf of vscode.workspace.workspaceFolders) {
+                gatherServers(wuf);
+            }
+        } else {
+            gatherServers();
+        }
+    }
+    const retVal = Object.keys(g_launchConfigurations);
+    if (retVal.length === 0) {
+        vscode.window.showErrorMessage("No ECL Launch configurations.", "Create ECL Launch").then(response => {
+            vscode.commands.executeCommand("workbench.action.debug.configure");
+        });
+
+        g_launchConfigurations["not found"] = {
+            name: "not found",
+            type: "ecl",
+
+            //  Required
+            protocol: "http",
+            serverAddress: "localhost",
+            port: 8010,
+            targetCluster: "unknown"
+        };
+        retVal.push("not found");
+    }
+    return retVal;
+}
+
+export function launchConfiguration(name: string): LaunchRequestArguments | undefined {
+    if (!g_launchConfigurations) {
+        launchConfigurations(true);
+    }
+    return g_launchConfigurations[name];
+}
+
+function config<T extends keyof LaunchRequestArguments>(id: string, key: T, defaultValue?: LaunchRequestArguments[T]) {
+    const config = launchConfiguration(id);
+    let retVal = config[key];
+    if (retVal === undefined) {
+        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        retVal = eclConfig.get(key);
+    } else if (typeof retVal === "string" && retVal.indexOf(configPrefix) === 0) {
+        const configKey = retVal.substring(configPrefix.length, retVal.length - 1);
+        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        retVal = eclConfig.get(configKey);
+    }
+    if (retVal === undefined) {
+        retVal = defaultValue;
+    }
+    return retVal;
+}
+
 export function espUrl(launchRequestArgs: LaunchRequestArguments) {
     return `${launchRequestArgs.protocol}://${launchRequestArgs.serverAddress}:${launchRequestArgs.port}`;
 }
@@ -35,7 +102,7 @@ export function wuResultUrl(launchRequestArgs: LaunchRequestArguments, wuid: str
     return `${espUrl(launchRequestArgs)}/?Widget=ResultWidget&Wuid=${wuid}&Sequence=${sequence}`;
 }
 
-export function action(mode: LaunchMode) {
+function action(mode: LaunchMode) {
     switch (mode) {
         case "compile":
         case "publish":
@@ -60,118 +127,91 @@ const configPrefix = "${config:ecl.";
 
 type ValueOf<T> = T[keyof T];
 
-export class LaunchConfig {
+export interface CheckResponse {
+    errors: IECLErrorWarning[];
+    checked: string[];
+}
 
-    private readonly _config: LaunchRequestArguments;
+export class LaunchConfig implements LaunchRequestArguments {
 
-    get name() {
-        return this.config("name");
+    private readonly _lcID: string;
+
+    get id(): string {
+        return this._lcID;
     }
 
-    get action(): WUUpdate.Action {
-        switch (this.config("mode")) {
-            case "compile":
-            case "publish":
-                return WUUpdate.Action.Compile;
-            case "debug":
-                return WUUpdate.Action.Debug;
-            case "submit":
-            default:
-                return WUUpdate.Action.Run;
-        }
+    get name(): string {
+        return config(this._lcID, "name");
     }
 
-    get isPublish() {
-        return this.config("mode") === "publish";
+    get type(): "ecl" {
+        return "ecl";
     }
 
-    get eclccPath() {
-        return this.config("eclccPath");
-    }
-
-    get includeFolders() {
-        const retVal = this.config("includeFolders");
-        if (typeof retVal === "string") {
-            return retVal.split(",");
-        }
-        return retVal;
-    }
-
-    get legacyMode() {
-        switch (this.config("legacyMode") as any) {
-            case true:
-            case "true":
-                return true;
-            case false:
-            case "false":
-                return false;
-            case "":
-            default:
-                return undefined;
-        }
-    }
-
-    get abortSubmitOnError() {
-        return this.config("abortSubmitOnError");
-    }
-
-    get targetCluster() {
-        return this.config("targetCluster");
-    }
-
-    get resultLimit() {
-        return this.config("resultLimit");
-    }
-
+    //  Required
     get protocol() {
-        return this.config("protocol");
+        return config(this._lcID, "protocol");
     }
 
     get serverAddress() {
-        return this.config("serverAddress");
+        return config(this._lcID, "serverAddress");
     }
 
     get port() {
-        return this.config("port");
+        return config(this._lcID, "port");
     }
 
-    get rejectUnauthorized() {
-        return this.config("rejectUnauthorized");
+    get targetCluster() {
+        return config(this._lcID, "targetCluster");
+    }
+
+    //  Optional
+    get abortSubmitOnError(): boolean {
+        return config(this._lcID, "abortSubmitOnError", true);
+    }
+
+    get rejectUnauthorized(): boolean {
+        return config(this._lcID, "rejectUnauthorized", false);
+    }
+
+    get eclccPath(): string {
+        return config(this._lcID, "eclccPath", "");
+    }
+
+    get eclccArgs(): string[] {
+        return config(this._lcID, "eclccArgs", []);
+    }
+
+    get eclccSyntaxArgs(): string[] {
+        return config(this._lcID, "eclccSyntaxArgs", []);
+    }
+
+    get eclccLogFile() {
+        return config(this._lcID, "eclccLogFile", "");
+    }
+
+    get resultLimit() {
+        return config(this._lcID, "resultLimit", 100);
     }
 
     get timeoutSecs() {
-        return this.config("timeoutSecs");
+        return config(this._lcID, "timeoutSecs", 60);
+    }
+
+    get user() {
+        return config(this._lcID, "user", "vscode_user");
+    }
+
+    get password() {
+        return config(this._lcID, "password", "");
     }
 
     get espUrl() {
         return `${this.protocol}://${this.serverAddress}:${this.port}`;
     }
 
-    config<T extends keyof LaunchRequestArguments>(key: T) {
-        let retVal = this._config[key];
-        if (typeof retVal === "string" && retVal.indexOf(configPrefix) === 0) {
-            const configKey = retVal.substring(configPrefix.length, retVal.length - 1);
-            const eclConfig = vscode.workspace.getConfiguration("ecl");
-            retVal = eclConfig.get(configKey);
-        }
-        return retVal;
-    }
-
-    constructor(args: LaunchRequestArguments) {
-        this._config = {
-            ...args,
-            protocol: args.protocol || "http",
-            abortSubmitOnError: args.abortSubmitOnError !== undefined ? args.abortSubmitOnError : true,
-            rejectUnauthorized: args.rejectUnauthorized || false,
-            eclccPath: args.eclccPath ? args.eclccPath : "",
-            eclccArgs: args.eclccArgs ? args.eclccArgs : [],
-            includeFolders: args.includeFolders ? args.includeFolders : "",
-            legacyMode: args.legacyMode || "",
-            resultLimit: args.resultLimit || 100,
-            timeoutSecs: args.timeoutSecs || 60,
-            user: args.user || "",
-            password: args.password || ""
-        };
+    constructor(lcID: string) {
+        this._lcID = lcID;
     }
 
     //  Credentials  ---
@@ -179,8 +219,8 @@ export class LaunchConfig {
         let retVal = credentials[this.serverAddress];
         if (!retVal) {
             retVal = credentials[this.serverAddress] = {
-                user: this._config.user,
-                password: this._config.password,
+                user: this.user,
+                password: this.password,
                 verified: false
             };
         }
@@ -222,7 +262,7 @@ export class LaunchConfig {
     private async promptUserID() {
         const credentials = this.credentials();
         credentials.user = await vscode.window.showInputBox({
-            prompt: `User ID (${this.name})`,
+            prompt: `User ID (${this.id})`,
             password: false,
             value: credentials.user
         }) || "";
@@ -231,7 +271,7 @@ export class LaunchConfig {
     private async promptPassword(): Promise<boolean> {
         const credentials = this.credentials();
         credentials.password = await vscode.window.showInputBox({
-            prompt: `Password (${this.name})`,
+            prompt: `Password (${this.id})`,
             password: true,
             value: credentials.password
         }) || "";
@@ -239,6 +279,9 @@ export class LaunchConfig {
     }
 
     async checkCredentials(): Promise<Credentials> {
+        if (this.name === "not found") {
+            throw new Error("No ECL Launch configurations.");
+        }
         const pingResult = await this.ping();
         switch (pingResult) {
             case LaunchConfigState.Ok:
@@ -247,6 +290,10 @@ export class LaunchConfig {
                 for (let i = 0; i < 3; ++i) {
                     await this.promptUserID();
                     await this.promptPassword();
+                    const credentials = this.credentials();
+                    if (!credentials.user && !credentials.password) {
+                        break;
+                    }
                     if (await this.verifyUser()) {
                         return this.credentials();
                     }
@@ -257,6 +304,87 @@ export class LaunchConfig {
             default:
                 throw new Error("Connection failed.");
         }
+    }
+
+    //  Check Syntax  ---
+    calcIncludeFolders(wsPath: string): string[] {
+        const retVal: string[] = [];
+        const dedup: { [key: string]: boolean } = {};
+
+        function safeAppend(fsPath: string) {
+            attachWorkspace(fsPath);    //  Just to prime autocompletion  ---
+            if (wsPath !== fsPath && !dedup[fsPath]) {
+                dedup[fsPath] = true;
+                retVal.push(fsPath);
+            }
+        }
+
+        if (vscode.workspace.workspaceFolders) {
+            for (const wuf of vscode.workspace.workspaceFolders) {
+                safeAppend(wuf.uri.fsPath);
+                const eclConfig = vscode.workspace.getConfiguration("ecl", wuf.uri);
+                for (const fsPath of eclConfig["includeFolders"]) {
+                    safeAppend(path.isAbsolute(fsPath) ? fsPath : path.resolve(wsPath, fsPath));
+                }
+            }
+        }
+        return retVal;
+    }
+
+    locateClientTools(fileUri?: vscode.Uri, build = ""): Promise<ClientTools> {
+        const eclConfig = vscode.workspace.getConfiguration("ecl", fileUri);
+        const currentWorkspace = fileUri ? vscode.workspace.getWorkspaceFolder(fileUri) : undefined;
+        const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
+        const includeFolders = this.calcIncludeFolders(currentWorkspacePath);
+        const args = this.eclccArgs;
+        if (this.eclccLogFile) {
+            args.push(`--logfile=${path.normalize(this.eclccLogFile)}`);
+        }
+        return locateClientTools(
+            this.eclccPath,
+            build,
+            currentWorkspacePath,
+            includeFolders,
+            eclConfig.get("legacyMode"),
+            args
+        ).then(clientTools => {
+            let eclccPathOverriden = false;
+            if (clientTools) {
+                if (clientTools.eclccPath === this.eclccPath) {
+                    eclccPathOverriden = true;
+                }
+                clientTools.version().then(version => {
+                    showEclStatus(version.toString(), eclccPathOverriden, clientTools.eclccPath);
+                });
+            } else {
+                showEclStatus("Unknown", false, "Unable to locate eclcc");
+            }
+            return clientTools;
+        });
+    }
+
+    checkSyntax(fileUri: vscode.Uri): Promise<CheckResponse> {
+        return this.locateClientTools(fileUri).then(clientTools => {
+            if (!clientTools) {
+                throw new Error();
+            } else {
+                logger.debug(`syntaxCheck-promise:  ${fileUri.fsPath}`);
+                return clientTools.syntaxCheck(fileUri.fsPath, ["-syntax", ...this.eclccSyntaxArgs]).then((errors) => {
+                    if (errors.hasUnknown()) {
+                        logger.warning(`syntaxCheck-warning:  ${fileUri.fsPath} ${errors.unknown().toString()}`);
+                    }
+                    logger.debug(`syntaxCheck-resolve:  ${fileUri.fsPath} ${errors.errors().length} total.`);
+                    return { errors: errors.all(), checked: errors.checked() };
+                }).catch(e => {
+                    logger.debug(`syntaxCheck-reject:  ${fileUri.fsPath} ${e.msg}`);
+                    vscode.window.showInformationMessage(`Syntax check exception:  ${fileUri.fsPath} ${e.msg}`);
+                    return Promise.resolve({ errors: [], checked: [] });
+                });
+            }
+        }).catch(e => {
+            vscode.window.showInformationMessage('Unable to locate "eclcc" binary.  Ensure ECL ClientTools is installed.');
+            return Promise.resolve({ errors: [], checked: [] });
+        });
     }
 
     //  Misc  ---
@@ -305,35 +433,35 @@ export class LaunchConfig {
     }
 
     //  Workunit  ---
-    async localResolveDebugConfiguration(filePath: string): Promise<LaunchRequestArguments> {
-        const uri = vscode.Uri.file(filePath);
-        const folder = vscode.workspace.getWorkspaceFolder(uri);
-        const configPrefix = "${config:ecl.";
-        return eclConfigurationProvider.resolveDebugConfiguration(folder, this._config as unknown as vscode.DebugConfiguration).then(debugConfiguration => {
-            for (const key in debugConfiguration) {
-                let value: any = debugConfiguration[key];
-                switch (value) {
-                    case "${workspaceRoot}":
-                        debugConfiguration[key] = folder.uri.fsPath;
-                        break;
-                    case "${file}":
-                        debugConfiguration[key] = filePath;
-                        break;
-                    default:
-                        if (typeof value === "string" && value.indexOf(configPrefix) === 0) {
-                            const configKey = value.substring(configPrefix.length, value.length - 1);
-                            const eclConfig = vscode.workspace.getConfiguration("ecl");
-                            debugConfiguration[key] = eclConfig.get(configKey);
-                        }
-                }
-                value = debugConfiguration[key];
-                if (Array.isArray(value)) {
-                    debugConfiguration[key] = value.join(",");
-                }
-            }
-            return debugConfiguration as unknown as LaunchRequestArguments;
-        });
-    }
+    // async localResolveDebugConfiguration(filePath: string): Promise<LaunchRequestArguments> {
+    //     const uri = vscode.Uri.file(filePath);
+    //     const folder = vscode.workspace.getWorkspaceFolder(uri);
+    //     const configPrefix = "${config:ecl.";
+    //     return eclConfigurationProvider.resolveDebugConfiguration(folder, this._config as unknown as vscode.DebugConfiguration).then(debugConfiguration => {
+    //         for (const key in debugConfiguration) {
+    //             let value: any = debugConfiguration[key];
+    //             switch (value) {
+    //                 case "${workspaceRoot}":
+    //                     debugConfiguration[key] = folder.uri.fsPath;
+    //                     break;
+    //                 case "${file}":
+    //                     debugConfiguration[key] = filePath;
+    //                     break;
+    //                 default:
+    //                     if (typeof value === "string" && value.indexOf(configPrefix) === 0) {
+    //                         const configKey = value.substring(configPrefix.length, value.length - 1);
+    //                         const eclConfig = vscode.workspace.getConfiguration("ecl");
+    //                         debugConfiguration[key] = eclConfig.get(configKey);
+    //                     }
+    //             }
+    //             value = debugConfiguration[key];
+    //             if (Array.isArray(value)) {
+    //                 debugConfiguration[key] = value.join(",");
+    //             }
+    //         }
+    //         return debugConfiguration as unknown as LaunchRequestArguments;
+    //     });
+    // }
 
     private createWorkunit() {
         return this.checkCredentials().then(credentials => {
@@ -356,9 +484,6 @@ export class LaunchConfig {
             title: "Submit ECL",
             cancellable: false
         }, (progress, token) => {
-            const currentWorkspace = vscode.workspace.getWorkspaceFolder(fileUri);
-            const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
-            const includeFolders = calcIncludeFolders(currentWorkspacePath);
             const filePath = fileUri.fsPath;
             logger.info(`Fetch build version.${os.EOL}`);
             const pathParts = path.parse(filePath);
@@ -366,7 +491,7 @@ export class LaunchConfig {
             return this.fetchBuild().then(build => {
                 progress.report({ increment: 10, message: "Locating Client Tools" });
                 logger.info(`Locating Client Tools.${os.EOL}`);
-                return locateClientTools(this.eclccPath, build, currentWorkspace.uri.fsPath, includeFolders, this.legacyMode);
+                return this.locateClientTools(fileUri, build);
             }).then((clientTools) => {
                 progress.report({ increment: 10, message: "Creating Archive" });
                 logger.info(`Client Tools:  ${clientTools.eclccPath}.${os.EOL}`);
