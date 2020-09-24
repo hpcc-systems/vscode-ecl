@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.4...v2.3.0) (2020-09-24)
+
+
+### Features
+
+* **Insert Record:** Offer list of logical files when possible ([5f1bbd2](https://github.com/hpcc-systems/vscode-ecl/commit/5f1bbd2cf3ec361648f395d0787094f5dd677b43)), closes [#201](https://github.com/hpcc-systems/vscode-ecl/issues/201)
+
+
+### Bug Fixes
+
+* **Launch Configuration:**  Consolidate settings and launch configurations. ([b7af7e3](https://github.com/hpcc-systems/vscode-ecl/commit/b7af7e3bbe81da8bd2cc60e37e497dca9fa21cf8))
+
 ### [2.2.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.3...v2.2.4) (2020-09-22)
 
 
