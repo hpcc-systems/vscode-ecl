@@ -1,9 +1,9 @@
-import { attachWorkspace, IECLErrorWarning } from "@hpcc-js/comms"; //  npm link ../jpcc-js/hpcc-js-comms
 import { scopedLogger } from "@hpcc-js/util";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
+import localize from "../util/localize";
 import { eclDiagnostic } from "./diagnostic";
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
@@ -16,7 +16,7 @@ function mapSeverityToVSCodeSeverity(sev: string) {
     }
 }
 
-const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...checking...", vscode.DiagnosticSeverity.Information)];
+const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("checking")}...`, vscode.DiagnosticSeverity.Information)];
 function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
     eclDiagnostic.set(uri, checking);
     return sessionManager.checkSyntax(uri).then(({ errors, checked }) => {
@@ -45,7 +45,7 @@ function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Pr
         vscode.window.setStatusBarMessage("");
     }).catch((err) => {
         eclDiagnostic.set(uri, []);
-        vscode.window.showInformationMessage("Error: " + err);
+        vscode.window.showInformationMessage(`${localize("Error")}:  ${err}`);
         vscode.window.setStatusBarMessage("");
     });
 }

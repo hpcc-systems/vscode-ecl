@@ -1,5 +1,6 @@
 import { scopedLogger } from "@hpcc-js/util";
 import * as vscode from "vscode";
+import localize from "../util/localize";
 import { locateClientTools, selectCTVersion } from "./clientTools";
 import { Diagnostic } from "./diagnostic";
 
@@ -13,8 +14,8 @@ function mapSeverityToVSCodeSeverity(sev: string) {
     }
 }
 
-const checking = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...checking...", vscode.DiagnosticSeverity.Information);
-const noClientTools = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), "...unable to locate KEL client tools...", vscode.DiagnosticSeverity.Information);
+const checking = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("checking")}...`, vscode.DiagnosticSeverity.Information);
+const noClientTools = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("unable to locate KEL client tools")}...`, vscode.DiagnosticSeverity.Information);
 
 export let commands: Commands;
 export class Commands {

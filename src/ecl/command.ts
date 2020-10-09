@@ -6,6 +6,7 @@ import { eclDiagnostic } from "./diagnostic";
 import { sessionManager } from "../hpccplatform/session";
 import { eclWatchPanelView } from "./eclWatchPanelView";
 import { ECLResultNode, ECLWUNode } from "./eclWatchTree";
+import localize from "../util/localize";
 
 export let eclCommands: ECLCommands;
 export class ECLCommands {
@@ -108,17 +109,17 @@ export class ECLCommands {
                 }
             } while (m);
 
-            let lf = "...other...";
+            let lf = `...${localize("other")}...`;
             if (items.length > 0) {
-                items = ["...other...", ...items.sort()];
+                items = [`...${localize("other")}...`, ...items.sort()];
                 lf = await vscode.window.showQuickPick(items, {
-                    placeHolder: "Logical File"
+                    placeHolder: localize("Logical File")
                 });
             }
 
-            if (lf === "...other...") {
+            if (lf === `...${localize("other")}...`) {
                 lf = await vscode.window.showInputBox({
-                    prompt: "Logical File"
+                    prompt: localize("Logical File")
                 });
             }
 

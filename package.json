@@ -21,6 +21,8 @@
     "compile-watch": "npm run compile -- -watch",
     "compile-es6": "tsc --module es6 --outDir ./lib-es6",
     "compile-es6-watch": "npm run compile-es6 -- -w",
+    "compile-util": "tsc --project ./tsconfig.util.json",
+    "compile-util-watch": "npm run compile-util -- -w",
     "bundle": "webpack --mode=\"development\"",
     "bundle-watch": "webpack --mode=\"development\" --watch",
     "build": "run-s copy-resources compile-es6 bundle",
@@ -39,16 +41,16 @@
     "tag": "run-s standard-version git-push"
   },
   "devDependencies": {
-    "@fluentui/react": "^7.148.1",
-    "@hpcc-js/comms": "^2.31.0",
+    "@fluentui/react": "^7.149.3",
+    "@hpcc-js/comms": "^2.32.0",
     "@hpcc-js/dgrid": "^2.8.37",
-    "@hpcc-js/loader": "^2.47.0",
-    "@hpcc-js/marshaller": "^2.23.56",
+    "@hpcc-js/loader": "^2.48.0",
+    "@hpcc-js/marshaller": "^2.23.57",
     "@hpcc-js/observable-md": "^2.21.0",
     "@hpcc-js/util": "^2.26.0",
     "@material-ui/core": "^4.11.0",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^12.19.2",
+    "@types/node": "^12.19.3",
     "@types/react-dom": "^16.0.5",
     "@types/vscode": "^1.50.0",
     "@typescript-eslint/eslint-plugin": "^3.2.0",
@@ -179,8 +181,8 @@
       {
         "command": "ecl.submit",
         "category": "ECL",
-        "title": "Submit",
-        "description": "Submit ECL to HPCC Platform.",
+        "title": "%Submit%",
+        "description": "%Submit ECL to HPCC Platform%",
         "icon": {
           "light": "resources/light/play.svg",
           "dark": "resources/dark/play.svg"
@@ -189,8 +191,8 @@
       {
         "command": "ecl.compile",
         "category": "ECL",
-        "title": "Compile",
-        "description": "Compile ECL on the HPCC Platform.",
+        "title": "%Compile%",
+        "description": "%Compile ECL on the HPCC Platform%",
         "icon": {
           "light": "resources/light/file-binary.svg",
           "dark": "resources/dark/file-binary.svg"
@@ -199,44 +201,44 @@
       {
         "command": "ecl.checkSyntax",
         "category": "ECL",
-        "title": "Syntax Check",
-        "description": "Save + check syntax of current file."
+        "title": "%Syntax Check%",
+        "description": "%Save + check syntax of current file%"
       },
       {
         "command": "ecl.checkSyntaxAll",
         "category": "ECL",
-        "title": "Syntax Check all files",
-        "description": "Save All + check syntax of all files."
+        "title": "%Syntax Check all files%",
+        "description": "%Save All + check syntax of all files%"
       },
       {
         "command": "ecl.checkSyntaxClear",
         "category": "ECL",
-        "title": "Syntax Clear",
-        "description": "Clear all previously reported ECL Syntax Check results."
+        "title": "%Syntax Clear%",
+        "description": "%Clear all previously reported ECL Syntax Check results%"
       },
       {
         "command": "ecl.showLanguageReference",
         "category": "ECL",
-        "title": "Language Reference Website",
-        "description": "Opens the ECL language reference website in external browser."
+        "title": "%Language Reference Website%",
+        "description": "%Opens the ECL language reference website in external browser%"
       },
       {
         "command": "ecl.searchTerm",
         "category": "ECL",
-        "title": "Language Reference Lookup",
-        "description": "For the currently selected text, search the online ECL language reference."
+        "title": "%Language Reference Lookup%",
+        "description": "%For the currently selected text, search the online ECL language reference%"
       },
       {
         "command": "ecl.showWUDetails",
         "category": "ECL",
-        "title": "Open ECL Watch",
-        "description": "Opens ECL Watch Page."
+        "title": "%Open ECL Watch%",
+        "description": "%Opens ECL Watch Page%"
       },
       {
         "command": "ecl.openECLWatchExternal",
         "category": "ECL",
-        "title": "Launch ECL Watch",
-        "description": "Opens ECL Watch Page in an external browser.",
+        "title": "%Launch ECL Watch%",
+        "description": "%Opens ECL Watch Page in an external browser%",
         "icon": {
           "light": "resources/light/globe.svg",
           "dark": "resources/dark/globe.svg"
@@ -245,38 +247,38 @@
       {
         "command": "ecl.selectCTVersion",
         "category": "ECL",
-        "title": "Select Client Tools Version",
-        "description": "Select Client Tools Version from available options."
+        "title": "%Select Client Tools Version%",
+        "description": "%Select Client Tools Version from available options%"
       },
       {
         "command": "ecl.createTerminal",
         "category": "ECL",
-        "title": "Terminal",
-        "description": "Opens ECL Client Tools Terminal Session."
+        "title": "%Terminal%",
+        "description": "%Opens ECL Client Tools Terminal Session%"
       },
       {
         "command": "ecl.insertRecordDef",
         "category": "ECL",
-        "title": "Insert Record Definition",
-        "description": "Insert logical file record defintition."
+        "title": "%Insert Record Definition%",
+        "description": "%Insert logical file record definition%"
       },
       {
         "command": "hpccPlatform.abortWU",
         "category": "ECL",
-        "title": "Abort Workunit",
+        "title": "%Abort Workunit%",
         "enablement": "viewItem == ECLWUNode"
       },
       {
         "command": "hpccPlatform.deleteWU",
         "category": "ECL",
-        "title": "Delete Workunit",
+        "title": "%Delete Workunit%",
         "enablement": "viewItem == ECLWUNodeComplete"
       },
       {
         "command": "hpccPlatform.refresh",
         "category": "ECL",
-        "title": "Refresh",
-        "description": "Refresh Tree.",
+        "title": "%Refresh%",
+        "description": "%Refresh Tree%",
         "icon": {
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
@@ -285,8 +287,8 @@
       {
         "command": "hpccPlatform.eclwatch",
         "category": "ECL",
-        "title": "ECL Watch",
-        "description": "Open ECL Watch in external browser.",
+        "title": "%ECL Watch%",
+        "description": "%Open ECL Watch in external browser%",
         "icon": {
           "light": "resources/light/globe.svg",
           "dark": "resources/dark/globe.svg"
@@ -295,14 +297,14 @@
       {
         "command": "hpccPlatform.pin",
         "category": "ECL",
-        "title": "Pin launch configutation",
-        "description": "Pin launch configutation to current document."
+        "title": "%Pin launch configuration%",
+        "description": "%Pin launch configuration to current document%"
       },
       {
         "command": "hpccPlatform.switch",
         "category": "ECL",
-        "title": "Switch HPCC Platform",
-        "description": "Switch to different HPCC Platform instance.",
+        "title": "%Switch HPCC Platform%",
+        "description": "%Switch to different HPCC Platform instance%",
         "icon": {
           "light": "resources/light/server-process.svg",
           "dark": "resources/dark/server-process.svg"
@@ -311,14 +313,14 @@
       {
         "command": "hpccPlatform.switchTargetCluster",
         "category": "ECL",
-        "title": "Switch Target Cluster",
-        "description": "Switch Target Cluster."
+        "title": "%Switch Target Cluster%",
+        "description": "%Switch Target Cluster%"
       },
       {
         "command": "hpccPlatform.myWorkunits",
         "category": "ECL",
-        "title": "My workunits",
-        "description": "Showing \"my\" workunits.",
+        "title": "%My workunits%",
+        "description": "%Showing \"my\" workunits%",
         "icon": {
           "light": "resources/light/person.svg",
           "dark": "resources/dark/person.svg"
@@ -327,8 +329,8 @@
       {
         "command": "hpccPlatform.allWorkunits",
         "category": "ECL",
-        "title": "All workunits",
-        "description": "Showing all workunits.",
+        "title": "%All workunits%",
+        "description": "%Showing all workunits%",
         "icon": {
           "light": "resources/light/organization.svg",
           "dark": "resources/dark/organization.svg"
@@ -337,8 +339,8 @@
       {
         "command": "hpccResources.bundles.refresh",
         "category": "ECL",
-        "title": "Refresh",
-        "description": "Refresh Tree.",
+        "title": "%Refresh%",
+        "description": "%Refresh Tree%",
         "icon": {
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
@@ -347,8 +349,8 @@
       {
         "command": "hpccResources.bundles.homepage",
         "category": "ECL",
-        "title": "Homepage",
-        "description": "Bundles Homepage.",
+        "title": "%Homepage%",
+        "description": "%Bundles Homepage%",
         "icon": {
           "light": "resources/light/globe.svg",
           "dark": "resources/dark/globe.svg"
@@ -357,8 +359,8 @@
       {
         "command": "hpccResources.bundles.install",
         "category": "ECL",
-        "title": "Install",
-        "description": "Install Bundle.",
+        "title": "%Install%",
+        "description": "%Install Bundle%",
         "icon": {
           "light": "resources/light/cloud-download.svg",
           "dark": "resources/dark/cloud-download.svg"
@@ -367,8 +369,8 @@
       {
         "command": "hpccResources.bundles.uninstall",
         "category": "ECL",
-        "title": "Uninstall",
-        "description": "Uninstall Bundle.",
+        "title": "%Uninstall%",
+        "description": "%Uninstall Bundle%",
         "icon": {
           "light": "resources/light/close.svg",
           "dark": "resources/dark/close.svg"
@@ -377,8 +379,8 @@
       {
         "command": "hpccResources.clientTools.homepage",
         "category": "ECL",
-        "title": "Homepage",
-        "description": "Client Tools Homepage.",
+        "title": "%Homepage%",
+        "description": "%Client Tools Homepage%",
         "icon": {
           "light": "resources/light/globe.svg",
           "dark": "resources/dark/globe.svg"
@@ -387,8 +389,8 @@
       {
         "command": "hpccResources.clientTools.refresh",
         "category": "ECL",
-        "title": "Refresh",
-        "description": "Refresh Tree.",
+        "title": "%Refresh%",
+        "description": "%Refresh Tree%",
         "icon": {
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
@@ -397,8 +399,8 @@
       {
         "command": "hpccResources.clientTools.activate",
         "category": "ECL",
-        "title": "Activate",
-        "description": "Activate Client Tools.",
+        "title": "%Activate%",
+        "description": "%Activate Client Tools%",
         "icon": {
           "light": "resources/light/pass.svg",
           "dark": "resources/dark/pass.svg"
@@ -407,8 +409,8 @@
       {
         "command": "hpccResources.clientTools.deactivate",
         "category": "ECL",
-        "title": "Auto Detect",
-        "description": "Auto Detect Client Tools.",
+        "title": "%Auto Detect%",
+        "description": "%Auto Detect Client Tools%",
         "icon": {
           "light": "resources/light/close.svg",
           "dark": "resources/dark/close.svg"
@@ -417,8 +419,8 @@
       {
         "command": "hpccResources.clientTools.terminal",
         "category": "ECL",
-        "title": "Terminal",
-        "description": "ECL Client Tools Terminal.",
+        "title": "%Terminal%",
+        "description": "%ECL Client Tools Terminal%",
         "icon": {
           "light": "resources/light/terminal.svg",
           "dark": "resources/dark/terminal.svg"
@@ -427,8 +429,8 @@
       {
         "command": "ecl.watch.lite.openECLWatchExternal",
         "category": "ECL",
-        "title": "ECL Watch",
-        "description": "Open ECL Watch in external browser.",
+        "title": "%ECL Watch%",
+        "description": "%Open ECL Watch in external browser%",
         "icon": {
           "light": "resources/light/globe.svg",
           "dark": "resources/dark/globe.svg"
@@ -437,30 +439,30 @@
       {
         "command": "kel.checkSyntax",
         "category": "KEL",
-        "title": "Syntax Check",
-        "description": "Save + check syntax of current file."
+        "title": "%Syntax Check%",
+        "description": "%Save + check syntax of current file%"
       },
       {
         "command": "kel.generate",
         "category": "KEL",
-        "title": "Generate",
-        "description": "Generate source from KEL file."
+        "title": "%Generate%",
+        "description": "%Generate source from KEL file%"
       },
       {
         "command": "kel.reveal",
         "category": "KEL",
-        "title": "Reveal Generated ECL in File Explorer",
-        "description": "Reveals Generated ECL in File Explorer."
+        "title": "%Reveal Generated ECL in File Explorer%",
+        "description": "%Reveals Generated ECL in File Explorer%"
       },
       {
         "command": "kel.selectCTVersion",
         "category": "KEL",
-        "title": "Select Client Tools Version",
-        "description": "Select Client Tools Version from available options."
+        "title": "%Select Client Tools Version%",
+        "description": "%Select Client Tools Version from available options%"
       },
       {
         "command": "omd.view",
-        "title": "View ECL Markdown",
+        "title": "%View ECL Markdown%",
         "icon": {
           "dark": "./resources/dark/omd-view.svg",
           "light": "./resources/light/omd-view.svg"
@@ -468,7 +470,7 @@
       },
       {
         "command": "omd.export",
-        "title": "Export ECL Markdown to HTML",
+        "title": "%Export ECL Markdown to HTML%",
         "icon": {
           "dark": "./resources/dark/omd-export.svg",
           "light": "./resources/light/omd-export.svg"
@@ -476,7 +478,7 @@
       },
       {
         "command": "dashy.view",
-        "title": "View Dashboard",
+        "title": "%View Dashboard%",
         "icon": {
           "dark": "./resources/dark/dashy-view.svg",
           "light": "./resources/light/dashy-view.svg"
@@ -484,7 +486,7 @@
       },
       {
         "command": "dashy.edit",
-        "title": "Edit Dashboard",
+        "title": "%Edit Dashboard%",
         "icon": {
           "dark": "./resources/dark/dashy-edit.svg",
           "light": "./resources/light/dashy-edit.svg"
@@ -832,7 +834,7 @@
             "type": "string"
           },
           "default": [],
-          "description": "eclcc syntax check arguments."
+          "description": "%eclcc syntax check arguments%"
         },
         "ecl.eclccSyntaxArgs": {
           "type": "array",
@@ -841,19 +843,19 @@
             "type": "string"
           },
           "default": [],
-          "description": "eclcc syntax check arguments."
+          "description": "%eclcc syntax check arguments%"
         },
         "ecl.syntaxCheckOnSave": {
           "type": "boolean",
           "scope": "resource",
           "default": true,
-          "description": "Run 'eclcc -syntax' on save."
+          "description": "%Run 'eclcc -syntax' on save%"
         },
         "ecl.syntaxCheckOnLoad": {
           "type": "boolean",
           "scope": "resource",
           "default": true,
-          "description": "Run 'eclcc -syntax' on load."
+          "description": "%Run 'eclcc -syntax' on load%"
         },
         "ecl.includeFolders": {
           "type": "array",
@@ -862,55 +864,55 @@
             "type": "string"
           },
           "default": [],
-          "description": "Additional folders to use when resolving IMPORT statements."
+          "description": "%Additional folders to use when resolving IMPORT statements%"
         },
         "ecl.eclccPath": {
           "type": "string",
           "scope": "resource",
           "default": "",
-          "description": "Override eclcc auto detection."
+          "description": "%Override eclcc auto detection%"
         },
         "ecl.eclccLogFile": {
           "type": "string",
           "scope": "resource",
           "default": "",
-          "description": "Write eclcc logfile to specified file."
+          "description": "%Write eclcc log file to specified file%"
         },
         "ecl.legacyMode": {
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "Add '-legacy' argument to eclcc."
+          "description": "%Add '-legacy' argument to eclcc%"
         },
         "ecl.debugLogging": {
           "type": "boolean",
           "scope": "application",
           "default": false,
-          "description": "Debug level logging (requires restart)."
+          "description": "%Debug level logging (requires restart)%"
         },
         "ecl.launchConfiguration": {
           "type": "string",
           "scope": "resource",
           "default": "",
-          "description": "Default launch configuration."
+          "description": "%Default launch configuration%"
         },
         "ecl.targetCluster": {
           "type": "object",
           "scope": "resource",
           "default": {},
-          "description": "Target cluster (per launch configuration)."
+          "description": "%Target cluster (per launch configuration)%"
         },
         "ecl.pinnedLaunchConfigurations": {
           "type": "object",
           "scope": "resource",
           "default": {},
-          "description": "Pinned launch configurations."
+          "description": "%Pinned launch configurations%"
         },
         "ecl.WUAutoOpen": {
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "Automatically open Workunits on creation."
+          "description": "%Automatically open Workunits on creation%"
         },
         "dashy.libraryLocation": {
           "type": "string",
@@ -920,33 +922,33 @@
             "localPath"
           ],
           "default": "latest",
-          "description": "Dashy library location (bundled, latest, localPath)"
+          "description": "%Dashy library location (bundled, latest, localPath)%"
         },
         "dashy.localPath": {
           "type": "string",
           "scope": "resource",
           "default": "",
-          "description": "Dashy Library Path (libraryLocation === \"localPath\")"
+          "description": "%Dashy Library Path (libraryLocation === \"localPath\")%"
         },
         "kel.javaArgs": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "Java runtime arguments (e.g. -Xmx12G).",
+          "description": "%Java runtime arguments (e.g. -Xmx12G)%",
           "default": []
         },
         "kel.kelPath": {
           "type": "string",
           "scope": "resource",
           "default": "",
-          "description": "Override KEL auto detection."
+          "description": "%Override KEL auto detection%"
         },
         "kel.syntaxCheckOnSave": {
           "type": "boolean",
           "scope": "resource",
           "default": true,
-          "description": "Check syntax on save."
+          "description": "%Check syntax on save%"
         },
         "kel.generateLocation": {
           "type": "string",
@@ -956,19 +958,19 @@
             "Child Folder"
           ],
           "default": "Same Folder",
-          "description": "Generated ECL location."
+          "description": "%Generated ECL location%"
         },
         "kel.generateOnSave": {
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "Generate ECL on save."
+          "description": "%Generate ECL on save%"
         },
         "kel.syntaxCheckOnLoad": {
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "Check syntax on load."
+          "description": "%Check syntax on load%"
         }
       }
     },
@@ -989,7 +991,7 @@
             "properties": {
               "protocol": {
                 "type": "string",
-                "description": "Server protocol (http or https).",
+                "description": "%Server protocol (http or https)%",
                 "enum": [
                   "http",
                   "https"
@@ -998,69 +1000,69 @@
               },
               "serverAddress": {
                 "type": "string",
-                "description": "Server IP/Domain address.",
+                "description": "%Server IP/Domain address%",
                 "default": "127.0.0.1"
               },
               "port": {
                 "type": "number",
-                "description": "The WsWorkunits port.",
+                "description": "%The WsWorkunits port%",
                 "default": 8010
               },
               "targetCluster": {
                 "type": "string",
-                "description": "Target cluster.",
+                "description": "%Target cluster%",
                 "default": "hthor"
               },
               "abortSubmitOnError": {
                 "type": "boolean",
-                "description": "Abort submit when errors are reported during archive generation.",
+                "description": "%Abort submit when errors are reported during archive generation%",
                 "default": true
               },
               "rejectUnauthorized": {
                 "type": "boolean",
-                "description": "Reject unauthorized calls e.g. SSL certificate errors.",
+                "description": "%Reject unauthorized calls e.g. SSL certificate errors%",
                 "default": false
               },
               "eclccPath": {
                 "type": "string",
-                "description": "Override eclcc auto detection"
+                "description": "%Override eclcc auto detection%"
               },
               "eclccArgs": {
                 "type": "array",
                 "items": {
                   "type": "string"
                 },
-                "description": "Build flags, to be passed to the eclcc compiler."
+                "description": "%Build flags, to be passed to the eclcc compiler%"
               },
               "eclccSyntaxArgs": {
                 "type": "array",
                 "items": {
                   "type": "string"
                 },
-                "description": "Syntax check arguments, to be passed to the eclcc compiler."
+                "description": "%Syntax check arguments, to be passed to the eclcc compiler%"
               },
               "eclccLogFile": {
                 "type": "string",
-                "description": "Override eclcc auto detection"
+                "description": "%Override eclcc auto detection%"
               },
               "resultLimit": {
                 "type": "number",
-                "description": "Max result limit for workunit results",
+                "description": "%Max result limit for workunit results%",
                 "default": 100
               },
               "timeoutSecs": {
                 "type": "number",
-                "description": "Default timeout (secs)",
+                "description": "%Default timeout (secs)%",
                 "default": 60
               },
               "user": {
                 "type": "string",
-                "description": "User ID",
+                "description": "%User ID%",
                 "default": ""
               },
               "password": {
                 "type": "string",
-                "description": "User password",
+                "description": "%User password%",
                 "default": ""
               }
             }
@@ -1085,7 +1087,7 @@
         "configurationSnippets": [
           {
             "label": "ECL:  localhost",
-            "description": "A new configuration to submit ECL to localhost, hthor.",
+            "description": "%A new configuration to submit ECL to localhost, hthor%",
             "body": {
               "name": "localhost",
               "type": "ecl",
@@ -1103,7 +1105,7 @@
           },
           {
             "label": "ECL:  play.hpccsystems.com",
-            "description": "Submits ECL to public demo servers, hthor.",
+            "description": "%Submits ECL to public demo servers, hthor%",
             "body": {
               "name": "play.hpccsystems.com",
               "type": "ecl",

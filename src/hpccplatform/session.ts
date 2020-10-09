@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { WUQuery, Workunit, ClientTools } from "@hpcc-js/comms";
 import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration } from "./launchConfig";
 import { ECL_MODE } from "../mode";
+import localize from "../util/localize";
 
 const isMultiRoot = () => vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 1;
 
@@ -179,7 +180,7 @@ class SessionManager {
                         this.switchTo(id, targetCluster);
                     }
                     if (this.session && this.isActiveECL) {
-                        vscode.window.showWarningMessage("Submitting ECL via the Run/Debug page is being deprecated.  Please use the new Submit + Compile buttons at the top of the ECL Editor.");
+                        vscode.window.showWarningMessage(`${localize("Submitting ECL via the Run/Debug page is being deprecated.  Please use the new Submit + Compile buttons at the top of the ECL Editor")}.`);
                         this.session.submit(this.activeUri).then(wu => {
                             this._onDidCreateWorkunit.fire(wu);
                         });
@@ -358,7 +359,7 @@ class SessionManager {
         if (this.session) {
             this.session.targetClusters().then(targetClusters => {
                 const input = vscode.window.createQuickPick();
-                input.items = [{ label: "Auto Detect" }, ...targetClusters.map(tc => {
+                input.items = [{ label: localize("Auto Detect") }, ...targetClusters.map(tc => {
                     return {
                         label: tc.Name
                     };
@@ -367,7 +368,7 @@ class SessionManager {
                 input.onDidChangeSelection(async items => {
                     const item = items[0];
                     if (item) {
-                        this.switchTo(this.session.id, item.label === "Auto Detect" ? undefined : item.label);
+                        this.switchTo(this.session.id, item.label === localize("Auto Detect") ? undefined : item.label);
                     }
                     input.hide();
                 });
@@ -386,7 +387,7 @@ class SessionManager {
             isPinned = !!pinnedLaunchConfigurations[activeUri];
         }
         this._statusBarPin.text = isPinned ? "$(pinned)" : "$(pin)";
-        this._statusBarPin.tooltip = (isPinned ? "Unpin" : "Pin") + " launch configutation to current document.";
+        this._statusBarPin.tooltip = (isPinned ? localize("Unpin") : localize("Pin")) + ` ${localize("launch configuration to current document")}.`;
         this.isActiveECL ? this._statusBarPin.show() : this._statusBarPin.hide();
     }
 
@@ -396,13 +397,13 @@ class SessionManager {
         } else {
             this._statusBarLaunch.text = this.session?.name;
         }
-        this._statusBarLaunch.tooltip = "HPCC Platform Launch Configuration";
+        this._statusBarLaunch.tooltip = localize("HPCC Platform Launch Configuration");
         this.isActiveECL ? this._statusBarLaunch.show() : this._statusBarLaunch.hide();
     }
 
     refreshTCStatusBar() {
         this._statusBarTargetCluster.text = this.session.targetCluster;
-        this._statusBarTargetCluster.tooltip = "HPCC Platform TargetCluster";
+        this._statusBarTargetCluster.tooltip = localize("HPCC Platform TargetCluster");
         this.isActiveECL ? this._statusBarTargetCluster.show() : this._statusBarTargetCluster.hide();
     }
 

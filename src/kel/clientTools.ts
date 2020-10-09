@@ -7,6 +7,7 @@ import * as path from "path";
 import * as os from "os";
 import * as fs from "fs";
 import * as AdmZip from "adm-zip";
+import localize from "../util/localize";
 
 const logger = scopedLogger("kel/clientTools.ts");
 
@@ -247,7 +248,7 @@ export function locateClientTools(): Promise<KELClientTools | undefined> {
                         showKelStatus(`KEL_${version.major}.${version.minor}.${version.patch}`, kelPathOverriden, clientTools.kelPath);
                     });
                 } else {
-                    showKelStatus("Unknown", false, "Unable to locate eclcc");
+                    showKelStatus(localize("Unknown"), false, localize("Unable to locate eclcc"));
                 }
                 return clientTools;
             }
@@ -261,9 +262,9 @@ interface SelectQP extends QuickPickItem {
 
 export function selectCTVersion() {
     const input = window.createQuickPick<SelectQP>();
-    input.placeholder = "Select eclcc version";
+    input.placeholder = localize("Select KEL version");
     locateAllClientTools().then(clientTools => {
-        input.items = [{ label: "Auto Detect", kelPath: undefined }, ...clientTools.map(ct => {
+        input.items = [{ label: localize("Auto Detect"), kelPath: undefined }, ...clientTools.map(ct => {
             const version = ct.versionSync();
             return {
                 label: `KEL_${version.major}.${version.minor}.${version.patch}${version.postfix ? "-" + version.postfix : ""}`,

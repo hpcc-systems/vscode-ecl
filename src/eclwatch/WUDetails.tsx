@@ -137,7 +137,7 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
                             <Pivot styles={pivotStyles} selectedKey={selected} onLinkClick={handleLinkClick} headersOnly={true}>
                                 {[
                                     ...(exceptions.length ? [<PivotItem key={"issues"} itemKey={"issues"} headerText={"Issues"} />] : []),
-                                    ...results.map(r => <PivotItem key={`${r.Wuid}:: ${r.Sequence}`} itemKey={"" + r.Sequence} headerText={`${r.Name}:  ${r.Value}`} />)
+                                    ...results.map(r => <PivotItem key={`${r.Wuid}::${r.Sequence}::${r.Value}`} itemKey={"" + r.Sequence} headerText={`${r.Name}${r.Value.indexOf("undefined") < 0 ? `:  ${r.Value}` : ""}`} />)
                                 ]}
                             </Pivot>
                             : undefined

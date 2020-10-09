@@ -1,5 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
+import localize from "../util/localize";
 import { View } from "./View";
 
 let viewManager: ViewManager;
@@ -22,7 +23,7 @@ export class ViewManager {
         const isDashy = vscode.window.activeTextEditor && path.extname(vscode.window.activeTextEditor.document.fileName).toLowerCase() === ".dashy";
         const retVal = isJson && isDashy;
         if (!retVal) {
-            vscode.window.showInformationMessage("Current document is not a 'Dashy' file.");
+            vscode.window.showInformationMessage(`${localize("Current document is not a 'Dashy' file")}.`);
         }
         return retVal;
     }
@@ -73,5 +74,4 @@ export class ViewManager {
     editGet(uri: vscode.Uri): View {
         return this._edits[uri.toString()];
     }
-
 }
