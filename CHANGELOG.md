@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.3.0...v2.4.0) (2020-10-09)
+
+
+### Features
+
+*  Add integrated result viewer into bottom panel ([268051c](https://github.com/hpcc-systems/vscode-ecl/commit/268051cdc3e9e9537012f04da4a359feb721a6eb)), closes [#193](https://github.com/hpcc-systems/vscode-ecl/issues/193)
+
 ## [2.3.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.2.4...v2.3.0) (2020-09-24)
 
 
