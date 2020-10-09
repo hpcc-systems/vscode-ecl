@@ -4,7 +4,7 @@ import * as os from "os";
 import * as path from "path";
 import { AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools } from "@hpcc-js/comms";
 import { scopedLogger } from "@hpcc-js/util";
-import { LaunchConfigState, LaunchMode, LaunchRequestArguments } from "../debugger/launchRequestArguments";
+import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
 
 const logger = scopedLogger("launchConfig.ts");
@@ -90,15 +90,15 @@ function config<T extends keyof LaunchRequestArguments>(id: string, key: T, defa
     return retVal;
 }
 
-export function espUrl(launchRequestArgs: LaunchRequestArguments) {
+export function espUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number }) {
     return `${launchRequestArgs.protocol}://${launchRequestArgs.serverAddress}:${launchRequestArgs.port}`;
 }
 
-export function wuDetailsUrl(launchRequestArgs: LaunchRequestArguments, wuid: string) {
+export function wuDetailsUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number }, wuid: string) {
     return `${espUrl(launchRequestArgs)}/?Widget=WUDetailsWidget&Wuid=${wuid}`;
 }
 
-export function wuResultUrl(launchRequestArgs: LaunchRequestArguments, wuid: string, sequence: number) {
+export function wuResultUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number }, wuid: string, sequence: number) {
     return `${espUrl(launchRequestArgs)}/?Widget=ResultWidget&Wuid=${wuid}&Sequence=${sequence}`;
 }
 

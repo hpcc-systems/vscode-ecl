@@ -7,18 +7,21 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 * Auto completion
 * Client tools discovery and integration
 * HPCC-Platform server support
+* Integrated result viewer
 
-## Version 2 Quick Start
+## Version 2.4 Quick Start
 _Version 2.x introduces a new streamlined submission process.  The "old" Run/Debug pane support has been deprecated and will be removed in the future._
 
-![Version 2 Quick Start](resources/QuickStart.gif)
+![Version 2.4 Quick Start](resources/QuickStart.gif)
 
 1. Open folder
 2. Open ECL file
-3. Select the target by:
+3. Create Launch Configuration (if needed)
+4. Select the target by:
     *  Clicking the "Launch Configuration" in the status bar
     *  Optionally clicking on the "Target Cluster" in the status bar
 4. Monitor Workunit in the "Workunit History" pane
+5. Click on Workunit to view results / issues in the bottom pane
 
 ## ECL
 
@@ -63,6 +66,16 @@ The following ECL specific commands are available.  Note:  These commands will *
 | Target Cluster | | Click to select target cluster |
 | Pin | | Pin current launch configuration and target cluster to current document |
 | Client Tools | | Click to select client tools version |
+
+#### Within the Result View
+
+All commands in the Result View are available via context menu.
+
+| Command                   | Notes                                                                       |
+|---------------------------|-----------------------------------------------------------------------------|
+| Copy Column as ECL Set    | Right Click on Column Header |
+| Copy Row as ECL           | Right Click in Result Body |
+| Copy All as ECL           | Right Click in Column Header or Result Body |
 
 #### ECL Settings
 

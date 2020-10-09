@@ -22,7 +22,7 @@ class Session {
         return this._launchConfig.name;
     }
 
-    get launchRequestArgs(): Readonly<LaunchRequestArguments> {
+    get launchRequestArgs(): LaunchRequestArguments {
         return this._launchConfig;
     }
 
@@ -163,7 +163,7 @@ class SessionManager {
                         this.switchTo(id, targetCluster);
                     }
                     if (this.session && this.isActiveECL) {
-                        vscode.window.showWarningMessage("Submitting ECL via the Run/Debug page is being depricated.  Please use the new Submit + Compile buttons at the top of the ECL Editor.");
+                        vscode.window.showWarningMessage("Submitting ECL via the Run/Debug page is being deprecated.  Please use the new Submit + Compile buttons at the top of the ECL Editor.");
                         this.session.submit(this.activeUri).then(wu => {
                             this._onDidCreateWorkunit.fire(wu);
                         });
@@ -175,6 +175,9 @@ class SessionManager {
         vscode.workspace.onDidChangeConfiguration(e => {
             if (e.affectsConfiguration("launch")) {
                 launchConfigurations(true);
+                const launchConfig = eclConfig.get<string>("launchConfiguration");
+                const targetCluster = eclConfig.get<object>("targetCluster")[launchConfig];
+                this.switchTo(launchConfig, targetCluster);
             }
         });
 

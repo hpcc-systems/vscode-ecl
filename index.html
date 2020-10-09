@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.2.8/es6-promise.auto.js"></script>
+    <script>
+        //  Polyfills  ---
+        if (typeof Object.assign !== 'function') {
+            Object.defineProperty(Object, "assign", {
+                value: function assign(target, varArgs) {
+                    'use strict';
+                    if (target === null || target === undefined) {
+                        throw new TypeError('Cannot convert undefined or null to object');
+                    }
+                    var to = Object(target);
+                    for (var index = 1; index < arguments.length; index++) {
+                        var nextSource = arguments[index];
+                        if (nextSource !== null && nextSource !== undefined) {
+                            for (var nextKey in nextSource) {
+                                if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                                    to[nextKey] = nextSource[nextKey];
+                                }
+                            }
+                        }
+                    }
+                    return to;
+                },
+                writable: true,
+                configurable: true
+            });
+        }
+    </script>
+
+    <script id="_vscodeApiScript">
+        const acquireVsCodeApi = (function () {
+            const originalPostMessage = window.parent.postMessage.bind(window.parent);
+            const targetOrigin = '*';
+            let acquired = false;
+
+            let state = JSON.parse(decodeURIComponent("%7B%22url%22%3A%22https%3A%2F%2Fplay.hpccsystems.com%3A18010%2F%3FWidget%3DWUDetailsWidget%26Wuid%3DW20200831-142403%22%7D"));
+
+            return function () {
+                if (acquired && !undefined) {
+                    throw new Error('An instance of the VS Code API has already been acquired');
+                }
+                acquired = true;
+                return Object.freeze({
+                    postMessage: function (msg) {
+                        return originalPostMessage({ command: 'onmessage', data: msg }, targetOrigin);
+                    },
+                    setState: function (newState) {
+                        state = newState;
+                        originalPostMessage({ command: 'do-update-state', data: JSON.stringify(newState) }, targetOrigin);
+                        return newState;
+                    },
+                    getState: function () {
+                        return state;
+                    }
+                });
+            };
+        })();
+        delete window.parent;
+        delete window.top;
+        delete window.frameElement;
+    </script>
+
+    <style>
+    </style>
+</head>
+
+<body>
+    <div id="placeholder">
+    </div>
+    <script nonce="zes9uXypVmEN3lSoLeogIeTyRgDkjQUE" src="./dist/eclwatch.js"></script>
+</body>
+
+</html>

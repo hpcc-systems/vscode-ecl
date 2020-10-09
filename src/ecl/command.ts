@@ -4,6 +4,7 @@ import { checkTextDocument, checkWorkspace } from "./check";
 import { selectCTVersion } from "./clientTools";
 import { eclDiagnostic } from "./diagnostic";
 import { sessionManager } from "../hpccplatform/session";
+import { eclWatchPanelView } from "./eclWatchPanelView";
 import { ECLResultNode, ECLWUNode } from "./eclWatchTree";
 
 export let eclCommands: ECLCommands;
@@ -78,7 +79,7 @@ export class ECLCommands {
     }
 
     openECLWatch(launchRequestArgs: LaunchRequestArguments, title: string, wuid: string, result?: number) {
-
+        eclWatchPanelView.navigateTo(launchRequestArgs, title, wuid, result);
     }
 
     openECLWatchExternal(source: ECLWUNode | ECLResultNode) {
