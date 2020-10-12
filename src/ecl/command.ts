@@ -20,7 +20,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.compile", this.compile));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatch", this.openECLWatch));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showWUDetails", this.showWUDetails));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef));
@@ -78,7 +78,7 @@ export class ECLCommands {
         }
     }
 
-    openECLWatch(launchRequestArgs: LaunchRequestArguments, title: string, wuid: string, result?: number) {
+    showWUDetails(launchRequestArgs: LaunchRequestArguments, title: string, wuid: string, result?: number) {
         eclWatchPanelView.navigateTo(launchRequestArgs, title, wuid, result);
     }
 

@@ -98,8 +98,7 @@
   "activationEvents": [
     "onLanguage:ecl",
     "onLanguage:kel",
-    "onLanguage:omd",
-    "onLanguage:json"
+    "onLanguage:omd"
   ],
   "contributes": {
     "languages": [
@@ -227,7 +226,7 @@
         "description": "For the currently selected text, search the online ECL language reference."
       },
       {
-        "command": "ecl.openECLWatch",
+        "command": "ecl.showWUDetails",
         "category": "ECL",
         "title": "Open ECL Watch",
         "description": "Opens ECL Watch Page."
@@ -261,7 +260,20 @@
         "description": "Insert logical file record defintition."
       },
       {
+        "command": "hpccPlatform.abortWU",
+        "category": "ECL",
+        "title": "Abort Workunit",
+        "enablement": "viewItem == ECLWUNode"
+      },
+      {
+        "command": "hpccPlatform.deleteWU",
+        "category": "ECL",
+        "title": "Delete Workunit",
+        "enablement": "viewItem == ECLWUNodeComplete"
+      },
+      {
         "command": "hpccPlatform.refresh",
+        "category": "ECL",
         "title": "Refresh",
         "description": "Refresh Tree.",
         "icon": {
@@ -271,15 +283,7 @@
       },
       {
         "command": "hpccPlatform.eclwatch",
-        "title": "ECL Watch",
-        "description": "Open ECL Watch in external browser.",
-        "icon": {
-          "light": "resources/light/globe.svg",
-          "dark": "resources/dark/globe.svg"
-        }
-      },
-      {
-        "command": "ecl.watch.lite.openECLWatchExternal",
+        "category": "ECL",
         "title": "ECL Watch",
         "description": "Open ECL Watch in external browser.",
         "icon": {
@@ -289,11 +293,13 @@
       },
       {
         "command": "hpccPlatform.pin",
+        "category": "ECL",
         "title": "Pin launch configutation",
         "description": "Pin launch configutation to current document."
       },
       {
         "command": "hpccPlatform.switch",
+        "category": "ECL",
         "title": "Switch HPCC Platform",
         "description": "Switch to different HPCC Platform instance.",
         "icon": {
@@ -303,11 +309,13 @@
       },
       {
         "command": "hpccPlatform.switchTargetCluster",
+        "category": "ECL",
         "title": "Switch Target Cluster",
         "description": "Switch Target Cluster."
       },
       {
         "command": "hpccPlatform.myWorkunits",
+        "category": "ECL",
         "title": "My workunits",
         "description": "Showing \"my\" workunits.",
         "icon": {
@@ -317,11 +325,22 @@
       },
       {
         "command": "hpccPlatform.allWorkunits",
+        "category": "ECL",
         "title": "All workunits",
         "description": "Showing all workunits.",
         "icon": {
           "light": "resources/light/organization.svg",
           "dark": "resources/dark/organization.svg"
+        }
+      },
+      {
+        "command": "ecl.watch.lite.openECLWatchExternal",
+        "category": "ECL",
+        "title": "ECL Watch",
+        "description": "Open ECL Watch in external browser.",
+        "icon": {
+          "light": "resources/light/globe.svg",
+          "dark": "resources/dark/globe.svg"
         }
       },
       {
@@ -523,8 +542,18 @@
       "view/item/context": [
         {
           "command": "ecl.openECLWatchExternal",
-          "when": "view == hpccPlatform && viewItem == ECLWUNode",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "inline"
+        },
+        {
+          "command": "hpccPlatform.abortWU",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "navigation@900"
+        },
+        {
+          "command": "hpccPlatform.deleteWU",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "navigation@920"
         },
         {
           "command": "ecl.openECLWatchExternal",
