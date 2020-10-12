@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.4.0...v2.5.0) (2020-10-12)
+
+
+### Features
+
+* **WU Tree:**  Add context menu to WU Items ([0aa4408](https://github.com/hpcc-systems/vscode-ecl/commit/0aa440829dc409eb943bf22af8c6d192d087f26c))
+
 ## [2.4.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.3.0...v2.4.0) (2020-10-09)
 
 
