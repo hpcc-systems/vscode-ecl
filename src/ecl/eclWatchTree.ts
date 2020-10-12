@@ -55,6 +55,14 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
             this.refresh();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.abortWU", (wuNode: ECLWUNode) => {
+            wuNode.abort();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.deleteWU", (wuNode: ECLWUNode) => {
+            wuNode.delete();
+        });
+
         this._treeView.title = "Loading...";
     }
 
@@ -78,10 +86,10 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
     getTreeItem(node: ECLNode): vscode.TreeItem | Thenable<vscode.TreeItem> {
         if (!node._treeItem) {
             node._treeItem = new vscode.TreeItem(node.getLabel(), node.initialCollapseState());
-            node._treeItem.contextValue = node.constructor.name;
         } else {
             node._treeItem.label = node.getLabel();
         }
+        node._treeItem.contextValue = node.contextValue();
         node._treeItem.iconPath = node.iconPath();
         node._treeItem.command = node.command();
         return node._treeItem;
@@ -228,6 +236,10 @@ export class ECLNode {
     iconPath(): vscode.ThemeIcon | undefined {
         return undefined;
     }
+
+    contextValue(): string {
+        return "ECLNode";
+    }
 }
 
 export class ECLErrorNode extends ECLNode {
@@ -286,11 +298,16 @@ export class ECLResultNode extends ECLNode {
 
     command(): vscode.Command | undefined {
         return {
-            command: "ecl.openECLWatch",
+            command: "ecl.showWUDetails",
             arguments: [sessionManager.session.launchRequestArgs, `${this._result.Name} - ${this._result.Wuid}`, this._result.Wuid, this._result.Sequence],
             title: "Open ECL Workunit Details"
         };
     }
+
+    contextValue(): string {
+        return "ECLResultNode";
+    }
+
 }
 
 class ECLOutputsNode extends ECLNode {
@@ -313,7 +330,7 @@ class ECLOutputsNode extends ECLNode {
 
     command(): vscode.Command | undefined {
         return {
-            command: "ecl.openECLWatch",
+            command: "ecl.showWUDetails",
             arguments: [sessionManager.session.launchRequestArgs, this._wu.Wuid, this._wu.Wuid],
             title: "Open ECL Workunit Details"
         };
@@ -343,7 +360,7 @@ export class ECLWUNode extends ECLNode {
     getLabel(): string {
         let primary = this._wu.Wuid;
         const extras: string[] = [];
-        if (!this._wu.isComplete()) extras.push(this._wu.State);
+        if (!this._wu.isComplete() || this._wu.isDeleted()) extras.push(this._wu.State);
         if (!this._tree._myWorkunits && this._wu.Owner) extras.push(this._wu.Owner);
         if (this._wu.Jobname) {
             primary = this._wu.Jobname;
@@ -386,13 +403,21 @@ export class ECLWUNode extends ECLNode {
         return Circle.question;
     }
 
+    abort() {
+        this._wu.abort().then(() => this._tree._onDidChangeTreeData.fire(this));
+    }
+
+    delete() {
+        this._wu.delete().then(() => this._tree.refresh());
+    }
+
     hasChildren() {
         return true;
     }
 
     command(): vscode.Command | undefined {
         return {
-            command: "ecl.openECLWatch",
+            command: "ecl.showWUDetails",
             arguments: [sessionManager.session.launchRequestArgs, this._wu.Wuid, this._wu.Wuid],
             title: "Open ECL Workunit Details"
         };
@@ -400,6 +425,10 @@ export class ECLWUNode extends ECLNode {
 
     getChildren() {
         return this._wu.fetchResults().then(results => results.map(result => new ECLResultNode(this._tree, result)));
+    }
+
+    contextValue(): string {
+        return this._wu.isComplete() ? "ECLWUNodeComplete" : "ECLWUNode";
     }
 }
 
