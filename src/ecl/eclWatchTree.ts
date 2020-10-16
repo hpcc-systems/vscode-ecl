@@ -299,7 +299,7 @@ export class ECLResultNode extends ECLNode {
     command(): vscode.Command | undefined {
         return {
             command: "ecl.showWUDetails",
-            arguments: [sessionManager.session.launchRequestArgs, `${this._result.Name} - ${this._result.Wuid}`, this._result.Wuid, this._result.Sequence],
+            arguments: [sessionManager.session.launchRequestArgs, this._result.Wuid, this._result.Sequence],
             title: "Open ECL Workunit Details"
         };
     }
@@ -331,7 +331,7 @@ class ECLOutputsNode extends ECLNode {
     command(): vscode.Command | undefined {
         return {
             command: "ecl.showWUDetails",
-            arguments: [sessionManager.session.launchRequestArgs, this._wu.Wuid, this._wu.Wuid],
+            arguments: [sessionManager.session.launchRequestArgs, this._wu.Wuid],
             title: "Open ECL Workunit Details"
         };
     }
@@ -418,7 +418,7 @@ export class ECLWUNode extends ECLNode {
     command(): vscode.Command | undefined {
         return {
             command: "ecl.showWUDetails",
-            arguments: [sessionManager.session.launchRequestArgs, this._wu.Wuid, this._wu.Wuid],
+            arguments: [sessionManager.session.launchRequestArgs, this._wu.Wuid],
             title: "Open ECL Workunit Details"
         };
     }

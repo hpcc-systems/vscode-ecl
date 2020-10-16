@@ -78,8 +78,8 @@ export class ECLCommands {
         }
     }
 
-    showWUDetails(launchRequestArgs: LaunchRequestArguments, title: string, wuid: string, result?: number) {
-        eclWatchPanelView.navigateTo(launchRequestArgs, title, wuid, result);
+    showWUDetails(launchRequestArgs: LaunchRequestArguments, wuid: string, result?: number) {
+        eclWatchPanelView.navigateTo(launchRequestArgs, wuid, result);
     }
 
     openECLWatchExternal(source: ECLWUNode | ECLResultNode) {

@@ -635,7 +635,7 @@
           "name": "HPCC Platform",
           "icon": "resources/ecl-explorer.svg",
           "contextualTitle": "HPCC Platform",
-          "when": "resourceLangId == ecl"
+          "when": "hpccPlatformActive"
         }
       ],
       "ecl-watch-lite": [
@@ -643,7 +643,7 @@
           "type": "webview",
           "id": "ecl.watch.lite",
           "name": "",
-          "when": "resourceLangId == ecl"
+          "when": "hpccPlatformActive"
         }
       ]
     },

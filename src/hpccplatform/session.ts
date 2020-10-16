@@ -185,6 +185,8 @@ class SessionManager {
         const launchConfig = eclConfig.get<string>("launchConfiguration");
         const targetCluster = eclConfig.get<object>("targetCluster")[launchConfig];
         this.switchTo(launchConfig, targetCluster);
+        //  Don't load HPCC Platform tree until session is fully initialized
+        vscode.commands.executeCommand("setContext", "hpccPlatformActive", true);
     }
 
     private get activeDocument() {

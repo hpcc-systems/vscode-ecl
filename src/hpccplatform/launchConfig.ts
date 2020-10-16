@@ -553,9 +553,9 @@ export class LaunchConfig implements LaunchRequestArguments {
                 logger.info(`Submitted:  ${this.wuDetailsUrl(wu.Wuid)}.${os.EOL}`);
                 failedWU = undefined;
                 return wu;
-            }).catch((e) => {
-                logger.info(`Launch failed - ${e}.${os.EOL}`);
-                logger.debug("InitializeEvent");
+            }).catch(e => {
+                logger.info(`Launch failed - ${e.message}.${os.EOL}`);
+                logger.debug("launchConfig.submit");
                 if (failedWU) {
                     failedWU.setToFailed();
                     return failedWU;
