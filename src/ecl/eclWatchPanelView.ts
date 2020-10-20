@@ -14,7 +14,6 @@ interface PartialLaunchRequestArgumentss {
 }
 
 interface NavigateParams extends PartialLaunchRequestArgumentss {
-    title: string;
     wuid: string;
     result?: number;
     show: boolean;
@@ -28,6 +27,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
     protected _ctx: vscode.ExtensionContext;
     private readonly _extensionUri: vscode.Uri
     private _webviewView?: vscode.WebviewView;
+    private _currParams: NavigateParams;
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
@@ -35,29 +35,16 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
 
         ctx.subscriptions.push(vscode.window.registerWebviewViewProvider(ECLWatchPanelView.viewType, this, {
             webviewOptions: {
-                retainContextWhenHidden: true
+                retainContextWhenHidden: false
             }
         }));
-    }
-
-    static attach(ctx: vscode.ExtensionContext): ECLWatchPanelView {
-        if (!eclWatchPanelView) {
-            eclWatchPanelView = new ECLWatchPanelView(ctx);
-        }
-        return eclWatchPanelView;
-    }
-
-    private _currParams: NavigateParams;
-    private _resolveParams: NavigateParams;
-    public resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, _token: vscode.CancellationToken) {
-        this._webviewView = webviewView;
 
         sessionManager.onDidChangeSession(launchRequestArgs => {
-            this.navigateTo(launchRequestArgs, "", "", 0, false);
+            this.navigateTo(launchRequestArgs, "", 0, false);
         });
 
         sessionManager.onDidCreateWorkunit(wu => {
-            this.navigateTo(sessionManager.session.launchRequestArgs, wu.Wuid, wu.Wuid);
+            this.navigateTo(sessionManager.session.launchRequestArgs, wu.Wuid);
         });
 
         vscode.commands.registerCommand("ecl.watch.lite.openECLWatchExternal", async () => {
@@ -69,7 +56,26 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                 }
             }
         });
+    }
 
+    static attach(ctx: vscode.ExtensionContext): ECLWatchPanelView {
+        if (!eclWatchPanelView) {
+            eclWatchPanelView = new ECLWatchPanelView(ctx);
+        }
+        return eclWatchPanelView;
+    }
+
+    private _initialParams: NavigateParams;
+    public resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<any>, _token: vscode.CancellationToken) {
+        if (this._webviewView === undefined) {
+
+            const handle = webviewView.onDidDispose(() => {
+                delete this._webviewView;
+                handle.dispose();
+            });
+
+        }
+        this._webviewView = webviewView;
         this._webviewView.webview.options = {
             enableScripts: true,
             enableCommandUris: true,
@@ -81,37 +87,45 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
         this._webviewView.webview.onDidReceiveMessage((message: Messages) => {
             switch (message.command) {
                 case "loaded":
-                    if (this._resolveParams) {
-                        this.navigateTo(this._resolveParams, this._resolveParams.title, this._resolveParams.wuid, this._resolveParams.result, this._resolveParams.show);
+                    if (this._initialParams) {
+                        this.navigateTo(this._initialParams, this._initialParams.wuid, this._initialParams.result, this._initialParams.show);
+                        delete this._initialParams;
+                    } else {
+                        this._webviewView.title = this._currParams?.wuid;
+                        vscode.commands.executeCommand("setContext", "ecl.watch.lite.hasWuid", !!this._currParams?.wuid);
                     }
                     break;
             }
         });
 
+        if (context.state) {
+            this._currParams = context.state;
+        }
+
         this._webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
     }
 
     private _prevHash: string;
-    navigateTo(launchRequestArgs: PartialLaunchRequestArgumentss, title: string, wuid: string, result?: number, show = true) {
+    navigateTo(launchRequestArgs: PartialLaunchRequestArgumentss, wuid: string, result?: number, show = true) {
         const { protocol, serverAddress, port, user, password } = launchRequestArgs;
-        this._currParams = { protocol, serverAddress, port, user, password, title, wuid, result, show };
-        if (this._webviewView) {
+        this._currParams = { protocol, serverAddress, port, user, password, wuid, result, show };
+        if (!this._webviewView) {
+            this._initialParams = this._currParams;
+            if (show) {
+                vscode.commands.executeCommand("ecl.watch.lite.focus");
+            }
+        } else {
             const hash = hashSum(this._currParams);
             if (this._prevHash !== hash) {
                 this._prevHash = hash;
-                this._webviewView.title = title;
+                this._webviewView.title = this._currParams?.wuid;
                 this._webviewView.webview.postMessage({ command: "navigate", data: this._currParams });
                 if (show) {
                     this._webviewView.show(true);
                 }
-            }
-        } else {
-            this._resolveParams = this._currParams;
-            if (show) {
-                vscode.commands.executeCommand("ecl.watch.lite.focus");
+                vscode.commands.executeCommand("setContext", "ecl.watch.lite.hasWuid", !!this._currParams?.wuid);
             }
         }
-        vscode.commands.executeCommand("setContext", "ecl.watch.lite.hasWuid", !!wuid);
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {

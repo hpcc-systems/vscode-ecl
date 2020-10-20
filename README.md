@@ -9,10 +9,55 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 * HPCC-Platform server support
 * Integrated result viewer
 
-## Version 2.4 Quick Start
+## Recent Highlights
+
+### v2.5.0
+
+* Added context menu items for Workunits in the Workunit Tree:
+  * Abort Workunit (only available for running WUs)
+  * Delete Workunit (Only available for completed WUs)
+
+![Version 2.5](resources/readme-v2_5.gif)
+
+### v2.4.0
+
+* Added result viewer to bottom pane
+* Added "Copy Results as ECL"
+
+![Version 2.4](resources/readme-v2_4.gif)
+
+### v2.3.0
+
+* Added list of "found" logical files to Insert Record Definition
+
+![Version 2.3](resources/readme-v2_3.gif)
+
+### v2.2.0
+
+* Added Insert Record Definition menu item
+
+### v2.1.0
+
+Reworked submission process:
+* Launch configuration:
+  * Simplified
+  * Can be selected from the status bar
+  * Can be pinned to specific ECL files
+* Target Cluster:
+  * Can be selected from the status bar
+  * Can be pinned to specific ECL files
+* Submit / Compile now available from:
+  * Context menu
+  * Top of editor
+* Recent Workunits:
+  * Tree view of recent workunits
+  * Toggle between "Mine" and "All"
+  * Open in external browser icon added to several locations
+
+## Quick Start
 _Version 2.x introduces a new streamlined submission process.  The "old" Run/Debug pane support has been deprecated and will be removed in the future._
 
-![Version 2.4 Quick Start](resources/QuickStart.gif)
+![Quick Start](resources/QuickStart.gif)
 
 1. Open folder
 2. Open ECL file
