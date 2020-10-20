@@ -98,7 +98,8 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
             }
         });
 
-        if (context.state) {
+        if (!this._initialParams && context.state) {
+            this._initialParams = context.state;
             this._currParams = context.state;
         }
 
