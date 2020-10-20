@@ -11,6 +11,21 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.6.0
+
+* Added HPCC resources page:
+  * List of available bundles:
+    * Install
+    * Uninstall
+    * Open homepage
+  * List of available client tools
+    * Select (force) specific version
+    * Deselect forced version
+    * Open terminal for specific version
+    * Open download page for Client Tools
+
+![Version 2.6](resources/readme-v2_6.gif)
+
 ### v2.5.0
 
 * Added context menu items for Workunits in the Workunit Tree:

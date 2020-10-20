@@ -1,29 +1,21 @@
 import { Workunit, WUStateID, Result } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
-
-export let eclWatchTree: ECLWatchTree;
+import { Item, Tree } from "./tree";
 
 const PrevWeeks: string[] = ["Last Week", "Two Weeks Ago", "Three Weeks Ago", "Four Weeks Ago", "Five Weeks Ago", "Six Weeks Ago", "Seven Weeks Ago"];
 
-export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
-    _ctx: vscode.ExtensionContext;
+export let eclWatchTree: ECLWatchTree;
 
-    _onDidChangeTreeData: vscode.EventEmitter<ECLNode | null> = new vscode.EventEmitter<ECLNode | null>();
-    readonly onDidChangeTreeData: vscode.Event<ECLNode | null> = this._onDidChangeTreeData.event;
+export class ECLWatchTree extends Tree {
 
-    private _treeView: vscode.TreeView<ECLNode>;
     _myWorkunits = true;
     _rendered = false;
 
     private constructor(ctx: vscode.ExtensionContext) {
-        this._ctx = ctx;
-        this.updateMenu();
+        super(ctx, "hpccPlatform");
 
-        this._treeView = vscode.window.createTreeView("hpccPlatform", {
-            treeDataProvider: this,
-            showCollapseAll: true
-        });
+        this.updateMenu();
 
         sessionManager.onDidChangeSession(launchConfigArgs => {
             this.refresh();
@@ -63,7 +55,6 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
             wuNode.delete();
         });
 
-        this._treeView.title = "Loading...";
     }
 
     static attach(ctx: vscode.ExtensionContext) {
@@ -80,37 +71,20 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
 
     refresh(): void {
         this.updateMenu();
-        this._onDidChangeTreeData.fire(undefined);
+        super.refresh();
     }
 
-    getTreeItem(node: ECLNode): vscode.TreeItem | Thenable<vscode.TreeItem> {
-        if (!node._treeItem) {
-            node._treeItem = new vscode.TreeItem(node.getLabel(), node.initialCollapseState());
-        } else {
-            node._treeItem.label = node.getLabel();
-        }
-        node._treeItem.contextValue = node.contextValue();
-        node._treeItem.iconPath = node.iconPath();
-        node._treeItem.command = node.command();
-        return node._treeItem;
-    }
+    getRootChildren(): vscode.ProviderResult<Item<ECLWatchTree>[]> {
+        this._treeView.title = "Loading...";
 
-    getChildren(element?: ECLNode): vscode.ProviderResult<ECLNode[]> {
-        if (element) {
-            return element.getChildren();
-        }
         this._rendered = true;
 
-        this._treeView.title = sessionManager.session.id;
         return sessionManager.wuQuery({
             Owner: this._myWorkunits ? sessionManager.session.userID : undefined,
             Sortby: "Wuid",
             Descending: false,
             Count: 1
         }).then(workunits => {
-            if (workunits.length === 0) {
-                return [];
-            }
             let year = 1970;
             let month = 0;
             let day = 1;
@@ -128,7 +102,7 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
             const now = new Date();
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-            const retVal: ECLNode[] = [];
+            const retVal: Item<ECLWatchTree>[] = [];
 
             //  Days
             let currDate = now.getDate() - 1;
@@ -173,18 +147,21 @@ export class ECLWatchTree implements vscode.TreeDataProvider<ECLNode> {
                 StartDate: today.toISOString(),
                 Count: 999999
             }).then(workunits => {
+                this._treeView.title = sessionManager.session.id;
                 return [...workunits.map(wu => new ECLWUNode(this, wu)), ...retVal];
             }).catch(e => {
+                this._treeView.title = sessionManager.session.id;
                 return [new ECLErrorNode(this, e)];
             });
         }).catch(e => {
+            this._treeView.title = sessionManager.session.id;
             return [new ECLErrorNode(this, e)];
         });
     }
 }
 
 //  https://microsoft.github.io/vscode-codicons/dist/codicon.html
-const Circle = {
+export const Circle = {
     account: new vscode.ThemeIcon("account"),
     colorMode: new vscode.ThemeIcon("color-mode"),
     dashboard: new vscode.ThemeIcon("dashboard"),
@@ -205,44 +182,7 @@ const Circle = {
 
 const globe = new vscode.ThemeIcon("globe");
 
-export class ECLNode {
-    _tree: ECLWatchTree;
-    _treeItem?: vscode.TreeItem;
-
-    constructor(tree: ECLWatchTree) {
-        this._tree = tree;
-    }
-
-    getLabel(): string {
-        return "TODO";
-    }
-
-    hasChildren(): boolean {
-        return false;
-    }
-
-    initialCollapseState(): vscode.TreeItemCollapsibleState {
-        return this.hasChildren() ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None;
-    }
-
-    getChildren(): vscode.ProviderResult<ECLNode[]> {
-        return [];
-    }
-
-    command(): vscode.Command | undefined {
-        return undefined;
-    }
-
-    iconPath(): vscode.ThemeIcon | undefined {
-        return undefined;
-    }
-
-    contextValue(): string {
-        return "ECLNode";
-    }
-}
-
-export class ECLErrorNode extends ECLNode {
+class ECLErrorNode extends Item<ECLWatchTree> {
     private _wu: Workunit;
 
     constructor(tree: ECLWatchTree, private _error: Error) {
@@ -258,7 +198,7 @@ export class ECLErrorNode extends ECLNode {
     }
 }
 
-export class ECLWebNode extends ECLNode {
+class ECLWebNode extends Item<ECLWatchTree> {
     private _wu: Workunit;
 
     constructor(tree: ECLWatchTree, private _label: string) {
@@ -283,7 +223,7 @@ export class ECLWebNode extends ECLNode {
 
 }
 
-export class ECLResultNode extends ECLNode {
+export class ECLResultNode extends Item<ECLWatchTree> {
 
     readonly url: string;
 
@@ -310,7 +250,7 @@ export class ECLResultNode extends ECLNode {
 
 }
 
-class ECLOutputsNode extends ECLNode {
+class ECLOutputsNode extends Item<ECLWatchTree> {
 
     constructor(tree: ECLWatchTree, private _wu: Workunit) {
         super(tree);
@@ -337,7 +277,7 @@ class ECLOutputsNode extends ECLNode {
     }
 }
 
-export class ECLWUNode extends ECLNode {
+export class ECLWUNode extends Item<ECLWatchTree> {
     private _wu: Workunit;
 
     readonly url: string;
@@ -432,7 +372,7 @@ export class ECLWUNode extends ECLNode {
     }
 }
 
-export class ECLDateRangeNode extends ECLNode {
+class ECLDateRangeNode extends Item<ECLWatchTree> {
     _name: string;
 
     constructor(tree: ECLWatchTree, name: string, private _from: Date, private _to: Date) {

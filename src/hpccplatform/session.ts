@@ -58,6 +58,10 @@ class Session {
         return this._launchConfig.wuQuery(request);
     }
 
+    bestClientTools(): Promise<ClientTools> {
+        return this._launchConfig.bestClientTools();
+    }
+
     locateClientTools(): Promise<ClientTools> {
         return this._launchConfig.locateClientTools();
     }
@@ -76,6 +80,18 @@ class Session {
 
     fetchRecordDef(lf: string) {
         return this._launchConfig.fetchRecordDef(lf);
+    }
+
+    bundleList() {
+        return this._launchConfig.bundleList();
+    }
+
+    bundleInstall(bundleUrl: string) {
+        return this._launchConfig.bundleInstall(bundleUrl);
+    }
+
+    bundleUninstall(name: string) {
+        return this._launchConfig.bundleUninstall(name);
     }
 }
 
@@ -230,9 +246,9 @@ class SessionManager {
         }
     }
 
-    locateClientTools(): Promise<ClientTools> {
+    bestClientTools(): Promise<ClientTools> {
         if (this.session) {
-            return this.session.locateClientTools();
+            return this.session.bestClientTools();
         }
         return Promise.resolve(undefined);
     }

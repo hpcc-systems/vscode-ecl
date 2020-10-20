@@ -39,17 +39,17 @@
     "tag": "run-s standard-version git-push"
   },
   "devDependencies": {
-    "@fluentui/react": "^7.145.0",
-    "@hpcc-js/comms": "^2.29.0",
-    "@hpcc-js/dgrid": "^2.8.35",
-    "@hpcc-js/loader": "^2.43.0",
-    "@hpcc-js/marshaller": "^2.23.53",
-    "@hpcc-js/observable-md": "^2.19.0",
+    "@fluentui/react": "^7.147.1",
+    "@hpcc-js/comms": "^2.30.0",
+    "@hpcc-js/dgrid": "^2.8.37",
+    "@hpcc-js/loader": "^2.46.0",
+    "@hpcc-js/marshaller": "^2.23.55",
+    "@hpcc-js/observable-md": "^2.21.0",
     "@hpcc-js/util": "^2.26.0",
     "@material-ui/core": "^4.11.0",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^12.12.66",
-    "@types/vscode": "^1.14.0",
+    "@types/node": "^12.19.1",
+    "@types/vscode": "^1.50.0",
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",
     "adm-zip": "^0.4.16",
@@ -58,17 +58,17 @@
     "copyfiles": "^2.4.0",
     "css-loader": "^4.3.0",
     "diff": "^4.0.2",
-    "eslint": "^7.10.0",
+    "eslint": "^7.11.0",
     "mocha": "^7.2.0",
     "npm-run-all": "^4.1.5",
     "original-fs": "^1.1.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "rimraf": "^3.0.2",
     "source-map-loader": "^0.2.4",
     "standard-version": "^9.0.0",
     "style-loader": "^1.3.0",
-    "tslib": "^1.14.0",
+    "tslib": "^1.14.1",
     "typescript": "^3.9.7",
     "use-resize-observer": "^6.1.0",
     "vsce": "^1.81.1",
@@ -334,6 +334,96 @@
         }
       },
       {
+        "command": "hpccResources.bundles.refresh",
+        "category": "ECL",
+        "title": "Refresh",
+        "description": "Refresh Tree.",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "hpccResources.bundles.homepage",
+        "category": "ECL",
+        "title": "Homepage",
+        "description": "Bundles Homepage.",
+        "icon": {
+          "light": "resources/light/globe.svg",
+          "dark": "resources/dark/globe.svg"
+        }
+      },
+      {
+        "command": "hpccResources.bundles.install",
+        "category": "ECL",
+        "title": "Install",
+        "description": "Install Bundle.",
+        "icon": {
+          "light": "resources/light/cloud-download.svg",
+          "dark": "resources/dark/cloud-download.svg"
+        }
+      },
+      {
+        "command": "hpccResources.bundles.uninstall",
+        "category": "ECL",
+        "title": "Uninstall",
+        "description": "Uninstall Bundle.",
+        "icon": {
+          "light": "resources/light/close.svg",
+          "dark": "resources/dark/close.svg"
+        }
+      },
+      {
+        "command": "hpccResources.clientTools.homepage",
+        "category": "ECL",
+        "title": "Homepage",
+        "description": "Client Tools Homepage.",
+        "icon": {
+          "light": "resources/light/globe.svg",
+          "dark": "resources/dark/globe.svg"
+        }
+      },
+      {
+        "command": "hpccResources.clientTools.refresh",
+        "category": "ECL",
+        "title": "Refresh",
+        "description": "Refresh Tree.",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "hpccResources.clientTools.activate",
+        "category": "ECL",
+        "title": "Activate",
+        "description": "Activate Client Tools.",
+        "icon": {
+          "light": "resources/light/pass.svg",
+          "dark": "resources/dark/pass.svg"
+        }
+      },
+      {
+        "command": "hpccResources.clientTools.deactivate",
+        "category": "ECL",
+        "title": "Auto Detect",
+        "description": "Auto Detect Client Tools.",
+        "icon": {
+          "light": "resources/light/close.svg",
+          "dark": "resources/dark/close.svg"
+        }
+      },
+      {
+        "command": "hpccResources.clientTools.terminal",
+        "category": "ECL",
+        "title": "Terminal",
+        "description": "ECL Client Tools Terminal.",
+        "icon": {
+          "light": "resources/light/terminal.svg",
+          "dark": "resources/dark/terminal.svg"
+        }
+      },
+      {
         "command": "ecl.watch.lite.openECLWatchExternal",
         "category": "ECL",
         "title": "ECL Watch",
@@ -534,6 +624,26 @@
           "group": "navigation@60"
         },
         {
+          "command": "hpccResources.bundles.homepage",
+          "when": "view == hpccResources.bundles",
+          "group": "navigation@10"
+        },
+        {
+          "command": "hpccResources.bundles.refresh",
+          "when": "view == hpccResources.bundles",
+          "group": "navigation@20"
+        },
+        {
+          "command": "hpccResources.clientTools.homepage",
+          "when": "view == hpccResources.clientTools",
+          "group": "navigation@10"
+        },
+        {
+          "command": "hpccResources.clientTools.refresh",
+          "when": "view == hpccResources.clientTools",
+          "group": "navigation@20"
+        },
+        {
           "command": "ecl.watch.lite.openECLWatchExternal",
           "when": "view == ecl.watch.lite && ecl.watch.lite.hasWuid",
           "group": "navigation@100"
@@ -554,6 +664,36 @@
           "command": "hpccPlatform.deleteWU",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "navigation@920"
+        },
+        {
+          "command": "hpccResources.bundles.homepage",
+          "when": "view == hpccResources.bundles && viewItem =~ /^BundlesItem/",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.bundles.install",
+          "when": "view == hpccResources.bundles && viewItem == BundlesItem",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.bundles.uninstall",
+          "when": "view == hpccResources.bundles && viewItem == BundlesItemInstalled",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.clientTools.activate",
+          "when": "view == hpccResources.clientTools && viewItem == ClientToolsItemDeactive",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.clientTools.deactivate",
+          "when": "view == hpccResources.clientTools && viewItem == ClientToolsItemActive",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.clientTools.terminal",
+          "when": "view == hpccResources.clientTools && viewItem =~ /^ClientToolsItem/",
+          "group": "inline"
         },
         {
           "command": "ecl.openECLWatchExternal",
@@ -629,6 +769,16 @@
       }
     ],
     "views": {
+      "hpccResources": [
+        {
+          "id": "hpccResources.bundles",
+          "name": "Bundles"
+        },
+        {
+          "id": "hpccResources.clientTools",
+          "name": "Client Tools"
+        }
+      ],
       "explorer": [
         {
           "id": "hpccPlatform",
@@ -648,7 +798,13 @@
       ]
     },
     "viewsContainers": {
-      "activitybar": [],
+      "activitybar": [
+        {
+          "id": "hpccResources",
+          "title": "hpcc-systems",
+          "icon": "resources/ecl-explorer.svg"
+        }
+      ],
       "panel": [
         {
           "id": "ecl-watch-lite",

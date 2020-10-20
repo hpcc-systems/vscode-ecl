@@ -77,7 +77,7 @@ if (document.location.protocol === "file:") {
         port: "18010",
         user: "gosmith",
         password: "",
-        wuid: "W20200917-150837"
+        wuid: "W20201021-172723"
     });
 }
 
