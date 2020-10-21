@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.5.1...v2.5.2) (2020-10-21)
+
+
+### Bug Fixes
+
+* **Results:**  Edge case with 0 issues and 0 rows ([dd2b5bd](https://github.com/hpcc-systems/vscode-ecl/commit/dd2b5bdacdb66466510c6fb205a4ace82eae074a))
+
 ### [2.5.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.5.0...v2.5.1) (2020-10-20)
 
 
