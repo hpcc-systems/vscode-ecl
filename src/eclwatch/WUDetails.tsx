@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Workunit, WUInfo, Result } from "@hpcc-js/comms";
-import { Pivot, PivotItem, IPivotStyles, Spinner, ILabelStyles, IStyleSet, initializeIcons } from "@fluentui/react";
+import { Pivot, PivotItem, IPivotStyles, Spinner, ILabelStyles, IStyleSet, initializeIcons, MessageBar, MessageBarType } from "@fluentui/react";
 import { WUIssues, WUResult } from "./WUResult";
 import { HolyGrail } from "./HolyGrail";
 
@@ -52,45 +52,57 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
         setSelectedKey(item.props.itemKey!);
     };
 
-    const [busy, setBusy] = React.useState("Loading...");
+    const [spinnerMessage, setSpinnerMessage] = React.useState("Loading...");
+    const [complete, setComplete] = React.useState(false);
     const [exceptions, setExceptions] = React.useState<WUInfo.ECLException[]>([]);
     const [results, setResults] = React.useState<Result[]>([]);
 
-    const refresh = (wu: Workunit) => {
-        setBusy(wu.State);
-        Promise.all([wu.fetchECLExceptions(), wu.fetchResults()]).then(([exceptions, results]) => {
-            setExceptions([...exceptions]);
-            setResults([...results]);
-        });
-    };
-
     React.useEffect(() => {
+        let canceled = false;
+
+        function update(complete: boolean, exceptions: WUInfo.ECLException[], results: Result[]) {
+            if (!canceled) {
+                setComplete(complete);
+                setExceptions([...exceptions]);
+                setResults([...results]);
+            }
+        }
+
+        function refresh(wu: Workunit) {
+            setSpinnerMessage(wu.State);
+            Promise.all([wu.fetchECLExceptions(), wu.fetchResults()]).then(([exceptions, results]) => {
+                update(wu.isComplete(), exceptions, results);
+            });
+        }
+
         if (wuid) {
-            setExceptions([]);
-            setResults([]);
+            setSpinnerMessage("Loading...");
+            update(false, [], []);
             const wu = Workunit.attach({ baseUrl, userID: user, password }, wuid);
             wu.refresh().then(() => {
-                if (wu.isComplete()) {
-                    refresh(wu);
-                } else {
-                    let prevStateID;
-                    wu.watchUntilComplete(() => {
-                        if (prevStateID !== wu.StateID) {
-                            prevStateID = wu.StateID;
-                            refresh(wu);
-                        }
-                    });
+                if (!canceled) {
+                    if (wu.isComplete()) {
+                        refresh(wu);
+                    } else {
+                        let prevStateID;
+                        wu.watchUntilComplete(() => {
+                            if (prevStateID !== wu.StateID) {
+                                prevStateID = wu.StateID;
+                                refresh(wu);
+                            }
+                        });
+                    }
                 }
             }).catch(e => {
-                setBusy(e.message);
-                setExceptions([]);
-                setResults([]);
+                setSpinnerMessage(e.message);
+                update(true, [], []);
             });
         } else {
-            setBusy("");
-            setExceptions([]);
-            setResults([]);
+            setSpinnerMessage("");
+            update(true, [], []);
         }
+
+        return () => (canceled = true);
     }, [baseUrl, wuid]);
 
     React.useEffect(() => {
@@ -111,7 +123,12 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
         }
     }
 
-    return (!hasIssues && !hasResults) ? <Spinner label={busy} /> :
+    return (!hasIssues && !hasResults) ?
+        complete ?
+            <MessageBar messageBarType={MessageBarType.info} isMultiline={false}      >
+                {spinnerMessage} - 0 Issues, 0 Results.
+            </MessageBar> :
+            <Spinner label={spinnerMessage} /> :
         <HolyGrail
             header={
                 <div ref={pivotRef}>
