@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.5.2...v2.6.0) (2020-10-23)
+
+
+### Features
+
+*  Add "resources" page ([8df7459](https://github.com/hpcc-systems/vscode-ecl/commit/8df7459adf377935f3890da59354f0aac6ee1d3b)), closes [#128](https://github.com/hpcc-systems/vscode-ecl/issues/128)
+
 ### [2.5.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.5.1...v2.5.2) (2020-10-21)
 
 
