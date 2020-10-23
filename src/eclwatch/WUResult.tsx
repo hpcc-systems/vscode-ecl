@@ -208,6 +208,7 @@ export class WUResultTable extends Common {
 
     constructor() {
         super();
+        this.renderHtml(false);
     }
 
     @publish(undefined, "string", "URL to WsWorkunits")

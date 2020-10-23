@@ -1,31 +1,37 @@
+import { ClientTools } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
 
-let eclTerminal: ECLTerminal;
+export function eclTerminal(ct: ClientTools) {
+    const ver = ct.versionSync();
+    const terminal = vscode.window.createTerminal({
+        name: `ECL v${ver.major}.${ver.minor}.${ver.patch}`,
+        env: {
+            PATH: `${ct.binPath};${process.env.PATH}`
+        }
+    });
+    terminal.show();
+}
+
+let g_eclTerminal: ECLTerminal;
 export class ECLTerminal {
     _ctx: vscode.ExtensionContext;
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.createTerminal", () => {
-            sessionManager.locateClientTools().then(clientTools => {
-                return Promise.all([clientTools.version(), Promise.resolve((clientTools as any).binPath)]);
-            }).then(([ver, path]) => {
-                const terminal = vscode.window.createTerminal({
-                    name: `ECL v${ver.major}.${ver.minor}.${ver.patch}`,
-                    env: {
-                        PATH: `${path};${process.env.PATH}`
-                    }
-                });
-                terminal.show();
+            sessionManager.bestClientTools().then(clientTools => {
+                return clientTools.version().then(() => clientTools);
+            }).then((clientTools) => {
+                eclTerminal(clientTools);
             });
         }));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLTerminal {
-        if (!eclTerminal) {
-            eclTerminal = new ECLTerminal(ctx);
+        if (!g_eclTerminal) {
+            g_eclTerminal = new ECLTerminal(ctx);
         }
-        return eclTerminal;
+        return g_eclTerminal;
     }
 }

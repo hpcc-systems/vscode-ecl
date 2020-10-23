@@ -227,7 +227,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         return retVal;
     }
 
-    private verifyUser(): Promise<boolean> {
+    private verifyUser(): Promise<boolean | undefined> {
         const credentials = this.credentials();
         if (credentials.verified) {
             return Promise.resolve(true);
@@ -240,7 +240,7 @@ export class LaunchConfig implements LaunchRequestArguments {
             credentials.verified = true;
             return true;
         }).catch(e => {
-            return false;
+            return e.message.indexOf("ECONNREFUSED") >= 0 ? undefined : false;
         });
     }
 
@@ -253,7 +253,15 @@ export class LaunchConfig implements LaunchRequestArguments {
         const queryPromise = this.verifyUser();
         return Promise.race([timeoutPrommise, queryPromise])
             .then(verified => {
-                return verified ? LaunchConfigState.Ok : LaunchConfigState.Credentials;
+                switch (verified) {
+                    case true:
+                        return LaunchConfigState.Ok;
+                    case false:
+                        return LaunchConfigState.Credentials;
+                    case undefined:
+                    default:
+                        return LaunchConfigState.Unreachable;
+                }
             }).catch(e => {
                 return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
             });
@@ -329,6 +337,13 @@ export class LaunchConfig implements LaunchRequestArguments {
             }
         }
         return retVal;
+    }
+
+    bestClientTools(): Promise<ClientTools> {
+        return this.fetchBuild().then(build => {
+            logger.info(`Locating Client Tools.${os.EOL}`);
+            return this.locateClientTools(undefined, build);
+        });
     }
 
     locateClientTools(fileUri?: vscode.Uri, build = ""): Promise<ClientTools> {
@@ -473,6 +488,24 @@ export class LaunchConfig implements LaunchRequestArguments {
         return this.checkCredentials().then(credentials => {
             const file = LogicalFile.attach(this.opts(credentials), "", lf);
             return file.fetchInfo().then(info => info.Ecl);
+        });
+    }
+
+    bundleList() {
+        return this.locateClientTools().then((clientTools) => {
+            return clientTools.bundleList();
+        });
+    }
+
+    bundleInstall(bundleUrl: string) {
+        return this.locateClientTools().then((clientTools) => {
+            return clientTools.bundleInstall(bundleUrl);
+        });
+    }
+
+    bundleUninstall(name: string) {
+        return this.locateClientTools().then((clientTools) => {
+            return clientTools.bundleUninstall(name);
         });
     }
 

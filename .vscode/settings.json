@@ -12,5 +12,6 @@
 	"editor.insertSpaces": true,
 	"ecl.debugLogging": true,
 	"ecl.launchConfiguration": "play-hthor-submit (vscode-ecl)",
-	"ecl.targetCluster": {}
+	"ecl.targetCluster": {},
+	"svg.preview.background": "black"
 }
