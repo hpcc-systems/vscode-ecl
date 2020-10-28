@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.6.0...v2.6.1) (2020-10-28)
+
+
+### Bug Fixes
+
+* **VerifyUser:**  Detect and ignore "old client exception" ([d596e95](https://github.com/hpcc-systems/vscode-ecl/commit/d596e95f2716c7f8d2f91e4f2140807a8ed8da3a))
+
 ## [2.6.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.5.2...v2.6.0) (2020-10-23)
 
 
