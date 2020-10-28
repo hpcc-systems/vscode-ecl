@@ -227,20 +227,26 @@ export class LaunchConfig implements LaunchRequestArguments {
         return retVal;
     }
 
-    private verifyUser(): Promise<boolean | undefined> {
+    private verifyUser(): Promise<LaunchConfigState> {
         const credentials = this.credentials();
         if (credentials.verified) {
-            return Promise.resolve(true);
+            return Promise.resolve(LaunchConfigState.Ok);
         }
         const acService = new AccountService(this.opts(credentials));
         return acService.VerifyUser({
             application: "vscode-ecl",
-            version: ""
+            version: "2"
         }).then(response => {
             credentials.verified = true;
-            return true;
+            return LaunchConfigState.Ok;
         }).catch(e => {
-            return e.message.indexOf("ECONNREFUSED") >= 0 ? undefined : false;
+            logger.debug("verifyUser catch:  -->" + e?.message + "<--");
+            //  old client version warning  ---
+            if (e.isESPExceptions && e.Exception.some((exception) => exception.Code === 20043)) {
+                credentials.verified = true;
+                return LaunchConfigState.Ok;
+            }
+            return e?.message.indexOf("ECONNREFUSED") >= 0 ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
         });
     }
 
@@ -252,28 +258,26 @@ export class LaunchConfig implements LaunchRequestArguments {
         });
         const queryPromise = this.verifyUser();
         return Promise.race([timeoutPrommise, queryPromise])
-            .then(verified => {
-                switch (verified) {
-                    case true:
-                        return LaunchConfigState.Ok;
-                    case false:
-                        return LaunchConfigState.Credentials;
-                    case undefined:
-                    default:
-                        return LaunchConfigState.Unreachable;
-                }
+            .then((verified: LaunchConfigState) => {
+                logger.debug("ping verified:  " + verified);
+                return verified;
             }).catch(e => {
+                logger.debug("ping exception:  " + e?.message || e);
                 return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
             });
     }
 
     private async promptUserID() {
         const credentials = this.credentials();
-        credentials.user = await vscode.window.showInputBox({
+        const user = await vscode.window.showInputBox({
             prompt: `User ID (${this.id})`,
             password: false,
             value: credentials.user
         }) || "";
+        if (user) {
+            credentials.user = user;
+        }
+        return user;
     }
 
     private async promptPassword(): Promise<boolean> {
@@ -286,7 +290,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         return false;
     }
 
-    async checkCredentials(): Promise<Credentials> {
+    async _checkCredentials(): Promise<Credentials> {
         if (this.name === "not found") {
             throw new Error("No ECL Launch configurations.");
         }
@@ -296,8 +300,9 @@ export class LaunchConfig implements LaunchRequestArguments {
                 return this.credentials();
             case LaunchConfigState.Credentials:
                 for (let i = 0; i < 3; ++i) {
-                    await this.promptUserID();
-                    await this.promptPassword();
+                    if (await this.promptUserID()) {
+                        await this.promptPassword();
+                    }
                     const credentials = this.credentials();
                     if (!credentials.user && !credentials.password) {
                         break;
@@ -312,6 +317,20 @@ export class LaunchConfig implements LaunchRequestArguments {
             default:
                 throw new Error("Connection failed.");
         }
+    }
+
+    _checkingCredentials: Promise<Credentials>;
+    async checkCredentials(): Promise<Credentials> {
+        if (this._checkingCredentials) return this._checkingCredentials;
+        this._checkingCredentials = this._checkCredentials()
+            .then(response => {
+                delete this._checkingCredentials;
+                return response;
+            }).catch(e => {
+                delete this._checkingCredentials;
+                throw e;
+            });
+        return this._checkingCredentials;
     }
 
     //  Check Syntax  ---
