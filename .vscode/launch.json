@@ -31,9 +31,10 @@
             // path to VSCode executable
             "runtimeExecutable": "${execPath}",
             "args": [
-                "--disable-extensions",
+                //"--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceRoot}",
-                "--enable-proposed-api"
+                //"--enable-proposed-api",
+                "C:\\Users\\gordon\\git\\tmp-ecl"
             ],
             "outFiles": [
                 "${workspaceRoot}/dist/*.js"
