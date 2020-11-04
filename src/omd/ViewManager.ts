@@ -1,7 +1,8 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { View } from "./View";
 import * as fs from "fs";
+import localize from "../util/localize";
+import { View } from "./View";
 
 let viewManager: ViewManager;
 export class ViewManager {
@@ -22,7 +23,7 @@ export class ViewManager {
         const isEclMD = vscode.window.activeTextEditor && path.extname(vscode.window.activeTextEditor.document.fileName).toLowerCase() === ".omd";
         const retVal = isEclMD;
         if (!retVal) {
-            vscode.window.showInformationMessage("Current document is not a 'ECL Markdown' file.");
+            vscode.window.showInformationMessage(`${localize("Current document is not a 'ECL Markdown' file")}.`);
         }
         return retVal;
     }
@@ -41,7 +42,7 @@ export class ViewManager {
         if (ViewManager.checkDocument()) {
             const uri: vscode.Uri = vscode.window.activeTextEditor!.document.uri;
             const htmlPath = uri.path.replace(".omd", ".html");
-            vscode.window.showSaveDialog({ defaultUri: vscode.Uri.file(htmlPath), saveLabel: "Export to HTML" }).then(resource => {
+            vscode.window.showSaveDialog({ defaultUri: vscode.Uri.file(htmlPath), saveLabel: localize("Export to HTML") }).then(resource => {
                 if (resource) {
                     const resourceParts = path.parse(resource.path);
                     const runtimePath = vscode.Uri.file(path.join(viewManager._ctx.extensionPath, "dist", "observable.js"));

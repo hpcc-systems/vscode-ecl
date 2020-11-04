@@ -1,6 +1,7 @@
 import { ClientTools, IBundle, locateAllClientTools } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
+import localize from "../util/localize";
 import { onDidClientToolsChange, switchClientTools } from "./clientTools";
 import { Circle } from "./eclWatchTree";
 import { eclTerminal } from "./terminal";
@@ -41,12 +42,12 @@ class Bundles extends Tree {
 
         vscode.commands.registerCommand("hpccResources.bundles.install", (item: Item) => {
             if (item instanceof BundlesItem) {
-                this._treeView.title = "Installing...";
+                this._treeView.title = `${localize("Installing")}...`;
                 item.install().then(response => {
                     if (response.code) {
                         vscode.window.showErrorMessage(response.stdout || response.stderr);
                     }
-                    this._treeView.title = "Bundles";
+                    this._treeView.title = localize("Bundles");
                     this.refresh();
                 });
             }
@@ -54,12 +55,12 @@ class Bundles extends Tree {
 
         vscode.commands.registerCommand("hpccResources.bundles.uninstall", (item: Item) => {
             if (item instanceof BundlesItem) {
-                this._treeView.title = "Uninstalling...";
+                this._treeView.title = `${localize("Uninstalling")}...`;
                 item.uninstall().then(response => {
                     if (response.code) {
                         vscode.window.showErrorMessage(response.stdout || response.stderr);
                     }
-                    this._treeView.title = "Bundles";
+                    this._treeView.title = localize("Bundles");
                     this.refresh();
                 });
             }
@@ -74,10 +75,10 @@ class Bundles extends Tree {
     }
 
     getRootChildren() {
-        this._treeView.title = "Loading...";
+        this._treeView.title = `${localize("Loading")}...`;
 
         return sessionManager.session.bundleList().then(bundles => {
-            this._treeView.title = "Bundles";
+            this._treeView.title = localize("Bundles");
             return bundles.map(b => {
                 return new BundlesItem(this, b);
             });
@@ -167,14 +168,14 @@ class ClientToolsTree extends Tree {
     }
 
     getRootChildren() {
-        this._treeView.title = "Loading...";
+        this._treeView.title = `${localize("Loading")}...`;
         const eclConfig = vscode.workspace.getConfiguration("ecl");
         const eclccPath = eclConfig.get("eclccPath");
         return Promise.all([
             sessionManager.session.bestClientTools(),
             locateAllClientTools()
         ]).then(([clientTools, allClientTools]) => {
-            this._treeView.title = "Client Tools";
+            this._treeView.title = localize("Client Tools");
             return allClientTools.map(ct => {
                 return new ClientToolsItem(this, ct, ct.eclccPath === eclccPath, ct.binPath === clientTools.binPath);
             });

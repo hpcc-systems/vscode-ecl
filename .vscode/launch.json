@@ -11,18 +11,13 @@
     ],
     "configurations": [
         {
-            "name": "play-hthor-submit",
-            "type": "ecl",
+            "name": "NLS Util",
+            "program": "${workspaceFolder}/lib-util/vscode-ecl/util/index.js",
             "request": "launch",
-            "protocol": "https",
-            "serverAddress": "play.hpccsystems.com",
-            "port": 18010,
-            "targetCluster": "hthor",
-            "rejectUnauthorized": false,
-            "resultLimit": 100,
-            "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
         },
         {
             "name": "Launch Extension",
@@ -31,7 +26,7 @@
             // path to VSCode executable
             "runtimeExecutable": "${execPath}",
             "args": [
-                //"--disable-extensions",
+                "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceRoot}",
                 //"--enable-proposed-api",
                 "C:\\Users\\gordon\\git\\tmp-ecl"

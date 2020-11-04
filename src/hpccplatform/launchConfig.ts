@@ -6,6 +6,7 @@ import { AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, EclccE
 import { scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
+import localize from "../util/localize";
 
 const logger = scopedLogger("launchConfig.ts");
 
@@ -47,7 +48,7 @@ export function launchConfigurations(refresh = false): string[] {
     }
     const retVal = Object.keys(g_launchConfigurations);
     if (retVal.length === 0) {
-        vscode.window.showErrorMessage("No ECL Launch configurations.", "Create ECL Launch").then(response => {
+        vscode.window.showErrorMessage(localize("No ECL Launch configurations."), localize("Create ECL Launch")).then(response => {
             vscode.commands.executeCommand("workbench.action.debug.configure");
         });
 
@@ -124,8 +125,6 @@ export interface Credentials {
 const credentials: { [serverAddress: string]: Credentials } = {};
 
 const configPrefix = "${config:ecl.";
-
-type ValueOf<T> = T[keyof T];
 
 export interface CheckResponse {
     errors: IECLErrorWarning[];
@@ -270,7 +269,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     private async promptUserID() {
         const credentials = this.credentials();
         const user = await vscode.window.showInputBox({
-            prompt: `User ID (${this.id})`,
+            prompt: `${localize("User ID")} (${this.id})`,
             password: false,
             value: credentials.user
         }) || "";
@@ -283,7 +282,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     private async promptPassword(): Promise<boolean> {
         const credentials = this.credentials();
         credentials.password = await vscode.window.showInputBox({
-            prompt: `Password (${this.id})`,
+            prompt: `${localize("Password")} (${this.id})`,
             password: true,
             value: credentials.password
         }) || "";
@@ -292,7 +291,7 @@ export class LaunchConfig implements LaunchRequestArguments {
 
     async _checkCredentials(): Promise<Credentials> {
         if (this.name === "not found") {
-            throw new Error("No ECL Launch configurations.");
+            throw new Error(localize("No ECL Launch configurations."));
         }
         const pingResult = await this.ping();
         switch (pingResult) {
@@ -311,11 +310,11 @@ export class LaunchConfig implements LaunchRequestArguments {
                         return this.credentials();
                     }
                 }
-                throw new Error("Invalid Credentials.");
+                throw new Error(localize("Invalid Credentials."));
             case LaunchConfigState.Unknown:
             case LaunchConfigState.Unreachable:
             default:
-                throw new Error("Connection failed.");
+                throw new Error(`${localize("Connection failed")}.`);
         }
     }
 
@@ -391,7 +390,7 @@ export class LaunchConfig implements LaunchRequestArguments {
                     showEclStatus(version.toString(), eclccPathOverriden, clientTools.eclccPath);
                 });
             } else {
-                showEclStatus("Unknown", false, "Unable to locate eclcc");
+                showEclStatus(localize("Unknown"), false, localize("Unable to locate eclcc"));
             }
             return clientTools;
         });
@@ -411,12 +410,12 @@ export class LaunchConfig implements LaunchRequestArguments {
                     return { errors: errors.all(), checked: errors.checked() };
                 }).catch(e => {
                     logger.debug(`syntaxCheck-reject:  ${fileUri.fsPath} ${e.msg}`);
-                    vscode.window.showInformationMessage(`Syntax check exception:  ${fileUri.fsPath} ${e.msg}`);
+                    vscode.window.showInformationMessage(`${localize("Syntax check exception")}:  ${fileUri.fsPath} ${e.msg}`);
                     return Promise.resolve({ errors: [], checked: [] });
                 });
             }
         }).catch(e => {
-            vscode.window.showInformationMessage('Unable to locate "eclcc" binary.  Ensure ECL ClientTools is installed.');
+            vscode.window.showInformationMessage(localize('Unable to locate "eclcc" binary.  Ensure ECL ClientTools is installed.'));
             return Promise.resolve({ errors: [], checked: [] });
         });
     }
@@ -533,7 +532,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         // logger.debug("launchRequest:  " + JSON.stringify(args));
         return vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
-            title: "Submit ECL",
+            title: localize("Submit ECL"),
             cancellable: false
         }, (progress, token) => {
             const filePath = fileUri.fsPath;
@@ -541,11 +540,11 @@ export class LaunchConfig implements LaunchRequestArguments {
             const pathParts = path.parse(filePath);
             let failedWU: Workunit;
             return this.fetchBuild().then(build => {
-                progress.report({ increment: 10, message: "Locating Client Tools" });
+                progress.report({ increment: 10, message: localize("Locating Client Tools") });
                 logger.info(`Locating Client Tools.${os.EOL}`);
                 return this.locateClientTools(fileUri, build);
             }).then((clientTools) => {
-                progress.report({ increment: 10, message: "Creating Archive" });
+                progress.report({ increment: 10, message: localize("Creating Archive") });
                 logger.info(`Client Tools:  ${clientTools.eclccPath}.${os.EOL}`);
                 logger.info(`Generating archive.${os.EOL}`);
                 if (pathParts.ext.toLowerCase() === ".xml") {
@@ -554,14 +553,14 @@ export class LaunchConfig implements LaunchRequestArguments {
                     return clientTools.createArchive(filePath);
                 }
             }).then(archive => {
-                progress.report({ increment: 10, message: "Verifying Archive" });
+                progress.report({ increment: 10, message: localize("Verifying Archive") });
                 if (this.abortSubmitOnError && archive.err.hasError()) {
-                    throw new Error(`ECL Syntax Error(s):\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
+                    throw new Error(`${localize("ECL Syntax Error(s)")}:\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
                 }
                 logger.info(`Archive Size: ${archive.content.length}.${os.EOL}`);
                 return archive;
             }).then(archive => {
-                progress.report({ increment: 10, message: "Creating Workunit" });
+                progress.report({ increment: 10, message: localize("Creating Workunit") });
                 logger.info(`Creating workunit.${os.EOL}`);
                 return this.createWorkunit().then(wu => {
                     failedWU = wu;
@@ -569,13 +568,13 @@ export class LaunchConfig implements LaunchRequestArguments {
                 });
             }).then(([wu, archive]) => {
                 // eslint-disable-next-line no-async-promise-executor
-                progress.report({ increment: 10, message: `Updating Workunit ${wu.Wuid}` });
+                progress.report({ increment: 10, message: `${localize("Updating Workunit")} ${wu.Wuid}` });
                 // eslint-disable-next-line no-async-promise-executor
                 return new Promise<Workunit>(async (resolve, reject) => {
                     const attempts = 3;
                     let lastError;
                     for (let retry = 1; retry <= attempts; ++retry) {
-                        progress.report({ increment: 3, message: `Updating workunit ${wu.Wuid} (${retry} of ${attempts})` });
+                        progress.report({ increment: 3, message: `${localize("Updating Workunit")} ${wu.Wuid} (${retry} of ${attempts})` });
                         logger.info(`Updating workunit (${retry} of ${attempts}).${os.EOL}`);
                         await wu.update({
                             Jobname: pathParts.name,
@@ -597,11 +596,11 @@ export class LaunchConfig implements LaunchRequestArguments {
                     reject(lastError);
                 });
             }).then((wu) => {
-                progress.report({ increment: 10, message: `Submitting workunit ${wu.Wuid}` });
+                progress.report({ increment: 10, message: `${localize("Submitting workunit")} ${wu.Wuid}` });
                 logger.info(`Submitting workunit:  ${wu.Wuid}.${os.EOL}`);
                 return wu.submit(targetCluster, action(mode), this.resultLimit);
             }).then((wu) => {
-                progress.report({ increment: 10, message: `Submitted workunit ${wu.Wuid}` });
+                progress.report({ increment: 10, message: `${localize("Submitted workunit")} ${wu.Wuid}` });
                 logger.info(`Submitted:  ${this.wuDetailsUrl(wu.Wuid)}.${os.EOL}`);
                 failedWU = undefined;
                 return wu;

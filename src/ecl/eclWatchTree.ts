@@ -1,9 +1,10 @@
 import { Workunit, WUStateID, Result } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
+import localize from "../util/localize";
 import { Item, Tree } from "./tree";
 
-const PrevWeeks: string[] = ["Last Week", "Two Weeks Ago", "Three Weeks Ago", "Four Weeks Ago", "Five Weeks Ago", "Six Weeks Ago", "Seven Weeks Ago"];
+const PrevWeeks: string[] = ["Last Week", "Two Weeks Ago", "Three Weeks Ago", "Four Weeks Ago", "Five Weeks Ago", "Six Weeks Ago", "Seven Weeks Ago"].map(localize);
 
 export let eclWatchTree: ECLWatchTree;
 
@@ -75,7 +76,7 @@ export class ECLWatchTree extends Tree {
     }
 
     getRootChildren(): vscode.ProviderResult<Item<ECLWatchTree>[]> {
-        this._treeView.title = "Loading...";
+        this._treeView.title = `${localize("Loading")}...`;
 
         this._rendered = true;
 
@@ -217,7 +218,7 @@ class ECLWebNode extends Item<ECLWatchTree> {
         return {
             command: "ecl.openWebSite",
             arguments: [sessionManager.wuDetailsUrl(this._wu.Wuid), this._wu.Wuid, true],
-            title: "Open Web Site"
+            title: localize("Open Web Site")
         };
     }
 
@@ -240,7 +241,7 @@ export class ECLResultNode extends Item<ECLWatchTree> {
         return {
             command: "ecl.showWUDetails",
             arguments: [sessionManager.session.launchRequestArgs, this._result.Wuid, this._result.Sequence],
-            title: "Open ECL Workunit Details"
+            title: localize("Open ECL Workunit Details")
         };
     }
 
@@ -257,7 +258,7 @@ class ECLOutputsNode extends Item<ECLWatchTree> {
     }
 
     getLabel(): string {
-        return "Outputs";
+        return localize("Outputs");
     }
 
     hasChildren() {
@@ -272,7 +273,7 @@ class ECLOutputsNode extends Item<ECLWatchTree> {
         return {
             command: "ecl.showWUDetails",
             arguments: [sessionManager.session.launchRequestArgs, this._wu.Wuid],
-            title: "Open ECL Workunit Details"
+            title: localize("Open ECL Workunit Details")
         };
     }
 }
@@ -359,7 +360,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         return {
             command: "ecl.showWUDetails",
             arguments: [sessionManager.session.launchRequestArgs, this._wu.Wuid],
-            title: "Open ECL Workunit Details"
+            title: localize("Open ECL Workunit Details")
         };
     }
 

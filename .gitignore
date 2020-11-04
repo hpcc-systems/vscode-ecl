@@ -1,8 +1,13 @@
+/.eclcc
 /dist
 /grammar
+/images
 /lib*
 /node_modules
+/tests
+/tmp
 /types
+tmp*.*
 .vscode-test
 *.vsix
 *.log

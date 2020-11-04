@@ -1,5 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
+import localize from "../util/localize";
 
 function encode(str: string) {
     return str
@@ -36,7 +37,7 @@ export class View {
         const localResourceRoots = [vscode.Uri.file(path.join(this._ctx.extensionPath, "dist"))];
         this._panel = vscode.window.createWebviewPanel(
             "omd",
-            `Preview (${baseName})`,
+            `${localize("Preview")} (${baseName})`,
             {
                 viewColumn: vscode.ViewColumn.Beside,
                 preserveFocus: true

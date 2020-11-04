@@ -11,6 +11,14 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.7.0
+
+* Preliminary localisation support:
+  * en
+  * zh
+
+![Version 2.7](resources/readme-v2_7.png)
+
 ### v2.6.0
 
 * Added HPCC resources page:
@@ -152,7 +160,7 @@ The following Visual Studio Code settings are available for the ECL extension.  
   // eclcc syntax check arguments.
   "ecl.eclccSyntaxArgs": [],
 
-  // Write eclcc logfile to specified file.
+  // Write eclcc log file to specified file.
   "ecl.eclccLogFile": ""
 
   // Run 'eclcc -syntax' on save.
