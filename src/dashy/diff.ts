@@ -1,4 +1,4 @@
-//  Ported from https://github.com/Microsoft/vscode-go/blob/master/src/diffUtils.ts
+//  Ported from https://github.com/Microsoft/vscode-go/blob/trunk/src/diffUtils.ts
 
 import * as jsDiff from "diff";
 import { Position, Range, TextDocument, TextEdit, TextEditorEdit, Uri, workspace, WorkspaceEdit } from "vscode";
