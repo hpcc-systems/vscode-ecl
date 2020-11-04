@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.6.1...v2.7.0) (2020-11-04)
+
+
+### Features
+
+* **localization:** Add localization support ([1437aad](https://github.com/hpcc-systems/vscode-ecl/commit/1437aad371796eddbf335e82cbe6b46ce118db1a))
+
 ### [2.6.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.6.0...v2.6.1) (2020-10-28)
 
 
