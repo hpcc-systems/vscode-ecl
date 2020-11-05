@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: "12.x"
       - run: npm ci
-      - uses: lannonbr/vsce-action@trunk
+      - uses: lannonbr/vsce-action@master
         with:
           args: "publish -p $VSCE_TOKEN"
         env:
