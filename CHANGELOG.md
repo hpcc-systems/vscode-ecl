@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.7.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.7.1...v2.7.2) (2020-11-05)
+
+
+### Bug Fixes
+
+* **publish:** Regression switching to trunk from master ([194b884](https://github.com/hpcc-systems/vscode-ecl/commit/194b884d17be5a8fc23792a1e5551d5c657490e4))
+
 ### [2.7.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.7.0...v2.7.1) (2020-11-05)
 
 ## [2.7.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.6.1...v2.7.0) (2020-11-04)
