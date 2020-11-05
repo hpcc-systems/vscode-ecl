@@ -11,11 +11,12 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
-### v2.7.0
+### v2.7.x
 
 * Preliminary localisation support:
   * en
   * zh
+  * pt-br
 
 ![Version 2.7](resources/readme-v2_7.png)
 
