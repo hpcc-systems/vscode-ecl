@@ -17,6 +17,7 @@
     "clean": "rimraf out lib* dist types *.vsix",
     "copy-resources": "copyfiles -f ./node_modules/@hpcc-js/ddl-shim/schema/v2.json ./dist",
     "gen-grammar": "wsl -e ./scripts/grammar-generate.sh",
+    "gen-nls": "node ./lib-util/vscode-ecl/util/index.js",
     "compile": "tsc",
     "compile-watch": "npm run compile -- -watch",
     "compile-es6": "tsc --module es6 --outDir ./lib-es6",
