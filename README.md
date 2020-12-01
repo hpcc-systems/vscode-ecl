@@ -17,6 +17,7 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
   * en
   * zh
   * pt-br
+  * es
 
 ![Version 2.7](resources/readme-v2_7.png)
 
