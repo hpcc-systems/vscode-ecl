@@ -199,31 +199,6 @@ class ECLErrorNode extends Item<ECLWatchTree> {
     }
 }
 
-class ECLWebNode extends Item<ECLWatchTree> {
-    private _wu: Workunit;
-
-    constructor(tree: ECLWatchTree, private _label: string) {
-        super(tree);
-    }
-
-    getLabel(): string {
-        return this._label;
-    }
-
-    iconPath() {
-        return globe;
-    }
-
-    command(): vscode.Command | undefined {
-        return {
-            command: "ecl.openWebSite",
-            arguments: [sessionManager.wuDetailsUrl(this._wu.Wuid), this._wu.Wuid, true],
-            title: localize("Open Web Site")
-        };
-    }
-
-}
-
 export class ECLResultNode extends Item<ECLWatchTree> {
 
     readonly url: string;
