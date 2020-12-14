@@ -79,7 +79,7 @@
     "vscode-debugadapter": "^1.42.1",
     "vscode-debugprotocol": "^1.42.0",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^4.2.0"
   },
   "author": {
     "name": "HPCC Systems®"
