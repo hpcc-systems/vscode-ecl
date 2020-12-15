@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.8.0...v2.8.1) (2020-12-15)
+
+
+### Bug Fixes
+
+* **sign:**  Allow blank passphrases ([c6002b2](https://github.com/hpcc-systems/vscode-ecl/commit/c6002b254f01ceaaadfb2d0637e137ff4be88cf6))
+
 ## [2.8.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.7.3...v2.8.0) (2020-12-15)
 
 
