@@ -202,6 +202,10 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     get password() {
+        const creds = credentials[this.serverAddress];
+        if (creds?.verified) {
+            return creds.password;
+        }
         return config(this._lcID, "password", "");
     }
 
