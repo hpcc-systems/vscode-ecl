@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools } from "@hpcc-js/comms";
 import { scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
@@ -506,6 +506,24 @@ export class LaunchConfig implements LaunchRequestArguments {
         return this.checkCredentials().then(credentials => {
             const file = LogicalFile.attach(this.opts(credentials), "", lf);
             return file.fetchInfo().then(info => info.Ecl);
+        });
+    }
+
+    digitalKeys() {
+        return this.checkCredentials().then(credentials => {
+            const csService = new CodesignService(this.opts(credentials));
+            return csService.ListUserIDs({});
+        });
+    }
+
+    sign(key: string, passphrase: string, ecl: string) {
+        return this.checkCredentials().then(credentials => {
+            const csService = new CodesignService(this.opts(credentials));
+            return csService.Sign({
+                UserID: key,
+                KeyPass: passphrase,
+                Text: ecl
+            });
         });
     }
 
