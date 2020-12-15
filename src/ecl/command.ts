@@ -25,6 +25,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -132,6 +133,38 @@ export class ECLCommands {
                     vscode.window.showErrorMessage(e.message);
                 });
             }
+        }
+    }
+
+    sign() {
+        if (vscode.window.activeTextEditor && sessionManager.session) {
+            const editor = vscode.window.activeTextEditor;
+            const eclText = editor.document.getText();
+            sessionManager.session.digitalKeys().then(async keys => {
+                if (keys.length === 0) {
+                    vscode.window.showWarningMessage(localize("Environment has no code signing keys"));
+                } else {
+                    const key = await vscode.window.showQuickPick(keys, {
+                        placeHolder: localize("Select code signing key")
+                    });
+                    if (key) {
+                        const passphrase = await vscode.window.showInputBox({
+                            prompt: localize("Enter passphrase for") + ` "${key}"`
+                        });
+                        if (passphrase) {
+                            sessionManager.session.sign(key, passphrase, eclText).then(response => {
+                                if (response.RetCode === 0) {
+                                    editor.edit(editBuilder => {
+                                        editBuilder.replace(new vscode.Range(0, 0, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER), response.SignedText);
+                                    });
+                                } else {
+                                    vscode.window.showErrorMessage(localize("Signing failed") + `:  ${response.ErrMsg}`);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
         }
     }
 }

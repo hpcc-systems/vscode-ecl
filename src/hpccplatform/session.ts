@@ -83,6 +83,14 @@ class Session {
         return this._launchConfig.fetchRecordDef(lf);
     }
 
+    digitalKeys() {
+        return this._launchConfig.digitalKeys();
+    }
+
+    sign(key: string, passphrase: string, ecl: string) {
+        return this._launchConfig.sign(key, passphrase, ecl);
+    }
+
     bundleList() {
         return this._launchConfig.bundleList();
     }

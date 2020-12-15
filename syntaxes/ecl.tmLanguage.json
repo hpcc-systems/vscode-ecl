@@ -92,6 +92,9 @@
                     "include": "#comment"
                 },
                 {
+                    "include": "#digital-signature"
+                },
+                {
                     "include": "#string"
                 },
                 {
@@ -126,6 +129,27 @@
         "comment-line": {
             "match": "(//).*$\\n?",
             "name": "comment.line.ecl"
+        },
+        "digital-signature": {
+            "name": "digital-signature.ecl",
+            "patterns": [
+                {
+                    "include": "#digital-signature-header"
+                },
+                {
+                    "include": "#digital-signature-footer"
+                }
+            ]
+        },
+        "digital-signature-header": {
+            "begin": "-----BEGIN PGP SIGNED MESSAGE-----",
+            "end": "Hash: SHA512",
+            "name": "keyword.control.ecl"
+        },
+        "digital-signature-footer": {
+            "begin": "-----BEGIN PGP SIGNATURE-----",
+            "end": "-----END PGP SIGNATURE-----",
+            "name": "keyword.control.ecl"
         },
         "string": {
             "name": "string.ecl",
