@@ -151,7 +151,7 @@ export class ECLCommands {
                         const passphrase = await vscode.window.showInputBox({
                             prompt: localize("Enter passphrase for") + ` "${key}"`
                         });
-                        if (passphrase) {
+                        if (passphrase !== undefined) {
                             sessionManager.session.sign(key, passphrase, eclText).then(response => {
                                 if (response.RetCode === 0) {
                                     editor.edit(editBuilder => {
