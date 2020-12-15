@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.7.3...v2.8.0) (2020-12-15)
+
+
+### Features
+
+*  Add digital signature support ([e81f8bf](https://github.com/hpcc-systems/vscode-ecl/commit/e81f8bfadd143d289d4f3079e386314b64009a03))
+
+
+### Bug Fixes
+
+* **results:**  Incorrect password passed to result viewer ([691bbc2](https://github.com/hpcc-systems/vscode-ecl/commit/691bbc208025a14317e323caf4f237981216c22d))
+
 ### [2.7.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.7.2...v2.7.3) (2020-12-01)
 
 ### [2.7.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.7.1...v2.7.2) (2020-11-05)
