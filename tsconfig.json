@@ -3,9 +3,10 @@
         "rootDir": "./src",
         "module": "es6",
         "moduleResolution": "node",
-        "target": "ES2015",
+        "target": "ES2019",
         "outDir": "lib-es6",
         "jsx": "react",
+        "allowJs": true,
         "sourceMap": true,
         "noImplicitAny": false,
         "noEmitOnError": false,
@@ -17,14 +18,11 @@
         "skipLibCheck": true,
         "lib": [
             "dom",
-            "ES2015"
+            "ES2019"
         ]
     },
     "include": [
         "./src/**/*.ts",
-        "./src/**/*.tsx",
-        "./node_modules/vscode/vscode.d.ts",
-        "./node_modules/vscode-debugadapter/lib/*",
-        "./node_modules/vscode/lib/*"
+        "./src/**/*.tsx"
     ]
 }

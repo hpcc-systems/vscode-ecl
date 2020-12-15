@@ -1,12 +1,13 @@
-// Generated from ./KELLexer.g4 by ANTLR 4.7.2
+// Generated from ./KELLexer.g4 by ANTLR 4.9.1
 // jshint ignore: start
-var antlr4 = require('antlr4/index');
+import antlr4 from 'antlr4';
 
 
-var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
-    "\u0002m\u0458\b\u0001\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004",
-    "\u0004\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t",
-    "\u0007\u0004\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004",
+
+const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
+    "\u5964\u0002m\u0458\b\u0001\u0004\u0002\t\u0002\u0004\u0003\t\u0003",
+    "\u0004\u0004\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007",
+    "\t\u0007\u0004\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004",
     "\f\t\f\u0004\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010",
     "\t\u0010\u0004\u0011\t\u0011\u0004\u0012\t\u0012\u0004\u0013\t\u0013",
     "\u0004\u0014\t\u0014\u0004\u0015\t\u0015\u0004\u0016\t\u0016\u0004\u0017",
@@ -720,24 +721,82 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u043b\u043e\u0444\u044e\u0456\u0004\b\u0002\u0002\u0002\u0004\u0002"].join("");
 
 
-var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
+const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
-var decisionsToDFA = atn.decisionToState.map( function(ds, index) { return new antlr4.dfa.DFA(ds, index); });
+const decisionsToDFA = atn.decisionToState.map( (ds, index) => new antlr4.dfa.DFA(ds, index) );
 
-function KELLexer(input) {
-	antlr4.Lexer.call(this, input);
-    this._interp = new antlr4.atn.LexerATNSimulator(this, atn, decisionsToDFA, new antlr4.PredictionContextCache());
-    return this;
+export default class KELLexer extends antlr4.Lexer {
+
+    static grammarFileName = "KELLexer.g4";
+    static channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN", "JAVADOC" ];
+	static modeNames = [ "DEFAULT_MODE" ];
+	static literalNames = [ null, "'('", "')'", "'='", "'\"'", "'<'", "'>'", 
+                         "'.'", "','", "';'", "':'", "'{'", "'}'", "'['", 
+                         "']'", "'*'", "'$'", "'&'", "'~'", "'!'", "'-'", 
+                         "'%'", "'+'", "'/'", "'^'", "'|'", "':='", "'!='", 
+                         "'<>'", "'<='", "'=>'", "'>='", "'==='", "'!!='", 
+                         "'IN'", "'OR'", "'NOT'", "'AND'", "'ERA'", "'NULL'", 
+                         "'DIV'", "'TRUE'", "'FALSE'", "'LINK'", "'ECL'", 
+                         "'RETURNS'", "'#OPTION'", "'PERMITS'", "'ENTITY'", 
+                         "'ASSOCIATION'", "'IMPORT'", "'FROM'", "'PACKAGE'", 
+                         "'END'", "'SHELL'", "'FLAT'", "'QUERY'", "'UID'", 
+                         "'FORMAT'", "'MODEL'", "'USE'", "'KELBASE'", "'KELQUERY'", 
+                         "'FDC'", "'FILTER'", "'HINT'", "'GLOBAL'", "'FUNCTION'", 
+                         "'DATASET'", "'OF'", "'SET'", "'ASOF'", "'USING'", 
+                         "'VISUALIZE'", "'ENDVISUALIZE'", "'RESOURCES'", 
+                         "'ENDRESOURCES'" ];
+	static symbolicNames = [ null, "LP", "RP", "EQ", "DQUOTE", "LT", "GT", 
+                          "DOT", "COMMA", "SEMI", "COLON", "LCURL", "RCURL", 
+                          "LSQUARE", "RSQUARE", "STAR", "SIGIL", "AMP", 
+                          "TILDE", "EXCLAIM", "HYPHEN", "MOD", "PLUS", "FSLASH", 
+                          "CARET", "PIPE", "DEFEQ", "NEQ", "LTGT", "LARROW", 
+                          "RARROW", "GTEQ", "LEQ", "NNEQ", "IN", "OR", "NOT", 
+                          "AND", "ERA", "NULL", "DIV", "TRUE", "FALSE", 
+                          "LINK", "ECL", "RETURNS", "OPTION", "PERMITS", 
+                          "ENTITY", "ASSOCIATION", "IMPORT", "FROM", "PACKAGE", 
+                          "END", "SHELL", "FLAT", "QUERY", "UID", "FORMAT", 
+                          "MODEL", "USE", "KELBASE", "KELQUERY", "FDC", 
+                          "FILTER", "HINT", "GLOBAL", "FUNCTION", "DATASET", 
+                          "OF", "SET", "ASOF", "USING", "VIS", "ENDVIS", 
+                          "RESOURCES", "ENDRESOURCES", "DOUBLESTRING", "SID", 
+                          "SINT", "PID", "PSID", "ID", "INT", "HEXINT", 
+                          "BININT", "REAL", "STR", "TYPDCONST", "ESC", "SEP_COMMENT", 
+                          "ML_COMMENT", "MLMS_COMMENT", "JAVADOC_OPEN", 
+                          "EMPTY_JAVADOC", "NEWLINE", "COMMENT", "WS", "BAD_BIN", 
+                          "HEX_NO_X", "BAD_HEX", "BAD_MIX", "BAD_REAL_A", 
+                          "BAD_REAL_B", "BAD_REAL_C", "ML_COMMENT_START", 
+                          "MLMS_COMMENT_START", "JD_COMMENT_START" ];
+	static ruleNames = [ "ESCAPED_DQUOTE", "LOWER", "LETTER", "DIGIT", "HEXDIGIT", 
+                      "OCTDIGIT", "BINDIGIT", "ESCCHAR", "LP", "RP", "EQ", 
+                      "DQUOTE", "LT", "GT", "DOT", "COMMA", "SEMI", "COLON", 
+                      "LCURL", "RCURL", "LSQUARE", "RSQUARE", "STAR", "SIGIL", 
+                      "AMP", "TILDE", "EXCLAIM", "HYPHEN", "MOD", "PLUS", 
+                      "FSLASH", "CARET", "PIPE", "DEFEQ", "NEQ", "LTGT", 
+                      "LARROW", "RARROW", "GTEQ", "LEQ", "NNEQ", "IN", "OR", 
+                      "NOT", "AND", "ERA", "NULL", "DIV", "TRUE", "FALSE", 
+                      "LINK", "ECL", "RETURNS", "OPTION", "PERMITS", "ENTITY", 
+                      "ASSOCIATION", "IMPORT", "FROM", "PACKAGE", "END", 
+                      "SHELL", "FLAT", "QUERY", "UID", "FORMAT", "MODEL", 
+                      "USE", "KELBASE", "KELQUERY", "FDC", "FILTER", "HINT", 
+                      "GLOBAL", "FUNCTION", "DATASET", "OF", "SET", "ASOF", 
+                      "USING", "VIS", "ENDVIS", "RESOURCES", "ENDRESOURCES", 
+                      "DOUBLESTRING", "SID", "SINT", "PID", "PSID", "ID", 
+                      "INT", "HEXINT", "BININT", "REAL", "STR", "TYPDCONST", 
+                      "ESC", "SEP_COMMENT", "ML_COMMENT", "MLMS_COMMENT", 
+                      "JAVADOC_OPEN", "EMPTY_JAVADOC", "NEWLINE", "COMMENT", 
+                      "WS", "BAD_BIN", "HEX_NO_X", "BAD_HEX", "BAD_MIX", 
+                      "BAD_REAL_A", "BAD_REAL_B", "BAD_REAL_C", "ML_COMMENT_START", 
+                      "MLMS_COMMENT_START", "JD_COMMENT_START" ];
+
+    constructor(input) {
+        super(input)
+        this._interp = new antlr4.atn.LexerATNSimulator(this, atn, decisionsToDFA, new antlr4.PredictionContextCache());
+    }
+
+    get atn() {
+        return atn;
+    }
 }
-
-KELLexer.prototype = Object.create(antlr4.Lexer.prototype);
-KELLexer.prototype.constructor = KELLexer;
-
-Object.defineProperty(KELLexer.prototype, "atn", {
-        get : function() {
-                return atn;
-        }
-});
 
 KELLexer.EOF = antlr4.Token.EOF;
 KELLexer.LP = 1;
@@ -850,86 +909,5 @@ KELLexer.JD_COMMENT_START = 107;
 
 KELLexer.JAVADOC = 2;
 
-KELLexer.prototype.channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN", "JAVADOC" ];
 
-KELLexer.prototype.modeNames = [ "DEFAULT_MODE" ];
-
-KELLexer.prototype.literalNames = [ null, "'('", "')'", "'='", "'\"'", "'<'", 
-                                    "'>'", "'.'", "','", "';'", "':'", "'{'", 
-                                    "'}'", "'['", "']'", "'*'", "'$'", "'&'", 
-                                    "'~'", "'!'", "'-'", "'%'", "'+'", "'/'", 
-                                    "'^'", "'|'", "':='", "'!='", "'<>'", 
-                                    "'<='", "'=>'", "'>='", "'==='", "'!!='", 
-                                    "'IN'", "'OR'", "'NOT'", "'AND'", "'ERA'", 
-                                    "'NULL'", "'DIV'", "'TRUE'", "'FALSE'", 
-                                    "'LINK'", "'ECL'", "'RETURNS'", "'#OPTION'", 
-                                    "'PERMITS'", "'ENTITY'", "'ASSOCIATION'", 
-                                    "'IMPORT'", "'FROM'", "'PACKAGE'", "'END'", 
-                                    "'SHELL'", "'FLAT'", "'QUERY'", "'UID'", 
-                                    "'FORMAT'", "'MODEL'", "'USE'", "'KELBASE'", 
-                                    "'KELQUERY'", "'FDC'", "'FILTER'", "'HINT'", 
-                                    "'GLOBAL'", "'FUNCTION'", "'DATASET'", 
-                                    "'OF'", "'SET'", "'ASOF'", "'USING'", 
-                                    "'VISUALIZE'", "'ENDVISUALIZE'", "'RESOURCES'", 
-                                    "'ENDRESOURCES'" ];
-
-KELLexer.prototype.symbolicNames = [ null, "LP", "RP", "EQ", "DQUOTE", "LT", 
-                                     "GT", "DOT", "COMMA", "SEMI", "COLON", 
-                                     "LCURL", "RCURL", "LSQUARE", "RSQUARE", 
-                                     "STAR", "SIGIL", "AMP", "TILDE", "EXCLAIM", 
-                                     "HYPHEN", "MOD", "PLUS", "FSLASH", 
-                                     "CARET", "PIPE", "DEFEQ", "NEQ", "LTGT", 
-                                     "LARROW", "RARROW", "GTEQ", "LEQ", 
-                                     "NNEQ", "IN", "OR", "NOT", "AND", "ERA", 
-                                     "NULL", "DIV", "TRUE", "FALSE", "LINK", 
-                                     "ECL", "RETURNS", "OPTION", "PERMITS", 
-                                     "ENTITY", "ASSOCIATION", "IMPORT", 
-                                     "FROM", "PACKAGE", "END", "SHELL", 
-                                     "FLAT", "QUERY", "UID", "FORMAT", "MODEL", 
-                                     "USE", "KELBASE", "KELQUERY", "FDC", 
-                                     "FILTER", "HINT", "GLOBAL", "FUNCTION", 
-                                     "DATASET", "OF", "SET", "ASOF", "USING", 
-                                     "VIS", "ENDVIS", "RESOURCES", "ENDRESOURCES", 
-                                     "DOUBLESTRING", "SID", "SINT", "PID", 
-                                     "PSID", "ID", "INT", "HEXINT", "BININT", 
-                                     "REAL", "STR", "TYPDCONST", "ESC", 
-                                     "SEP_COMMENT", "ML_COMMENT", "MLMS_COMMENT", 
-                                     "JAVADOC_OPEN", "EMPTY_JAVADOC", "NEWLINE", 
-                                     "COMMENT", "WS", "BAD_BIN", "HEX_NO_X", 
-                                     "BAD_HEX", "BAD_MIX", "BAD_REAL_A", 
-                                     "BAD_REAL_B", "BAD_REAL_C", "ML_COMMENT_START", 
-                                     "MLMS_COMMENT_START", "JD_COMMENT_START" ];
-
-KELLexer.prototype.ruleNames = [ "ESCAPED_DQUOTE", "LOWER", "LETTER", "DIGIT", 
-                                 "HEXDIGIT", "OCTDIGIT", "BINDIGIT", "ESCCHAR", 
-                                 "LP", "RP", "EQ", "DQUOTE", "LT", "GT", 
-                                 "DOT", "COMMA", "SEMI", "COLON", "LCURL", 
-                                 "RCURL", "LSQUARE", "RSQUARE", "STAR", 
-                                 "SIGIL", "AMP", "TILDE", "EXCLAIM", "HYPHEN", 
-                                 "MOD", "PLUS", "FSLASH", "CARET", "PIPE", 
-                                 "DEFEQ", "NEQ", "LTGT", "LARROW", "RARROW", 
-                                 "GTEQ", "LEQ", "NNEQ", "IN", "OR", "NOT", 
-                                 "AND", "ERA", "NULL", "DIV", "TRUE", "FALSE", 
-                                 "LINK", "ECL", "RETURNS", "OPTION", "PERMITS", 
-                                 "ENTITY", "ASSOCIATION", "IMPORT", "FROM", 
-                                 "PACKAGE", "END", "SHELL", "FLAT", "QUERY", 
-                                 "UID", "FORMAT", "MODEL", "USE", "KELBASE", 
-                                 "KELQUERY", "FDC", "FILTER", "HINT", "GLOBAL", 
-                                 "FUNCTION", "DATASET", "OF", "SET", "ASOF", 
-                                 "USING", "VIS", "ENDVIS", "RESOURCES", 
-                                 "ENDRESOURCES", "DOUBLESTRING", "SID", 
-                                 "SINT", "PID", "PSID", "ID", "INT", "HEXINT", 
-                                 "BININT", "REAL", "STR", "TYPDCONST", "ESC", 
-                                 "SEP_COMMENT", "ML_COMMENT", "MLMS_COMMENT", 
-                                 "JAVADOC_OPEN", "EMPTY_JAVADOC", "NEWLINE", 
-                                 "COMMENT", "WS", "BAD_BIN", "HEX_NO_X", 
-                                 "BAD_HEX", "BAD_MIX", "BAD_REAL_A", "BAD_REAL_B", 
-                                 "BAD_REAL_C", "ML_COMMENT_START", "MLMS_COMMENT_START", 
-                                 "JD_COMMENT_START" ];
-
-KELLexer.prototype.grammarFileName = "KELLexer.g4";
-
-
-
-exports.KELLexer = KELLexer;
 

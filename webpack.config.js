@@ -28,17 +28,14 @@ const config = [{
     },
 
     module: {
-        rules: [
-            {
-                test: /\.js$/,
-                use: ["source-map-loader"],
-                enforce: "pre"
-            }
-        ]
+        rules: [{
+            test: /\.js$/,
+            use: ["source-map-loader"],
+            enforce: "pre"
+        }]
     },
 
-    resolve: {
-    },
+    resolve: {},
 
     plugins: []
 }, {
@@ -62,21 +59,17 @@ const config = [{
     },
 
     module: {
-        rules: [
-            {
-                test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
-            },
-            {
-                test: /\.js$/,
-                use: ["source-map-loader"],
-                enforce: "pre"
-            }
-        ]
+        rules: [{
+            test: /\.css$/i,
+            use: ['style-loader', 'css-loader'],
+        }, {
+            test: /\.js$/,
+            use: ["source-map-loader"],
+            enforce: "pre"
+        }]
     },
 
-    resolve: {
-    },
+    resolve: {},
 
     plugins: []
 }];
