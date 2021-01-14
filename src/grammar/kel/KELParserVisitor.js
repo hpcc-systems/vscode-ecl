@@ -1,826 +1,820 @@
-// Generated from ./KELParser.g4 by ANTLR 4.7.2
+// Generated from ./KELParser.g4 by ANTLR 4.9.1
 // jshint ignore: start
-var antlr4 = require('antlr4/index');
+import antlr4 from 'antlr4';
 
 // This class defines a complete generic visitor for a parse tree produced by KELParser.
 
-function KELParserVisitor() {
-	antlr4.tree.ParseTreeVisitor.call(this);
-	return this;
+export default class KELParserVisitor extends antlr4.tree.ParseTreeVisitor {
+
+	// Visit a parse tree produced by KELParser#program.
+	visitProgram(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#annotation.
+	visitAnnotation(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#statement.
+	visitStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#optionBool.
+	visitOptionBool(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#optionStr.
+	visitOptionStr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#optionInt.
+	visitOptionInt(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#eraDeclaration.
+	visitEraDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#epoch.
+	visitEpoch(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#permitsDeclaration.
+	visitPermitsDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#permit.
+	visitPermit(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#simpleImport.
+	visitSimpleImport(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#packageImport.
+	visitPackageImport(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#inlinePackage.
+	visitInlinePackage(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#outoflinePackage.
+	visitOutoflinePackage(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#packageDeclaration.
+	visitPackageDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#packageStatement.
+	visitPackageStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#packageExportDeclaration.
+	visitPackageExportDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#entityDeclaration.
+	visitEntityDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#entityProperty.
+	visitEntityProperty(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#fieldMapping.
+	visitFieldMapping(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#fileType.
+	visitFileType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#mappingElement.
+	visitMappingElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#nullSpec.
+	visitNullSpec(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#formatSpec.
+	visitFormatSpec(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#compositeIdSpec.
+	visitCompositeIdSpec(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#complexModel.
+	visitComplexModel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#singleRowModel.
+	visitSingleRowModel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#singleValueSubModel.
+	visitSingleValueSubModel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#remainderSubModel.
+	visitRemainderSubModel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#explicitSubModel.
+	visitExplicitSubModel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#submodelId.
+	visitSubmodelId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#useDeclaration.
+	visitUseDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#useKelBaseDeclaration.
+	visitUseKelBaseDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#useKelQueryDeclaration.
+	visitUseKelQueryDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#useElement.
+	visitUseElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#useFileType.
+	visitUseFileType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#useClause.
+	visitUseClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#useClauseElement.
+	visitUseClauseElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#useClauseFileType.
+	visitUseClauseFileType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#nestedEntityMapping.
+	visitNestedEntityMapping(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#entityMapping.
+	visitEntityMapping(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#normalMappingOverride.
+	visitNormalMappingOverride(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#constantMappingOverride.
+	visitConstantMappingOverride(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#dotId.
+	visitDotId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#permitsClause.
+	visitPermitsClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#variablePermits.
+	visitVariablePermits(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#constantPermits.
+	visitConstantPermits(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#hintsClause.
+	visitHintsClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#logicPropertyStatement.
+	visitLogicPropertyStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#constantDeclStatement.
+	visitConstantDeclStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#entityGeneratorStatement.
+	visitEntityGeneratorStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#logicPredicate.
+	visitLogicPredicate(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#logicProductions.
+	visitLogicProductions(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#logicProduction.
+	visitLogicProduction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#entityProductions.
+	visitEntityProductions(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#entityProduction.
+	visitEntityProduction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#functionStatement.
+	visitFunctionStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#fparams.
+	visitFparams(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#fparam.
+	visitFparam(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#functionBody.
+	visitFunctionBody(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#queryDeclaration.
+	visitQueryDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#qparams.
+	visitQparams(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#qparam.
+	visitQparam(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#paramTypeId.
+	visitParamTypeId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#simpleTypeId.
+	visitSimpleTypeId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#asof.
+	visitAsof(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#using.
+	visitUsing(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#shellDeclaration.
+	visitShellDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#visual_section.
+	visitVisual_section(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#resource_section.
+	visitResource_section(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#expression.
+	visitExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#booleanDisjunction.
+	visitBooleanDisjunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#booleanConjunction.
+	visitBooleanConjunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#booleanTerm.
+	visitBooleanTerm(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#booleanAtom.
+	visitBooleanAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#valueExpression.
+	visitValueExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#valueTerm.
+	visitValueTerm(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#unaryValueFactor.
+	visitUnaryValueFactor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#propValueFactor.
+	visitPropValueFactor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#scopedValueFactor.
+	visitScopedValueFactor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#constValueFactor.
+	visitConstValueFactor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#nestedValueFactor.
+	visitNestedValueFactor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#setValueFactor.
+	visitSetValueFactor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#queryOpValueAtom.
+	visitQueryOpValueAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#projValueAtom.
+	visitProjValueAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#patternModelAtom.
+	visitPatternModelAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#idValueAtom.
+	visitIdValueAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#autoMatchValueAtom.
+	visitAutoMatchValueAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#linkAtom.
+	visitLinkAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#queryFuncOp.
+	visitQueryFuncOp(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#funcOrFilter.
+	visitFuncOrFilter(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#pair.
+	visitPair(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#linkExp.
+	visitLinkExp(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#linkSpec.
+	visitLinkSpec(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#linkDegree.
+	visitLinkDegree(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#entityProjection.
+	visitEntityProjection(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#namedExpression.
+	visitNamedExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#patternModel.
+	visitPatternModel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#singleValuedPatternSubmodel.
+	visitSingleValuedPatternSubmodel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#multiValuedPatternSubmodel.
+	visitMultiValuedPatternSubmodel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#fieldSelector.
+	visitFieldSelector(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#selfScopeExpression.
+	visitSelfScopeExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#outerScopeExpression.
+	visitOuterScopeExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#explicitScopeExpression.
+	visitExplicitScopeExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#tableProperty.
+	visitTableProperty(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#func_id.
+	visitFunc_id(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#qualifiedId.
+	visitQualifiedId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#leadingId.
+	visitLeadingId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#fieldId.
+	visitFieldId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#tablePropId.
+	visitTablePropId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#propertyId.
+	visitPropertyId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#nonSetConstant.
+	visitNonSetConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#emptySetConstant.
+	visitEmptySetConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#stringConstant.
+	visitStringConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#generalRealConstant.
+	visitGeneralRealConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#trueConstant.
+	visitTrueConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#falseConstant.
+	visitFalseConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#typedConstant.
+	visitTypedConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#generalIntConstant.
+	visitGeneralIntConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#decIntConstant.
+	visitDecIntConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#negIntConstant.
+	visitNegIntConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#hexConstant.
+	visitHexConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#binConstant.
+	visitBinConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#badHexConstant.
+	visitBadHexConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#badBinConstant.
+	visitBadBinConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#noFlagHexConstant.
+	visitNoFlagHexConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#badMixConstant.
+	visitBadMixConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#realConst.
+	visitRealConst(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#badRealConst.
+	visitBadRealConst(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#eclExpression.
+	visitEclExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#eclBody.
+	visitEclBody(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#eclFragment.
+	visitEclFragment(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#eclImportList.
+	visitEclImportList(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#eclImportItem.
+	visitEclImportItem(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#returnTypeId.
+	visitReturnTypeId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+
 }
-
-KELParserVisitor.prototype = Object.create(antlr4.tree.ParseTreeVisitor.prototype);
-KELParserVisitor.prototype.constructor = KELParserVisitor;
-
-// Visit a parse tree produced by KELParser#program.
-KELParserVisitor.prototype.visitProgram = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#annotation.
-KELParserVisitor.prototype.visitAnnotation = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#statement.
-KELParserVisitor.prototype.visitStatement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#optionBool.
-KELParserVisitor.prototype.visitOptionBool = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#optionStr.
-KELParserVisitor.prototype.visitOptionStr = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#optionInt.
-KELParserVisitor.prototype.visitOptionInt = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#eraDeclaration.
-KELParserVisitor.prototype.visitEraDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#epoch.
-KELParserVisitor.prototype.visitEpoch = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#permitsDeclaration.
-KELParserVisitor.prototype.visitPermitsDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#permit.
-KELParserVisitor.prototype.visitPermit = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#simpleImport.
-KELParserVisitor.prototype.visitSimpleImport = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#packageImport.
-KELParserVisitor.prototype.visitPackageImport = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#inlinePackage.
-KELParserVisitor.prototype.visitInlinePackage = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#outoflinePackage.
-KELParserVisitor.prototype.visitOutoflinePackage = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#packageDeclaration.
-KELParserVisitor.prototype.visitPackageDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#packageStatement.
-KELParserVisitor.prototype.visitPackageStatement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#packageExportDeclaration.
-KELParserVisitor.prototype.visitPackageExportDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#entityDeclaration.
-KELParserVisitor.prototype.visitEntityDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#entityProperty.
-KELParserVisitor.prototype.visitEntityProperty = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#fieldMapping.
-KELParserVisitor.prototype.visitFieldMapping = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#fileType.
-KELParserVisitor.prototype.visitFileType = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#mappingElement.
-KELParserVisitor.prototype.visitMappingElement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#nullSpec.
-KELParserVisitor.prototype.visitNullSpec = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#formatSpec.
-KELParserVisitor.prototype.visitFormatSpec = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#compositeIdSpec.
-KELParserVisitor.prototype.visitCompositeIdSpec = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#complexModel.
-KELParserVisitor.prototype.visitComplexModel = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#singleRowModel.
-KELParserVisitor.prototype.visitSingleRowModel = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#singleValueSubModel.
-KELParserVisitor.prototype.visitSingleValueSubModel = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#remainderSubModel.
-KELParserVisitor.prototype.visitRemainderSubModel = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#explicitSubModel.
-KELParserVisitor.prototype.visitExplicitSubModel = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#submodelId.
-KELParserVisitor.prototype.visitSubmodelId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#useDeclaration.
-KELParserVisitor.prototype.visitUseDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#useKelBaseDeclaration.
-KELParserVisitor.prototype.visitUseKelBaseDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#useKelQueryDeclaration.
-KELParserVisitor.prototype.visitUseKelQueryDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#useElement.
-KELParserVisitor.prototype.visitUseElement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#useFileType.
-KELParserVisitor.prototype.visitUseFileType = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#useClause.
-KELParserVisitor.prototype.visitUseClause = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#useClauseElement.
-KELParserVisitor.prototype.visitUseClauseElement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#useClauseFileType.
-KELParserVisitor.prototype.visitUseClauseFileType = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#nestedEntityMapping.
-KELParserVisitor.prototype.visitNestedEntityMapping = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#entityMapping.
-KELParserVisitor.prototype.visitEntityMapping = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#normalMappingOverride.
-KELParserVisitor.prototype.visitNormalMappingOverride = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#constantMappingOverride.
-KELParserVisitor.prototype.visitConstantMappingOverride = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#dotId.
-KELParserVisitor.prototype.visitDotId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#permitsClause.
-KELParserVisitor.prototype.visitPermitsClause = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#variablePermits.
-KELParserVisitor.prototype.visitVariablePermits = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#constantPermits.
-KELParserVisitor.prototype.visitConstantPermits = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#hintsClause.
-KELParserVisitor.prototype.visitHintsClause = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#logicPropertyStatement.
-KELParserVisitor.prototype.visitLogicPropertyStatement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#constantDeclStatement.
-KELParserVisitor.prototype.visitConstantDeclStatement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#entityGeneratorStatement.
-KELParserVisitor.prototype.visitEntityGeneratorStatement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#logicPredicate.
-KELParserVisitor.prototype.visitLogicPredicate = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#logicProductions.
-KELParserVisitor.prototype.visitLogicProductions = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#logicProduction.
-KELParserVisitor.prototype.visitLogicProduction = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#entityProductions.
-KELParserVisitor.prototype.visitEntityProductions = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#entityProduction.
-KELParserVisitor.prototype.visitEntityProduction = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#functionStatement.
-KELParserVisitor.prototype.visitFunctionStatement = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#fparams.
-KELParserVisitor.prototype.visitFparams = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#fparam.
-KELParserVisitor.prototype.visitFparam = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#functionBody.
-KELParserVisitor.prototype.visitFunctionBody = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#queryDeclaration.
-KELParserVisitor.prototype.visitQueryDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#qparams.
-KELParserVisitor.prototype.visitQparams = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#qparam.
-KELParserVisitor.prototype.visitQparam = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#paramTypeId.
-KELParserVisitor.prototype.visitParamTypeId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#simpleTypeId.
-KELParserVisitor.prototype.visitSimpleTypeId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#asof.
-KELParserVisitor.prototype.visitAsof = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#using.
-KELParserVisitor.prototype.visitUsing = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#shellDeclaration.
-KELParserVisitor.prototype.visitShellDeclaration = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#visual_section.
-KELParserVisitor.prototype.visitVisual_section = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#resource_section.
-KELParserVisitor.prototype.visitResource_section = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#expression.
-KELParserVisitor.prototype.visitExpression = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#booleanDisjunction.
-KELParserVisitor.prototype.visitBooleanDisjunction = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#booleanConjunction.
-KELParserVisitor.prototype.visitBooleanConjunction = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#booleanTerm.
-KELParserVisitor.prototype.visitBooleanTerm = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#booleanAtom.
-KELParserVisitor.prototype.visitBooleanAtom = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#valueExpression.
-KELParserVisitor.prototype.visitValueExpression = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#valueTerm.
-KELParserVisitor.prototype.visitValueTerm = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#unaryValueFactor.
-KELParserVisitor.prototype.visitUnaryValueFactor = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#propValueFactor.
-KELParserVisitor.prototype.visitPropValueFactor = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#scopedValueFactor.
-KELParserVisitor.prototype.visitScopedValueFactor = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#constValueFactor.
-KELParserVisitor.prototype.visitConstValueFactor = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#nestedValueFactor.
-KELParserVisitor.prototype.visitNestedValueFactor = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#setValueFactor.
-KELParserVisitor.prototype.visitSetValueFactor = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#queryOpValueAtom.
-KELParserVisitor.prototype.visitQueryOpValueAtom = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#projValueAtom.
-KELParserVisitor.prototype.visitProjValueAtom = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#patternModelAtom.
-KELParserVisitor.prototype.visitPatternModelAtom = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#idValueAtom.
-KELParserVisitor.prototype.visitIdValueAtom = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#autoMatchValueAtom.
-KELParserVisitor.prototype.visitAutoMatchValueAtom = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#linkAtom.
-KELParserVisitor.prototype.visitLinkAtom = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#queryFuncOp.
-KELParserVisitor.prototype.visitQueryFuncOp = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#funcOrFilter.
-KELParserVisitor.prototype.visitFuncOrFilter = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#pair.
-KELParserVisitor.prototype.visitPair = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#linkExp.
-KELParserVisitor.prototype.visitLinkExp = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#linkSpec.
-KELParserVisitor.prototype.visitLinkSpec = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#linkDegree.
-KELParserVisitor.prototype.visitLinkDegree = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#entityProjection.
-KELParserVisitor.prototype.visitEntityProjection = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#namedExpression.
-KELParserVisitor.prototype.visitNamedExpression = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#patternModel.
-KELParserVisitor.prototype.visitPatternModel = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#singleValuedPatternSubmodel.
-KELParserVisitor.prototype.visitSingleValuedPatternSubmodel = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#multiValuedPatternSubmodel.
-KELParserVisitor.prototype.visitMultiValuedPatternSubmodel = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#fieldSelector.
-KELParserVisitor.prototype.visitFieldSelector = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#selfScopeExpression.
-KELParserVisitor.prototype.visitSelfScopeExpression = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#outerScopeExpression.
-KELParserVisitor.prototype.visitOuterScopeExpression = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#explicitScopeExpression.
-KELParserVisitor.prototype.visitExplicitScopeExpression = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#tableProperty.
-KELParserVisitor.prototype.visitTableProperty = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#func_id.
-KELParserVisitor.prototype.visitFunc_id = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#qualifiedId.
-KELParserVisitor.prototype.visitQualifiedId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#leadingId.
-KELParserVisitor.prototype.visitLeadingId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#fieldId.
-KELParserVisitor.prototype.visitFieldId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#tablePropId.
-KELParserVisitor.prototype.visitTablePropId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#propertyId.
-KELParserVisitor.prototype.visitPropertyId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#nonSetConstant.
-KELParserVisitor.prototype.visitNonSetConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#emptySetConstant.
-KELParserVisitor.prototype.visitEmptySetConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#stringConstant.
-KELParserVisitor.prototype.visitStringConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#generalRealConstant.
-KELParserVisitor.prototype.visitGeneralRealConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#trueConstant.
-KELParserVisitor.prototype.visitTrueConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#falseConstant.
-KELParserVisitor.prototype.visitFalseConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#typedConstant.
-KELParserVisitor.prototype.visitTypedConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#generalIntConstant.
-KELParserVisitor.prototype.visitGeneralIntConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#decIntConstant.
-KELParserVisitor.prototype.visitDecIntConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#negIntConstant.
-KELParserVisitor.prototype.visitNegIntConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#hexConstant.
-KELParserVisitor.prototype.visitHexConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#binConstant.
-KELParserVisitor.prototype.visitBinConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#badHexConstant.
-KELParserVisitor.prototype.visitBadHexConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#badBinConstant.
-KELParserVisitor.prototype.visitBadBinConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#noFlagHexConstant.
-KELParserVisitor.prototype.visitNoFlagHexConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#badMixConstant.
-KELParserVisitor.prototype.visitBadMixConstant = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#realConst.
-KELParserVisitor.prototype.visitRealConst = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#badRealConst.
-KELParserVisitor.prototype.visitBadRealConst = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#eclExpression.
-KELParserVisitor.prototype.visitEclExpression = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#eclBody.
-KELParserVisitor.prototype.visitEclBody = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#eclFragment.
-KELParserVisitor.prototype.visitEclFragment = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#eclImportList.
-KELParserVisitor.prototype.visitEclImportList = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#eclImportItem.
-KELParserVisitor.prototype.visitEclImportItem = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-// Visit a parse tree produced by KELParser#returnTypeId.
-KELParserVisitor.prototype.visitReturnTypeId = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
-
-exports.KELParserVisitor = KELParserVisitor;

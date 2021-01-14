@@ -1,1230 +1,1224 @@
-// Generated from ./KELParser.g4 by ANTLR 4.7.2
+// Generated from ./KELParser.g4 by ANTLR 4.9.1
 // jshint ignore: start
-var antlr4 = require('antlr4/index');
+import antlr4 from 'antlr4';
 
 // This class defines a complete listener for a parse tree produced by KELParser.
-function KELParserListener() {
-	antlr4.tree.ParseTreeListener.call(this);
-	return this;
+export default class KELParserListener extends antlr4.tree.ParseTreeListener {
+
+	// Enter a parse tree produced by KELParser#program.
+	enterProgram(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#program.
+	exitProgram(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#annotation.
+	enterAnnotation(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#annotation.
+	exitAnnotation(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#statement.
+	enterStatement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#statement.
+	exitStatement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#optionBool.
+	enterOptionBool(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#optionBool.
+	exitOptionBool(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#optionStr.
+	enterOptionStr(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#optionStr.
+	exitOptionStr(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#optionInt.
+	enterOptionInt(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#optionInt.
+	exitOptionInt(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#eraDeclaration.
+	enterEraDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#eraDeclaration.
+	exitEraDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#epoch.
+	enterEpoch(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#epoch.
+	exitEpoch(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#permitsDeclaration.
+	enterPermitsDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#permitsDeclaration.
+	exitPermitsDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#permit.
+	enterPermit(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#permit.
+	exitPermit(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#simpleImport.
+	enterSimpleImport(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#simpleImport.
+	exitSimpleImport(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#packageImport.
+	enterPackageImport(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#packageImport.
+	exitPackageImport(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#inlinePackage.
+	enterInlinePackage(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#inlinePackage.
+	exitInlinePackage(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#outoflinePackage.
+	enterOutoflinePackage(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#outoflinePackage.
+	exitOutoflinePackage(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#packageDeclaration.
+	enterPackageDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#packageDeclaration.
+	exitPackageDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#packageStatement.
+	enterPackageStatement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#packageStatement.
+	exitPackageStatement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#packageExportDeclaration.
+	enterPackageExportDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#packageExportDeclaration.
+	exitPackageExportDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#entityDeclaration.
+	enterEntityDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#entityDeclaration.
+	exitEntityDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#entityProperty.
+	enterEntityProperty(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#entityProperty.
+	exitEntityProperty(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#fieldMapping.
+	enterFieldMapping(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#fieldMapping.
+	exitFieldMapping(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#fileType.
+	enterFileType(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#fileType.
+	exitFileType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#mappingElement.
+	enterMappingElement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#mappingElement.
+	exitMappingElement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#nullSpec.
+	enterNullSpec(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#nullSpec.
+	exitNullSpec(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#formatSpec.
+	enterFormatSpec(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#formatSpec.
+	exitFormatSpec(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#compositeIdSpec.
+	enterCompositeIdSpec(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#compositeIdSpec.
+	exitCompositeIdSpec(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#complexModel.
+	enterComplexModel(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#complexModel.
+	exitComplexModel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#singleRowModel.
+	enterSingleRowModel(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#singleRowModel.
+	exitSingleRowModel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#singleValueSubModel.
+	enterSingleValueSubModel(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#singleValueSubModel.
+	exitSingleValueSubModel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#remainderSubModel.
+	enterRemainderSubModel(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#remainderSubModel.
+	exitRemainderSubModel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#explicitSubModel.
+	enterExplicitSubModel(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#explicitSubModel.
+	exitExplicitSubModel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#submodelId.
+	enterSubmodelId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#submodelId.
+	exitSubmodelId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#useDeclaration.
+	enterUseDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#useDeclaration.
+	exitUseDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#useKelBaseDeclaration.
+	enterUseKelBaseDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#useKelBaseDeclaration.
+	exitUseKelBaseDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#useKelQueryDeclaration.
+	enterUseKelQueryDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#useKelQueryDeclaration.
+	exitUseKelQueryDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#useElement.
+	enterUseElement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#useElement.
+	exitUseElement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#useFileType.
+	enterUseFileType(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#useFileType.
+	exitUseFileType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#useClause.
+	enterUseClause(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#useClause.
+	exitUseClause(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#useClauseElement.
+	enterUseClauseElement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#useClauseElement.
+	exitUseClauseElement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#useClauseFileType.
+	enterUseClauseFileType(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#useClauseFileType.
+	exitUseClauseFileType(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#nestedEntityMapping.
+	enterNestedEntityMapping(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#nestedEntityMapping.
+	exitNestedEntityMapping(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#entityMapping.
+	enterEntityMapping(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#entityMapping.
+	exitEntityMapping(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#normalMappingOverride.
+	enterNormalMappingOverride(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#normalMappingOverride.
+	exitNormalMappingOverride(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#constantMappingOverride.
+	enterConstantMappingOverride(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#constantMappingOverride.
+	exitConstantMappingOverride(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#dotId.
+	enterDotId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#dotId.
+	exitDotId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#permitsClause.
+	enterPermitsClause(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#permitsClause.
+	exitPermitsClause(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#variablePermits.
+	enterVariablePermits(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#variablePermits.
+	exitVariablePermits(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#constantPermits.
+	enterConstantPermits(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#constantPermits.
+	exitConstantPermits(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#hintsClause.
+	enterHintsClause(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#hintsClause.
+	exitHintsClause(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#logicPropertyStatement.
+	enterLogicPropertyStatement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#logicPropertyStatement.
+	exitLogicPropertyStatement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#constantDeclStatement.
+	enterConstantDeclStatement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#constantDeclStatement.
+	exitConstantDeclStatement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#entityGeneratorStatement.
+	enterEntityGeneratorStatement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#entityGeneratorStatement.
+	exitEntityGeneratorStatement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#logicPredicate.
+	enterLogicPredicate(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#logicPredicate.
+	exitLogicPredicate(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#logicProductions.
+	enterLogicProductions(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#logicProductions.
+	exitLogicProductions(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#logicProduction.
+	enterLogicProduction(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#logicProduction.
+	exitLogicProduction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#entityProductions.
+	enterEntityProductions(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#entityProductions.
+	exitEntityProductions(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#entityProduction.
+	enterEntityProduction(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#entityProduction.
+	exitEntityProduction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#functionStatement.
+	enterFunctionStatement(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#functionStatement.
+	exitFunctionStatement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#fparams.
+	enterFparams(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#fparams.
+	exitFparams(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#fparam.
+	enterFparam(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#fparam.
+	exitFparam(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#functionBody.
+	enterFunctionBody(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#functionBody.
+	exitFunctionBody(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#queryDeclaration.
+	enterQueryDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#queryDeclaration.
+	exitQueryDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#qparams.
+	enterQparams(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#qparams.
+	exitQparams(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#qparam.
+	enterQparam(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#qparam.
+	exitQparam(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#paramTypeId.
+	enterParamTypeId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#paramTypeId.
+	exitParamTypeId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#simpleTypeId.
+	enterSimpleTypeId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#simpleTypeId.
+	exitSimpleTypeId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#asof.
+	enterAsof(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#asof.
+	exitAsof(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#using.
+	enterUsing(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#using.
+	exitUsing(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#shellDeclaration.
+	enterShellDeclaration(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#shellDeclaration.
+	exitShellDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#visual_section.
+	enterVisual_section(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#visual_section.
+	exitVisual_section(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#resource_section.
+	enterResource_section(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#resource_section.
+	exitResource_section(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#expression.
+	enterExpression(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#expression.
+	exitExpression(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#booleanDisjunction.
+	enterBooleanDisjunction(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#booleanDisjunction.
+	exitBooleanDisjunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#booleanConjunction.
+	enterBooleanConjunction(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#booleanConjunction.
+	exitBooleanConjunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#booleanTerm.
+	enterBooleanTerm(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#booleanTerm.
+	exitBooleanTerm(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#booleanAtom.
+	enterBooleanAtom(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#booleanAtom.
+	exitBooleanAtom(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#valueExpression.
+	enterValueExpression(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#valueExpression.
+	exitValueExpression(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#valueTerm.
+	enterValueTerm(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#valueTerm.
+	exitValueTerm(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#unaryValueFactor.
+	enterUnaryValueFactor(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#unaryValueFactor.
+	exitUnaryValueFactor(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#propValueFactor.
+	enterPropValueFactor(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#propValueFactor.
+	exitPropValueFactor(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#scopedValueFactor.
+	enterScopedValueFactor(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#scopedValueFactor.
+	exitScopedValueFactor(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#constValueFactor.
+	enterConstValueFactor(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#constValueFactor.
+	exitConstValueFactor(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#nestedValueFactor.
+	enterNestedValueFactor(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#nestedValueFactor.
+	exitNestedValueFactor(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#setValueFactor.
+	enterSetValueFactor(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#setValueFactor.
+	exitSetValueFactor(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#queryOpValueAtom.
+	enterQueryOpValueAtom(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#queryOpValueAtom.
+	exitQueryOpValueAtom(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#projValueAtom.
+	enterProjValueAtom(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#projValueAtom.
+	exitProjValueAtom(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#patternModelAtom.
+	enterPatternModelAtom(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#patternModelAtom.
+	exitPatternModelAtom(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#idValueAtom.
+	enterIdValueAtom(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#idValueAtom.
+	exitIdValueAtom(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#autoMatchValueAtom.
+	enterAutoMatchValueAtom(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#autoMatchValueAtom.
+	exitAutoMatchValueAtom(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#linkAtom.
+	enterLinkAtom(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#linkAtom.
+	exitLinkAtom(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#queryFuncOp.
+	enterQueryFuncOp(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#queryFuncOp.
+	exitQueryFuncOp(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#funcOrFilter.
+	enterFuncOrFilter(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#funcOrFilter.
+	exitFuncOrFilter(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#pair.
+	enterPair(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#pair.
+	exitPair(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#linkExp.
+	enterLinkExp(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#linkExp.
+	exitLinkExp(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#linkSpec.
+	enterLinkSpec(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#linkSpec.
+	exitLinkSpec(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#linkDegree.
+	enterLinkDegree(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#linkDegree.
+	exitLinkDegree(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#entityProjection.
+	enterEntityProjection(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#entityProjection.
+	exitEntityProjection(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#namedExpression.
+	enterNamedExpression(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#namedExpression.
+	exitNamedExpression(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#patternModel.
+	enterPatternModel(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#patternModel.
+	exitPatternModel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#singleValuedPatternSubmodel.
+	enterSingleValuedPatternSubmodel(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#singleValuedPatternSubmodel.
+	exitSingleValuedPatternSubmodel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#multiValuedPatternSubmodel.
+	enterMultiValuedPatternSubmodel(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#multiValuedPatternSubmodel.
+	exitMultiValuedPatternSubmodel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#fieldSelector.
+	enterFieldSelector(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#fieldSelector.
+	exitFieldSelector(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#selfScopeExpression.
+	enterSelfScopeExpression(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#selfScopeExpression.
+	exitSelfScopeExpression(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#outerScopeExpression.
+	enterOuterScopeExpression(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#outerScopeExpression.
+	exitOuterScopeExpression(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#explicitScopeExpression.
+	enterExplicitScopeExpression(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#explicitScopeExpression.
+	exitExplicitScopeExpression(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#tableProperty.
+	enterTableProperty(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#tableProperty.
+	exitTableProperty(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#func_id.
+	enterFunc_id(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#func_id.
+	exitFunc_id(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#qualifiedId.
+	enterQualifiedId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#qualifiedId.
+	exitQualifiedId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#leadingId.
+	enterLeadingId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#leadingId.
+	exitLeadingId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#fieldId.
+	enterFieldId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#fieldId.
+	exitFieldId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#tablePropId.
+	enterTablePropId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#tablePropId.
+	exitTablePropId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#propertyId.
+	enterPropertyId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#propertyId.
+	exitPropertyId(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#nonSetConstant.
+	enterNonSetConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#nonSetConstant.
+	exitNonSetConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#emptySetConstant.
+	enterEmptySetConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#emptySetConstant.
+	exitEmptySetConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#stringConstant.
+	enterStringConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#stringConstant.
+	exitStringConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#generalRealConstant.
+	enterGeneralRealConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#generalRealConstant.
+	exitGeneralRealConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#trueConstant.
+	enterTrueConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#trueConstant.
+	exitTrueConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#falseConstant.
+	enterFalseConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#falseConstant.
+	exitFalseConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#typedConstant.
+	enterTypedConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#typedConstant.
+	exitTypedConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#generalIntConstant.
+	enterGeneralIntConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#generalIntConstant.
+	exitGeneralIntConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#decIntConstant.
+	enterDecIntConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#decIntConstant.
+	exitDecIntConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#negIntConstant.
+	enterNegIntConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#negIntConstant.
+	exitNegIntConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#hexConstant.
+	enterHexConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#hexConstant.
+	exitHexConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#binConstant.
+	enterBinConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#binConstant.
+	exitBinConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#badHexConstant.
+	enterBadHexConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#badHexConstant.
+	exitBadHexConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#badBinConstant.
+	enterBadBinConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#badBinConstant.
+	exitBadBinConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#noFlagHexConstant.
+	enterNoFlagHexConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#noFlagHexConstant.
+	exitNoFlagHexConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#badMixConstant.
+	enterBadMixConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#badMixConstant.
+	exitBadMixConstant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#realConst.
+	enterRealConst(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#realConst.
+	exitRealConst(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#badRealConst.
+	enterBadRealConst(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#badRealConst.
+	exitBadRealConst(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#eclExpression.
+	enterEclExpression(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#eclExpression.
+	exitEclExpression(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#eclBody.
+	enterEclBody(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#eclBody.
+	exitEclBody(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#eclFragment.
+	enterEclFragment(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#eclFragment.
+	exitEclFragment(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#eclImportList.
+	enterEclImportList(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#eclImportList.
+	exitEclImportList(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#eclImportItem.
+	enterEclImportItem(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#eclImportItem.
+	exitEclImportItem(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#returnTypeId.
+	enterReturnTypeId(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#returnTypeId.
+	exitReturnTypeId(ctx) {
+	}
+
+
+
 }
-
-KELParserListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
-KELParserListener.prototype.constructor = KELParserListener;
-
-// Enter a parse tree produced by KELParser#program.
-KELParserListener.prototype.enterProgram = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#program.
-KELParserListener.prototype.exitProgram = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#annotation.
-KELParserListener.prototype.enterAnnotation = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#annotation.
-KELParserListener.prototype.exitAnnotation = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#statement.
-KELParserListener.prototype.enterStatement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#statement.
-KELParserListener.prototype.exitStatement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#optionBool.
-KELParserListener.prototype.enterOptionBool = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#optionBool.
-KELParserListener.prototype.exitOptionBool = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#optionStr.
-KELParserListener.prototype.enterOptionStr = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#optionStr.
-KELParserListener.prototype.exitOptionStr = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#optionInt.
-KELParserListener.prototype.enterOptionInt = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#optionInt.
-KELParserListener.prototype.exitOptionInt = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#eraDeclaration.
-KELParserListener.prototype.enterEraDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#eraDeclaration.
-KELParserListener.prototype.exitEraDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#epoch.
-KELParserListener.prototype.enterEpoch = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#epoch.
-KELParserListener.prototype.exitEpoch = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#permitsDeclaration.
-KELParserListener.prototype.enterPermitsDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#permitsDeclaration.
-KELParserListener.prototype.exitPermitsDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#permit.
-KELParserListener.prototype.enterPermit = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#permit.
-KELParserListener.prototype.exitPermit = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#simpleImport.
-KELParserListener.prototype.enterSimpleImport = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#simpleImport.
-KELParserListener.prototype.exitSimpleImport = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#packageImport.
-KELParserListener.prototype.enterPackageImport = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#packageImport.
-KELParserListener.prototype.exitPackageImport = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#inlinePackage.
-KELParserListener.prototype.enterInlinePackage = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#inlinePackage.
-KELParserListener.prototype.exitInlinePackage = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#outoflinePackage.
-KELParserListener.prototype.enterOutoflinePackage = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#outoflinePackage.
-KELParserListener.prototype.exitOutoflinePackage = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#packageDeclaration.
-KELParserListener.prototype.enterPackageDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#packageDeclaration.
-KELParserListener.prototype.exitPackageDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#packageStatement.
-KELParserListener.prototype.enterPackageStatement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#packageStatement.
-KELParserListener.prototype.exitPackageStatement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#packageExportDeclaration.
-KELParserListener.prototype.enterPackageExportDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#packageExportDeclaration.
-KELParserListener.prototype.exitPackageExportDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#entityDeclaration.
-KELParserListener.prototype.enterEntityDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#entityDeclaration.
-KELParserListener.prototype.exitEntityDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#entityProperty.
-KELParserListener.prototype.enterEntityProperty = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#entityProperty.
-KELParserListener.prototype.exitEntityProperty = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#fieldMapping.
-KELParserListener.prototype.enterFieldMapping = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#fieldMapping.
-KELParserListener.prototype.exitFieldMapping = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#fileType.
-KELParserListener.prototype.enterFileType = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#fileType.
-KELParserListener.prototype.exitFileType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#mappingElement.
-KELParserListener.prototype.enterMappingElement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#mappingElement.
-KELParserListener.prototype.exitMappingElement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#nullSpec.
-KELParserListener.prototype.enterNullSpec = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#nullSpec.
-KELParserListener.prototype.exitNullSpec = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#formatSpec.
-KELParserListener.prototype.enterFormatSpec = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#formatSpec.
-KELParserListener.prototype.exitFormatSpec = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#compositeIdSpec.
-KELParserListener.prototype.enterCompositeIdSpec = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#compositeIdSpec.
-KELParserListener.prototype.exitCompositeIdSpec = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#complexModel.
-KELParserListener.prototype.enterComplexModel = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#complexModel.
-KELParserListener.prototype.exitComplexModel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#singleRowModel.
-KELParserListener.prototype.enterSingleRowModel = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#singleRowModel.
-KELParserListener.prototype.exitSingleRowModel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#singleValueSubModel.
-KELParserListener.prototype.enterSingleValueSubModel = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#singleValueSubModel.
-KELParserListener.prototype.exitSingleValueSubModel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#remainderSubModel.
-KELParserListener.prototype.enterRemainderSubModel = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#remainderSubModel.
-KELParserListener.prototype.exitRemainderSubModel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#explicitSubModel.
-KELParserListener.prototype.enterExplicitSubModel = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#explicitSubModel.
-KELParserListener.prototype.exitExplicitSubModel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#submodelId.
-KELParserListener.prototype.enterSubmodelId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#submodelId.
-KELParserListener.prototype.exitSubmodelId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#useDeclaration.
-KELParserListener.prototype.enterUseDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#useDeclaration.
-KELParserListener.prototype.exitUseDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#useKelBaseDeclaration.
-KELParserListener.prototype.enterUseKelBaseDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#useKelBaseDeclaration.
-KELParserListener.prototype.exitUseKelBaseDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#useKelQueryDeclaration.
-KELParserListener.prototype.enterUseKelQueryDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#useKelQueryDeclaration.
-KELParserListener.prototype.exitUseKelQueryDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#useElement.
-KELParserListener.prototype.enterUseElement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#useElement.
-KELParserListener.prototype.exitUseElement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#useFileType.
-KELParserListener.prototype.enterUseFileType = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#useFileType.
-KELParserListener.prototype.exitUseFileType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#useClause.
-KELParserListener.prototype.enterUseClause = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#useClause.
-KELParserListener.prototype.exitUseClause = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#useClauseElement.
-KELParserListener.prototype.enterUseClauseElement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#useClauseElement.
-KELParserListener.prototype.exitUseClauseElement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#useClauseFileType.
-KELParserListener.prototype.enterUseClauseFileType = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#useClauseFileType.
-KELParserListener.prototype.exitUseClauseFileType = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#nestedEntityMapping.
-KELParserListener.prototype.enterNestedEntityMapping = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#nestedEntityMapping.
-KELParserListener.prototype.exitNestedEntityMapping = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#entityMapping.
-KELParserListener.prototype.enterEntityMapping = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#entityMapping.
-KELParserListener.prototype.exitEntityMapping = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#normalMappingOverride.
-KELParserListener.prototype.enterNormalMappingOverride = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#normalMappingOverride.
-KELParserListener.prototype.exitNormalMappingOverride = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#constantMappingOverride.
-KELParserListener.prototype.enterConstantMappingOverride = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#constantMappingOverride.
-KELParserListener.prototype.exitConstantMappingOverride = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#dotId.
-KELParserListener.prototype.enterDotId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#dotId.
-KELParserListener.prototype.exitDotId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#permitsClause.
-KELParserListener.prototype.enterPermitsClause = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#permitsClause.
-KELParserListener.prototype.exitPermitsClause = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#variablePermits.
-KELParserListener.prototype.enterVariablePermits = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#variablePermits.
-KELParserListener.prototype.exitVariablePermits = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#constantPermits.
-KELParserListener.prototype.enterConstantPermits = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#constantPermits.
-KELParserListener.prototype.exitConstantPermits = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#hintsClause.
-KELParserListener.prototype.enterHintsClause = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#hintsClause.
-KELParserListener.prototype.exitHintsClause = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#logicPropertyStatement.
-KELParserListener.prototype.enterLogicPropertyStatement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#logicPropertyStatement.
-KELParserListener.prototype.exitLogicPropertyStatement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#constantDeclStatement.
-KELParserListener.prototype.enterConstantDeclStatement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#constantDeclStatement.
-KELParserListener.prototype.exitConstantDeclStatement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#entityGeneratorStatement.
-KELParserListener.prototype.enterEntityGeneratorStatement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#entityGeneratorStatement.
-KELParserListener.prototype.exitEntityGeneratorStatement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#logicPredicate.
-KELParserListener.prototype.enterLogicPredicate = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#logicPredicate.
-KELParserListener.prototype.exitLogicPredicate = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#logicProductions.
-KELParserListener.prototype.enterLogicProductions = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#logicProductions.
-KELParserListener.prototype.exitLogicProductions = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#logicProduction.
-KELParserListener.prototype.enterLogicProduction = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#logicProduction.
-KELParserListener.prototype.exitLogicProduction = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#entityProductions.
-KELParserListener.prototype.enterEntityProductions = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#entityProductions.
-KELParserListener.prototype.exitEntityProductions = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#entityProduction.
-KELParserListener.prototype.enterEntityProduction = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#entityProduction.
-KELParserListener.prototype.exitEntityProduction = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#functionStatement.
-KELParserListener.prototype.enterFunctionStatement = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#functionStatement.
-KELParserListener.prototype.exitFunctionStatement = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#fparams.
-KELParserListener.prototype.enterFparams = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#fparams.
-KELParserListener.prototype.exitFparams = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#fparam.
-KELParserListener.prototype.enterFparam = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#fparam.
-KELParserListener.prototype.exitFparam = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#functionBody.
-KELParserListener.prototype.enterFunctionBody = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#functionBody.
-KELParserListener.prototype.exitFunctionBody = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#queryDeclaration.
-KELParserListener.prototype.enterQueryDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#queryDeclaration.
-KELParserListener.prototype.exitQueryDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#qparams.
-KELParserListener.prototype.enterQparams = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#qparams.
-KELParserListener.prototype.exitQparams = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#qparam.
-KELParserListener.prototype.enterQparam = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#qparam.
-KELParserListener.prototype.exitQparam = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#paramTypeId.
-KELParserListener.prototype.enterParamTypeId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#paramTypeId.
-KELParserListener.prototype.exitParamTypeId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#simpleTypeId.
-KELParserListener.prototype.enterSimpleTypeId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#simpleTypeId.
-KELParserListener.prototype.exitSimpleTypeId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#asof.
-KELParserListener.prototype.enterAsof = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#asof.
-KELParserListener.prototype.exitAsof = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#using.
-KELParserListener.prototype.enterUsing = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#using.
-KELParserListener.prototype.exitUsing = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#shellDeclaration.
-KELParserListener.prototype.enterShellDeclaration = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#shellDeclaration.
-KELParserListener.prototype.exitShellDeclaration = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#visual_section.
-KELParserListener.prototype.enterVisual_section = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#visual_section.
-KELParserListener.prototype.exitVisual_section = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#resource_section.
-KELParserListener.prototype.enterResource_section = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#resource_section.
-KELParserListener.prototype.exitResource_section = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#expression.
-KELParserListener.prototype.enterExpression = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#expression.
-KELParserListener.prototype.exitExpression = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#booleanDisjunction.
-KELParserListener.prototype.enterBooleanDisjunction = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#booleanDisjunction.
-KELParserListener.prototype.exitBooleanDisjunction = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#booleanConjunction.
-KELParserListener.prototype.enterBooleanConjunction = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#booleanConjunction.
-KELParserListener.prototype.exitBooleanConjunction = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#booleanTerm.
-KELParserListener.prototype.enterBooleanTerm = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#booleanTerm.
-KELParserListener.prototype.exitBooleanTerm = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#booleanAtom.
-KELParserListener.prototype.enterBooleanAtom = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#booleanAtom.
-KELParserListener.prototype.exitBooleanAtom = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#valueExpression.
-KELParserListener.prototype.enterValueExpression = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#valueExpression.
-KELParserListener.prototype.exitValueExpression = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#valueTerm.
-KELParserListener.prototype.enterValueTerm = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#valueTerm.
-KELParserListener.prototype.exitValueTerm = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#unaryValueFactor.
-KELParserListener.prototype.enterUnaryValueFactor = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#unaryValueFactor.
-KELParserListener.prototype.exitUnaryValueFactor = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#propValueFactor.
-KELParserListener.prototype.enterPropValueFactor = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#propValueFactor.
-KELParserListener.prototype.exitPropValueFactor = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#scopedValueFactor.
-KELParserListener.prototype.enterScopedValueFactor = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#scopedValueFactor.
-KELParserListener.prototype.exitScopedValueFactor = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#constValueFactor.
-KELParserListener.prototype.enterConstValueFactor = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#constValueFactor.
-KELParserListener.prototype.exitConstValueFactor = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#nestedValueFactor.
-KELParserListener.prototype.enterNestedValueFactor = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#nestedValueFactor.
-KELParserListener.prototype.exitNestedValueFactor = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#setValueFactor.
-KELParserListener.prototype.enterSetValueFactor = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#setValueFactor.
-KELParserListener.prototype.exitSetValueFactor = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#queryOpValueAtom.
-KELParserListener.prototype.enterQueryOpValueAtom = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#queryOpValueAtom.
-KELParserListener.prototype.exitQueryOpValueAtom = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#projValueAtom.
-KELParserListener.prototype.enterProjValueAtom = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#projValueAtom.
-KELParserListener.prototype.exitProjValueAtom = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#patternModelAtom.
-KELParserListener.prototype.enterPatternModelAtom = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#patternModelAtom.
-KELParserListener.prototype.exitPatternModelAtom = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#idValueAtom.
-KELParserListener.prototype.enterIdValueAtom = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#idValueAtom.
-KELParserListener.prototype.exitIdValueAtom = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#autoMatchValueAtom.
-KELParserListener.prototype.enterAutoMatchValueAtom = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#autoMatchValueAtom.
-KELParserListener.prototype.exitAutoMatchValueAtom = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#linkAtom.
-KELParserListener.prototype.enterLinkAtom = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#linkAtom.
-KELParserListener.prototype.exitLinkAtom = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#queryFuncOp.
-KELParserListener.prototype.enterQueryFuncOp = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#queryFuncOp.
-KELParserListener.prototype.exitQueryFuncOp = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#funcOrFilter.
-KELParserListener.prototype.enterFuncOrFilter = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#funcOrFilter.
-KELParserListener.prototype.exitFuncOrFilter = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#pair.
-KELParserListener.prototype.enterPair = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#pair.
-KELParserListener.prototype.exitPair = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#linkExp.
-KELParserListener.prototype.enterLinkExp = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#linkExp.
-KELParserListener.prototype.exitLinkExp = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#linkSpec.
-KELParserListener.prototype.enterLinkSpec = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#linkSpec.
-KELParserListener.prototype.exitLinkSpec = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#linkDegree.
-KELParserListener.prototype.enterLinkDegree = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#linkDegree.
-KELParserListener.prototype.exitLinkDegree = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#entityProjection.
-KELParserListener.prototype.enterEntityProjection = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#entityProjection.
-KELParserListener.prototype.exitEntityProjection = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#namedExpression.
-KELParserListener.prototype.enterNamedExpression = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#namedExpression.
-KELParserListener.prototype.exitNamedExpression = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#patternModel.
-KELParserListener.prototype.enterPatternModel = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#patternModel.
-KELParserListener.prototype.exitPatternModel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#singleValuedPatternSubmodel.
-KELParserListener.prototype.enterSingleValuedPatternSubmodel = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#singleValuedPatternSubmodel.
-KELParserListener.prototype.exitSingleValuedPatternSubmodel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#multiValuedPatternSubmodel.
-KELParserListener.prototype.enterMultiValuedPatternSubmodel = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#multiValuedPatternSubmodel.
-KELParserListener.prototype.exitMultiValuedPatternSubmodel = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#fieldSelector.
-KELParserListener.prototype.enterFieldSelector = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#fieldSelector.
-KELParserListener.prototype.exitFieldSelector = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#selfScopeExpression.
-KELParserListener.prototype.enterSelfScopeExpression = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#selfScopeExpression.
-KELParserListener.prototype.exitSelfScopeExpression = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#outerScopeExpression.
-KELParserListener.prototype.enterOuterScopeExpression = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#outerScopeExpression.
-KELParserListener.prototype.exitOuterScopeExpression = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#explicitScopeExpression.
-KELParserListener.prototype.enterExplicitScopeExpression = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#explicitScopeExpression.
-KELParserListener.prototype.exitExplicitScopeExpression = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#tableProperty.
-KELParserListener.prototype.enterTableProperty = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#tableProperty.
-KELParserListener.prototype.exitTableProperty = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#func_id.
-KELParserListener.prototype.enterFunc_id = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#func_id.
-KELParserListener.prototype.exitFunc_id = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#qualifiedId.
-KELParserListener.prototype.enterQualifiedId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#qualifiedId.
-KELParserListener.prototype.exitQualifiedId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#leadingId.
-KELParserListener.prototype.enterLeadingId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#leadingId.
-KELParserListener.prototype.exitLeadingId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#fieldId.
-KELParserListener.prototype.enterFieldId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#fieldId.
-KELParserListener.prototype.exitFieldId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#tablePropId.
-KELParserListener.prototype.enterTablePropId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#tablePropId.
-KELParserListener.prototype.exitTablePropId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#propertyId.
-KELParserListener.prototype.enterPropertyId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#propertyId.
-KELParserListener.prototype.exitPropertyId = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#nonSetConstant.
-KELParserListener.prototype.enterNonSetConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#nonSetConstant.
-KELParserListener.prototype.exitNonSetConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#emptySetConstant.
-KELParserListener.prototype.enterEmptySetConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#emptySetConstant.
-KELParserListener.prototype.exitEmptySetConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#stringConstant.
-KELParserListener.prototype.enterStringConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#stringConstant.
-KELParserListener.prototype.exitStringConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#generalRealConstant.
-KELParserListener.prototype.enterGeneralRealConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#generalRealConstant.
-KELParserListener.prototype.exitGeneralRealConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#trueConstant.
-KELParserListener.prototype.enterTrueConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#trueConstant.
-KELParserListener.prototype.exitTrueConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#falseConstant.
-KELParserListener.prototype.enterFalseConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#falseConstant.
-KELParserListener.prototype.exitFalseConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#typedConstant.
-KELParserListener.prototype.enterTypedConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#typedConstant.
-KELParserListener.prototype.exitTypedConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#generalIntConstant.
-KELParserListener.prototype.enterGeneralIntConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#generalIntConstant.
-KELParserListener.prototype.exitGeneralIntConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#decIntConstant.
-KELParserListener.prototype.enterDecIntConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#decIntConstant.
-KELParserListener.prototype.exitDecIntConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#negIntConstant.
-KELParserListener.prototype.enterNegIntConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#negIntConstant.
-KELParserListener.prototype.exitNegIntConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#hexConstant.
-KELParserListener.prototype.enterHexConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#hexConstant.
-KELParserListener.prototype.exitHexConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#binConstant.
-KELParserListener.prototype.enterBinConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#binConstant.
-KELParserListener.prototype.exitBinConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#badHexConstant.
-KELParserListener.prototype.enterBadHexConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#badHexConstant.
-KELParserListener.prototype.exitBadHexConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#badBinConstant.
-KELParserListener.prototype.enterBadBinConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#badBinConstant.
-KELParserListener.prototype.exitBadBinConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#noFlagHexConstant.
-KELParserListener.prototype.enterNoFlagHexConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#noFlagHexConstant.
-KELParserListener.prototype.exitNoFlagHexConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#badMixConstant.
-KELParserListener.prototype.enterBadMixConstant = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#badMixConstant.
-KELParserListener.prototype.exitBadMixConstant = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#realConst.
-KELParserListener.prototype.enterRealConst = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#realConst.
-KELParserListener.prototype.exitRealConst = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#badRealConst.
-KELParserListener.prototype.enterBadRealConst = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#badRealConst.
-KELParserListener.prototype.exitBadRealConst = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#eclExpression.
-KELParserListener.prototype.enterEclExpression = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#eclExpression.
-KELParserListener.prototype.exitEclExpression = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#eclBody.
-KELParserListener.prototype.enterEclBody = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#eclBody.
-KELParserListener.prototype.exitEclBody = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#eclFragment.
-KELParserListener.prototype.enterEclFragment = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#eclFragment.
-KELParserListener.prototype.exitEclFragment = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#eclImportList.
-KELParserListener.prototype.enterEclImportList = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#eclImportList.
-KELParserListener.prototype.exitEclImportList = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#eclImportItem.
-KELParserListener.prototype.enterEclImportItem = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#eclImportItem.
-KELParserListener.prototype.exitEclImportItem = function(ctx) {
-};
-
-
-// Enter a parse tree produced by KELParser#returnTypeId.
-KELParserListener.prototype.enterReturnTypeId = function(ctx) {
-};
-
-// Exit a parse tree produced by KELParser#returnTypeId.
-KELParserListener.prototype.exitReturnTypeId = function(ctx) {
-};
-
-
-
-exports.KELParserListener = KELParserListener;

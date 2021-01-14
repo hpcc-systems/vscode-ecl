@@ -4,8 +4,7 @@
         "kel"
     ],
     "name": "KEL",
-    "patterns": [
-        {
+    "patterns": [{
             "include": "#expression"
         },
         {
@@ -13,40 +12,35 @@
             "match": "\\b(?i:(boolean|date|integer|real|string|timestamp|uid|unk))\\b"
         },
         {
-            "name": "entity.other.kel",
-            "match": "\\b(?i:(asof|fdc|filter|flat|format|global|kelbase|kelquery|link|null|resources|using))\\b"
-        },
-        {
             "name": "keyword.operator.kel",
             "match": "\\b(?i:(%|\\*|\\+|-|/|and|div|in|not|or))\\b"
         },
         {
-            "match": "([A-Za-z_]+)\\s*(\\()",
-            "captures": {
-                "1": {
-                    "patterns": [
-                        {
-                            "include": "#functions"
-                        },
-                        {
-                            "include": "#functionsEcl"
-                        },
-                        {
-                            "include": "#functionSequence"
-                        },
-                        {
-                            "include": "#functionStats"
-                        }
-                    ]
+            "patterns": [{
+                    "include": "#functions"
+                },
+                {
+                    "include": "#functionsEcl"
+                },
+                {
+                    "include": "#functionSequence"
+                },
+                {
+                    "include": "#functionStats"
                 }
-            }
+            ]
         }
     ],
     "repository": {
         "functions": {
             "name": "entity.name.function.kel",
-            "match": "\\b(?i:(adjustcalendar|all|association|ave|avenz|boundsclip|boundsfold|ceiling|concat|contains|convertdateformat|count|currentdate|datefromparts|datesformonthend|datesformonthstart|datesforweekend|datesforweekstart|datetostring|day|dayofweek|dayofyear|daysbetween|dayssince1900|default|endswith|entity|era|era|floor|fromdayssince1900|fromgregoriandate|fromstringtodate|function|import|integerfromdate|iqr|isdateleapyear|isjulianleapyear|isleapyear|isvaliddate|known|max|median|min|month|monthsbetween|only|package|percentile|permits|quartile|query|range|rank|rankdown|sequence.allcontiguouslyfollowing|sequence.allcontiguouslypreceding|sequence.allfollowing|sequence.allpreceding|sequence.dedup|sequence.next|sequence.nextwhere|sequence.previous|sequence.previouswhere|shell|startswith|stats.covariance|stats.populationstddev|stats.populationvariance|stats.samplestddev|stats.samplevariance|stats.slope|stats.weightedpopulationstddev|stats.weightedpopulationvariance|stats.weightedsamplestddev|stats.weightedsamplevariance|std|stddev|substr|sum|today|todayssince1900|togregoriandate|trimall|trimboth|trimleft|upcase|use|variance|visualize|weightedave|weightedavenz|weightedcount|weightediqr|weightedmedian|weightedpercentile|weightedquartile|weightedrank|weightedrankdown|weightedstddev|weightedsum|weightedvariance|word|wordcount|year|yearsbetween))\\b"
+            "match": "\\b(?i:(adjustcalendar|all|association|ave|avenz|boundsclip|boundsfold|ceiling|concat|contains|convertdateformat|count|currentdate|datefromparts|datesformonthend|datesformonthstart|datesforweekend|datesforweekstart|datetostring|day|dayofweek|dayofyear|daysbetween|dayssince1900|default|endswith|entity|era|flat|floor|fromdayssince1900|fromgregoriandate|fromstringtodate|function|import|integerfromdate|iqr|isdateleapyear|isjulianleapyear|isleapyear|isvaliddate|known|max|median|min|month|monthsbetween|only|package|percentile|permits|quartile|query|range|rank|rankdown|sequence.allcontiguouslyfollowing|sequence.allcontiguouslypreceding|sequence.allfollowing|sequence.allpreceding|sequence.dedup|sequence.next|sequence.nextwhere|sequence.previous|sequence.previouswhere|shell|startswith|stats.covariance|stats.populationstddev|stats.populationvariance|stats.samplestddev|stats.samplevariance|stats.slope|stats.weightedpopulationstddev|stats.weightedpopulationvariance|stats.weightedsamplestddev|stats.weightedsamplevariance|std|stddev|substr|sum|today|todayssince1900|togregoriandate|trimall|trimboth|trimleft|upcase|use|variance|visualize|weightedave|weightedavenz|weightedcount|weightediqr|weightedmedian|weightedpercentile|weightedquartile|weightedrank|weightedrankdown|weightedstddev|weightedsum|weightedvariance|word|wordcount|year|yearsbetween))\\b"
         },
+        "functions2": {
+            "name": "entity.name.function.kel",
+            "match": "\\b(?i:(asof|fdc|filter|format|global|kelbase|kelquery|link|null|resources|using))\\b"
+        },
+
         "functionsEcl": {
             "name": "entity.name.function.ecl",
             "match": "\\b(?i:(abs|acos|asin|atan|atan2|cos|cosh|exists|exp|if|intformat|length|ln|log|map|power|realformat|round|roundup|sin|sinh|sqrt|tan|tanh|topn|trim|truncate))\\b"
@@ -61,8 +55,7 @@
         },
         "expression": {
             "name": "meta.expression.kel",
-            "patterns": [
-                {
+            "patterns": [{
                     "include": "#comment"
                 },
                 {
@@ -70,13 +63,21 @@
                 },
                 {
                     "include": "#literal"
+                },
+                {
+                    "include": "#modifiers"
+                },
+                {
+                    "include": "#control"
+                },
+                {
+                    "include": "#operator"
                 }
             ]
         },
         "comment": {
             "name": "comment.kel",
-            "patterns": [
-                {
+            "patterns": [{
                     "include": "#comment-block-doc"
                 },
                 {
@@ -103,21 +104,17 @@
         },
         "string": {
             "name": "string.kel",
-            "patterns": [
-                {
-                    "include": "#qstring-single"
-                }
-            ]
+            "patterns": [{
+                "include": "#qstring-single"
+            }]
         },
         "qstring-single": {
             "begin": "'",
             "end": "\\'|(?:[^\\\\\\n]$)",
             "name": "string.single.kel",
-            "patterns": [
-                {
-                    "include": "#string-character-escape"
-                }
-            ]
+            "patterns": [{
+                "include": "#string-character-escape"
+            }]
         },
         "string-character-escape": {
             "match": "\\\\(x\\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)",
@@ -125,8 +122,7 @@
         },
         "literal": {
             "name": "literal.kel",
-            "patterns": [
-                {
+            "patterns": [{
                     "include": "#numeric-literal"
                 },
                 {
@@ -141,6 +137,22 @@
         "boolean-literal": {
             "match": "\\b(?i:(false|true))\\b",
             "name": "constant.language.boolean.kel"
+        },
+        "modifiers": {
+            "name": "storage.modifier.kel",
+            "match": "\\b(?i:(era|before|null|keep|only|permits|entity|ui))\\b"
+        },
+        "other": {
+            "name": "entity.name.function.kel",
+            "match": "\\b(?i:(adjustcalendar|all|association|ave|avenz|boundsclip|boundsfold|ceiling|concat|contains|convertdateformat|count|currentdate|datefromparts|datesformonthend|datesformonthstart|datesforweekend|datesforweekstart|datetostring|day|dayofweek|dayofyear|daysbetween|dayssince1900|default|endswith|entity|era|era|floor|fromdayssince1900|fromgregoriandate|fromstringtodate|function|import|integerfromdate|iqr|isdateleapyear|isjulianleapyear|isleapyear|isvaliddate|known|max|median|min|month|monthsbetween|only|package|percentile|permits|quartile|query|range|rank|rankdown|sequence.allcontiguouslyfollowing|sequence.allcontiguouslypreceding|sequence.allfollowing|sequence.allpreceding|sequence.dedup|sequence.next|sequence.nextwhere|sequence.previous|sequence.previouswhere|shell|startswith|stats.covariance|stats.populationstddev|stats.populationvariance|stats.samplestddev|stats.samplevariance|stats.slope|stats.weightedpopulationstddev|stats.weightedpopulationvariance|stats.weightedsamplestddev|stats.weightedsamplevariance|std|stddev|substr|sum|today|todayssince1900|togregoriandate|trimall|trimboth|trimleft|upcase|use|variance|visualize|weightedave|weightedavenz|weightedcount|weightediqr|weightedmedian|weightedpercentile|weightedquartile|weightedrank|weightedrankdown|weightedstddev|weightedsum|weightedvariance|word|wordcount|year|yearsbetween))\\b"
+        },
+        "control": {
+            "name": "keyword.control.kel",
+            "match": "\\b(?i:(returns))\\b"
+        },
+        "operator": {
+            "name": "keyword.operator.kel",
+            "match": "\\b(?i:(in|or|not|and|div|of|asof))\\b"
         }
     }
 }
