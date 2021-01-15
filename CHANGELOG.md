@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.8.1...v2.9.0) (2021-01-15)
+
+
+### Features
+
+* **kel:** Add syntaxCheckFromGrammar option ([9ff6a1d](https://github.com/hpcc-systems/vscode-ecl/commit/9ff6a1d7c64d0fbb87a9266ebbcce1a3baeb20e9))
+* **kel:** enhance KEL lexer for better visualization ([5e8296b](https://github.com/hpcc-systems/vscode-ecl/commit/5e8296b74a5471bc8a6c7baaf5caa82db5b03aa6))
+
 ### [2.8.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.8.0...v2.8.1) (2020-12-15)
 
 
