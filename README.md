@@ -11,6 +11,13 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.9.x
+
+* KEL:
+  * Optionally use grammar for syntax as you type checking (now off by default).
+  * Improved syntax highlighting
+  * Default syntax checking "on open" to `true`
+
 ### v2.8.x
 
 * Added digital signature support:
@@ -277,9 +284,11 @@ The following Visual Studio Code settings are available for the KEL extension.  
   "kel.generateOnSave": false
 
   // Check syntax on load.
-  "kel.syntaxCheckOnLoad": false
- 
-```
+  "kel.syntaxCheckOnLoad": true
+
+  // Check syntax with KEL grammar (fast)
+  "kel.syntaxCheckFromGrammar": false
+ ```
 
 ## License
 [Apache-2.0](LICENSE)
