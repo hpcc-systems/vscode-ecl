@@ -91,6 +91,8 @@
     "Uninstall Bundle": "Uninstall Bundle",
     "User ID": "User ID",
     "User password": "User password",
+    "Verify ECL Signature": "Verify ECL Signature",
+    "Verify ECL Digital Signature": "Verify ECL Digital Signature",
     "View Dashboard": "View Dashboard",
     "View ECL Markdown": "View ECL Markdown",
     "Write eclcc log file to specified file": "Write eclcc log file to specified file",

@@ -91,6 +91,10 @@ class Session {
         return this._launchConfig.sign(key, passphrase, ecl);
     }
 
+    verify(ecl: string) {
+        return this._launchConfig.verify(ecl);
+    }
+
     bundleList() {
         return this._launchConfig.bundleList();
     }
