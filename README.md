@@ -11,6 +11,10 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.10.x
+* Enhanced digital signature support:
+  * ECL: Verify ECL Signature
+
 ### v2.9.x
 
 * KEL:
@@ -128,6 +132,7 @@ The following ECL specific commands are available.  Note:  These commands will *
 |![Compile](resources/light-png/file-binary.png) Compile | | Compile ECL |
 | Syntax Check | F7 | Save and check syntax of current file |
 | Sign ECL | | Digitally sign ECL file |
+| Verify ECL Signature | | Verify ECL Digital Signature |
 | Language Reference Lookup | shift+F1 | For the currently selected text, search the online ECL language reference |
 | Insert Record Definition | ctrl/cmd+I R | Fetches record definition for given logical file |
 

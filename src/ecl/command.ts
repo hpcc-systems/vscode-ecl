@@ -26,6 +26,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -149,7 +150,8 @@ export class ECLCommands {
                     });
                     if (key) {
                         const passphrase = await vscode.window.showInputBox({
-                            prompt: localize("Enter passphrase for") + ` "${key}"`
+                            prompt: localize("Enter passphrase for") + ` "${key}"`,
+                            password: true
                         });
                         if (passphrase !== undefined) {
                             sessionManager.session.sign(key, passphrase, eclText).then(response => {
@@ -158,11 +160,25 @@ export class ECLCommands {
                                         editBuilder.replace(new vscode.Range(0, 0, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER), response.SignedText);
                                     });
                                 } else {
-                                    vscode.window.showErrorMessage(localize("Signing failed") + `:  ${response.ErrMsg}`);
+                                    vscode.window.showErrorMessage(localize("Signing failed") + `:  "${response.ErrMsg}"`);
                                 }
                             });
                         }
                     }
+                }
+            });
+        }
+    }
+
+    verify() {
+        if (vscode.window.activeTextEditor && sessionManager.session) {
+            const editor = vscode.window.activeTextEditor;
+            const eclText = editor.document.getText();
+            sessionManager.session.verify(eclText).then(response => {
+                if (response.IsVerified) {
+                    vscode.window.showInformationMessage(localize("Verification succeeded, signed by") + `:  "${response.SignedBy}"`);
+                } else {
+                    vscode.window.showErrorMessage(localize("Verification failed"));
                 }
             });
         }

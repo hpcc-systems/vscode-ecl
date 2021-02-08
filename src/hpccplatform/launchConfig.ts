@@ -524,8 +524,18 @@ export class LaunchConfig implements LaunchRequestArguments {
         return this.checkCredentials().then(credentials => {
             const csService = new CodesignService(this.opts(credentials));
             return csService.Sign({
+                SigningMethod: "gpg",
                 UserID: key,
                 KeyPass: passphrase,
+                Text: ecl
+            });
+        });
+    }
+
+    verify(ecl: string) {
+        return this.checkCredentials().then(credentials => {
+            const csService = new CodesignService(this.opts(credentials));
+            return csService.Verify({
                 Text: ecl
             });
         });
