@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.7.0...v2.10.0) (2021-02-12)
+
+
+### Features
+
+* **codesign:** Added verify ECL signature command ([e99ec5b](https://github.com/hpcc-systems/vscode-ecl/commit/e99ec5b35555a0955c86964900601ca0c8472134)), closes [#228](https://github.com/hpcc-systems/vscode-ecl/issues/228)
+* **kel:** Add syntaxCheckFromGrammar option ([9ff6a1d](https://github.com/hpcc-systems/vscode-ecl/commit/9ff6a1d7c64d0fbb87a9266ebbcce1a3baeb20e9))
+* **kel:** enhance KEL lexer for better visualization ([5e8296b](https://github.com/hpcc-systems/vscode-ecl/commit/5e8296b74a5471bc8a6c7baaf5caa82db5b03aa6))
+*  Add digital signature support ([e81f8bf](https://github.com/hpcc-systems/vscode-ecl/commit/e81f8bfadd143d289d4f3079e386314b64009a03))
+
+
+### Bug Fixes
+
+* **publish:** Regression switching to trunk from master ([194b884](https://github.com/hpcc-systems/vscode-ecl/commit/194b884d17be5a8fc23792a1e5551d5c657490e4))
+* **results:**  Incorrect password passed to result viewer ([691bbc2](https://github.com/hpcc-systems/vscode-ecl/commit/691bbc208025a14317e323caf4f237981216c22d))
+* **sign:**  Allow blank passphrases ([c6002b2](https://github.com/hpcc-systems/vscode-ecl/commit/c6002b254f01ceaaadfb2d0637e137ff4be88cf6))
+
 ### [2.9.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.9.0...v2.9.1) (2021-01-15)
 
 ## [2.9.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.8.1...v2.9.0) (2021-01-15)
