@@ -1,0 +1,543 @@
+{
+	"association": {
+		"prefix": ["ASSOCIATION"]
+	},
+	"entity": {
+		"prefix": ["ENTITY"]
+	},
+	"function": {
+		"prefix": ["FUNCTION"]
+	},
+	"import": {
+		"prefix": ["IMPORT"]
+	},
+	"package": {
+		"prefix": ["PACKAGE"]
+	},
+	"permits": {
+		"prefix": ["PERMITS"]
+	},
+	"query": {
+		"prefix": ["QUERY"]
+	},
+	"shell": {
+		"prefix": ["SHELL"]
+	},
+	"use": {
+		"prefix": ["USE"]
+	},
+	"visualize": {
+		"prefix": ["VISUALIZE"]
+	},
+	"abs": {
+		"prefix": ["ABS"],
+		"description": "(ecl) Absolute value."
+	},
+	"acos": {
+		"prefix": ["ACOS"],
+		"description": "(ecl) Inverse Cosine."
+	},
+	"adjustcalendar": {
+		"prefix": ["ADJUSTCALENDAR"],
+		"description": "(start, years. months, days) Returns the DATE value for the start date after adjusting by the number of years and/or months and/or days. The years, months, and days parameters may be negative numbers and are not omittable."
+	},
+	"all": {
+		"prefix": ["ALL"],
+		"body": [
+			"ALL(${1:domain},${2:condition})"
+		],
+		"description": "(kel) Returns TRUE if the logical condition expression is true for every row in the specified domain. The domain may be an ENTITY or ASSOCIATION."
+	},
+	"asin": {
+		"prefix": ["ASIN"],
+		"description": "(ecl) Inverse sine."
+	},
+	"atan": {
+		"prefix": ["ATAN"],
+		"description": "(ecl) Inverse tangent (from the tangent)."
+	},
+	"atan2": {
+		"prefix": ["ATAN2"],
+		"description": "(ecl) Inverse tangent (from y,x values)."
+	},
+	"ave": {
+		"prefix": ["AVE"],
+		"body": [
+			"AVE(${1:entityset},${2:value})"
+		],
+		"description": "(aggregate) Average (mean) value"
+	},
+	"avenz": {
+		"prefix": ["AVENZ"],
+		"body": [
+			"AVENZ(${1:entityset},${2:value})"
+		],
+		"description": "(aggregate) Average non-zero value"
+	},
+	"boundsclip": {
+		"prefix": ["BOUNDSCLIP"],
+		"body": [
+			"BOUNDSCLIP(${1:value},${2:low},${3:high})"
+		],
+		"description": "(kel) Returns NULL if the value is out of the inclusive range low..high, otherwise it returns the value."
+	},
+	"boundsfold": {
+		"prefix": ["BOUNDSFOLD"],
+		"body": [
+			"BOUNDSFOLD(${1:value},${2:low},${3:high})"
+		],
+		"description": "(kel) Returns the value if it is within the inclusive range low..high. If the value is less than the low value it returns low, if greater than high it returns high."
+	},
+	"ceiling": {
+		"prefix": ["CEILING"],
+		"body": [
+			"CEILING(${1:value})"
+		],
+		"description": "(kel) Returns integer portion of a real value by rounding positive values up and truncating negative values."
+	},
+	"concat": {
+		"prefix": ["CONCAT"],
+		"body": [
+			"CONCAT(${1:set},${2:value},${3:delimiter})"
+		],
+		"description": "(aggregate) Produces a single STRING containing each value from the set separated by the specified delimiter."
+	},
+	"contains": {
+		"prefix": ["CONTAINS"],
+		"body": [
+			"CONTAINS(${1:source},${2:target})"
+		],
+		"description": "(kel) Returns TRUE if the source text contains the target text."
+	},
+	"convertdateformat": {
+		"prefix": ["CONVERTDATEFORMAT"],
+		"description": "(text, in_format, out_format) Returns a STRING formatted with the date text parameter converted from the in_format to the out_format form."
+	},
+	"cos": {
+		"prefix": ["COS"],
+		"description": "(ecl) Cosine."
+	},
+	"cosh": {
+		"prefix": ["COSH"],
+		"description": "(ecl) Hyperbolic Cosine."
+	},
+	"count": {
+		"prefix": ["COUNT"],
+		"body": [
+			"COUNT(${1:entityset})"
+		],
+		"description": "(aggregate) Number of entities in the entityset IQR IQR(entityset, value) Interquartile Range"
+	},
+	"currentdate": {
+		"prefix": ["CURRENTDATE"],
+		"description": "(date) Returns the same as the TODAY() function unless ASOF is used. When ASOF clauses are in use, CURRENTDATE() returns the last"
+	},
+	"datefromparts": {
+		"prefix": ["DATEFROMPARTS"],
+		"description": "(date) (year, month, day) Returns a DATE-formatted value for the year, month, and day parameters specified."
+	},
+	"datesformonthend": {
+		"prefix": ["DATESFORMONTHEND"],
+		"description": "(date) Returns an DATE-formatted value for the last day of the month containing the date parameter."
+	},
+	"datesformonthstart": {
+		"prefix": ["DATESFORMONTHSTART"],
+		"description": "(date) Returns an DATE-formatted value for the first day of the month containing the date parameter."
+	},
+	"datesforweekend": {
+		"prefix": ["DATESFORWEEKEND"],
+		"description": "(date) Returns an DATE-formatted value for the Saturday of the week containing the date parameter."
+	},
+	"datesforweekstart": {
+		"prefix": ["DATESFORWEEKSTART"],
+		"description": "(date) Returns an DATE-formatted value for the Sunday of the week containing the date parameter."
+	},
+	"datetostring": {
+		"prefix": ["DATETOSTRING"],
+		"description": "(date, format) Returns a string in the format form from the date parameter. See the STD.Date.ToString function docs."
+	},
+	"day": {
+		"prefix": ["DAY"],
+		"description": "(date) Returns the day value for the date specified."
+	},
+	"dayofweek": {
+		"prefix": ["DAYOFWEEK"],
+		"description": "(date) Returns an integer for the day of the week from the date parameter, where 1=Sunday, ... 7=Saturday, consistent with the HPCC Date Standard Library."
+	},
+	"dayofyear": {
+		"prefix": ["DAYOFYEAR"],
+		"description": "(date) Returns a DATE-formatted value for the date of the number of days since 31st December, 1BC."
+	},
+	"daysbetween": {
+		"prefix": ["DAYSBETWEEN"],
+		"description": "(from, to) Returns the number of days between the from date and the to date."
+	},
+	"dayssince1900": {
+		"prefix": ["DAYSSINCE1900"],
+		"description": "(date) (year, month, day) Returns an INTEGER value for the number of days between January 1st, 1900 and the year, month, day parameters specified."
+	},
+	"default": {
+		"prefix": ["DEFAULT"],
+		"body": [
+			"DEFAULT(${1:nullablevalue},${2:defaultvalue})"
+		],
+		"description": "(kel) Returns nullablevalue if the nullablevalue is not NULL, else it returns the defaultvalue."
+	},
+	"endswith": {
+		"prefix": ["ENDSWITH"],
+		"body": [
+			"ENDSWITH(${1:source},${2:target})"
+		],
+		"description": "(kel) Returns TRUE if the source text ends with the target text. Trailing spaces are ignored."
+	},
+	"era": {
+		"prefix": ["ERA"],
+		"description": "(date) parameter value (the only or second ERA parameter from the last ASOF clause), even when used in logic properties."
+	},
+	"exists": {
+		"prefix": ["EXISTS"],
+		"body": [
+			"EXISTS(${1:expression})"
+		],
+		"description": "(ecl) Returns TRUE if records exist (the KEYED option is not supported in KEL)."
+	},
+	"exp": {
+		"prefix": ["EXP"],
+		"description": "(ecl) Returns returns the natural exponential value."
+	},
+	"floor": {
+		"prefix": ["FLOOR"],
+		"body": [
+			"FLOOR(${1:value})"
+		],
+		"description": "(kel) Returns integer portion of a real value by truncating positive values and rounding negative values down to the next lower negative number."
+	},
+	"fromdayssince1900": {
+		"prefix": ["FROMDAYSSINCE1900"],
+		"description": "(days) Returns an DATE-formatted value for date that is the number of days between January 1st, 1900 and the specified days INTEGER parameter."
+	},
+	"fromgregoriandate": {
+		"prefix": ["FROMGREGORIANDATE"],
+		"description": "(date) Returns the number of days elapsed since 31st December, 1 BC for the date."
+	},
+	"fromstringtodate": {
+		"prefix": ["FROMSTRINGTODATE"],
+		"description": "(date) (text, format) Returns a DATE-formatted value extracted from the text parameter as interpreted by the format parameter. See the"
+	},
+	"if": {
+		"prefix": ["IF"],
+		"description": "(ecl) Conditional IF-THEN-ELSE evaluation (both true and false return values are required in KEL)."
+	},
+	"integerfromdate": {
+		"prefix": ["INTEGERFROMDATE"],
+		"description": "(date) Returns an integer in the YYYYMMDD format from the date parameter. This function is only on the KEL level to allow an ECL \"date\" integer field to contain negative \"flag\" values (such as -99) when certain conditions are true."
+	},
+	"intformat": {
+		"prefix": ["INTFORMAT"],
+		"description": "(ecl) Returns a STRING containing a right-justified integer value."
+	},
+	"iqr": {
+		"prefix": ["IQR"],
+		"body": [
+			"IQR(${1:singlecolumnset})"
+		],
+		"description": "(aggregate) Interquartile Range in the singlecolumnset Sum"
+	},
+	"isdateleapyear": {
+		"prefix": ["ISDATELEAPYEAR"],
+		"description": "(date) Returns TRUE if the year portion of the date specified is a leap year. The date must be a KEL DATE data type. This function has no Date Standard Library equivalent."
+	},
+	"isjulianleapyear": {
+		"prefix": ["ISJULIANLEAPYEAR"],
+		"description": "(days) Returns TRUE if the date of the the Julian days parameter is a leap year. The days must be an INTEGER data type containing the number of days since 1900."
+	},
+	"isleapyear": {
+		"prefix": ["ISLEAPYEAR"],
+		"description": "(date) (year) Returns TRUE if the year specified is a leap year."
+	},
+	"isvaliddate": {
+		"prefix": ["ISVALIDDATE"],
+		"description": "(date) Returns a BOOLEAN value if the date parameter specified is valid."
+	},
+	"known": {
+		"prefix": ["KNOWN"],
+		"body": [
+			"KNOWN(${1:nullableboolean})"
+		],
+		"description": "(kel) Returns FALSE if the nullableboolean expression is false or NULL, else it returns TRUE."
+	},
+	"length": {
+		"prefix": ["LENGTH"],
+		"description": "(ecl) Returns the length of a text string."
+	},
+	"ln": {
+		"prefix": ["LN"],
+		"description": "(ecl) Returns a natural logarithm."
+	},
+	"log": {
+		"prefix": ["LOG"],
+		"description": "(ecl) Returns a base-10 logarithm."
+	},
+	"map": {
+		"prefix": ["MAP"],
+		"description": "(ecl) Conditional IF-ELSIF-ELSIF ... ELSE evaluation. Form is: MAP(condition1 => value1, ... conditionn => valuen, elsevalue). All return values must be type compatible (can implicitly cast to the result type). Unlike ECL, in KEL the elsevalue is optional, and if omitted, results in NULL."
+	},
+	"max": {
+		"prefix": ["MAX"],
+		"body": [
+			"MAX(${1:entityset},${2:value})"
+		],
+		"description": "(aggregate) Maximum value"
+	},
+	"median": {
+		"prefix": ["MEDIAN"],
+		"body": [
+			"MEDIAN(${1:entityset},${2:value})"
+		],
+		"description": "(aggregate) Median value."
+	},
+	"min": {
+		"prefix": ["MIN"],
+		"body": [
+			"MIN(${1:entityset},${2:value})"
+		],
+		"description": "(aggregate) Minimum value"
+	},
+	"month": {
+		"prefix": ["MONTH"],
+		"description": "(date) Returns the month value for the date specified."
+	},
+	"monthsbetween": {
+		"prefix": ["MONTHSBETWEEN"],
+		"description": "(from, to) Returns the number of months between the from date and the to date."
+	},
+	"only": {
+		"prefix": ["ONLY"],
+		"body": [
+			"ONLY(${1:entity_expression})"
+		],
+		"description": "(kel) Returns a reference to the one row defined by the entity_expression. The entity_expression is an expression that returns a set derived from an entity (and therefore has UID included) but which only has a single row. Account: => MostRecentTradeline :="
+	},
+	"percentile": {
+		"prefix": ["PERCENTILE"],
+		"body": [
+			"PERCENTILE(${1:entityset},${2:value},${3:n})"
+		],
+		"description": "(aggregate) Nth Percentile. The n value must be constant or a query parameter."
+	},
+	"power": {
+		"prefix": ["POWER"],
+		"description": "(ecl) Exponentiation function."
+	},
+	"quartile": {
+		"prefix": ["QUARTILE"],
+		"body": [
+			"QUARTILE(${1:entityset},${2:value},${3:n})"
+		],
+		"description": "(aggregate) Nth Quartile, The n value must be constant or a query parameter."
+	},
+	"range": {
+		"prefix": ["RANGE"],
+		"body": [
+			"RANGE(${1:entityset},${2:value})"
+		],
+		"description": "(aggregate) Range computed as Maximum- Minimum value"
+	},
+	"rank": {
+		"prefix": ["RANK"],
+		"body": [
+			"RANK(${1:entityset},${2:value},${3:n})"
+		],
+		"description": "(aggregate) Returns the value of the item with the given rank within the scope (operates only on INTEGER, REAL, and DATE properties). Rank(1) is the same as MIN and Rank(2) is the second lowest value when the entityset is sorted on value. The n value must be constant or a query parameter."
+	},
+	"rankdown": {
+		"prefix": ["RANKDOWN"],
+		"body": [
+			"RANKDOWN(${1:entityset},${2:value},${3:n})"
+		],
+		"description": "(aggregate) Returns the descending order value of the item with the given rank within the scope (operates only on INTEGER, REAL, and DATE properties). Rank(1) is the same as MAX and Rank(2) is the second highest value when the entityset is sorted descending on value. The n value must be constant or a query parameter. StdDev"
+	},
+	"realformat": {
+		"prefix": ["REALFORMAT"],
+		"description": "(ecl) Returns a STRING containing a right-justified floating point value."
+	},
+	"round": {
+		"prefix": ["ROUND"],
+		"description": "(ecl) Returns an arithmetically rounded value."
+	},
+	"roundup": {
+		"prefix": ["ROUNDUP"],
+		"description": "(ecl) Returns a rounded up value."
+	},
+	"sequence.allcontiguouslyfollowing": {
+		"prefix": ["SEQUENCE.ALLCONTIGUOUSLYFOLLOWING"],
+		"body": [
+			"SEQUENCE.ALLCONTIGUOUSLYFOLLOWING(${1:filter},${2:sortlist})"
+		]
+	},
+	"sequence.allcontiguouslypreceding": {
+		"prefix": ["SEQUENCE.ALLCONTIGUOUSLYPRECEDING"]
+	},
+	"sequence.allfollowing": {
+		"prefix": ["SEQUENCE.ALLFOLLOWING"]
+	},
+	"sequence.allpreceding": {
+		"prefix": ["SEQUENCE.ALLPRECEDING"]
+	},
+	"sequence.dedup": {
+		"prefix": ["SEQUENCE.DEDUP"]
+	},
+	"sequence.next": {
+		"prefix": ["SEQUENCE.NEXT"]
+	},
+	"sequence.nextwhere": {
+		"prefix": ["SEQUENCE.NEXTWHERE"]
+	},
+	"sequence.previous": {
+		"prefix": ["SEQUENCE.PREVIOUS"]
+	},
+	"sequence.previouswhere": {
+		"prefix": ["SEQUENCE.PREVIOUSWHERE"]
+	},
+	"sin": {
+		"prefix": ["SIN"]
+	},
+	"sinh": {
+		"prefix": ["SINH"]
+	},
+	"sqrt": {
+		"prefix": ["SQRT"]
+	},
+	"startswith": {
+		"prefix": ["STARTSWITH"]
+	},
+	"stats.covariance": {
+		"prefix": ["STATS.COVARIANCE"]
+	},
+	"stats.populationstddev": {
+		"prefix": ["STATS.POPULATIONSTDDEV"]
+	},
+	"stats.populationvariance": {
+		"prefix": ["STATS.POPULATIONVARIANCE"]
+	},
+	"stats.samplestddev": {
+		"prefix": ["STATS.SAMPLESTDDEV"]
+	},
+	"stats.samplevariance": {
+		"prefix": ["STATS.SAMPLEVARIANCE"]
+	},
+	"stats.slope": {
+		"prefix": ["STATS.SLOPE"]
+	},
+	"stats.weightedpopulationstddev": {
+		"prefix": ["STATS.WEIGHTEDPOPULATIONSTDDEV"]
+	},
+	"stats.weightedpopulationvariance": {
+		"prefix": ["STATS.WEIGHTEDPOPULATIONVARIANCE"]
+	},
+	"stats.weightedsamplestddev": {
+		"prefix": ["STATS.WEIGHTEDSAMPLESTDDEV"]
+	},
+	"stats.weightedsamplevariance": {
+		"prefix": ["STATS.WEIGHTEDSAMPLEVARIANCE"]
+	},
+	"std": {
+		"prefix": ["STD"]
+	},
+	"stddev": {
+		"prefix": ["STDDEV"]
+	},
+	"substr": {
+		"prefix": ["SUBSTR"]
+	},
+	"sum": {
+		"prefix": ["SUM"]
+	},
+	"tan": {
+		"prefix": ["TAN"]
+	},
+	"tanh": {
+		"prefix": ["TANH"]
+	},
+	"today": {
+		"prefix": ["TODAY"]
+	},
+	"todayssince1900": {
+		"prefix": ["TODAYSSINCE1900"]
+	},
+	"togregoriandate": {
+		"prefix": ["TOGREGORIANDATE"]
+	},
+	"topn": {
+		"prefix": ["TOPN"]
+	},
+	"trim": {
+		"prefix": ["TRIM"]
+	},
+	"trimall": {
+		"prefix": ["TRIMALL"]
+	},
+	"trimboth": {
+		"prefix": ["TRIMBOTH"]
+	},
+	"trimleft": {
+		"prefix": ["TRIMLEFT"]
+	},
+	"truncate": {
+		"prefix": ["TRUNCATE"]
+	},
+	"upcase": {
+		"prefix": ["UPCASE"]
+	},
+	"variance": {
+		"prefix": ["VARIANCE"]
+	},
+	"weightedave": {
+		"prefix": ["WEIGHTEDAVE"]
+	},
+	"weightedavenz": {
+		"prefix": ["WEIGHTEDAVENZ"]
+	},
+	"weightedcount": {
+		"prefix": ["WEIGHTEDCOUNT"]
+	},
+	"weightediqr": {
+		"prefix": ["WEIGHTEDIQR"]
+	},
+	"weightedmedian": {
+		"prefix": ["WEIGHTEDMEDIAN"]
+	},
+	"weightedpercentile": {
+		"prefix": ["WEIGHTEDPERCENTILE"]
+	},
+	"weightedquartile": {
+		"prefix": ["WEIGHTEDQUARTILE"]
+	},
+	"weightedrank": {
+		"prefix": ["WEIGHTEDRANK"]
+	},
+	"weightedrankdown": {
+		"prefix": ["WEIGHTEDRANKDOWN"]
+	},
+	"weightedstddev": {
+		"prefix": ["WEIGHTEDSTDDEV"]
+	},
+	"weightedsum": {
+		"prefix": ["WEIGHTEDSUM"]
+	},
+	"weightedvariance": {
+		"prefix": ["WEIGHTEDVARIANCE"]
+	},
+	"word": {
+		"prefix": ["WORD"]
+	},
+	"wordcount": {
+		"prefix": ["WORDCOUNT"]
+	},
+	"year": {
+		"prefix": ["YEAR"]
+	},
+	"yearsbetween": {
+		"prefix": ["YEARSBETWEEN"]
+	}
+}

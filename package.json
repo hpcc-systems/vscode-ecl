@@ -175,6 +175,10 @@
       {
         "language": "ecl",
         "path": "./snippets/ecl.json"
+      },
+      {
+        "language": "kel",
+        "path": "./snippets/kel.json"
       }
     ],
     "viewsWelcome": [],
