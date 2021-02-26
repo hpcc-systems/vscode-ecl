@@ -11,6 +11,9 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.11.x
+* Added "Import MOD file" command
+
 ### v2.10.x
 * Enhanced digital signature support:
   * ECL: Verify ECL Signature
@@ -121,6 +124,7 @@ The following ECL specific commands are available.  Note:  These commands will *
 |---------------------------|:--------:|------------------------------------------------------------------|
 | Syntax Check All Files | shift+F7 | Save All + check syntax of all files. |
 | Syntax Clear | ctrl/cmd+F7 | Clear all previously reported ECL Syntax Check results |
+| Import '.mod' file | | Import MOD file into workspace |
 | Language Reference Website | | Opens the ECL language reference website in external browser |
 | Terminal | | Opens ECL Client Tools Terminal Session |
 
@@ -230,27 +234,6 @@ Submitting ECL using VS-Code requires specifying the target environment within t
 }
 ```
 
-## Building and Debugging the Extension
-
-To set up a development environment for debugging the ECL for VS Code extension:
-
-```bash
-cd /Some/Dev/Folder/
-git clone https://github.com/hpcc-systems/vscode-ecl
-cd vscode-ecl
-npm install
-```
-
-At which point you can open the `vscode-ecl` folder within VS Code.  
-
-Next start the background build process by running the following command within a terminal session:
-
-```bash
-npm run watch
-```
-
-At which point you can edit the sources and launch debug sessions via **F5** and included launch configurations.
-
 ## KEL
 _KEL is an optional language that can generate ECL._
 
@@ -294,6 +277,23 @@ The following Visual Studio Code settings are available for the KEL extension.  
   // Check syntax with KEL grammar (fast)
   "kel.syntaxCheckFromGrammar": false
  ```
+
+## Building and Debugging the Extension
+
+To set up a development environment for debugging the ECL for VS Code extension:
+
+```bash
+cd /Some/Dev/Folder/
+git clone https://github.com/hpcc-systems/vscode-ecl
+cd vscode-ecl
+npm install
+```
+
+At which point you can open the `vscode-ecl` folder within VS Code.  
+
+Next start the background build process by pressing `ctrl+shift+b` (which will run the default build command in .vscode/tasks.json)
+
+At which point you can edit the sources and launch debug sessions via **F5** and included launch configurations.
 
 ## License
 [Apache-2.0](LICENSE)
