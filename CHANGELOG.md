@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.10.0...v2.11.0) (2021-03-03)
+
+
+### Features
+
+*  Add command to import MOD files ([84d5395](https://github.com/hpcc-systems/vscode-ecl/commit/84d53955159078f334c2742483754674b58225a4)), closes [#233](https://github.com/hpcc-systems/vscode-ecl/issues/233)
+* **kel:** adding KEL snippets to vscode-ecl ([cfaa3c9](https://github.com/hpcc-systems/vscode-ecl/commit/cfaa3c93039a26aad4c044b1f0e721798499c897))
+
 ## [2.10.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.7.0...v2.10.0) (2021-02-12)
 
 
