@@ -110,6 +110,7 @@
         "id": "ecl",
         "extensions": [
           "ecl",
+          "mod",
           "ecllib"
         ],
         "aliases": [
@@ -232,6 +233,12 @@
         "category": "ECL",
         "title": "%Verify ECL Signature%",
         "description": "%Verify ECL Digital Signature%"
+      },
+      {
+        "command": "ecl.importModFile",
+        "category": "ECL",
+        "title": "%Import '.mod' file%",
+        "description": "%Import ECL '.mod' file%"
       },
       {
         "command": "ecl.showLanguageReference",

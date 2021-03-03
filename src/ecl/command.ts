@@ -1,4 +1,7 @@
 import * as vscode from "vscode";
+import * as path from "path";
+import * as fs from "fs";
+import * as os from "os";
 import { LaunchRequestArguments } from "../hpccplatform/launchConfig";
 import { checkTextDocument, checkWorkspace } from "./check";
 import { selectCTVersion } from "./clientTools";
@@ -7,6 +10,12 @@ import { sessionManager } from "../hpccplatform/session";
 import { eclWatchPanelView } from "./eclWatchPanelView";
 import { ECLResultNode, ECLWUNode } from "./eclWatchTree";
 import localize from "../util/localize";
+
+const IMPORT_MARKER = "//Import:";
+const SKIP = localize("Skip");
+const SKIP_ALL = localize("Skip All");
+const OVERWRITE = localize("Overwrite");
+const OVERWRITE_ALL = localize("Overwrite All");
 
 export let eclCommands: ECLCommands;
 export class ECLCommands {
@@ -27,6 +36,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.importModFile", this.importModFile));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -179,6 +189,101 @@ export class ECLCommands {
                     vscode.window.showInformationMessage(localize("Verification succeeded, signed by") + `:  "${response.SignedBy}"`);
                 } else {
                     vscode.window.showErrorMessage(localize("Verification failed"));
+                }
+            });
+        }
+    }
+
+    async importModFile() {
+        const dlgResponse = await vscode.window.showOpenDialog({ canSelectFolders: false, canSelectFiles: true, title: localize("Select '.mod' file to import"), filters: { "ECL .mod": ["mod"], "All Files": ["*"] } });
+        if (dlgResponse && dlgResponse.length) {
+            vscode.workspace.openTextDocument(dlgResponse[0].fsPath).then(async (document) => {
+                let text = document.getText();
+                text = text.split("\r\n").join("\n");
+                text = text.split("\r").join("\n");
+
+                let currID = "";
+                const attrs: { [id: string]: string[] } = {};
+
+                text.split("\n").forEach((line, idx) => {
+                    if (line.toLowerCase().indexOf(IMPORT_MARKER.toLowerCase()) === 0) {
+                        currID = line.substring(IMPORT_MARKER.length);
+                        let i = 2;
+                        let dupID = currID;
+                        while (attrs[dupID] !== undefined) {
+                            dupID = currID + ` (${i++})`;
+                        }
+                        currID = dupID;
+                        attrs[currID] = [];
+                    } else if (currID) {
+                        attrs[currID].push(line);
+                    }
+                });
+
+                const dlgResponse = await vscode.window.showOpenDialog({ canSelectFolders: true, canSelectFiles: false, title: localize("Select Target Folder for '.mod' file import") });
+                if (dlgResponse && dlgResponse.length) {
+                    const targetDir = dlgResponse[0].fsPath;
+
+                    let skipAll = false;
+                    let overwriteAll = false;
+                    const items = Object.keys(attrs);
+                    for (const item of items) {
+                        let folder = targetDir;
+
+                        //  Ensure folder exists
+                        const itemParts = item.split(".");
+                        for (let i = 0; i < itemParts.length - 1; ++i) {
+                            folder = path.join(folder, itemParts[i]);
+                            if (!fs.existsSync(folder)) {
+                                fs.mkdirSync(folder);
+                            }
+                        }
+
+                        //  Check for file extension
+                        let fileLeaf = itemParts[itemParts.length - 1];
+                        const filePathParts = fileLeaf.split(":");
+                        if (filePathParts.length > 1) {
+                            fileLeaf = filePathParts.join(".");
+                        } else {
+                            fileLeaf += ".ecl";
+                        }
+
+                        const filePath = path.join(folder, fileLeaf);
+
+                        //  Check if file already exists
+                        let doWrite = true;
+                        if (fs.existsSync(filePath)) {
+                            if (skipAll) {
+                                doWrite = false;
+                            } else if (overwriteAll) {
+                                doWrite = true;
+                            } else {
+                                switch (await vscode.window.showWarningMessage(localize("File already exists") + ` "${filePath}"`, SKIP, SKIP_ALL, OVERWRITE, OVERWRITE_ALL)) {
+                                    case SKIP:
+                                        doWrite = false;
+                                        break;
+                                    case SKIP_ALL:
+                                        doWrite = false;
+                                        skipAll = true;
+                                        break;
+                                    case OVERWRITE:
+                                        doWrite = true;
+                                        break;
+                                    case OVERWRITE_ALL:
+                                        doWrite = true;
+                                        overwriteAll = true;
+                                        break;
+                                    default:
+                                        doWrite = false;
+                                }
+                            }
+                        }
+
+                        //  Write File
+                        if (doWrite) {
+                            fs.writeFile(filePath, attrs[item].join(os.EOL), "utf8", () => { });
+                        }
+                    }
                 }
             });
         }

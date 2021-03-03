@@ -36,6 +36,8 @@
     "Generate source from KEL file": "Generate source from KEL file",
     "Generated ECL location": "Generated ECL location",
     "Homepage": "Homepage",
+    "Import '.mod' file": "Import '.mod' file",
+    "Import ECL '.mod' file": "Import ECL '.mod' file",
     "Insert Record Definition": "Insert Record Definition",
     "Insert logical file record definition": "Insert logical file record definition",
     "Install": "Install",
