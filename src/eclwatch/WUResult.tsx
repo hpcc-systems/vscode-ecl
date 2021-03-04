@@ -12,22 +12,23 @@ import { Store } from "./WUResultStore";
 
 import "../../src/eclwatch/WUResult.css";
 
-function typeTPL(type: string) {
+function typeTPL(type: string, isSet: boolean) {
+    const prefix = isSet ? "SET OF " : "";
     switch (type) {
         case "xs:boolean":
-            return "BOOLEAN";
+            return prefix + "BOOLEAN";
         case "xs:integer":
-            return "INTEGER";
+            return prefix + "INTEGER";
         case "xs:nonNegativeInteger":
-            return "UNSIGNED INTEGER";
+            return prefix + "UNSIGNED INTEGER";
         case "xs:real":
-            return "REAL";
+            return prefix + "REAL";
         case "xs:string":
-            return "VARSTRING";
+            return prefix + "VARSTRING";
         case "xs:hexBinary":
-            return "DATA";
+            return prefix + "DATA";
         default:
-            return type.toUpperCase();
+            return prefix + type.toUpperCase();
     }
 }
 
@@ -43,7 +44,12 @@ function valueTPL(value: string | number | boolean) {
 }
 
 function rowTPL(row: object) {
-    return `{${Object.values(row).map(valueTPL).join(", ")}}`;
+    return `{${Object.values(row).map(field => {
+        if (field.Item) {
+            return `[${field.Item.map(valueTPL).join(", ")}]`;
+        }
+        return valueTPL(field);
+    }).join(", ")}}`;
 }
 
 function rowsTPL(row: object[], prefix = "    ") {
@@ -53,7 +59,7 @@ function rowsTPL(row: object[], prefix = "    ") {
 function copyRowsTPL(fields: XSDXMLNode[], row: object[]) {
     return `
 r := RECORD
-${fields.map(f => `    ${typeTPL(f.type)} ${f.name};`).join("\n")}
+${fields.map(f => `    ${typeTPL(f.type, f.isSet)} ${f.name};`).join("\n")}
 END;
 
 d := DATASET([
@@ -73,7 +79,7 @@ function copyColumnTPL(col: number, dedup: boolean, fields: XSDXMLNode[], row: o
         set = row.map(r => valueTPL(r[name]));
     }
     return `
-SET OF ${typeTPL(fields[col].type)} ${name} := [${set.join(",")}];
+SET OF ${typeTPL(fields[col].type, false)} ${name} := [${set.join(",")}];
 `;
 }
 
@@ -329,24 +335,31 @@ export class WUResultTable extends Common {
                 const pDiv = document.createElement("div");
                 (e.target as HTMLElement).appendChild(pDiv);
                 ReactDOM.render(
-                    <ContextMenu target={e} menuItems={[
-                        {
-                            key: "copyColumnAsECL",
-                            text: "Copy Column as ECL SET",
-                            onClick: () => {
-                                this.copyColumn(cell);
+                    <ContextMenu target={e} menuItems={
+                        cell.column.isSet ? [
+                            {
+                                key: "copyAllAsECL",
+                                text: "Copy All as ECL",
+                                onClick: () => this.copyAll()
                             }
-                        },
-                        {
-                            key: "div1",
-                            itemType: ContextualMenuItemType.Divider,
-                        },
-                        {
-                            key: "copyAllAsECL",
-                            text: "Copy All as ECL",
-                            onClick: () => this.copyAll()
-                        }
-                    ]} />,
+                        ] : [
+                            {
+                                key: "copyColumnAsECL",
+                                text: "Copy Column as ECL SET",
+                                onClick: () => {
+                                    this.copyColumn(cell);
+                                }
+                            },
+                            {
+                                key: "div1",
+                                itemType: ContextualMenuItemType.Divider,
+                            },
+                            {
+                                key: "copyAllAsECL",
+                                text: "Copy All as ECL",
+                                onClick: () => this.copyAll()
+                            }
+                        ]} />,
                     pDiv
                 );
             });
