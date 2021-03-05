@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.11.0...v2.12.0) (2021-03-05)
+
+
+### Features
+
+*  Copy file path as ECL ID ([8de7571](https://github.com/hpcc-systems/vscode-ecl/commit/8de7571975cc602b88dffd88e41592bcf768e768)), closes [#237](https://github.com/hpcc-systems/vscode-ecl/issues/237)
+
+
+### Bug Fixes
+
+*  Add support for SET OF to Copy As ECL ([d0aa19e](https://github.com/hpcc-systems/vscode-ecl/commit/d0aa19e51585c890a97c28cdb321f3661ff2f99a)), closes [#235](https://github.com/hpcc-systems/vscode-ecl/issues/235)
+
 ## [2.11.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.10.0...v2.11.0) (2021-03-03)
 
 
