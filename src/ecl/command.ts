@@ -37,6 +37,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.importModFile", this.importModFile));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.copyAsEclID", this.copyAsEclID));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -286,6 +287,19 @@ export class ECLCommands {
                     }
                 }
             });
+        }
+    }
+
+    copyAsEclID(file, files) {
+        const ids: string[] = [];
+        (Array.isArray(files) ? files : [file]).forEach(file => {
+            let relPath = vscode.workspace.asRelativePath(file.path);
+            relPath = relPath.replace(/\.[^/.]+$/, "");
+            relPath = relPath.split("\\").join("/");
+            ids.push(relPath.split("/").join("."));
+        });
+        if (ids.length) {
+            vscode.env.clipboard.writeText(ids.join(os.EOL));
         }
     }
 }
