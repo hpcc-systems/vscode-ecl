@@ -11,6 +11,11 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.12.x
+* Added "Copy as ECL ID" command to explorer and editor tab context menus
+
+![Version 2.12](resources/readme-v2_12.gif)
+
 ### v2.11.x
 * Added "Import MOD file" command
 
@@ -140,6 +145,12 @@ The following ECL specific commands are available.  Note:  These commands will *
 | Language Reference Lookup | shift+F1 | For the currently selected text, search the online ECL language reference |
 | Insert Record Definition | ctrl/cmd+I R | Fetches record definition for given logical file |
 
+#### Within the ECL Code Editor Tab Context Menu:
+
+| Command                   | Shortcut | Description                                                      |
+|---------------------------|:--------:|------------------------------------------------------------------|
+| Copy as ECL ID | | Copy path as Qualified ECL ID | 
+
 #### Within the Workunit Tree:
 
 | Command                   | Shortcut | Description                                                      |
@@ -149,6 +160,12 @@ The following ECL specific commands are available.  Note:  These commands will *
 |![Refresh](resources/light-png/refresh.png) Refresh | | Refresh Tree |
 |![ECL Watch](resources/light-png/globe.png) ECL Watch | | Launch ECL Watch in external browser |
 |![Switch](resources/light-png/server-process.png) Switch Platform | | Switch HPCC Platform instance (launch configuration) | 
+
+#### Within the Explorer Tree Context Menu (ecl files only):
+
+| Command                   | Shortcut | Description                                                      |
+|---------------------------|:--------:|------------------------------------------------------------------|
+| Copy as ECL ID | | Copy path as Qualified ECL ID | 
 
 #### Within the Status Bar
 
