@@ -229,27 +229,27 @@ export class ECLCommands {
                     let overwriteAll = false;
                     const items = Object.keys(attrs);
                     for (const item of items) {
-                        let folder = targetDir;
+                        let qualifiedID = item;
+                        let ext = "ecl";
+
+                        //  Check for file extension
+                        let qualifiedIDParts = qualifiedID.split(":");
+                        if (qualifiedIDParts.length > 1) {
+                            qualifiedID = qualifiedIDParts[1];
+                            ext = qualifiedIDParts[0];
+                        }
 
                         //  Ensure folder exists
-                        const itemParts = item.split(".");
-                        for (let i = 0; i < itemParts.length - 1; ++i) {
-                            folder = path.join(folder, itemParts[i]);
+                        qualifiedIDParts = qualifiedID.split(".");
+                        let folder = targetDir;
+                        for (let i = 0; i < qualifiedIDParts.length - 1; ++i) {
+                            folder = path.join(folder, qualifiedIDParts[i]);
                             if (!fs.existsSync(folder)) {
                                 fs.mkdirSync(folder);
                             }
                         }
 
-                        //  Check for file extension
-                        let fileLeaf = itemParts[itemParts.length - 1];
-                        const filePathParts = fileLeaf.split(":");
-                        if (filePathParts.length > 1) {
-                            fileLeaf = filePathParts.join(".");
-                        } else {
-                            fileLeaf += ".ecl";
-                        }
-
-                        const filePath = path.join(folder, fileLeaf);
+                        const filePath = path.join(folder, `${qualifiedIDParts[qualifiedIDParts.length - 1]}.${ext}`);
 
                         //  Check if file already exists
                         let doWrite = true;
