@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.12.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.0...v2.12.1) (2021-03-10)
+
+
+### Bug Fixes
+
+* Import mod file parses extension incorrectly ([79c8146](https://github.com/hpcc-systems/vscode-ecl/commit/79c81463d9cc8bd0096fb0329531af72c38fd7eb)), closes [#241](https://github.com/hpcc-systems/vscode-ecl/issues/241)
+
 ## [2.12.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.11.0...v2.12.0) (2021-03-05)
 
 
