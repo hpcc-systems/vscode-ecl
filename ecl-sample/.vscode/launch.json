@@ -2,20 +2,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "play.hpccsystems.com",
-            "type": "ecl",
-            "request": "launch",
-            "protocol": "https",
-            "serverAddress": "play.hpccsystems.com",
-            "port": 18010,
-            "targetCluster": "hthor",
-            "rejectUnauthorized": false,
-            "resultLimit": 100,
-            "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
-        },
-        {
             "name": "localhost",
             "type": "ecl",
             "request": "launch",

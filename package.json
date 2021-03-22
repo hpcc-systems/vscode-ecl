@@ -1118,12 +1118,12 @@
         },
         "initialConfigurations": [
           {
-            "name": "play.hpccsystems.com",
+            "name": "localhost",
             "type": "ecl",
             "request": "launch",
-            "protocol": "https",
-            "serverAddress": "play.hpccsystems.com",
-            "port": 18010,
+            "protocol": "http",
+            "serverAddress": "localhost",
+            "port": 8010,
             "targetCluster": "hthor",
             "rejectUnauthorized": false,
             "resultLimit": 100,
@@ -1134,7 +1134,7 @@
         ],
         "configurationSnippets": [
           {
-            "label": "ECL:  localhost",
+            "label": "ECL:  localhost (http)",
             "description": "%A new configuration to submit ECL to localhost, hthor%",
             "body": {
               "name": "localhost",
@@ -1152,14 +1152,14 @@
             }
           },
           {
-            "label": "ECL:  play.hpccsystems.com",
-            "description": "%Submits ECL to public demo servers, hthor%",
+            "label": "ECL:  localhost (https)",
+            "description": "%A new configuration to submit ECL to localhost, hthor%",
             "body": {
-              "name": "play.hpccsystems.com",
+              "name": "localhost (https)",
               "type": "ecl",
               "request": "launch",
               "protocol": "https",
-              "serverAddress": "play.hpccsystems.com",
+              "serverAddress": "localhost",
               "port": 18010,
               "targetCluster": "hthor",
               "rejectUnauthorized": false,
