@@ -10,7 +10,7 @@
         },
         {
             "name": "entity.name.type.ecl",
-            "match": "#\\b(?i)append|break|constant|declare|demangle|expand|end|error|export|exportxml|for|getdatatype|if|inmodule|loop|mangle|onwarning|option|set|stored|text|uniquename|warning|webservice|workunit(?-i)\\b"
+            "match": "#\\b(?i)append|break|constant|declare|demangle|else|expand|end|error|export|exportxml|for|getdatatype|if|inmodule|loop|mangle|onwarning|option|set|stored|text|uniquename|warning|webservice|workunit(?-i)\\b"
         },
         {
             "name": "entity.name.type.ecl",
@@ -34,11 +34,7 @@
         },
         {
             "name": "entity.name.type.ecl",
-            "match": "\\b(?i:(ascii|big_endian|boolean|data|decimal|ebcdic|grouped|integer|linkcounted|pattern|qstring|real|record|rule|set of|streamed|string|token|udecimal|unicode|utf8|unsigned|varstring|varunicode))\\b"
-        },
-        {
-            "name": "keyword.other.ecl",
-            "match": "\\b(?i:(and|or|in|not|all|any|as|from|atmost|before|beginc|best|between|case|const|counter|csv|descend|embed|encrypt|end|endc|endembed|endmacro|enum|except|exclusive|expire|extend|fail|few|first|flat|full|function|functionmacro|group|heading|hole|ifblock|import|in|joined|keep|keyed|last|left|limit|load|local|locale|lookup|macro|many|maxcount|maxlength|min skew|module|interface|named|nocase|noroot|noscan|nosort|of|only|opt|outer|overwrite|packed|partition|penalty|physicallength|pipe|quote|record|repeat|return|right|rows|scan|self|separator|service|shared|skew|skip|sql|store|terminator|thor|threshold|token|transform|trim|type|unicodeorder|unsorted|validate|virtual|whole|wild|within|xml|xpath|after|cluster|compressed|compression|default|encoding|escape|fileposition|forward|grouped|inner|internal|linkcounted|literal|little_endian|lzw|mofn|multiple|namespace|nocase|wnotrim|noxpath|onfail|overwrite|prefetch|retry|right1|right2|rowset|xpath|scope|smart|soapaction|stable|timelimit|timeout|unordered|unstable|update|use|width|__compressed__))\\b"
+            "match": "\\b(?i:(ascii|big_endian|boolean|data|decimal|ebcdic|grouped|integer|linkcounted|pattern|qstring|real|rule|set of|streamed|string|token|udecimal|unicode|utf8|unsigned|varstring|varunicode))\\b"
         },
         {
             "name": "keyword.other.ecl",
@@ -46,7 +42,7 @@
         },
         {
             "name": "keyword.control.ecl",
-            "match": "\\b(?i:(import|as|checkpoint|deprecated|failcode|failmessage|failure|global|independent|onwarning|persist|priority|recovery|stored|success|wait|when))\\b"
+            "match": "\\b(?i:(as|checkpoint|deprecated|failcode|failmessage|failure|global|independent|onwarning|persist|priority|recovery|stored|success|wait|when))\\b"
         },
         {
             "name": "keyword.operator.ecl",
@@ -55,35 +51,18 @@
         {
             "name": "support.class.ecl",
             "match": "\\b(?i:(std).(file|date|str|math|metaphone|metaphone3|uni|audit|blas|system.(debug|email|job|log|thorlib|util|workunit)))\\b"
-        },
-        {
-            "match": "([A-Za-z_]+)\\s*(\\()",
-            "captures": {
-                "1": {
-                    "patterns": [
-                        {
-                            "include": "#functions"
-                        },
-                        {
-                            "include": "#functions2"
-                        }
-                    ]
-                }
-            }
         }
     ],
     "repository": {
-        "functions": {
-            "name": "entity.name.function.ecl",
-            "match": "\\b(?i:(abs|acos|aggregate|allnodes|apply|ascii|asin|asstring|atan|atan2|ave|case|catch|choose|choosen|choosesets|clustersize|combine|correlation|cos|cosh|count|covariance|cron|dataset|dedup|define|denormalize|dictionary|distribute|distributed|distribution|ebcdic|enth|evaluate|event|eventextra|eventname|exists|exp|failcode|failmessage|fetch|fromunicode|fromxml|getenv|getisvalid|global|graph|group|hash|hash32|hash64|hashcrc|hashmd5|having|httpcall|httpheader|if|iff|index|intformat|isvalid|iterate|join|keyunicode|length|library|limit|ln|local|log|loop|map|matched|matchlength|matchposition|matchtext|matchunicode|max|merge|mergejoin|min|nofold|nolocal|nonempty|normalize|parse|pipe|power|preload|process|project|pull|random|range|rank|ranked|realformat|recordof|regexfind|regexreplace|regroup|rejected|rollup|round|roundup|row|rowdiff|sample|set|sin|sinh|sizeof|soapcall|sort|sorted|sqrt|stepped|stored|sum|table|tan|tanh|thisnode|topn|tounicode|toxml|transfer|transform|trim|truncate|typeof|ungroup|unicodeorder|variance|which|workunit|xmldecode|xmlencode|xmltext|xmlunicode))\\b"
-        },
-        "functions2": {
-            "name": "entity.name.function.ecl",
-            "match": "\\b(?i:(apply|assert|build|buildindex|evaluate|fail|keydiff|keypatch|loadxml|nothor|notify|output|parallel|sequential|soapcall|wait))\\b"
-        },
         "expression": {
             "name": "meta.expression.ecl",
             "patterns": [
+                {
+                    "include": "#function-call"
+                },
+                {
+                    "include": "#keywords"
+                },                
                 {
                     "include": "#comment"
                 },
@@ -97,6 +76,33 @@
                     "include": "#literal"
                 }
             ]
+        },
+        "function-call": {
+            "match": "([A-Za-z_]+)\\s*(\\()",
+            "captures": {
+                "1": {
+                    "patterns": [
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#functions2"
+                        }
+                    ]
+                }
+            }
+        },
+        "functions": {
+            "name": "entity.name.function.ecl",
+            "match": "\\b(?i:(abs|acos|aggregate|allnodes|apply|ascii|asin|asstring|atan|atan2|ave|case|catch|choose|choosen|choosesets|clustersize|combine|correlation|cos|cosh|count|covariance|cron|dataset|dedup|define|denormalize|dictionary|distribute|distributed|distribution|ebcdic|enth|evaluate|event|eventextra|eventname|exists|exp|failcode|failmessage|fetch|fromunicode|fromxml|getenv|getisvalid|global|graph|group|hash|hash32|hash64|hashcrc|hashmd5|having|httpcall|httpheader|if|iff|index|intformat|isvalid|iterate|join|keyunicode|length|library|limit|ln|local|log|loop|map|matched|matchlength|matchposition|matchtext|matchunicode|max|merge|mergejoin|min|nofold|nolocal|nonempty|normalize|parse|pipe|power|preload|process|project|pull|random|range|rank|ranked|realformat|recordof|regexfind|regexreplace|regroup|rejected|rollup|round|roundup|row|rowdiff|sample|set|sin|sinh|sizeof|soapcall|sort|sorted|sqrt|stepped|stored|sum|table|tan|tanh|thisnode|topn|tounicode|toxml|transfer|transform|trim|truncate|typeof|ungroup|unicodeorder|variance|which|workunit|xmldecode|xmlencode|xmltext|xmlunicode))\\b"
+        },
+        "functions2": {
+            "name": "entity.name.function.ecl",
+            "match": "\\b(?i:(apply|assert|build|buildindex|evaluate|fail|keydiff|keypatch|loadxml|nothor|notify|output|parallel|sequential|soapcall|wait))\\b"
+        },
+        "keywords": {
+            "name": "keyword.other.ecl",
+            "match": "\\b(?i:(and|or|in|not|all|any|as|from|atmost|before|beginc|best|between|case|const|counter|csv|descend|embed|encrypt|end|endc|endembed|endmacro|enum|except|exclusive|expire|export|extend|fail|few|first|flat|full|function|functionmacro|group|heading|hole|ifblock|import|in|joined|keep|keyed|last|left|limit|load|local|locale|lookup|macro|many|maxcount|maxlength|min skew|module|interface|named|nocase|noroot|noscan|nosort|of|only|opt|outer|overwrite|packed|partition|penalty|physicallength|pipe|quote|record|repeat|return|right|rows|scan|self|separator|service|shared|skew|skip|sql|store|terminator|thor|threshold|token|transform|trim|type|unicodeorder|unsorted|validate|virtual|whole|wild|within|xml|xpath|after|cluster|compressed|compression|default|encoding|escape|fileposition|forward|grouped|inner|internal|linkcounted|literal|little_endian|lzw|mofn|multiple|namespace|nocase|wnotrim|noxpath|onfail|overwrite|prefetch|retry|right1|right2|rowset|xpath|scope|smart|soapaction|stable|timelimit|timeout|unordered|unstable|update|use|width|__compressed__))\\b"
         },
         "comment": {
             "name": "comment.ecl",
