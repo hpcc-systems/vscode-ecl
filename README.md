@@ -231,19 +231,14 @@ Submitting ECL using VS-Code requires specifying the target environment within t
 ```typescript
 // Default ECL Launch Configuration
 {
-  "name": "play-hthor-submit",
+  "name": "localhost",
   "type": "ecl",
   "request": "launch",
-  "protocol": "https",
-  "serverAddress": "play.hpccsystems.com",
-  "port": 18010,
+  "protocol": "http",
+  "serverAddress": "localhost",
+  "port": 8010,
   "targetCluster": "hthor",
-  "abortSubmitOnError": false,
   "rejectUnauthorized": false,
-  "eclccPath": "",
-  "eclccArgs": [],
-  "eclccSyntaxArgs": [],
-  "eclccLogFile": "",
   "resultLimit": 100,
   "timeoutSecs": 60,
   "user": "vscode_user",
