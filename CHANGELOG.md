@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.12.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.1...v2.12.2) (2021-03-23)
+
+
+### Bug Fixes
+
+*  Remove "play.hpccsystems.com" from launch snippets ([19eb89e](https://github.com/hpcc-systems/vscode-ecl/commit/19eb89e639bd3f9ec5bfb2a09dd3e1b57c1f99a5))
+* lexer for ecl ([dea0e54](https://github.com/hpcc-systems/vscode-ecl/commit/dea0e546a67cf3b9cf9f1ab32019dbb3d86e3d38))
+
 ### [2.12.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.0...v2.12.1) (2021-03-10)
 
 
