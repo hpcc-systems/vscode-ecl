@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.12.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.2...v2.12.3) (2021-03-25)
+
+
+### Bug Fixes
+
+* lexer for ecl ([b17a7c8](https://github.com/hpcc-systems/vscode-ecl/commit/b17a7c869da0da7da8e466e692e56ca140128cf8))
+
 ### [2.12.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.1...v2.12.2) (2021-03-23)
 
 
