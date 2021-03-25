@@ -58,11 +58,11 @@
             "name": "meta.expression.ecl",
             "patterns": [
                 {
-                    "include": "#function-call"
+                    "include": "#keywords"
                 },
                 {
-                    "include": "#keywords"
-                },                
+                    "include": "#function-call"
+                },
                 {
                     "include": "#comment"
                 },
