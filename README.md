@@ -12,6 +12,7 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 ## Recent Highlights
 
 ### v2.12.x
+* Updated translations, added FR locale.
 * Added "Copy as ECL ID" command to explorer and editor tab context menus
 
 ![Version 2.12](resources/readme-v2_12.gif)
