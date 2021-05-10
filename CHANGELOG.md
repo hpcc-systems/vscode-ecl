@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.12.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.3...v2.12.4) (2021-05-10)
+
+
+### Bug Fixes
+
+* **build:**  Bump versions for latest security updates ([f221db3](https://github.com/hpcc-systems/vscode-ecl/commit/f221db3da9cd058f65a84423e69ffbd6c6fcbf57))
+
 ### [2.12.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.2...v2.12.3) (2021-03-25)
 
 
