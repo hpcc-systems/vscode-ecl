@@ -102,7 +102,9 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
             update(true, [], []);
         }
 
-        return () => (canceled = true);
+        return () => {
+            canceled = true;
+        };
     }, [baseUrl, wuid]);
 
     React.useEffect(() => {
