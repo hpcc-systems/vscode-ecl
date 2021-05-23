@@ -1,4 +1,4 @@
-name: Pull Build Test
+name: Publish to GitHub
 
 on:
   push:
