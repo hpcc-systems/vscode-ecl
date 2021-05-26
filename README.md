@@ -12,8 +12,10 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 ## Recent Highlights
 
 ### v2.12.x
+* Added extra support for Trustwave CA authority.
+* Fixed issue with `rejectAuthorized: false` being ignored.
 * Updated translations, added FR locale.
-* Added "Copy as ECL ID" command to explorer and editor tab context menus
+* Added "Copy as ECL ID" command to explorer and editor tab context menus.
 
 ![Version 2.12](resources/readme-v2_12.gif)
 
@@ -239,7 +241,7 @@ Submitting ECL using VS-Code requires specifying the target environment within t
   "serverAddress": "localhost",
   "port": 8010,
   "targetCluster": "hthor",
-  "rejectUnauthorized": false,
+  "rejectUnauthorized": true,
   "resultLimit": 100,
   "timeoutSecs": 60,
   "user": "vscode_user",
