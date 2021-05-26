@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.12.6](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.5...v2.12.6) (2021-05-26)
+
+
+### Bug Fixes
+
+* **proxy:**  Add extra support for new VS Code proxy settings ([58e7705](https://github.com/hpcc-systems/vscode-ecl/commit/58e7705e45b582677e96afb194b6dd6139989499))
+
 ### [2.12.5](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.4...v2.12.5) (2021-05-23)
 
 ### [2.12.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.3...v2.12.4) (2021-05-10)
