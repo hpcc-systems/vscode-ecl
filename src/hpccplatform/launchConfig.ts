@@ -10,6 +10,9 @@ import localize from "../util/localize";
 
 const logger = scopedLogger("launchConfig.ts");
 
+const PROXY_WARNING = localize("User setting 'http.proxySupport' is set to 'override'.\nThis will prevent ECL from targetting 'Trustwave' signed sites and will also prevent 'rejectUnauthorized: false' from working.\nSetting this to 'fallback' will resolve these issues.");
+const SET_FALLBACK = localize("Set to 'fallback'");
+
 function xmlFile(programPath: string): Promise<{ err: EclccErrors, content: string }> {
     return new Promise((resolve, reject) => {
         fs.readFile(programPath, "utf8", function (err, content) {
@@ -230,12 +233,24 @@ export class LaunchConfig implements LaunchRequestArguments {
         return retVal;
     }
 
-    private verifyUser(): Promise<LaunchConfigState> {
+    private async verifyUser(): Promise<LaunchConfigState> {
         const credentials = this.credentials();
         if (credentials.verified) {
             return Promise.resolve(LaunchConfigState.Ok);
         }
-        const acService = new AccountService(this.opts(credentials));
+        const opts = this.opts(credentials);
+        if (opts.baseUrl.indexOf("https:") === 0) {
+            const config = vscode.workspace.getConfiguration();
+            if (config.get("http.proxySupport") === "override") {
+                const response = await vscode.window.showWarningMessage(PROXY_WARNING, { modal: true }, SET_FALLBACK);
+                switch (response) {
+                    case SET_FALLBACK:
+                        await config.update("http.proxySupport", "fallback", true);
+                        break;
+                }
+            }
+        }
+        const acService = new AccountService(opts);
         return acService.VerifyUser({
             application: "vscode-ecl",
             version: "2"
