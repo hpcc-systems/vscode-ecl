@@ -65,13 +65,15 @@ export class Localize {
         format: string,
         candidate: string
     ): string {
-        const filename = format.replace("{0}", `.${candidate}`);
-        const filepath = resolve(rootPath, filename);
-        if (existsSync(filepath)) {
-            return filename;
-        }
-        if (candidate.split("-")[0] !== candidate) {
-            return this.recurseCandidates(rootPath, format, candidate.split("-")[0]);
+        if (rootPath !== undefined && format !== undefined && candidate !== undefined) {
+            const filename = format.replace("{0}", `.${candidate}`);
+            const filepath = resolve(rootPath, filename);
+            if (existsSync(filepath)) {
+                return filename;
+            }
+            if (candidate.split("-")[0] !== candidate) {
+                return this.recurseCandidates(rootPath, format, candidate.split("-")[0]);
+            }
         }
         return format.replace("{0}", "");
     }
