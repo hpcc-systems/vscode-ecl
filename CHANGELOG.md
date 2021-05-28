@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.7...v2.13.0) (2021-05-28)
+
+
+### Features
+
+*  Added ecl.forceProxySupport setting ([1c1c1bf](https://github.com/hpcc-systems/vscode-ecl/commit/1c1c1bfd4cc5f50ba7bc2430179cced315c15502))
+
 ### [2.12.7](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.3...v2.12.7) (2021-05-27)
 
 
