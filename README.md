@@ -11,6 +11,9 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.13.x
+* Add `ecl.forceProxySupport` setting.
+
 ### v2.12.x
 * Added extra support for Trustwave CA authority.
 * Fixed issue with `rejectAuthorized: false` being ignored.
@@ -225,6 +228,8 @@ The following Visual Studio Code settings are available for the ECL extension.  
   // Automatically open Workunits on creation.
   "ecl.WUAutoOpen": false
 
+  // Force global 'proxySupport' to 'fallback'
+  "ecl.forceProxySupport": false
 ```
 
 #### ECL Launch Settings

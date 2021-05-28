@@ -242,7 +242,8 @@ export class LaunchConfig implements LaunchRequestArguments {
         if (opts.baseUrl.indexOf("https:") === 0) {
             const config = vscode.workspace.getConfiguration();
             if (config.get("http.proxySupport") === "override") {
-                const response = await vscode.window.showWarningMessage(PROXY_WARNING, { modal: true }, SET_FALLBACK);
+                const eclConfig = vscode.workspace.getConfiguration("ecl");
+                const response = eclConfig.get("forceProxySupport") ? SET_FALLBACK : await vscode.window.showWarningMessage(PROXY_WARNING, { modal: true }, SET_FALLBACK);
                 switch (response) {
                     case SET_FALLBACK:
                         await config.update("http.proxySupport", "fallback", true);
