@@ -33,6 +33,7 @@
     "Edit Dashboard": "Edit Dashboard",
     "Export ECL Markdown to HTML": "Export ECL Markdown to HTML",
     "For the currently selected text, search the online ECL language reference": "For the currently selected text, search the online ECL language reference",
+    "Force global 'proxySupport' to 'fallback'": "Force global 'proxySupport' to 'fallback'",
     "Generate": "Generate",
     "Generate ECL on save": "Generate ECL on save",
     "Generate source from KEL file": "Generate source from KEL file",

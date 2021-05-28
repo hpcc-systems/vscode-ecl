@@ -957,6 +957,12 @@
           "default": false,
           "description": "%Automatically open Workunits on creation%"
         },
+        "ecl.forceProxySupport": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false,
+          "description": "%Force global 'proxySupport' to 'fallback'%"
+        },
         "dashy.libraryLocation": {
           "type": "string",
           "scope": "resource",
