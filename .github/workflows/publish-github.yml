@@ -31,4 +31,4 @@ jobs:
       - uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "*.vsix"
+          asset_path: "./hpcc-systems.ecl.vsix"
