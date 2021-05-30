@@ -38,7 +38,7 @@
     "git-push": "git push --follow-tags upstream trunk",
     "preinstall": "npm run dev-unlink || echo \"Clean Install - ignore previous error!\"",
     "vsce-publish": "vsce publish",
-    "vsce-package": "vsce package",
+    "vsce-package": "vsce package -o ./hpcc-systems.ecl.vsix",
     "tag": "run-s standard-version git-push"
   },
   "devDependencies": {

@@ -2,12 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "localhost",
+            "name": "play (https)",
             "type": "ecl",
             "request": "launch",
-            "protocol": "http",
-            "serverAddress": "localhost",
-            "port": 8010,
+            "protocol": "https",
+            "serverAddress": "play.hpccsystems.com",
+            "port": 18010,
             "targetCluster": "thor",
             "rejectUnauthorized": true,
             "resultLimit": 100,
@@ -30,12 +30,12 @@
             "password": ""
         },
         {
-            "name": "play (https)",
+            "name": "localhost",
             "type": "ecl",
             "request": "launch",
-            "protocol": "https",
-            "serverAddress": "play.hpccsystems.com",
-            "port": 18010,
+            "protocol": "http",
+            "serverAddress": "localhost",
+            "port": 8010,
             "targetCluster": "thor",
             "rejectUnauthorized": true,
             "resultLimit": 100,
