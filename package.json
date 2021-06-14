@@ -118,7 +118,7 @@
           "ECL",
           "ecl"
         ],
-        "configuration": "./ecl.configuration.json"
+        "configuration": "./ecl-tmLanguage/ecl.configuration.json"
       },
       {
         "id": "kel",
@@ -160,7 +160,7 @@
       {
         "language": "ecl",
         "scopeName": "source.ecl",
-        "path": "./syntaxes/ecl.tmLanguage.json"
+        "path": "./ecl-tmLanguage/syntaxes/ecl.tmLanguage.json"
       },
       {
         "language": "kel",
