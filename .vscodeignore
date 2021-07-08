@@ -7,6 +7,7 @@
 !resources/**/*
 !snippets/**/*
 !syntaxes/**/*
+!ecl-tmLanguage/**/*
 
 !.vscodeignore
 !CHANGELOG.md
