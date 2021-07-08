@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.14.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.13.1...v2.14.0) (2021-07-08)
+
+
+### Features
+
+*  Ping server to ensure connection is up ([865194f](https://github.com/hpcc-systems/vscode-ecl/commit/865194f0ba89fbbe31e4d00961ea26cdc77d49ef)), closes [#268](https://github.com/hpcc-systems/vscode-ecl/issues/268)
+
 ### [2.13.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.13.0...v2.13.1) (2021-05-30)
 
 ## [2.13.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.12.7...v2.13.0) (2021-05-28)
