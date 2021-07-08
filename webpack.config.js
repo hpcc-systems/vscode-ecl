@@ -3,7 +3,14 @@
 "use strict";
 
 const path = require("path");
-const webpack = require("webpack");
+
+const resolve = {
+    fallback: {
+        "@hpcc-js/comms": path.resolve(__dirname, "../hpcc-js/packages/comms/dist/index.node.js"),
+        "@hpcc-js": path.resolve(__dirname, "../hpcc-js/packages")
+    }
+};
+
 
 /**@type {import('webpack').Configuration}*/
 const config = [{
@@ -35,7 +42,7 @@ const config = [{
         }]
     },
 
-    resolve: {},
+    resolve,
 
     plugins: []
 }, {
@@ -69,7 +76,7 @@ const config = [{
         }]
     },
 
-    resolve: {},
+    resolve,
 
     plugins: []
 }];

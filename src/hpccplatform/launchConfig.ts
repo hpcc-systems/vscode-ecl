@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, Service } from "@hpcc-js/comms";
 import { scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
@@ -34,6 +34,28 @@ function gatherServers(wuf?: vscode.WorkspaceFolder) {
                 g_launchConfigurations[`${launchConfig.name}${wuf ? ` (${wuf.name})` : ""}`] = launchConfig;
             }
         }
+    }
+}
+
+export namespace Ping {
+    export interface Response {
+        result: boolean;
+        error?: any;
+    }
+}
+
+export class WorkunitsService extends Service {
+
+    constructor(optsConnection) {
+        super(optsConnection, "WsWorkunits", "1.8");
+    }
+
+    Ping(): Promise<Ping.Response> {
+        return this._connection.send("Ping", {}, "json", false, undefined, "WsWorkunitsPingResponse").then((response) => {
+            return { result: true };
+        }).catch((e: Error) => {
+            return { result: false, error: e };
+        });
     }
 }
 
@@ -233,12 +255,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         return retVal;
     }
 
-    private async verifyUser(): Promise<LaunchConfigState> {
-        const credentials = this.credentials();
-        if (credentials.verified) {
-            return Promise.resolve(LaunchConfigState.Ok);
-        }
-        const opts = this.opts(credentials);
+    private async checkProxy(opts: IOptions) {
         if (opts.baseUrl.indexOf("https:") === 0) {
             const config = vscode.workspace.getConfiguration();
             if (config.get("http.proxySupport") === "override") {
@@ -251,6 +268,15 @@ export class LaunchConfig implements LaunchRequestArguments {
                 }
             }
         }
+    }
+
+    private async verifyUser(): Promise<LaunchConfigState> {
+        const credentials = this.credentials();
+        if (credentials.verified) {
+            return Promise.resolve(LaunchConfigState.Ok);
+        }
+        const opts = this.opts(credentials);
+        await this.checkProxy(opts);
         const acService = new AccountService(opts);
         return acService.VerifyUser({
             application: "vscode-ecl",
@@ -267,6 +293,27 @@ export class LaunchConfig implements LaunchRequestArguments {
             }
             return e?.message.indexOf("ECONNREFUSED") >= 0 ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
         });
+    }
+
+    async pingServer(timeout: number = 5000): Promise<LaunchConfigState> {
+        const credentials = this.credentials();
+        const timeoutPrommise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                reject("timeout");
+            }, timeout);
+        });
+        const opts = this.opts(credentials);
+        await this.checkProxy(opts);
+        const service = new WorkunitsService(this.opts(credentials));
+        const queryPromise = service.Ping();
+        return Promise.race([timeoutPrommise, queryPromise])
+            .then((response: Ping.Response) => {
+                logger.debug("ping response:  " + response.result);
+                return response.result ? LaunchConfigState.Ok : LaunchConfigState.Unreachable;
+            }).catch(e => {
+                logger.debug("ping exception:  " + e?.message || e);
+                return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
+            });
     }
 
     private ping(timeout: number = 5000): Promise<LaunchConfigState> {
