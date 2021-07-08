@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.14.0...v2.14.1) (2021-07-08)
+
+
+### Bug Fixes
+
+*  ECL Syntax colouring missing in vsix package ([074f1a9](https://github.com/hpcc-systems/vscode-ecl/commit/074f1a9db715d685fe335af400ff350c4fb45374))
+
 ## [2.14.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.13.1...v2.14.0) (2021-07-08)
 
 
