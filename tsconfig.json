@@ -19,7 +19,13 @@
         "lib": [
             "dom",
             "ES2019"
-        ]
+        ],
+        "paths": {
+            "@hpcc-js/*": [
+                "./node_modules/@hpcc-js/*",
+                "../hpcc-js/packages/*"
+            ]
+        }
     },
     "include": [
         "./src/**/*.ts",

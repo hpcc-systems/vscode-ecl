@@ -229,6 +229,8 @@ export class WUResultTable extends Common {
     resultName: { (): string, (_: string): WUResultTable };
     @publish(undefined, "number", "Sequence Number")
     sequence: { (): number, (_: number): WUResultTable };
+    @publish("", "string", "Cluster")
+    cluster: { (): string, (_: string): WUResultTable };
     @publish("", "string", "Logical File Name")
     logicalFile: { (): string, (_: string): WUResultTable };
 
@@ -239,11 +241,11 @@ export class WUResultTable extends Common {
             password: this.password()
         };
         if (this.wuid() && this.resultName()) {
-            return new Result(opts, this.wuid(), this.resultName());
+            return Result.attach(opts, this.wuid(), this.resultName());
         } else if (this.wuid() && this.sequence() !== undefined) {
-            return new Result(opts, this.wuid(), this.sequence());
+            return Result.attach(opts, this.wuid(), this.sequence());
         } else if (this.logicalFile()) {
-            return new Result(opts, this.logicalFile());
+            return Result.attachLogicalFile(opts, this.cluster(), this.logicalFile());
         }
         return null;
     }

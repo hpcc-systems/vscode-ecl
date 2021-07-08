@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import { WUQuery, Workunit, ClientTools } from "@hpcc-js/comms";
 import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration } from "./launchConfig";
-import { ECL_MODE } from "../mode";
+import { LaunchConfigState } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
+import { ECL_MODE } from "../mode";
 
 const isMultiRoot = () => vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 1;
 
@@ -91,6 +92,10 @@ class Session {
         return this._launchConfig.sign(key, passphrase, ecl);
     }
 
+    ping(force = false) {
+        return this._launchConfig.pingServer();
+    }
+
     verify(ecl: string) {
         return this._launchConfig.verify(ecl);
     }
@@ -119,9 +124,12 @@ class SessionManager {
     private _onDidCreateWorkunit: vscode.EventEmitter<Workunit> = new vscode.EventEmitter<Workunit>();
     readonly onDidCreateWorkunit: vscode.Event<Workunit> = this._onDidCreateWorkunit.event;
 
-    private _statusBarPin: vscode.StatusBarItem;
+    private _onDidPing: vscode.EventEmitter<LaunchConfigState> = new vscode.EventEmitter<LaunchConfigState>();
+    readonly onDidPing: vscode.Event<LaunchConfigState> = this._onDidPing.event;
+
     private _statusBarLaunch: vscode.StatusBarItem;
     private _statusBarTargetCluster: vscode.StatusBarItem;
+    private _statusBarPin: vscode.StatusBarItem;
 
     constructor() {
         this._statusBarLaunch = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, Number.MIN_VALUE + 2);
@@ -216,6 +224,10 @@ class SessionManager {
         this.switchTo(launchConfig, targetCluster);
         //  Don't load HPCC Platform tree until session is fully initialized
         vscode.commands.executeCommand("setContext", "hpccPlatformActive", true);
+
+        this.onDidPing(state => {
+            this.refreshStatusBar(state);
+        });
     }
 
     private get activeDocument() {
@@ -313,8 +325,17 @@ class SessionManager {
         }
     }
 
+    async updateConnection() {
+        const state = (await this.session?.ping(true)) || LaunchConfigState.Unknown;
+        vscode.commands.executeCommand("setContext", "ecl.connected", state === LaunchConfigState.Ok);
+        this._onDidPing.fire(state);
+    }
+
+    protected _monitor = {};
     switchTo(id?: string, targetCluster?: string) {
         if (!this.session || this.session.id !== id) {
+            vscode.commands.executeCommand("setContext", "ecl.connected", false);
+            this._onDidPing.fire(LaunchConfigState.Unknown);
             const configs = launchConfigurations();
             const launchID = configs.indexOf(id) >= 0 ? id : configs[0];
             if (launchID) {
@@ -327,6 +348,15 @@ class SessionManager {
         }
         this.updateSettings();
         this.refreshStatusBar();
+        if (!this._monitor[this.session.id]) {
+            for (const key in this._monitor) {
+                clearInterval(this._monitor[key]);
+            }
+            this.updateConnection();
+            this._monitor[this.session.id] = setInterval(() => {
+                this.updateConnection();
+            }, 5000);
+        }
     }
 
     updateSettings() {
@@ -403,12 +433,22 @@ class SessionManager {
         this.isActiveECL ? this._statusBarPin.show() : this._statusBarPin.hide();
     }
 
-    refreshLaunchStatusBar() {
-        if (isMultiRoot()) {
-            this._statusBarLaunch.text = this.session?.id;
-        } else {
-            this._statusBarLaunch.text = this.session?.name;
+    stateIcon(state: LaunchConfigState): string {
+        switch (state) {
+            case LaunchConfigState.Credentials:
+                return "$(key)";
+            case LaunchConfigState.Ok:
+                return "$(pass-filled)";
+            case LaunchConfigState.Unreachable:
+                return "$(error)";
+            case LaunchConfigState.Unknown:
+            default:
+                return "$(question)";
         }
+    }
+
+    refreshLaunchStatusBar(state: LaunchConfigState) {
+        this._statusBarLaunch.text = `${this.stateIcon(state)} ${isMultiRoot() ? this.session?.id : this.session?.name}`;
         this._statusBarLaunch.tooltip = localize("HPCC Platform Launch Configuration");
         this.isActiveECL ? this._statusBarLaunch.show() : this._statusBarLaunch.hide();
     }
@@ -419,10 +459,10 @@ class SessionManager {
         this.isActiveECL ? this._statusBarTargetCluster.show() : this._statusBarTargetCluster.hide();
     }
 
-    refreshStatusBar() {
-        this.refreshPinStatusBar();
-        this.refreshLaunchStatusBar();
+    refreshStatusBar(state: LaunchConfigState = LaunchConfigState.Unknown) {
+        this.refreshLaunchStatusBar(state);
         this.refreshTCStatusBar();
+        this.refreshPinStatusBar();
     }
 }
 export const sessionManager: SessionManager = new SessionManager();

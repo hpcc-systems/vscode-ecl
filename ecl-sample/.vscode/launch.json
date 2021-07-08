@@ -42,6 +42,32 @@
             "timeoutSecs": 60,
             "user": "vscode_user",
             "password": ""
+        },
+        {
+            "name": "dataland",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "https",
+            "serverAddress": "boca-dataland-dev.hpcc.risk.regn.net",
+            "port": 18012,
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60
+        },
+        {
+            "name": "offline",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "http",
+            "serverAddress": "apple.ie",
+            "port": 8010,
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "vscode_user",
+            "password": ""
         }
     ]
 }
