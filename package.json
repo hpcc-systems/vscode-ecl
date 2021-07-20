@@ -43,16 +43,15 @@
     "tag": "run-s standard-version git-push"
   },
   "devDependencies": {
-    "@fluentui/react": "^7.172.3",
-    "@hpcc-js/common": "^2.50.0",
-    "@hpcc-js/comms": "^2.47.0",
+    "@fluentui/react": "^7.173.1",
+    "@hpcc-js/common": "^2.51.0",
+    "@hpcc-js/comms": "^2.48.0",
     "@hpcc-js/ddl-shim": "^2.17.16",
-    "@hpcc-js/dgrid": "^2.11.0",
-    "@hpcc-js/loader": "^2.72.0",
-    "@hpcc-js/marshaller": "^2.23.80",
-    "@hpcc-js/observable-md": "^2.32.0",
-    "@hpcc-js/util": "^2.31.0",
-    "@material-ui/core": "^4.12.1",
+    "@hpcc-js/dgrid": "^2.12.0",
+    "@hpcc-js/loader": "^2.74.0",
+    "@hpcc-js/marshaller": "^2.23.82",
+    "@hpcc-js/util": "^2.32.0",
+    "@material-ui/core": "^4.12.2",
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.20.16",
     "@types/react": "^16.14.11",
@@ -66,7 +65,7 @@
     "copyfiles": "^2.4.1",
     "css-loader": "^4.3.0",
     "diff": "^4.0.2",
-    "eslint": "^7.30.0",
+    "eslint": "^7.31.0",
     "mocha": "^7.2.0",
     "npm-run-all": "^4.1.5",
     "original-fs": "^1.1.0",
@@ -74,15 +73,15 @@
     "react-dom": "^16.14.0",
     "rimraf": "^3.0.2",
     "source-map-loader": "^2.0.2",
-    "standard-version": "^9.3.0",
+    "standard-version": "^9.3.1",
     "style-loader": "^1.3.0",
     "tslib": "^2.3.0",
     "typescript": "^4.3.5",
     "use-resize-observer": "^6.1.0",
-    "vsce": "^1.95.0",
+    "vsce": "^1.96.0",
     "vscode-debugadapter": "^1.47.0",
     "vscode-debugprotocol": "^1.47.0",
-    "webpack": "^5.43.0",
+    "webpack": "^5.45.1",
     "webpack-cli": "^4.7.2"
   },
   "author": {
@@ -105,8 +104,7 @@
   ],
   "activationEvents": [
     "onLanguage:ecl",
-    "onLanguage:kel",
-    "onLanguage:omd"
+    "onLanguage:kel"
   ],
   "contributes": {
     "languages": [
@@ -135,15 +133,6 @@
         "configuration": "./kel.configuration.json"
       },
       {
-        "id": "omd",
-        "extensions": [
-          "omd"
-        ],
-        "aliases": [
-          "Observable Markdown"
-        ]
-      },
-      {
         "id": "json",
         "extensions": [
           "dashy"
@@ -169,11 +158,6 @@
         "language": "kel",
         "scopeName": "source.kel",
         "path": "./syntaxes/kel.tmLanguage.json"
-      },
-      {
-        "language": "omd",
-        "scopeName": "text.html.markdown",
-        "path": "./syntaxes/omd.tmLanguage"
       }
     ],
     "snippets": [
@@ -301,6 +285,11 @@
         "category": "ECL",
         "title": "%Copy as ECL ID%",
         "description": "%Copy path as Qualified ECL ID%"
+      },
+      {
+        "command": "hpccPlatform.copyWUID",
+        "category": "ECL",
+        "title": "%Copy WUID%"
       },
       {
         "command": "hpccPlatform.abortWU",
@@ -506,22 +495,6 @@
         "description": "%Select Client Tools Version from available options%"
       },
       {
-        "command": "omd.view",
-        "title": "%View ECL Markdown%",
-        "icon": {
-          "dark": "./resources/dark/omd-view.svg",
-          "light": "./resources/light/omd-view.svg"
-        }
-      },
-      {
-        "command": "omd.export",
-        "title": "%Export ECL Markdown to HTML%",
-        "icon": {
-          "dark": "./resources/dark/omd-export.svg",
-          "light": "./resources/light/omd-export.svg"
-        }
-      },
-      {
         "command": "dashy.view",
         "title": "%View Dashboard%",
         "icon": {
@@ -544,16 +517,6 @@
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.copyAsEclID",
           "group": "6_copypath@999"
-        },
-        {
-          "when": "resourceLangId == omd && resourceExtname == .omd",
-          "command": "omd.view",
-          "group": "navigation@998"
-        },
-        {
-          "when": "resourceLangId == omd && resourceExtname == .omd",
-          "command": "omd.export",
-          "group": "navigation@999"
         },
         {
           "when": "resourceLangId == json && resourceExtname == .dashy",
@@ -598,16 +561,6 @@
           "group": "navigation@999"
         },
         {
-          "when": "resourceLangId == omd && resourceExtname == .omd",
-          "command": "omd.view",
-          "group": "navigation@998"
-        },
-        {
-          "when": "resourceLangId == omd && resourceExtname == .omd",
-          "command": "omd.export",
-          "group": "navigation@999"
-        },
-        {
           "when": "resourceLangId == json && resourceExtname == .dashy",
           "command": "dashy.view",
           "group": "navigation@998"
@@ -619,11 +572,6 @@
         }
       ],
       "editor/title": [
-        {
-          "when": "resourceLangId == omd && resourceExtname == .omd",
-          "command": "omd.view",
-          "group": "navigation@998"
-        },
         {
           "when": "resourceLangId == json && resourceExtname == .dashy",
           "command": "dashy.view",
@@ -716,9 +664,14 @@
           "group": "inline"
         },
         {
-          "command": "hpccPlatform.abortWU",
+          "command": "hpccPlatform.copyWUID",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "navigation@900"
+        },
+        {
+          "command": "hpccPlatform.abortWU",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "navigation@910"
         },
         {
           "command": "hpccPlatform.deleteWU",
@@ -808,12 +761,6 @@
         "key": "f5",
         "mac": "f5",
         "when": "editorTextFocus && editorLangId == kel"
-      },
-      {
-        "command": "omd.view",
-        "key": "ctrl+shift+V",
-        "mac": "cmd+shift+V",
-        "when": "editorTextFocus"
       },
       {
         "command": "dashy.view",

@@ -21,6 +21,7 @@
     "Compile ECL on the HPCC Platform": "Compile ECL on the HPCC Platform",
     "Copy as ECL ID": "Copy as ECL ID",
     "Copy path as Qualified ECL ID": "Copy path as Qualified ECL ID",
+    "Copy WUID": "Copy WUID",
     "Dashy Library Path (libraryLocation === \"localPath\")": "Dashy Library Path (libraryLocation === \"localPath\")",
     "Dashy library location (bundled, latest, localPath)": "Dashy library location (bundled, latest, localPath)",
     "Debug level logging (requires restart)": "Debug level logging (requires restart)",

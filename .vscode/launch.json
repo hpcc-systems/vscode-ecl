@@ -46,7 +46,7 @@
         },
         {
             "name": "webview-test",
-            "type": "chrome",
+            "type": "pwa-msedge",
             "request": "launch",
             "url": "file:///${workspaceRoot}/webview-test.html",
             "runtimeArgs": [
@@ -56,7 +56,7 @@
         },
         {
             "name": "index",
-            "type": "chrome",
+            "type": "pwa-msedge",
             "request": "launch",
             "url": "file:///${workspaceRoot}/index.html",
             "runtimeArgs": [

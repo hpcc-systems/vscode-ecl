@@ -11,6 +11,9 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.14.x
+* Add `Copy WUID` context menu.
+
 ### v2.13.x
 * Add `ecl.forceProxySupport` setting.
 
@@ -157,7 +160,7 @@ The following ECL specific commands are available.  Note:  These commands will *
 |---------------------------|:--------:|------------------------------------------------------------------|
 | Copy as ECL ID | | Copy path as Qualified ECL ID | 
 
-#### Within the Workunit Tree:
+#### Within the Workunit Tree Title Bar:
 
 | Command                   | Shortcut | Description                                                      |
 |---------------------------|:--------:|------------------------------------------------------------------|
@@ -166,6 +169,14 @@ The following ECL specific commands are available.  Note:  These commands will *
 |![Refresh](resources/light-png/refresh.png) Refresh | | Refresh Tree |
 |![ECL Watch](resources/light-png/globe.png) ECL Watch | | Launch ECL Watch in external browser |
 |![Switch](resources/light-png/server-process.png) Switch Platform | | Switch HPCC Platform instance (launch configuration) | 
+
+#### Within the Workunit Tree:
+
+| Command                   | Shortcut | Description                                                      |
+|---------------------------|:--------:|------------------------------------------------------------------|
+| Copy WUID | | Copy workunit ID to clipboard |
+| Abort Workunit | | Abort running workunit |
+| Delete Workunit | | Delete completed workunit |
 
 #### Within the Explorer Tree Context Menu (ecl files only):
 
