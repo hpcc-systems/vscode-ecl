@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.14.2...v2.15.0) (2021-07-20)
+
+
+### Features
+
+*  Add copy wuid option to WU Node ([02158b9](https://github.com/hpcc-systems/vscode-ecl/commit/02158b94ce097aa42026453e8a07f726a3cf8a79))
+
 ### [2.14.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.14.1...v2.14.2) (2021-07-08)
 
 ### [2.14.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.14.0...v2.14.1) (2021-07-08)
