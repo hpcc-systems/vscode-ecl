@@ -48,6 +48,10 @@ export class ECLWatchTree extends Tree {
             this.refresh();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.copyWUID", (wuNode: ECLWUNode) => {
+            wuNode.copyWuid();
+        });
+
         vscode.commands.registerCommand("hpccPlatform.abortWU", (wuNode: ECLWUNode) => {
             wuNode.abort();
         });
@@ -317,6 +321,10 @@ export class ECLWUNode extends Item<ECLWatchTree> {
                 return Circle.record;
         }
         return Circle.question;
+    }
+
+    copyWuid() {
+        vscode.env.clipboard.writeText(this._wu.Wuid);
     }
 
     abort() {
