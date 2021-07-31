@@ -51,7 +51,7 @@
     "@hpcc-js/loader": "^2.74.0",
     "@hpcc-js/marshaller": "^2.23.82",
     "@hpcc-js/util": "^2.32.0",
-    "@material-ui/core": "^4.12.2",
+    "@material-ui/core": "^4.12.3",
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.20.16",
     "@types/react": "^16.14.11",
