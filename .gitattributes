@@ -1,1 +1,3 @@
 /scripts/grammar-generate.sh eol=lf
+*.ecl linguist-detectable
+*.ecl linguist-language=ECL
