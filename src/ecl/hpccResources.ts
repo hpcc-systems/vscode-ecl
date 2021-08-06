@@ -177,7 +177,7 @@ class ClientToolsTree extends Tree {
         ]).then(([clientTools, allClientTools]) => {
             this._treeView.title = localize("Client Tools");
             return allClientTools.map(ct => {
-                return new ClientToolsItem(this, ct, ct.eclccPath === eclccPath, ct.binPath === clientTools.binPath);
+                return new ClientToolsItem(this, ct, ct.eclccPath === eclccPath, ct.binPath === clientTools?.binPath);
             });
         });
     }
@@ -190,7 +190,8 @@ class ClientToolsItem extends Item<ClientToolsTree> {
     }
 
     getLabel() {
-        return this.clientTools.versionSync().toString();
+        const x86 = this.clientTools.binPath.indexOf("(x86)") >= 0 ? "(x86)" : "";
+        return `${this.clientTools.versionSync().toString()} ${x86}`;
     }
 
     iconPath() {
