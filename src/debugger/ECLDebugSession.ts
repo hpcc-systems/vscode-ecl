@@ -1,9 +1,9 @@
-import { locateAllClientTools, Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
+import { Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
 import { IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
 
 import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, Variable } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { LaunchRequestArguments } from "./launchRequestArguments";
+import { LaunchRequestArguments, locateAllClientTools } from "./launchRequestArguments";
 
 import * as fs from "fs";
 import * as os from "os";
