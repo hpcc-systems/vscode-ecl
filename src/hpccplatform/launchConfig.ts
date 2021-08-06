@@ -428,6 +428,8 @@ export class LaunchConfig implements LaunchRequestArguments {
         return this.fetchBuild().then(build => {
             logger.info(`Locating Client Tools.${os.EOL}`);
             return this.locateClientTools(undefined, build);
+        }).catch(e => {
+            return undefined;
         });
     }
 
