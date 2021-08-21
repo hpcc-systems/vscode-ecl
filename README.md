@@ -11,6 +11,9 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.15.x
+* Add `path` option to launch configuration (to assist with proxy servers).
+
 ### v2.14.x
 * Add `Copy WUID` context menu.
 
@@ -256,6 +259,7 @@ Submitting ECL using VS-Code requires specifying the target environment within t
   "protocol": "http",
   "serverAddress": "localhost",
   "port": 8010,
+  "path": "",
   "targetCluster": "hthor",
   "rejectUnauthorized": true,
   "resultLimit": 100,

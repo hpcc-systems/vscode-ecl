@@ -44,6 +44,21 @@
             "password": ""
         },
         {
+            "name": "localhost-proxy",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "http",
+            "serverAddress": "localhost",
+            "port": 8080,
+            "path": "xxx",
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "vscode_user",
+            "password": ""
+        },
+        {
             "name": "dataland",
             "type": "ecl",
             "request": "launch",

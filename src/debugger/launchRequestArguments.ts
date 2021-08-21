@@ -21,6 +21,7 @@ export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArgum
     serverAddress: string;
     port: number;
     targetCluster: string;
+    path: string;
 
     //  Optional
     abortSubmitOnError?: boolean;

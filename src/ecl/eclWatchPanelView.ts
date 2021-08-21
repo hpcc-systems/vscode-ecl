@@ -9,6 +9,7 @@ interface PartialLaunchRequestArgumentss {
     protocol: LaunchProtocol;
     serverAddress: string;
     port: number;
+    path: string;
     user?: string;
     password?: string;
 }
@@ -108,8 +109,8 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
 
     private _prevHash: string;
     navigateTo(launchRequestArgs: PartialLaunchRequestArgumentss, wuid: string, result?: number, show = true) {
-        const { protocol, serverAddress, port, user, password } = launchRequestArgs;
-        this._currParams = { protocol, serverAddress, port, user, password, wuid, result, show };
+        const { protocol, serverAddress, port, path, user, password } = launchRequestArgs;
+        this._currParams = { protocol, serverAddress, port, path, user, password, wuid, result, show };
         if (!this._webviewView) {
             this._initialParams = this._currParams;
             if (show) {
