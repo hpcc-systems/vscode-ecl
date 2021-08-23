@@ -31,13 +31,13 @@ function gatherServers(wuf?: vscode.WorkspaceFolder) {
     if (eclLaunch.has("configurations")) {
         for (const launchConfig of eclLaunch.get<any[]>("configurations")!) {
             if (launchConfig.type === "ecl" && launchConfig.name) {
-                g_launchConfigurations[`${launchConfig.name}${wuf ? ` (${wuf.name})` : ""}`] = launchConfig;
+                g_launchConfigurations[launchConfig.name] = launchConfig;
             }
         }
     }
 }
 
-export function launchConfigurations(refresh = false): string[] {
+export function launchConfigurations(refresh = false): LaunchRequestArguments[] {
     if (!g_launchConfigurations || refresh === true) {
         g_launchConfigurations = {};
 
@@ -49,13 +49,12 @@ export function launchConfigurations(refresh = false): string[] {
             gatherServers();
         }
     }
-    const retVal = Object.keys(g_launchConfigurations);
+    const retVal = Object.values(g_launchConfigurations);
     if (retVal.length === 0) {
         vscode.window.showErrorMessage(localize("No ECL Launch configurations."), localize("Create ECL Launch")).then(response => {
             vscode.commands.executeCommand("workbench.action.debug.configure");
         });
-
-        g_launchConfigurations["not found"] = {
+        const notFound: LaunchRequestArguments = {
             name: "not found",
             type: "ecl",
 
@@ -66,7 +65,8 @@ export function launchConfigurations(refresh = false): string[] {
             path: "",
             targetCluster: "unknown"
         };
-        retVal.push("not found");
+        g_launchConfigurations["not found"] = notFound;
+        retVal.push(notFound);
     }
     return retVal;
 }
