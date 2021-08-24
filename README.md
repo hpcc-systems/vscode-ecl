@@ -317,6 +317,7 @@ To set up a development environment for debugging the ECL for VS Code extension:
 cd /Some/Dev/Folder/
 git clone https://github.com/hpcc-systems/vscode-ecl
 cd vscode-ecl
+git submodule update --init --recursive
 npm install
 ```
 
