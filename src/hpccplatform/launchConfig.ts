@@ -2,8 +2,8 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, Service } from "@hpcc-js/comms";
-import { scopedLogger } from "@hpcc-js/util";
+import { AccountService, Activity, CodesignService, Ping, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, Service, WorkunitsService } from "@hpcc-js/comms";
+import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
 import localize from "../util/localize";
@@ -37,28 +37,6 @@ function gatherServers(wuf?: vscode.WorkspaceFolder) {
     }
 }
 
-export namespace Ping {
-    export interface Response {
-        result: boolean;
-        error?: any;
-    }
-}
-
-export class WorkunitsService extends Service {
-
-    constructor(optsConnection) {
-        super(optsConnection, "WsWorkunits", "1.8");
-    }
-
-    Ping(): Promise<Ping.Response> {
-        return this._connection.send("Ping", {}, "json", false, undefined, "WsWorkunitsPingResponse").then((response) => {
-            return { result: true };
-        }).catch((e: Error) => {
-            return { result: false, error: e };
-        });
-    }
-}
-
 export function launchConfigurations(refresh = false): string[] {
     if (!g_launchConfigurations || refresh === true) {
         g_launchConfigurations = {};
@@ -85,6 +63,7 @@ export function launchConfigurations(refresh = false): string[] {
             protocol: "http",
             serverAddress: "localhost",
             port: 8010,
+            path: "",
             targetCluster: "unknown"
         };
         retVal.push("not found");
@@ -116,15 +95,15 @@ function config<T extends keyof LaunchRequestArguments>(id: string, key: T, defa
     return retVal;
 }
 
-export function espUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number }) {
-    return `${launchRequestArgs.protocol}://${launchRequestArgs.serverAddress}:${launchRequestArgs.port}`;
+export function espUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }) {
+    return join(`${launchRequestArgs.protocol}://${launchRequestArgs.serverAddress}:${launchRequestArgs.port}`, launchRequestArgs.path);
 }
 
-export function wuDetailsUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number }, wuid: string) {
+export function wuDetailsUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }, wuid: string) {
     return `${espUrl(launchRequestArgs)}/?Widget=WUDetailsWidget&Wuid=${wuid}`;
 }
 
-export function wuResultUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number }, wuid: string, sequence: number) {
+export function wuResultUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }, wuid: string, sequence: number) {
     return `${espUrl(launchRequestArgs)}/?Widget=ResultWidget&Wuid=${wuid}&Sequence=${sequence}`;
 }
 
@@ -190,6 +169,10 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     //  Optional
+    get path() {
+        return config(this._lcID, "path", "");
+    }
+
     get abortSubmitOnError(): boolean {
         return config(this._lcID, "abortSubmitOnError", true);
     }
@@ -235,7 +218,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     get espUrl() {
-        return `${this.protocol}://${this.serverAddress}:${this.port}`;
+        return join(`${this.protocol}://${this.serverAddress}:${this.port}`, this.path);
     }
 
     constructor(lcID: string) {
@@ -523,7 +506,7 @@ export class LaunchConfig implements LaunchRequestArguments {
 
     targetClusters(): Promise<TpLogicalClusterQuery.TpLogicalCluster[]> {
         return this.checkCredentials().then(credentials => {
-            const topology = new Topology(this.opts(credentials));
+            const topology = Topology.attach(this.opts(credentials));
             return topology.fetchLogicalClusters();
         });
     }

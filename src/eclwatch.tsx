@@ -2,6 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { WUDetails } from "./eclwatch/WUDetails";
 import { ThemeProvider } from "./eclwatch/themeGenerator";
+import { join } from "@hpcc-js/util";
 
 const bodyStyles = window.getComputedStyle(document.body);
 
@@ -17,6 +18,7 @@ interface State {
     protocol: string;
     serverAddress: string;
     port: string;
+    path: string;
     user: string;
     password: string;
     wuid: string;
@@ -56,7 +58,7 @@ function render(state: State) {
     if (state) {
         vscode.setState(state);
         ReactDOM.render(<WUDetails
-            baseUrl={`${state.protocol}://${state.serverAddress}:${state.port}`}
+            baseUrl={join(`${state.protocol}://${state.serverAddress}:${state.port}`, state.path)}
             wuid={state.wuid}
             user={state.user}
             password={state.password}
@@ -75,6 +77,7 @@ if (document.location.protocol === "file:") {
         protocol: "https",
         serverAddress: "play.hpccsystems.com",
         port: "18010",
+        path: "",
         user: "gosmith",
         password: "",
         wuid: "W20210304-144316"
