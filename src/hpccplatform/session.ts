@@ -179,9 +179,9 @@ class SessionManager {
                 const pinnedLaunchConfiguration = eclConfig.get<object>("pinnedLaunchConfigurations")[this.activePath];
                 const launchConfigName = pinnedLaunchConfiguration?.launchConfiguration;
                 if (launchConfigName) {
-                    const pinnedConfig = launchConfigurations()[launchConfigName];
+                    const pinnedConfig = launchConfiguration(launchConfigName);
                     if (pinnedConfig) {
-                        this._pinnedSession = new Session(pinnedConfig, pinnedLaunchConfiguration?.targetCluster);
+                        this._pinnedSession = new Session(pinnedConfig.name, pinnedLaunchConfiguration?.targetCluster);
                     }
                 }
             }
@@ -336,7 +336,7 @@ class SessionManager {
         if (!this.session || this.session.id !== id) {
             vscode.commands.executeCommand("setContext", "ecl.connected", false);
             this._onDidPing.fire(LaunchConfigState.Unknown);
-            const configs = launchConfigurations();
+            const configs = launchConfigurations().map(lc => lc.name);
             const launchID = configs.indexOf(id) >= 0 ? id : configs[0];
             if (launchID) {
                 this.session = new Session(launchID, targetCluster);
@@ -377,7 +377,7 @@ class SessionManager {
     }
 
     switch(): void {
-        const configs = launchConfigurations();
+        const configs = launchConfigurations().map(lc => lc.name);
 
         const input = vscode.window.createQuickPick<{ id: string, label: string }>();
         input.items = configs.map(id => {
