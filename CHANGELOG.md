@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.16.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.0...v2.16.1) (2021-08-26)
+
+
+### Bug Fixes
+
+* Occasional document.uri uncaught exception ([34bcb30](https://github.com/hpcc-systems/vscode-ecl/commit/34bcb30dbdc097b5882c5c5b4f423b53c0dfedc1))
+
 ## [2.16.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.15.0...v2.16.0) (2021-08-26)
 
 
