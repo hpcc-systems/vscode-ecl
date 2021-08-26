@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.16.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.15.0...v2.16.0) (2021-08-26)
+
+
+### Features
+
+*  Add optional path to launch configuration ([d2726ca](https://github.com/hpcc-systems/vscode-ecl/commit/d2726ca68e877aac678c2e4ca305dc7a928a9c70))
+*  Highlight 32 bit client tools ([e2d8961](https://github.com/hpcc-systems/vscode-ecl/commit/e2d896189a7bded76be9dac208bb645022adf297)), closes [#274](https://github.com/hpcc-systems/vscode-ecl/issues/274)
+
+
+### Bug Fixes
+
+*  Improve corrupt client tools handling ([9c7e9b0](https://github.com/hpcc-systems/vscode-ecl/commit/9c7e9b07fe182be9bf1418e3bde170a33e208de0)), closes [#276](https://github.com/hpcc-systems/vscode-ecl/issues/276)
+*  Pinned configurations not working ([bb56735](https://github.com/hpcc-systems/vscode-ecl/commit/bb5673519acfe18aca15450ca658853d73ee0fe9)), closes [#278](https://github.com/hpcc-systems/vscode-ecl/issues/278)
+
 ## [2.15.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.14.2...v2.15.0) (2021-07-20)
 
 
