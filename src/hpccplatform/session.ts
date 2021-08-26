@@ -247,7 +247,7 @@ class SessionManager {
     }
 
     private get isActiveECL() {
-        return vscode.languages.match(ECL_MODE, this.activeDocument) > 0;
+        return this.activeDocument && vscode.languages.match(ECL_MODE, this.activeDocument) > 0;
     }
 
     private get pinnedSession() {
