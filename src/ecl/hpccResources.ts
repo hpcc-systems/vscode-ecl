@@ -1,5 +1,6 @@
-import { ClientTools, IBundle, locateAllClientTools } from "@hpcc-js/comms";
+import { ClientTools, IBundle } from "@hpcc-js/comms";
 import * as vscode from "vscode";
+import { locateAllClientTools } from "../debugger/launchRequestArguments";
 import { sessionManager } from "../hpccplatform/session";
 import localize from "../util/localize";
 import { onDidClientToolsChange, switchClientTools } from "./clientTools";
@@ -173,7 +174,7 @@ class ClientToolsTree extends Tree {
         const eclccPath = eclConfig.get("eclccPath");
         return Promise.all([
             sessionManager.session.bestClientTools(),
-            locateAllClientTools()
+            locateAllClientTools(true)
         ]).then(([clientTools, allClientTools]) => {
             this._treeView.title = localize("Client Tools");
             return allClientTools.map(ct => {
@@ -191,7 +192,17 @@ class ClientToolsItem extends Item<ClientToolsTree> {
 
     getLabel() {
         const x86 = this.clientTools.binPath.indexOf("(x86)") >= 0 ? "(x86)" : "";
-        return `${this.clientTools.versionSync().toString()} ${x86}`;
+        if (this.clientTools.versionSync().exists()) {
+            return `${this.clientTools.versionSync().toString()} ${x86}`;
+        }
+        return `${localize("Bad eclcc")}:  ${this.clientTools.binPath}`;
+    }
+
+    getDescription(): string {
+        if (this.clientTools.versionSync().exists()) {
+            return this.clientTools.binPath;
+        }
+        return undefined;
     }
 
     iconPath() {
@@ -203,6 +214,9 @@ class ClientToolsItem extends Item<ClientToolsTree> {
     }
 
     contextValue(): string {
-        return "ClientToolsItem" + (this.forced ? "Active" : "Deactive");
+        if (this.clientTools.versionSync().exists()) {
+            return "ClientToolsItem" + (this.forced ? "Active" : "Deactive");
+        }
+        return "BadClientToolsItem" + (this.forced ? "Active" : "Deactive");
     }
 }

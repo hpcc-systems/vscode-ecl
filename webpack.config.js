@@ -4,14 +4,6 @@
 
 const path = require("path");
 
-const resolve = {
-    fallback: {
-        "@hpcc-js/comms": path.resolve(__dirname, "../hpcc-js/packages/comms/dist/index.node.js"),
-        "@hpcc-js": path.resolve(__dirname, "../hpcc-js/packages")
-    }
-};
-
-
 /**@type {import('webpack').Configuration}*/
 const config = [{
     target: "node", // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
@@ -42,7 +34,12 @@ const config = [{
         }]
     },
 
-    resolve,
+    resolve: {
+        fallback: {
+            "@hpcc-js/comms": path.resolve(__dirname, "../hpcc-js/packages/comms/dist/index.node.js"),
+            "@hpcc-js": path.resolve(__dirname, "../hpcc-js/packages")
+        }
+    },
 
     plugins: []
 }, {
@@ -59,6 +56,7 @@ const config = [{
         globalObject: "this",
         devtoolModuleFilenameTemplate: "../[resource-path]",
     },
+
     devtool: "source-map",
 
     externals: {
@@ -76,7 +74,11 @@ const config = [{
         }]
     },
 
-    resolve,
+    resolve: {
+        fallback: {
+            "@hpcc-js": path.resolve(__dirname, "../hpcc-js/packages")
+        }
+    },
 
     plugins: []
 }];

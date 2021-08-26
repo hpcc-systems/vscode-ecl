@@ -1,7 +1,8 @@
 import { Event, EventEmitter, QuickPickItem, window, workspace } from "vscode";
-import { ClientTools, locateAllClientTools } from "@hpcc-js/comms";
+import { ClientTools } from "@hpcc-js/comms";
 import { eclStatusBar } from "./status";
 import localize from "../util/localize";
+import { locateAllClientTools } from "../debugger/launchRequestArguments";
 
 export function showEclStatus(version: string, overriden: boolean, tooltip: string) {
     eclStatusBar.showClientTools(`${overriden ? "*" : ""}${version}`, tooltip);
