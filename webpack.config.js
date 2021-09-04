@@ -1,63 +1,20 @@
 /* eslint-disable */
-
-"use strict";
-
 const path = require("path");
 
-/**@type {import('webpack').Configuration}*/
-const config = [{
-    target: "node", // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
+const makeConfig = (argv, { entry, target = "node", libraryTarget = "commonjs" }) => ({
+    mode: argv.mode,
+    devtool: argv.mode === "production" ? false : "source-map",
+    target,
 
-    entry: {
-        extension: "./lib-es6/extension.js",
-        debugger: "./lib-es6/debugger.js"
-    },
+    entry,
 
-    output: { // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
+    output: {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].js",
-        libraryTarget: "commonjs2",
+        libraryTarget,
         globalObject: "this",
         devtoolModuleFilenameTemplate: "../[resource-path]",
     },
-    devtool: "source-map",
-
-    externals: {
-        vscode: "commonjs vscode" // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
-    },
-
-    module: {
-        rules: [{
-            test: /\.js$/,
-            use: ["source-map-loader"],
-            enforce: "pre"
-        }]
-    },
-
-    resolve: {
-        fallback: {
-            "@hpcc-js/comms": path.resolve(__dirname, "../hpcc-js/packages/comms/dist/index.node.js"),
-            "@hpcc-js": path.resolve(__dirname, "../hpcc-js/packages")
-        }
-    },
-
-    plugins: []
-}, {
-    target: "web", // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
-
-    entry: {
-        eclwatch: "./lib-es6/eclwatch.js"
-    },
-
-    output: { // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
-        path: path.resolve(__dirname, "dist"),
-        filename: "[name].js",
-        libraryTarget: "umd",
-        globalObject: "this",
-        devtoolModuleFilenameTemplate: "../[resource-path]",
-    },
-
-    devtool: "source-map",
 
     externals: {
         vscode: "commonjs vscode" // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
@@ -66,7 +23,7 @@ const config = [{
     module: {
         rules: [{
             test: /\.css$/i,
-            use: ['style-loader', 'css-loader'],
+            use: ["style-loader", "css-loader"],
         }, {
             test: /\.js$/,
             use: ["source-map-loader"],
@@ -80,7 +37,26 @@ const config = [{
         }
     },
 
-    plugins: []
-}];
+    experiments: {
+        outputModule: libraryTarget === "module"
+    },
 
-module.exports = config;
+    plugins: []
+});
+
+module.exports = (env, argv) => [
+    makeConfig(argv, {
+        entry: {
+            extension: "./lib-es6/extension.js",
+            debugger: "./lib-es6/debugger.js"
+        }
+    }),
+    makeConfig(argv, {
+        entry: {
+            eclwatch: "./lib-es6/eclwatch.js",
+            renderer: "./lib-es6/renderer.js"
+        },
+        target: "web",
+        libraryTarget: "module"
+    })
+];

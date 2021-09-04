@@ -3,6 +3,8 @@ import * as ReactDOM from "react-dom";
 import { WUDetails } from "./eclwatch/WUDetails";
 import { ThemeProvider } from "./eclwatch/themeGenerator";
 import { join } from "@hpcc-js/util";
+import { LoadedMessage, Messages, ProxyCancelMessage, ProxySendMessage, State, vscode } from "./eclwatch/messages";
+import { hookSend } from "@hpcc-js/comms";
 
 const bodyStyles = window.getComputedStyle(document.body);
 
@@ -14,42 +16,55 @@ const placeholder = document.getElementById("placeholder");
 const themeProvider = new ThemeProvider(foreColour, backColor);
 themeProvider.loadThemeForColor(bodyStyles.getPropertyValue("--vscode-progressBar-background") || "navy");
 
-interface State {
-    protocol: string;
-    serverAddress: string;
-    port: string;
-    path: string;
-    user: string;
-    password: string;
-    wuid: string;
-    result?: number;
+interface executor<T> {
+    resolve: (value: T | PromiseLike<T>) => void;
+    reject: (reason?: any) => void;
 }
 
-interface VSCodeAPI {
-    postMessage: <T extends Message>(msg: T) => void;
-    setState: (newState: State) => void;
-    getState: () => State;
-}
+const proxyPromises: { [id: number]: executor<any> } = {};
 
-declare const acquireVsCodeApi: () => VSCodeAPI;
+let proxyID = 0;
 
-const vscode = acquireVsCodeApi();
+const origSend = hookSend((opts, action, request, responseType, header) => {
+    const id = ++proxyID;
+    if (request.abortSignal_) {
+        request.abortSignal_.onabort = function () {
+            vscode.postMessage<ProxyCancelMessage>({
+                command: "proxyCancel",
+                id
+            });
+        };
+        delete request.abortSignal_;
+    }
 
-interface Message {
-    callbackID?: string;
-}
+    vscode.postMessage<ProxySendMessage>({
+        command: "proxySend",
+        id,
+        params: {
+            opts,
+            action,
+            request,
+            responseType,
+            header
+        }
+    });
 
-interface LoadedMessage extends Message {
-    command: "loaded";
-}
-
-export type Messages = LoadedMessage;
+    return new Promise((resolve, reject) => {
+        proxyPromises[proxyID] = { resolve, reject };
+    });
+});
 
 window.addEventListener("message", function (event) {
     const message = event.data; // The JSON data our extension sent
     switch (message.command) {
         case "navigate":
             render(message.data as State);
+            break;
+        case "proxyResponse":
+            if (proxyPromises[message.id]) {
+                proxyPromises[message.id].resolve(message.response);
+                delete proxyPromises[message.id];
+            }
             break;
     }
 });

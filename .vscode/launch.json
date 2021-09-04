@@ -30,6 +30,25 @@
             "internalConsoleOptions": "neverOpen"
         },
         {
+            "name": "Launch Extension With Other Extensions",
+            "type": "extensionHost",
+            "request": "launch",
+            // path to VSCode executable
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                //                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceRoot}",
+                //"--enable-proposed-api",
+                "${workspaceRoot}\\ecl-sample"
+            ],
+            "outFiles": [
+                "${workspaceRoot}/dist/*.js"
+            ],
+            "stopOnEntry": false,
+            "sourceMaps": true,
+            "internalConsoleOptions": "neverOpen"
+        },
+        {
             "name": "Launch Server Adapter",
             "type": "node",
             "request": "launch",
