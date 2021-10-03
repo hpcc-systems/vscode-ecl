@@ -1,11 +1,4 @@
-import { loadTheme } from "@uifabric/styling";
-import {
-    IThemeRules,
-    ThemeGenerator,
-    themeRulesStandardCreator,
-} from "@fluentui/react/lib/ThemeGenerator";
-import { getColorFromString } from "@fluentui/react";
-import { IColor } from "@fluentui/react";
+import { getColorFromString, IColor, IThemeRules, loadTheme, ThemeGenerator, themeRulesStandardCreator } from "@fluentui/react";
 
 export class ThemeProvider {
     private themeRules: IThemeRules;

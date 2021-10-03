@@ -1,9 +1,10 @@
 import * as vscode from "vscode";
-import { hashSum } from "@hpcc-js/util";
+import { send } from "@hpcc-js/comms";
+import { hashSum, join } from "@hpcc-js/util";
 import { LaunchProtocol } from "../debugger/launchRequestArguments";
-import { LaunchRequestArguments, wuDetailsUrl, wuResultUrl } from "../hpccplatform/launchConfig";
+import { wuDetailsUrl, wuResultUrl } from "../hpccplatform/launchConfig";
 import { sessionManager } from "../hpccplatform/session";
-import type { Messages } from "../eclwatch";
+import type { Messages } from "../eclwatch/messages";
 
 interface PartialLaunchRequestArgumentss {
     protocol: LaunchProtocol;
@@ -85,6 +86,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
             ]
         };
 
+        const abortControllers: { [id: number]: AbortController } = {};
         this._webviewView.webview.onDidReceiveMessage((message: Messages) => {
             switch (message.command) {
                 case "loaded":
@@ -95,6 +97,21 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                         this._webviewView.title = this._currParams?.wuid;
                         vscode.commands.executeCommand("setContext", "ecl.watch.lite.hasWuid", !!this._currParams?.wuid);
                     }
+                    break;
+                case "proxySend":
+                    abortControllers[message.id] = new AbortController();
+                    message.params.request.abortSignal_ = abortControllers[message.id].signal;
+                    send(message.params.opts, message.params.action, message.params.request, message.params.responseType, message.params.header).then(response => {
+                        this._webviewView.webview.postMessage({
+                            command: "proxyResponse",
+                            id: message.id,
+                            response
+                        });
+                        delete abortControllers[message.id];
+                    });
+                    break;
+                case "proxyCancel":
+                    abortControllers[message.id]?.abort();
                     break;
             }
         });

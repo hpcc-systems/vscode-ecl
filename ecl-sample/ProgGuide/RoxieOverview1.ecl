@@ -5,8 +5,8 @@ IMPORT $;
 
 EXPORT RoxieOverview1 := FUNCTION
 
-STRING30 lname_value := '' : STORED('LastName');
-STRING30 fname_value := '' : STORED('FirstName');
+STRING30 lname_value := 'HARLESS' : STORED('LastName');
+STRING30 fname_value := 'YOUSEF' : STORED('FirstName');
 
 IDX  := $.DeclareData.IDX__Person_LastName_FirstName;
 Base := $.DeclareData.Person.FilePlus;

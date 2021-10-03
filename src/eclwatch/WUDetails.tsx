@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Workunit, WUInfo, Result } from "@hpcc-js/comms";
 import { Pivot, PivotItem, IPivotStyles, Spinner, ILabelStyles, IStyleSet, initializeIcons, MessageBar, MessageBarType } from "@fluentui/react";
+import { Workunit, WUInfo, Result } from "@hpcc-js/comms";
 import { WUIssues, WUResult } from "./WUResult";
 import { HolyGrail } from "./HolyGrail";
 
@@ -136,7 +136,7 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
                 <div ref={pivotRef}>
                     {
                         exceptions.length > 0 || results.length > 0 ?
-                            <Pivot styles={pivotStyles} selectedKey={selected} onLinkClick={handleLinkClick} headersOnly={true}>
+                            <Pivot overflowBehavior="menu" styles={pivotStyles} selectedKey={selected} onLinkClick={handleLinkClick} headersOnly={true} >
                                 {[
                                     ...(exceptions.length ? [<PivotItem key={"issues"} itemKey={"issues"} headerText={"Issues"} />] : []),
                                     ...results.map(r => <PivotItem key={`${r.Wuid}::${r.Sequence}::${r.Value}`} itemKey={"" + r.Sequence} headerText={`${r.Name}${r.Value.indexOf("undefined") < 0 ? `:  ${r.Value}` : ""}`} />)

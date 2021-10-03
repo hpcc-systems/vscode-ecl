@@ -303,7 +303,7 @@ class SessionManager {
         });
     }
 
-    submit(doc: vscode.TextDocument) {
+    submit(doc: { uri: vscode.Uri }) {
         if (this.session) {
             return this.session.submit(doc.uri).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);
@@ -314,7 +314,7 @@ class SessionManager {
         }
     }
 
-    compile(doc: vscode.TextDocument) {
+    compile(doc: { uri: vscode.Uri }) {
         if (this.session) {
             return this.session.compile(doc.uri).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);

@@ -280,9 +280,9 @@ export class LaunchConfig implements LaunchRequestArguments {
 
     async pingServer(timeout: number = 5000): Promise<LaunchConfigState> {
         const credentials = this.credentials();
-        const timeoutPrommise = new Promise((resolve, reject) => {
+        const timeoutPrommise = new Promise<string>((resolve, reject) => {
             setTimeout(() => {
-                reject("timeout");
+                resolve("timeout");
             }, timeout);
         });
         const opts = this.opts(credentials);
@@ -290,9 +290,14 @@ export class LaunchConfig implements LaunchRequestArguments {
         const service = new WorkunitsService(this.opts(credentials));
         const queryPromise = service.Ping();
         return Promise.race([timeoutPrommise, queryPromise])
-            .then((response: Ping.Response) => {
-                logger.debug("ping response:  " + response.result);
-                return response.result ? LaunchConfigState.Ok : LaunchConfigState.Unreachable;
+            .then((response: string | Ping.Response) => {
+                if (typeof response === "string") {
+                    logger.debug("ping response:  " + response);
+                    return LaunchConfigState.Unreachable;
+                } else {
+                    logger.debug("ping response:  " + response.result);
+                    return response.result ? LaunchConfigState.Ok : LaunchConfigState.Unreachable;
+                }
             }).catch(e => {
                 logger.debug("ping exception:  " + e?.message || e);
                 return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
@@ -302,14 +307,19 @@ export class LaunchConfig implements LaunchRequestArguments {
     private ping(timeout: number = 5000): Promise<LaunchConfigState> {
         const timeoutPrommise = new Promise((resolve, reject) => {
             setTimeout(() => {
-                reject("timeout");
+                resolve("timeout");
             }, timeout);
         });
         const queryPromise = this.verifyUser();
         return Promise.race([timeoutPrommise, queryPromise])
-            .then((verified: LaunchConfigState) => {
-                logger.debug("ping verified:  " + verified);
-                return verified;
+            .then((verified: string | LaunchConfigState) => {
+                if (typeof verified === "string") {
+                    logger.debug("ping verified:  " + verified);
+                    return LaunchConfigState.Unreachable;
+                } else {
+                    logger.debug("ping verified:  " + verified);
+                    return verified;
+                }
             }).catch(e => {
                 logger.debug("ping exception:  " + e?.message || e);
                 return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
