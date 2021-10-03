@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.16.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.3...v2.16.4) (2021-10-03)
+
+
+### Bug Fixes
+
+*  Move AbortController shim into @hpcc-js/comms ([9d843cc](https://github.com/hpcc-systems/vscode-ecl/commit/9d843cc0e142aa1ef3bed983f4bd4744d9183faf))
+
 ### [2.16.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.2...v2.16.3) (2021-10-03)
 
 
