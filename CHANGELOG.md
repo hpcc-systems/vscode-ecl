@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.16.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.2...v2.16.3) (2021-10-03)
+
+
+### Bug Fixes
+
+*  Add support for VSCode v1.59.0 ([b0f4799](https://github.com/hpcc-systems/vscode-ecl/commit/b0f4799e38c615f2288138b884a5bfa21a314e61))
+
 ### [2.16.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.1...v2.16.2) (2021-10-03)
 
 
