@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.16.5](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.4...v2.16.5) (2021-10-03)
+
+
+### Bug Fixes
+
+*  Only use AbortController when needed ([066e2ae](https://github.com/hpcc-systems/vscode-ecl/commit/066e2ae9e2d7e24bc551d94153aec1526a889790))
+
 ### [2.16.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.3...v2.16.4) (2021-10-03)
 
 
