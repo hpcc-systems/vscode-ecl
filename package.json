@@ -54,8 +54,8 @@
     "@types/react": "^16.14.16",
     "@types/react-dom": "^16.9.14",
     "@types/tmp": "^0.2.1",
-    "@types/vscode": "^1.60.0",
-    "@types/vscode-notebook-renderer": "^1.60.0",
+    "@types/vscode": "^1.59.0",
+    "@types/vscode-notebook-renderer": "^1.59.0",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
     "abortcontroller-polyfill": "^1.7.3",
@@ -93,7 +93,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.59.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
