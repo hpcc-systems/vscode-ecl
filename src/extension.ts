@@ -1,5 +1,3 @@
-import "abortcontroller-polyfill/dist/polyfill-patch-fetch";
-
 import * as vscode from "vscode";
 import { activate as dashyActivate } from "./dashy/main";
 import { activate as eclActivate } from "./ecl/main";
