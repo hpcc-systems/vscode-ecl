@@ -27,7 +27,9 @@ let proxyID = 0;
 
 const origSend = hookSend((opts, action, request, responseType, header) => {
     const id = ++proxyID;
+    let canAbort = false;
     if (request.abortSignal_) {
+        canAbort = true;
         request.abortSignal_.onabort = function () {
             vscode.postMessage<ProxyCancelMessage>({
                 command: "proxyCancel",
@@ -40,6 +42,7 @@ const origSend = hookSend((opts, action, request, responseType, header) => {
     vscode.postMessage<ProxySendMessage>({
         command: "proxySend",
         id,
+        canAbort,
         params: {
             opts,
             action,

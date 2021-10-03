@@ -30,6 +30,7 @@ export interface LoadedMessage extends Message {
 export interface ProxySendMessage extends Message {
     command: "proxySend";
     id: number;
+    canAbort: boolean;
     params: {
         opts: any;
         action: any;

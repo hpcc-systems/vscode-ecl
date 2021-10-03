@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { send } from "@hpcc-js/comms";
-import { hashSum, join } from "@hpcc-js/util";
+import { hashSum } from "@hpcc-js/util";
 import { LaunchProtocol } from "../debugger/launchRequestArguments";
 import { wuDetailsUrl, wuResultUrl } from "../hpccplatform/launchConfig";
 import { sessionManager } from "../hpccplatform/session";
@@ -99,8 +99,10 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                     }
                     break;
                 case "proxySend":
-                    abortControllers[message.id] = new AbortController();
-                    message.params.request.abortSignal_ = abortControllers[message.id].signal;
+                    if (message.canAbort) {
+                        abortControllers[message.id] = new AbortController();
+                        message.params.request.abortSignal_ = abortControllers[message.id].signal;
+                    }
                     send(message.params.opts, message.params.action, message.params.request, message.params.responseType, message.params.header).then(response => {
                         this._webviewView.webview.postMessage({
                             command: "proxyResponse",
