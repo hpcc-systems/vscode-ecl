@@ -1,6 +1,24 @@
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "gitpod (https)",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "https",
+            "serverAddress": "8010-lavender-urial-rocy5p9m.ws-eu17.gitpod.io",
+            "port": 443,
+            "path": "",
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "vscode_user",
+            "password": ""
+        },
         {
             "name": "localhost",
             "type": "ecl",
@@ -16,83 +34,14 @@
             "password": ""
         },
         {
-            "name": "localhost2",
-            "type": "ecl",
-            "request": "launch",
-            "protocol": "http",
-            "serverAddress": "localhost",
-            "port": 8010,
-            "targetCluster": "thor",
-            "rejectUnauthorized": true,
-            "resultLimit": 100,
-            "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
-        },
-        {
-            "name": "play (https)",
+            "name": "localhost (https)",
             "type": "ecl",
             "request": "launch",
             "protocol": "https",
-            "serverAddress": "play.hpccsystems.com",
+            "serverAddress": "localhost",
             "port": 18010,
-            "targetCluster": "thor",
-            "rejectUnauthorized": true,
-            "resultLimit": 100,
-            "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
-        },
-        {
-            "name": "play",
-            "type": "ecl",
-            "request": "launch",
-            "protocol": "http",
-            "serverAddress": "play.hpccsystems.com",
-            "port": 8010,
-            "targetCluster": "thor",
-            "rejectUnauthorized": true,
-            "resultLimit": 100,
-            "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
-        },
-        {
-            "name": "localhost-proxy",
-            "type": "ecl",
-            "request": "launch",
-            "protocol": "http",
-            "serverAddress": "localhost",
-            "port": 8080,
-            "path": "xxx",
-            "targetCluster": "thor",
-            "rejectUnauthorized": true,
-            "resultLimit": 100,
-            "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
-        },
-        {
-            "name": "dataland",
-            "type": "ecl",
-            "request": "launch",
-            "protocol": "https",
-            "serverAddress": "boca-dataland-dev.hpcc.risk.regn.net",
-            "port": 18012,
-            "targetCluster": "thor",
-            "rejectUnauthorized": true,
-            "resultLimit": 100,
-            "timeoutSecs": 60
-        },
-        {
-            "name": "offline",
-            "type": "ecl",
-            "request": "launch",
-            "protocol": "http",
-            "serverAddress": "apple.ie",
-            "port": 8010,
-            "targetCluster": "thor",
-            "rejectUnauthorized": true,
+            "targetCluster": "hthor",
+            "rejectUnauthorized": false,
             "resultLimit": 100,
             "timeoutSecs": 60,
             "user": "vscode_user",

@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import * as fs from "fs";
 import * as os from "os";
 import { LaunchRequestArguments } from "../hpccplatform/launchConfig";
 import { checkTextDocument, checkWorkspace } from "./check";
@@ -10,6 +9,7 @@ import { sessionManager } from "../hpccplatform/session";
 import { eclWatchPanelView } from "./eclWatchPanelView";
 import { ECLResultNode, ECLWUNode } from "./eclWatchTree";
 import localize from "../util/localize";
+import { createDirectory, exists, writeFile } from "../util/fs";
 
 const IMPORT_MARKER = "//Import:";
 const SKIP = localize("Skip");
@@ -244,8 +244,8 @@ export class ECLCommands {
                         let folder = targetDir;
                         for (let i = 0; i < qualifiedIDParts.length - 1; ++i) {
                             folder = path.join(folder, qualifiedIDParts[i]);
-                            if (!fs.existsSync(folder)) {
-                                fs.mkdirSync(folder);
+                            if (!await exists(folder)) {
+                                await createDirectory(folder);
                             }
                         }
 
@@ -253,7 +253,7 @@ export class ECLCommands {
 
                         //  Check if file already exists
                         let doWrite = true;
-                        if (fs.existsSync(filePath)) {
+                        if (await exists(filePath)) {
                             if (skipAll) {
                                 doWrite = false;
                             } else if (overwriteAll) {
@@ -282,7 +282,7 @@ export class ECLCommands {
 
                         //  Write File
                         if (doWrite) {
-                            fs.writeFile(filePath, attrs[item].join(os.EOL), "utf8", () => { });
+                            writeFile(filePath, attrs[item].join(os.EOL));
                         }
                     }
                 }
