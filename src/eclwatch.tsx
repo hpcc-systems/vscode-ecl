@@ -22,7 +22,6 @@ interface executor<T> {
 }
 
 const proxyPromises: { [id: number]: executor<any> } = {};
-
 let proxyID = 0;
 
 const origSend = hookSend((opts, action, request, responseType, header) => {

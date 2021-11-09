@@ -1,0 +1,314 @@
+<Archive build="community_8.0.18-1"
+         eclVersion="8.0.18"
+         legacyImport="0"
+         legacyWhen="0">
+ <Query attributePath="ProgGuide.CrossTab"/>
+ <Module key="progguide" name="ProgGuide">
+  <Attribute key="crosstab"
+             name="CrossTab"
+             sourcePath="c:\Users\gordon\git\vscode-ecl\ecl-sample\ProgGuide\CrossTab.ecl"
+             ts="1623312095816746">
+   //
+//  Example code - use without restriction.  
+//
+IMPORT $;
+Person := $.DeclareData.PersonAccounts;
+
+CountAccts := COUNT(Person.Accounts);
+
+MyReportFormat := RECORD
+	State 		 := Person.State;
+ 	A1 		     := SUM(GROUP,CountAccts);
+	GroupCount := COUNT(GROUP);
+END;
+
+RepTable := TABLE(Person,MyReportFormat,state);
+OUTPUT(RepTable);
+/* The result set would look something like this:
+	State		A1	GroupCount
+	 AK		 1		7
+	 AK		 2		3
+	 AL		 1		42
+	 AL		 2		54
+	 AR		 1		103
+	 AR		 2		89
+	 AR		 3		2		*/	
+	 
+	 
+MyReportFormat2 := RECORD
+	State{cardinality(56)}	:= Person.State;
+ 	A1 		:= CountAccts;
+	GroupCount 	:= COUNT(GROUP);
+	MaleCount   := COUNT(GROUP,Person.Gender = &apos;M&apos;);
+	FemaleCount := COUNT(GROUP,Person.Gender = &apos;F&apos;);
+ END;
+
+RepTable2 := TABLE(Person,MyReportFormat2,State,CountAccts );
+OUTPUT(RepTable2);
+
+IsValidType(STRING1 t) := t IN [&apos;O&apos;, &apos;R&apos;, &apos;I&apos;];
+
+IsRevolv := Person.Accounts.AcctType = &apos;R&apos; OR 
+		        (~IsValidType(Person.Accounts.AcctType) AND 
+		         Person.Accounts.Account[1] IN [&apos;4&apos;, &apos;5&apos;, &apos;6&apos;]);
+
+SetBankIndCodes := [&apos;BB&apos;, &apos;ON&apos;, &apos;FS&apos;, &apos;FC&apos;];
+
+IsBank := Person.Accounts.IndustryCode IN SetBankIndCodes;
+
+IsBankCard := IsBank AND IsRevolv;
+
+AvgBal := AVE(Person.Accounts(isBankCard),Balance);
+TotBal := SUM(Person.Accounts(isBankCard),Balance);
+AvgHC  := AVE(Person.Accounts(isBankCard),HighCredit);
+
+R1 := RECORD
+  Person.state;
+  Person.gender;
+  Number 		      := COUNT(GROUP);
+  AverageBal 	    := AVE(GROUP,AvgBal);
+  AverageTotalBal := AVE(GROUP,TotBal);
+  AverageHC 	  	:= AVE(GROUP,AvgHC);
+END;
+
+T1 := TABLE(Person, R1,  state, gender);
+OUTPUT(T1);
+
+
+//******************
+pointRec := { REAL x, REAL y };
+
+analyze( ds ) := MACRO
+
+  #uniquename(rec)
+  %rec% := RECORD
+    c     := COUNT(GROUP),
+  	sx    := SUM(GROUP, ds.x),
+	  sy    := SUM(GROUP, ds.y),
+	  sxx   := SUM(GROUP, ds.x * ds.x),
+	  sxy   := SUM(GROUP, ds.x * ds.y),
+	  syy   := SUM(GROUP, ds.y * ds.y),
+	  varx  := VARIANCE(GROUP, ds.x);
+  	vary  := VARIANCE(GROUP, ds.y);
+	  varxy := COVARIANCE(GROUP, ds.x, ds.y);
+	  rc    := CORRELATION(GROUP, ds.x, ds.y) ;
+  END;	
+
+  #uniquename(stats)
+  %stats% := TABLE(ds,%rec% );
+  OUTPUT(%stats%);
+
+  OUTPUT(%stats%, { varx - (sxx-sx*sx/c)/c,
+              			vary - (syy-sy*sy/c)/c,
+		  							varxy - (sxy-sx*sy/c)/c,
+			  						rc - (varxy/SQRT(varx*vary)) });
+				
+  OUTPUT(%stats%, { &apos;bestFit: y=&apos; + 
+	  								(STRING)((sy-sx*varxy/varx)/c) + 
+		  							&apos; + &apos; + 
+			  						(STRING)(varxy/varx)+&apos;x&apos; });
+ENDMACRO;
+
+ds1 := DATASET([{1,1},{2,2},{3,3},{4,4},{5,5},{6,6}], pointRec);
+ds2 := DATASET([{1.93896e+009, 2.04482e+009},
+								{1.77971e+009, 8.54858e+008},
+								{2.96181e+009, 1.24848e+009},
+								{2.7744e+009,  1.26357e+009},
+								{1.14416e+009, 4.3429e+008},
+								{3.38728e+009, 1.30238e+009},
+								{3.19538e+009, 1.71177e+009} ], pointRec);
+
+ds3 := DATASET([{1, 1.00039},
+								{2, 2.07702},
+								{3, 2.86158},
+								{4, 3.87114},
+								{5, 5.12417},
+								{6, 6.20283} ], pointRec);
+
+analyze(ds1);
+analyze(ds2);
+analyze(ds3);&#13;&#10;&#13;&#10;&#32;
+  </Attribute>
+  <Attribute key="declaredata"
+             name="DeclareData"
+             sourcePath="c:\Users\gordon\git\vscode-ecl\ecl-sample\.\ProgGuide\DeclareData.ecl"
+             ts="1623312095816746">
+   //
+//  Example code - use without restriction.  
+//
+IMPORT Std;
+
+EXPORT DeclareData := MODULE
+
+	EXPORT LZ_IP  := &apos;10.173.9.4&apos;;		//This MUST be changed to the Landing Zone IP for your configuration
+	EXPORT LZ_Dir := &apos;ProgGuide/&apos;;   
+
+	EXPORT Layout_Person := RECORD
+		UNSIGNED3 PersonID;
+		STRING15 FirstName;
+		STRING25 LastName;
+		STRING1   MiddleInitial;
+		STRING1   Gender;
+		STRING42 Street;
+		STRING20 City;
+		STRING2   State;
+		STRING5  Zip;
+	END;
+	EXPORT Layout_Accounts := RECORD
+		STRING20 Account;
+		STRING8  OpenDate;
+		STRING2   IndustryCode;
+		STRING1   AcctType;
+		STRING1   AcctRate;
+		UNSIGNED1 Code1;
+		UNSIGNED1 Code2;
+		UNSIGNED4 HighCredit;
+		UNSIGNED4 Balance;
+	END;
+	EXPORT Layout_Accounts_Link := RECORD
+		UNSIGNED3 PersonID;
+		Layout_Accounts;
+	END;
+	SHARED Layout_Combined := RECORD
+		Layout_Person;
+		DATASET(Layout_Accounts) Accounts;
+	END;
+
+  EXPORT Person := MODULE
+	  EXPORT File     := DATASET(&apos;~PROGGUIDE::EXAMPLEDATA::People&apos;,
+													     Layout_Person, THOR);
+	  EXPORT FilePlus := DATASET(&apos;~PROGGUIDE::EXAMPLEDATA::People&apos;,
+													     {Layout_Person,UNSIGNED8 RecPos{virtual(fileposition)}}, THOR);
+	END;												 
+  EXPORT Accounts := DATASET(&apos;~PROGGUIDE::EXAMPLEDATA::Accounts&apos;,
+														 {Layout_Accounts_Link,UNSIGNED8 RecPos{virtual(fileposition)}}, THOR);
+  EXPORT PersonAccounts := DATASET(&apos;~PROGGUIDE::EXAMPLEDATA::PeopleAccts&apos;,
+																	 {Layout_Combined,UNSIGNED8 RecPos{virtual(fileposition)}},THOR);
+
+  EXPORT IDX_Person_PersonID := INDEX(Person.FilePlus,{PersonID,RecPos},&apos;~PROGGUIDE::EXAMPLEDATA::KEYS::People.PersonID&apos;);
+  EXPORT IDX_Accounts_PersonID := INDEX(Accounts,{PersonID,RecPos},&apos;~PROGGUIDE::EXAMPLEDATA::KEYS::Accounts.PersonID&apos;);
+  EXPORT IDX_Accounts_PersonID_Payload := INDEX(Accounts,{PersonID},{Account,OpenDate,IndustryCode,AcctType,AcctRate,Code1,Code2,HighCredit,Balance,RecPos},&apos;~PROGGUIDE::EXAMPLEDATA::KEYS::Accounts.PersonID.Payload&apos;);
+  EXPORT IDX_PersonAccounts_PersonID := INDEX(PersonAccounts,{PersonID,RecPos},&apos;~PROGGUIDE::EXAMPLEDATA::KEYS::PeopleAccts.PersonID&apos;);
+
+  EXPORT IDX__Person_LastName_FirstName := INDEX(Person.FilePlus,{LastName,FirstName,RecPos},&apos;~PROGGUIDE::EXAMPLEDATA::KEYS::People.LastName.FirstName&apos;);
+  EXPORT IDX__Person_PersonID_Payload := INDEX(Person.FilePlus,{PersonID},{FirstName,LastName,MiddleInitial,Gender,Street,City,State,Zip,RecPos},&apos;~PROGGUIDE::EXAMPLEDATA::KEYS::People.PersonID.Payload&apos;);
+  EXPORT IDX__Person_LastName_FirstName_Payload := INDEX(Person.FilePlus,{LastName,FirstName},{Person.FilePlus},&apos;~PROGGUIDE::EXAMPLEDATA::KEYS::People.LastName.FirstName.Payload&apos;);
+  EXPORT IDX__Person_State_City_Zip_LastName_FirstName_Payload := INDEX(Person.FilePlus,{State,City,Zip,Lastname,Firstname},{Person.FilePlus},&apos;~PROGGUIDE::EXAMPLEDATA::KEYS::People.State.City.Zip.LastName.FirstName.Payload&apos;);
+
+  EXPORT TimeZonesXML := DATASET(&apos;~PROGGUIDE::EXAMPLEDATA::XML_timezones&apos;,
+															   {STRING code,
+																  STRING state,
+																	STRING description,
+																	STRING timezone{XPATH(&apos;zone&apos;)}},
+															   XML(&apos;timezones/area&apos;) );
+
+	EXPORT MAC_CountFieldValues(infile,infield) := MACRO
+		// Create the count of unique values in the infield
+		COUNT(DEDUP(TABLE(infile,{infile.infield}),infield,ALL));
+		// Create the crosstab report
+		#UNIQUENAME(r_macro)
+		%r_macro% := RECORD
+			infile.infield;
+			INTEGER cnt := COUNT(GROUP);
+		END;
+		#UNIQUENAME(y_macro)
+		%y_macro% := TABLE(infile,%r_macro%,infield,FEW);
+		OUTPUT(CHOOSEN(%y_macro%,50000));
+	ENDMACRO;
+
+  //These attributes directly support the SuperFiles articles
+	EXPORT AllPeople  := &apos;~PROGGUIDE::SUPERFILE::AllPeople&apos;;
+	EXPORT BaseFile   := &apos;~PROGGUIDE::SUPERFILE::Base&apos;;
+	EXPORT WeeklyFile := &apos;~PROGGUIDE::SUPERFILE::Weekly&apos;;
+	EXPORT DailyFile  := &apos;~PROGGUIDE::SUPERFILE::Daily&apos;;
+	EXPORT SubFile1   := &apos;~PROGGUIDE::SUPERFILE::People1&apos;;
+	EXPORT SubFile2   := &apos;~PROGGUIDE::SUPERFILE::People2&apos;;
+	EXPORT SubFile3   := &apos;~PROGGUIDE::SUPERFILE::People3&apos;;
+	EXPORT SubFile4   := &apos;~PROGGUIDE::SUPERFILE::People4&apos;;
+	EXPORT SubFile5   := &apos;~PROGGUIDE::SUPERFILE::People5&apos;;
+	EXPORT SubFile6   := &apos;~PROGGUIDE::SUPERFILE::People6&apos;;
+  EXPORT SuperFile1 := DATASET(BaseFile,Layout_Person,FLAT);
+  EXPORT SuperFile2 := DATASET(AllPeople,Layout_Person,FLAT);
+
+  //this macro lists the sub-files in a SuperFile	
+  EXPORT MAC_ListSFsubfiles(SuperFile) := MACRO
+		#UNIQUENAME(SeedRec)
+		%SeedRec% := DATASET([{&apos;&apos;}], {STRING fn});
+		#UNIQUENAME(Xform)
+		TYPEOF(%SeedRec%) %Xform%(%SeedRec% L, INTEGER C) := TRANSFORM 
+			SELF.fn := Std.File.GetSuperFileSubName(SuperFile,C); 
+		END; 
+		OUTPUT(NORMALIZE(%SeedRec%,
+										 Std.File.GetSuperFileSubCount(SuperFile),
+										 %Xform%(LEFT,COUNTER))); 
+  ENDMACRO;
+
+  //this macro clears then deletes a SuperFile	
+  EXPORT MAC_DeleteSF(SuperFile) := MACRO
+		SEQUENTIAL(
+			Std.File.StartSuperFileTransaction(),
+			Std.File.ClearSuperFile(SuperFile),
+			Std.File.FinishSuperFileTransaction(),
+			Std.File.DeleteSuperFile(SuperFile));
+  ENDMACRO;
+
+  //These attributes directly support the &quot;Indexes Into SuperFiles&quot; article
+  EXPORT i1name := &apos;~PROGGUIDE::SUPERKEY::IDX1&apos;;
+  EXPORT i2name := &apos;~PROGGUIDE::SUPERKEY::IDX2&apos;;
+	EXPORT i3name := &apos;~PROGGUIDE::SUPERKEY::IDX3&apos;;
+  EXPORT SFname := &apos;~PROGGUIDE::SUPERKEY::SF1&apos;;
+  EXPORT SKname := &apos;~PROGGUIDE::SUPERKEY::SK1&apos;;
+  EXPORT ds1 := DATASET(SubFile1,{Layout_Person,UNSIGNED8 RecPos {VIRTUAL(fileposition)}},THOR);
+  EXPORT ds2 := DATASET(SubFile2,{Layout_Person,UNSIGNED8 RecPos {VIRTUAL(fileposition)}},THOR);
+  EXPORT i1  := INDEX(ds1,{personid,RecPos},i1name);
+  EXPORT i2  := INDEX(ds2,{personid,RecPos},i2name);
+  EXPORT sf1 := DATASET(SFname,{Layout_Person,UNSIGNED8 RecPos {VIRTUAL(fileposition)}},THOR);
+  EXPORT sk1 := INDEX(sf1,{personid,RecPos},SKname);
+  EXPORT sk2 := INDEX(sf1,{personid,RecPos},i3name);
+
+  //These attributes directly support the &quot;Using SuperKeys&quot; article
+	EXPORT SubKey1   := &apos;~PROGGUIDE::SUPERKEY::Accounts1&apos;;
+	EXPORT SubKey2   := &apos;~PROGGUIDE::SUPERKEY::Accounts2&apos;;
+	EXPORT SubKey3   := &apos;~PROGGUIDE::SUPERKEY::Accounts3&apos;;
+	EXPORT SubKey4   := &apos;~PROGGUIDE::SUPERKEY::Accounts4&apos;;
+	EXPORT SubIDX1   := &apos;~PROGGUIDE::SUPERKEY::KEY::AcctsIDX1&apos;;
+	EXPORT SubIDX2   := &apos;~PROGGUIDE::SUPERKEY::KEY::AcctsIDX2&apos;;
+	EXPORT SubIDX3   := &apos;~PROGGUIDE::SUPERKEY::KEY::AcctsIDX3&apos;;
+	EXPORT SubIDX4   := &apos;~PROGGUIDE::SUPERKEY::KEY::AcctsIDX4&apos;;
+  EXPORT AcctSKname   := &apos;~PROGGUIDE::SUPERKEY::KEY::AcctsSK&apos;;
+  EXPORT AcctSK := INDEX(Accounts,{PersonID},
+												 {Account,OpenDate,IndustryCode,AcctType,AcctRate,Code1,Code2,HighCredit,Balance,RecPos},
+												 AcctSKname);
+
+  //This MACRO directly supports the &quot;Scanning LandingZone Files&quot; article
+	EXPORT MAC_ScanFile(IP, infile, scansize) := MACRO
+		ds := DATASET(Std.File.ExternalLogicalFileName(IP, infile),{DATA1 S}, THOR )[1..scansize];
+		
+		OUTPUT(TABLE(ds,{hex := ds.s,txt := (STRING1)ds.s}),ALL);
+		
+		Rec := RECORD 
+			UNSIGNED2 C;
+			DATA S {MAXLENGTH(8*1024)};
+		END;
+		Rec XF1(ds L,INTEGER C) := TRANSFORM
+			SELF.C := C;
+			SELF.S := L.s;
+		END;
+		ds2  := PROJECT(ds,XF1(LEFT,COUNTER));
+		Rec XF2(Rec L,Rec R) := TRANSFORM
+			SELF.S := L.S[1 .. R.C-1] + R.S[1];
+			SELF := L;
+		END;
+		Rolled := ROLLUP(ds2,TRUE,XF2(LEFT,RIGHT));
+
+		OUTPUT(TRANSFER(Rolled[1].S,STRING));
+	ENDMACRO;
+		 
+	
+
+END;&#13;&#10;
+  </Attribute>
+ </Module>
+ <Module key="std" name="std"/>
+ <Option name="eclcc_compiler_version" value="8.0.18"/>
+</Archive>

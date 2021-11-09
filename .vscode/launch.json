@@ -30,6 +30,19 @@
             "internalConsoleOptions": "neverOpen"
         },
         {
+            "name": "Launch Web Extension",
+            "type": "pwa-extensionHost",
+            "debugWebWorkerHost": true,
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--extensionDevelopmentKind=web"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+        },
+        {
             "name": "Launch Extension With Other Extensions",
             "type": "extensionHost",
             "request": "launch",

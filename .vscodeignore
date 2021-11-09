@@ -3,7 +3,7 @@
 */**
 
 # Whitelist required files
-!dist/**/*
+!dist*/**/*
 !resources/**/*
 !snippets/**/*
 !syntaxes/**/*

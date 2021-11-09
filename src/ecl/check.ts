@@ -1,10 +1,12 @@
 import { scopedLogger } from "@hpcc-js/util";
-import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
+import { isTypeDirectory, modAttrs } from "../util/fs";
 import localize from "../util/localize";
 import { eclDiagnostic } from "./diagnostic";
+
+const fs = vscode.workspace.fs;
 
 const logger = scopedLogger("debugger/ECLDEbugSession.ts");
 
@@ -55,14 +57,10 @@ export function checkTextDocument(document: vscode.TextDocument, eclConfig: vsco
     return checkUri(document.uri, eclConfig);
 }
 
-const isDirectory = source => source.indexOf(".") !== 0 && fs.lstatSync(source).isDirectory();
-const isEcl = source => path.extname(source).toLowerCase() === ".ecl";
-const modAttrs = source => fs.readdirSync(source).map(name => path.join(source, name)).filter(fsPath => isDirectory(fsPath) || isEcl(fsPath));
-
-function walkFolders(folderPath: string, cb: (fsPath: string) => void) {
-    for (const child of modAttrs(folderPath)) {
-        if (isDirectory(child)) {
-            walkFolders(child, cb);
+async function walkFolders(folderPath: string, cb: (fsPath: string) => void) {
+    for (const [child, type] of (await modAttrs(folderPath))) {
+        if (isTypeDirectory(type)) {
+            await walkFolders(child, cb);
         } else {
             cb(child);
         }
@@ -71,7 +69,7 @@ function walkFolders(folderPath: string, cb: (fsPath: string) => void) {
 
 export async function checkWorkspace(wsf: vscode.WorkspaceFolder): Promise<void> {
     const files: string[] = [];
-    walkFolders(wsf.uri.fsPath, filePath => {
+    await walkFolders(wsf.uri.fsPath, filePath => {
         files.push(filePath);
     });
     for (const file of files) {

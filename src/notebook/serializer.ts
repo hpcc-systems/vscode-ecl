@@ -15,7 +15,7 @@ interface RawNotebookCell {
 
 export class Serializer implements vscode.NotebookSerializer {
     async deserializeNotebook(content: Uint8Array, _token: vscode.CancellationToken): Promise<vscode.NotebookData> {
-        const contents = new TextDecoder().decode(content);
+        const contents = new TextDecoder("utf-8").decode(content);
 
         let raw: RawNotebookCell[];
         try {

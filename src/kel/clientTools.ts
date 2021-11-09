@@ -5,9 +5,9 @@ import { kelStatusBar } from "./status";
 import * as cp from "child_process";
 import * as path from "path";
 import * as os from "os";
-import * as fs from "fs";
 import * as AdmZip from "adm-zip";
 import localize from "../util/localize";
+import { exists, isDirectory, readDirectory } from "../util/fs";
 
 const logger = scopedLogger("kel/clientTools.ts");
 
@@ -167,51 +167,51 @@ class KELClientTools extends ClientTools {
     }
 }
 
-function locateClientToolsInFolder(rootFolder: string, clientTools: KELClientTools[]) {
+async function locateClientToolsInFolder(rootFolder: string, clientTools: KELClientTools[]) {
     if (rootFolder) {
         const hpccSystemsFolder = path.join(rootFolder, "HPCCSystems");
-        if (fs.existsSync(hpccSystemsFolder) && fs.statSync(hpccSystemsFolder).isDirectory()) {
+        if (await exists(hpccSystemsFolder) && await isDirectory(hpccSystemsFolder)) {
             if (os.type() !== "Windows_NT") {
                 const kelPath = path.join(hpccSystemsFolder, "KEL", "KEL.jar");
-                if (fs.existsSync(kelPath)) {
+                if (await exists(kelPath)) {
                     clientTools.push(new KELClientTools(kelPath));
                 }
             }
-            fs.readdirSync(hpccSystemsFolder).forEach((versionFolder) => {
+            for (const [versionFolder] of await readDirectory(hpccSystemsFolder)) {
                 const kelPath = path.join(hpccSystemsFolder, versionFolder, "KEL", "KEL.jar");
-                if (fs.existsSync(kelPath)) {
+                if (await exists(kelPath)) {
                     const name = path.basename(versionFolder);
                     const version = new Version(name);
                     if (version.exists()) {
                         clientTools.push(new KELClientTools(kelPath, undefined, undefined, undefined, undefined, version));
                     }
                 }
-            });
+            }
         }
     }
 }
 
 let allClientToolsCache: Promise<KELClientTools[]>;
-function locateAllClientTools() {
+async function locateAllClientTools(): Promise<KELClientTools[]> {
     if (allClientToolsCache) return allClientToolsCache;
     const clientTools: KELClientTools[] = [];
     switch (os.type()) {
         case "Windows_NT":
             const rootFolder86 = process.env["ProgramFiles(x86)"] || "";
             if (rootFolder86) {
-                locateClientToolsInFolder(rootFolder86, clientTools);
+                await locateClientToolsInFolder(rootFolder86, clientTools);
             }
             const rootFolder = process.env["ProgramFiles"] || "";
             if (rootFolder) {
-                locateClientToolsInFolder(rootFolder, clientTools);
+                await locateClientToolsInFolder(rootFolder, clientTools);
             }
             if (!rootFolder86 && !rootFolder) {
-                locateClientToolsInFolder("c:\\Program Files (x86)", clientTools);
+                await locateClientToolsInFolder("c:\\Program Files (x86)", clientTools);
             }
             break;
         case "Linux":
         case "Darwin":
-            locateClientToolsInFolder("/opt", clientTools);
+            await locateClientToolsInFolder("/opt", clientTools);
             break;
         default:
             break;

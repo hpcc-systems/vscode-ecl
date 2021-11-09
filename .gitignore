@@ -1,5 +1,5 @@
 /.eclcc
-/dist
+/dist*
 /ecl-sample/.vscode/settings.json
 /grammar
 /images

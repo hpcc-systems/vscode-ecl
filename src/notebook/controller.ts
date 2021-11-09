@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import * as fs from "fs";
 import * as path from "path";
 import { hashSum } from "@hpcc-js/util";
 import { sessionManager } from "../hpccplatform/session";
+import { deleteFile, writeFile } from "../util/fs";
 
 function encodeID(id: string) {
     return id.split(" ").join("_");
@@ -47,10 +47,10 @@ export class Controller {
             const code = cell.document.getText();
             const jobname = `${basename}-${hashSum(code.trim())}`;
             tmpPath = `${path.join(dirname, jobname)}.tmp`;
-            fs.writeFileSync(tmpPath, cell.document.getText(), "utf8");
+            await writeFile(tmpPath, cell.document.getText());
             const uri = vscode.Uri.file(tmpPath);
             const wu = await sessionManager.submit({ uri });
-            fs.unlink(tmpPath, () => { });
+            deleteFile(tmpPath);
             tmpPath = "";
             if (wu) {
                 await wu.watchUntilComplete();
@@ -67,7 +67,7 @@ export class Controller {
             return vscode.NotebookCellOutputItem.error(e);
         } finally {
             if (tmpPath) {
-                fs.unlink(tmpPath, () => { });
+                deleteFile(tmpPath);
             }
         }
     }
@@ -92,7 +92,7 @@ export class Controller {
             folder: path.dirname(cell.document.uri.path),
             eclResults
         };
-        return vscode.NotebookCellOutputItem.json(retVal, "application-x/hpcc/ojs");
+        return vscode.NotebookCellOutputItem.json(retVal, "application/hpcc.ojs+json");
     }
 
     private async executeCell(cell: vscode.NotebookCell, cells: vscode.NotebookCell[]): Promise<void> {

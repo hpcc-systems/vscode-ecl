@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { AccountService, Activity, CodesignService, Ping, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, Service, WorkunitsService } from "@hpcc-js/comms";
@@ -7,17 +6,18 @@ import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
 import localize from "../util/localize";
+import { readFile } from "../util/fs";
+
+const fs = vscode.workspace.fs;
 
 const logger = scopedLogger("launchConfig.ts");
 
 const PROXY_WARNING = localize("User setting 'http.proxySupport' is set to 'override'.\nThis will prevent ECL from targetting 'Trustwave' signed sites and will also prevent 'rejectUnauthorized: false' from working.\nSetting this to 'fallback' will resolve these issues.");
 const SET_FALLBACK = localize("Set to 'fallback'");
 
-function xmlFile(programPath: string): Promise<{ err: EclccErrors, content: string }> {
-    return new Promise((resolve, reject) => {
-        fs.readFile(programPath, "utf8", function (err, content) {
-            resolve({ err: new EclccErrors("", []), content });
-        });
+function xmlFile(programPath: string): Thenable<{ err: EclccErrors, content: string }> {
+    return readFile(programPath).then(content => {
+        return { err: new EclccErrors("", []), content };
     });
 }
 
