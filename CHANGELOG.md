@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.17.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.5...v2.17.0) (2021-11-10)
+
+
+### Features
+
+*  Initial support for https://vscode.dev/ ([c095792](https://github.com/hpcc-systems/vscode-ecl/commit/c0957927144090ad39acd37afb3e1eaaab7c4470))
+
+
+### Bug Fixes
+
+*  Include user launch configurations in list ([d7fd399](https://github.com/hpcc-systems/vscode-ecl/commit/d7fd399bdf7da479e64fdebe8226507cc7801357)), closes [#288](https://github.com/hpcc-systems/vscode-ecl/issues/288)
+
 ### [2.16.5](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.4...v2.16.5) (2021-10-03)
 
 
