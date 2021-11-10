@@ -26,15 +26,22 @@ export {
 };
 
 let g_launchConfigurations: { [name: string]: LaunchRequestArguments };
-function gatherServers(wuf?: vscode.WorkspaceFolder) {
-    const eclLaunch = vscode.workspace.getConfiguration("launch", wuf.uri);
-    if (eclLaunch.has("configurations")) {
-        for (const launchConfig of eclLaunch.get<any[]>("configurations")!) {
-            if (launchConfig.type === "ecl" && launchConfig.name) {
-                g_launchConfigurations[launchConfig.name] = launchConfig;
-            }
+function addLaunchConfiguration(configurations, source?: string) {
+    for (const launchConfig of configurations ?? []) {
+        if (launchConfig.type === "ecl" && launchConfig.name) {
+            const name = launchConfig.name + (source ? ` (${source})` : "");
+            g_launchConfigurations[name] = { ...launchConfig };
+            g_launchConfigurations[name].name = name;
         }
     }
+}
+
+function gatherServers(wuf?: vscode.WorkspaceFolder, wufCount: number = 0) {
+    const eclLaunch = vscode.workspace.getConfiguration("launch", wuf?.uri);
+    const configs = eclLaunch.inspect("configurations");
+    addLaunchConfiguration(configs.globalValue, "user settings");
+    addLaunchConfiguration(configs.workspaceFolderValue, wufCount > 1 ? wuf?.name : undefined);
+    addLaunchConfiguration(configs.workspaceValue, wufCount > 1 ? wuf?.name : undefined);
 }
 
 export function launchConfigurations(refresh = false): LaunchRequestArguments[] {
@@ -43,7 +50,7 @@ export function launchConfigurations(refresh = false): LaunchRequestArguments[] 
 
         if (vscode.workspace.workspaceFolders) {
             for (const wuf of vscode.workspace.workspaceFolders) {
-                gatherServers(wuf);
+                gatherServers(wuf, vscode.workspace.workspaceFolders.length);
             }
         } else {
             gatherServers();
