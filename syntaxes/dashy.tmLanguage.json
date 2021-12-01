@@ -1,0 +1,12 @@
+{
+    "scopeName": "source.json.dashy",
+    "fileTypes": [
+        "dashy"
+    ],
+    "name": "Dashy",
+    "patterns": [
+        {
+            "include": "source.json"
+        }
+    ]
+}

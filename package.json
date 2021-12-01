@@ -110,7 +110,13 @@
   "activationEvents": [
     "onLanguage:ecl",
     "onNotebook:ecl-notebook",
-    "onLanguage:kel"
+    "onLanguage:kel",
+    "workspaceContains:*.ecl",
+    "workspaceContains:*.ecllib",
+    "workspaceContains:*.mod",
+    "workspaceContains:*.eclnb",
+    "workspaceContains:*.kel",
+    "workspaceContains:*.dashy"
   ],
   "contributes": {
     "languages": [
@@ -164,6 +170,13 @@
         "language": "kel",
         "scopeName": "source.kel",
         "path": "./syntaxes/kel.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.json.dashy",
+        "path": "./syntaxes/dashy.tmLanguage.json",
+        "injectTo": [
+          "source.json"
+        ]
       }
     ],
     "snippets": [
