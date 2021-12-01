@@ -39,7 +39,7 @@ function addLaunchConfiguration(configurations, source?: string) {
 function gatherServers(wuf?: vscode.WorkspaceFolder, wufCount: number = 0) {
     const eclLaunch = vscode.workspace.getConfiguration("launch", wuf?.uri);
     const configs = eclLaunch.inspect("configurations");
-    addLaunchConfiguration(configs.globalValue, "user settings");
+    addLaunchConfiguration(configs.globalValue, localize("user settings"));
     addLaunchConfiguration(configs.workspaceFolderValue, wufCount > 1 ? wuf?.name : undefined);
     addLaunchConfiguration(configs.workspaceValue, wufCount > 1 ? wuf?.name : undefined);
 }
@@ -438,7 +438,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         const currentWorkspace = fileUri ? vscode.workspace.getWorkspaceFolder(fileUri) : undefined;
         const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
         const includeFolders = this.calcIncludeFolders(currentWorkspacePath);
-        const args = this.eclccArgs;
+        const args = [...this.eclccArgs];
         if (this.eclccLogFile) {
             args.push(`--logfile=${path.normalize(this.eclccLogFile)}`);
         }
