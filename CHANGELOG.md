@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.17.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.17.0...v2.17.1) (2021-12-01)
+
+
+### Bug Fixes
+
+* Dashy files do not auto-activate the plugin ([7b6e8ad](https://github.com/hpcc-systems/vscode-ecl/commit/7b6e8adfc591237945bfba9aeabee736294dc7bd)), closes [#293](https://github.com/hpcc-systems/vscode-ecl/issues/293)
+* eclccLogFile repeats on each process call ([90898ff](https://github.com/hpcc-systems/vscode-ecl/commit/90898fff7c8caf1e655fcdb76bceaf409194acd0)), closes [#292](https://github.com/hpcc-systems/vscode-ecl/issues/292)
+
 ## [2.17.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.16.5...v2.17.0) (2021-11-10)
 
 
