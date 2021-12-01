@@ -4,7 +4,8 @@
         "kel"
     ],
     "name": "KEL",
-    "patterns": [{
+    "patterns": [
+        {
             "include": "#expression"
         },
         {
@@ -16,7 +17,8 @@
             "match": "\\b(?i:(%|\\*|\\+|-|/))\\b"
         },
         {
-            "patterns": [{
+            "patterns": [
+                {
                     "include": "#regions"
                 },
                 {
@@ -47,7 +49,6 @@
             "name": "entity.name.function.kel",
             "match": "\\b(?i:(fdc|filter|format|global|kelbase|kelquery|link|null|resources))\\b"
         },
-
         "functionsEcl": {
             "name": "entity.name.function.ecl",
             "match": "\\b(?i:(abs|acos|asin|atan|atan2|cos|cosh|exists|exp|if|intformat|length|ln|log|map|power|realformat|round|roundup|sin|sinh|sqrt|tan|tanh|topn|trim|truncate))\\b"
@@ -62,7 +63,8 @@
         },
         "expression": {
             "name": "meta.expression.kel",
-            "patterns": [{
+            "patterns": [
+                {
                     "include": "#comment"
                 },
                 {
@@ -84,7 +86,8 @@
         },
         "comment": {
             "name": "comment.kel",
-            "patterns": [{
+            "patterns": [
+                {
                     "include": "#comment-block-doc"
                 },
                 {
@@ -111,17 +114,21 @@
         },
         "string": {
             "name": "string.kel",
-            "patterns": [{
-                "include": "#qstring-single"
-            }]
+            "patterns": [
+                {
+                    "include": "#qstring-single"
+                }
+            ]
         },
         "qstring-single": {
             "begin": "'",
             "end": "\\'|(?:[^\\\\\\n]$)",
             "name": "string.single.kel",
-            "patterns": [{
-                "include": "#string-character-escape"
-            }]
+            "patterns": [
+                {
+                    "include": "#string-character-escape"
+                }
+            ]
         },
         "string-character-escape": {
             "match": "\\\\(x\\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)",
@@ -129,7 +136,8 @@
         },
         "literal": {
             "name": "literal.kel",
-            "patterns": [{
+            "patterns": [
+                {
                     "include": "#numeric-literal"
                 },
                 {
