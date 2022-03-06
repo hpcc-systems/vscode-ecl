@@ -653,6 +653,8 @@ export class LaunchConfig implements LaunchRequestArguments {
                 progress.report({ increment: 10, message: localize("Verifying Archive") });
                 if (this.abortSubmitOnError && archive.err.hasError()) {
                     throw new Error(`${localize("ECL Syntax Error(s)")}:\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
+                } else if (archive.content.length === 0) {
+                    throw new Error(`${localize("Empty Archive")}:\n  ${archive.err.all().map(e => e.msg).join("\n  ")}`);
                 }
                 logger.info(`Archive Size: ${archive.content.length}.${os.EOL}`);
                 return archive;

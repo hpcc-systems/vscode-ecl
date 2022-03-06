@@ -11,7 +11,7 @@
 	},
 	"editor.insertSpaces": true,
 	"ecl.debugLogging": true,
-	"ecl.launchConfiguration": "localhost (user settings)",
+	"ecl.launchConfiguration": "not found",
 	"ecl.targetCluster": {},
 	"svg.preview.background": "black"
 }
