@@ -5,21 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "gitpod (https)",
-            "type": "ecl",
-            "request": "launch",
-            "protocol": "https",
-            "serverAddress": "8010-lavender-urial-rocy5p9m.ws-eu17.gitpod.io",
-            "port": 443,
-            "path": "",
-            "targetCluster": "thor",
-            "rejectUnauthorized": true,
-            "resultLimit": 100,
-            "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
-        },
-        {
             "name": "localhost",
             "type": "ecl",
             "request": "launch",
@@ -42,6 +27,21 @@
             "port": 18010,
             "targetCluster": "hthor",
             "rejectUnauthorized": false,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "vscode_user",
+            "password": ""
+        },
+        {
+            "name": "gitpod (https)",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "https",
+            "serverAddress": "8010-lavender-urial-rocy5p9m.ws-eu17.gitpod.io",
+            "port": 443,
+            "path": "",
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
             "resultLimit": 100,
             "timeoutSecs": 60,
             "user": "vscode_user",

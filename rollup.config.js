@@ -1,10 +1,10 @@
 import alias from "@rollup/plugin-alias";
-import commonjs from '@rollup/plugin-commonjs';
-import nodeResolve from '@rollup/plugin-node-resolve';
-import sourcemaps from 'rollup-plugin-sourcemaps';
+import commonjs from "@rollup/plugin-commonjs";
+import nodeResolve from "@rollup/plugin-node-resolve";
+import sourcemaps from "rollup-plugin-sourcemaps";
 import postcss from "rollup-plugin-postcss";
 
-const pkg = require("./package.json");
+import pkg from "./package.json";
 
 const node_libs = [
     "buffer",

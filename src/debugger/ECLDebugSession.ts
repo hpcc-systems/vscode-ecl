@@ -1,8 +1,8 @@
 import { Workunit, XGMMLEdge, XGMMLGraph, XGMMLSubgraph, XGMMLVertex } from "@hpcc-js/comms";
 import { IObserverHandle, Level, logger, scopedLogger, ScopedLogging, Writer } from "@hpcc-js/util";
 
-import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, Variable } from "vscode-debugadapter";
-import { DebugProtocol } from "vscode-debugprotocol";
+import { Breakpoint, ContinuedEvent, DebugSession, Event, Handles, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread, Variable } from "@vscode/debugadapter";
+import { DebugProtocol } from "@vscode/debugprotocol";
 import { LaunchRequestArguments, locateAllClientTools } from "./launchRequestArguments";
 
 import * as os from "os";
@@ -235,7 +235,7 @@ export class ECLDebugSession extends DebugSession {
                 return this.workunit.debugBreakpointValid(sourcePath);
             }).then((validBPLocations: any) => {
                 // verify breakpoint locations
-                const breakpoints: Breakpoint[] = [];
+                const breakpoints: DebugProtocol.Breakpoint[] = [];
                 const clientLines = args.lines;
                 if (clientLines) {
                     for (const clientLine of clientLines) {

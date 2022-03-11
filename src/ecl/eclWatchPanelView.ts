@@ -27,7 +27,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
     public static readonly viewType = "ecl.watch.lite";
 
     protected _ctx: vscode.ExtensionContext;
-    private readonly _extensionUri: vscode.Uri
+    private readonly _extensionUri: vscode.Uri;
     private _webviewView?: vscode.WebviewView;
     private _currParams: NavigateParams;
 

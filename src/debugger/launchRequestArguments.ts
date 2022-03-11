@@ -1,4 +1,4 @@
-import { DebugProtocol } from "vscode-debugprotocol";
+import { DebugProtocol } from "@vscode/debugprotocol";
 import { locateAllClientTools as commsLocateAllClientTools } from "@hpcc-js/comms";
 
 export type LaunchProtocol = "http" | "https";
