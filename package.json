@@ -107,7 +107,6 @@
     "color": "#CFB69A",
     "theme": "light"
   },
-  "enabledApiProposals": [],
   "extensionDependencies": [],
   "activationEvents": [
     "onLanguage:ecl",
