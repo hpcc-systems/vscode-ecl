@@ -24,6 +24,8 @@ function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Pr
     return sessionManager.checkSyntax(uri).then(({ errors, checked }) => {
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
 
+        // The below fixes an issue where the "...checking..." message won't go away even after checking completes.
+        eclDiagnostic.delete(uri);
         for (const checkedPath of checked) {
             eclDiagnostic.set(vscode.Uri.file(checkedPath), []);
         }
