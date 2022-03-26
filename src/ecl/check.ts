@@ -24,6 +24,7 @@ function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Pr
     return sessionManager.checkSyntax(uri).then(({ errors, checked }) => {
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
 
+        eclDiagnostic.set(uri, []);
         for (const checkedPath of checked) {
             eclDiagnostic.set(vscode.Uri.file(checkedPath), []);
         }

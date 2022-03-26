@@ -20,6 +20,7 @@ module.exports = {
         "debugConfig": "readonly",
         "Promise": "readonly"
     },
+    ignorePatterns: ["src/grammar"],
     rules: {
         "no-redeclare": "off",
         "no-empty": "off",
