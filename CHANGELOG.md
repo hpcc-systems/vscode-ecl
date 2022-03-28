@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.17.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.17.3...v2.17.4) (2022-03-28)
+
+
+### Bug Fixes
+
+* Ensure stray "...compiling..." message is tidied up ([6f420a9](https://github.com/hpcc-systems/vscode-ecl/commit/6f420a9131b9caa7ce65dab619cbf2b5a0c04d6b))
+
 ### [2.17.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.17.2...v2.17.3) (2022-03-11)
 
 ### [2.17.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.17.1...v2.17.2) (2022-03-11)
