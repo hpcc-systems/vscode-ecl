@@ -43,24 +43,24 @@
     "update": "npx npm-check-updates -u -t minor"
   },
   "devDependencies": {
-    "@fluentui/react": "8.62.3",
-    "@hpcc-js/common": "2.67.0",
-    "@hpcc-js/comms": "2.74.0",
+    "@fluentui/react": "8.67.3",
+    "@hpcc-js/common": "2.69.0",
+    "@hpcc-js/comms": "2.76.0",
     "@hpcc-js/ddl-shim": "2.19.1",
-    "@hpcc-js/dgrid": "2.30.3",
-    "@hpcc-js/loader": "2.102.11",
-    "@hpcc-js/marshaller": "2.24.9",
-    "@hpcc-js/observable-md": "2.52.4",
-    "@hpcc-js/util": "2.46.2",
-    "@types/mocha": "9.1.0",
-    "@types/node": "17.0.23",
-    "@types/react": "17.0.43",
-    "@types/react-dom": "17.0.14",
+    "@hpcc-js/dgrid": "2.31.2",
+    "@hpcc-js/loader": "2.103.2",
+    "@hpcc-js/marshaller": "2.24.12",
+    "@hpcc-js/observable-md": "2.52.7",
+    "@hpcc-js/util": "2.47.1",
+    "@types/mocha": "9.1.1",
+    "@types/node": "17.0.31",
+    "@types/react": "17.0.45",
+    "@types/react-dom": "17.0.16",
     "@types/tmp": "0.2.3",
     "@types/vscode": "1.59.0",
     "@types/vscode-notebook-renderer": "1.60.0",
-    "@typescript-eslint/eslint-plugin": "5.16.0",
-    "@typescript-eslint/parser": "5.16.0",
+    "@typescript-eslint/eslint-plugin": "5.23.0",
+    "@typescript-eslint/parser": "5.23.0",
     "adm-zip": "0.5.9",
     "antlr4": "~4.9.3",
     "assert": "2.0.0",
@@ -70,7 +70,7 @@
     "copyfiles": "2.4.1",
     "css-loader": "6.7.1",
     "diff": "5.0.0",
-    "eslint": "8.12.0",
+    "eslint": "8.15.0",
     "mocha": "9.2.2",
     "npm-run-all": "4.1.5",
     "original-fs": "1.1.0",
@@ -84,13 +84,13 @@
     "stream-browserify": "3.0.0",
     "style-loader": "3.3.1",
     "tmp": "0.2.1",
-    "tslib": "2.3.1",
-    "typescript": "4.6.3",
+    "tslib": "2.4.0",
+    "typescript": "4.6.4",
     "use-resize-observer": "8.0.0",
     "vsce": "2.7.0",
-    "@vscode/debugadapter": "1.54.0",
-    "@vscode/debugprotocol": "1.54.0",
-    "webpack": "5.70.0",
+    "@vscode/debugadapter": "1.55.1",
+    "@vscode/debugprotocol": "1.55.1",
+    "webpack": "5.72.1",
     "webpack-cli": "4.9.2"
   },
   "author": {
@@ -209,8 +209,8 @@
         "title": "%Compile%",
         "description": "%Compile ECL on the HPCC Platform%",
         "icon": {
-          "light": "resources/light/file-binary.svg",
-          "dark": "resources/dark/file-binary.svg"
+          "light": "resources/light/build.svg",
+          "dark": "resources/dark/build.svg"
         },
         "enablement": "ecl.connected"
       },
@@ -218,7 +218,11 @@
         "command": "ecl.checkSyntax",
         "category": "ECL",
         "title": "%Syntax Check%",
-        "description": "%Save + check syntax of current file%"
+        "description": "%Save + check syntax of current file%",
+        "icon": {
+          "light": "resources/light/check.svg",
+          "dark": "resources/dark/check.svg"
+        }
       },
       {
         "command": "ecl.checkSyntaxAll",
@@ -604,13 +608,18 @@
         },
         {
           "when": "resourceLangId == ecl",
-          "command": "ecl.submit",
+          "command": "ecl.checkSyntax",
           "group": "navigation@900"
         },
         {
           "when": "resourceLangId == ecl",
-          "command": "ecl.compile",
+          "command": "ecl.submit",
           "group": "navigation@910"
+        },
+        {
+          "when": "resourceLangId == ecl",
+          "command": "ecl.compile",
+          "group": "navigation@920"
         }
       ],
       "editor/title/context": [

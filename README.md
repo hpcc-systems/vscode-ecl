@@ -150,8 +150,8 @@ The following ECL specific commands are available.  Note:  These commands will *
 | Command                   | Shortcut | Description                                                      |
 |---------------------------|:--------:|------------------------------------------------------------------|
 |![Submit](resources/light-png/play.png) Submit | F5 | Submit ECL |
-|![Compile](resources/light-png/file-binary.png) Compile | | Compile ECL |
-| Syntax Check | F7 | Save and check syntax of current file |
+|![Compile](resources/light-png/build.png) Compile | | Compile ECL |
+|![Syntax Check](resources/light-png/check.png) Syntax Check | F7 | Save and check syntax of current file |
 | Sign ECL | | Digitally sign ECL file |
 | Verify ECL Signature | | Verify ECL Digital Signature |
 | Language Reference Lookup | shift+F1 | For the currently selected text, search the online ECL language reference |
