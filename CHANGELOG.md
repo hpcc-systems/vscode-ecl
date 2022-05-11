@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.18.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.17.4...v2.18.0) (2022-05-11)
+
+
+### Features
+
+*  Add syntax check to title bar ([e99d58f](https://github.com/hpcc-systems/vscode-ecl/commit/e99d58f686f9152db4180f89a0717b82a2b3ca12)), closes [#302](https://github.com/hpcc-systems/vscode-ecl/issues/302)
+
 ### [2.17.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.17.3...v2.17.4) (2022-03-28)
 
 
