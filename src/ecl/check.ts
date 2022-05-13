@@ -2,7 +2,7 @@ import { scopedLogger } from "@hpcc-js/util";
 import * as path from "path";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
-import { isTypeDirectory, modAttrs } from "../util/fs";
+import { DisposableFile, eclTempFile, isTypeDirectory, modAttrs, writeTempFile } from "../util/fs";
 import localize from "../util/localize";
 import { eclDiagnostic } from "./diagnostic";
 
@@ -19,7 +19,7 @@ function mapSeverityToVSCodeSeverity(sev: string) {
 }
 
 const checking = [new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("checking")}...`, vscode.DiagnosticSeverity.Information)];
-function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
+function checkUri(uri: vscode.Uri, resolveUri?: vscode.Uri): Promise<void> {
     eclDiagnostic.set(uri, checking);
     return sessionManager.checkSyntax(uri).then(({ errors, checked }) => {
         const diagnosticMap: Map<string, vscode.Diagnostic[]> = new Map();
@@ -28,9 +28,15 @@ function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Pr
         for (const checkedPath of checked) {
             eclDiagnostic.set(vscode.Uri.file(checkedPath), []);
         }
+        if (resolveUri) {
+            eclDiagnostic.set(resolveUri, []);
+        }
         errors.forEach(error => {
             const errorFilePath = path.normalize(error.filePath).toString();
-            const canonicalFile = vscode.Uri.file(errorFilePath).toString();
+            let canonicalFile = vscode.Uri.file(errorFilePath).toString();
+            if (resolveUri && canonicalFile === uri.toString()) {
+                canonicalFile = resolveUri.toString();
+            }
             const line = +error.line > 0 ? +error.line - 1 : 0;
             const col = +error.col >= 0 ? +error.col : 0;
             const range = new vscode.Range(line, col, line, col);
@@ -53,9 +59,17 @@ function checkUri(uri: vscode.Uri, eclConfig: vscode.WorkspaceConfiguration): Pr
     });
 }
 
-export function checkTextDocument(document: vscode.TextDocument, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
+export async function checkTextDocument(document: vscode.TextDocument, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
     if (document.languageId !== "ecl") return Promise.resolve();
-    return checkUri(document.uri, eclConfig);
+    if (eclConfig.get("saveOnSyntaxCheck", false)) {
+        await document.save();
+    }
+    const tmpFile = await eclTempFile(document);
+    try {
+        await checkUri(tmpFile.uri, document.uri);
+    } finally {
+        tmpFile.dispose();
+    }
 }
 
 async function walkFolders(folderPath: string, cb: (fsPath: string) => void) {
@@ -74,6 +88,6 @@ export async function checkWorkspace(wsf: vscode.WorkspaceFolder): Promise<void>
         files.push(filePath);
     });
     for (const file of files) {
-        await checkUri(vscode.Uri.file(file), vscode.workspace.getConfiguration("ecl", wsf.uri));
+        await checkUri(vscode.Uri.file(file));
     }
 }

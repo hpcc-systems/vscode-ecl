@@ -1,7 +1,19 @@
+import * as os from "os";
 import * as path from "path";
-import { FileType, Uri, workspace } from "vscode";
+import { Disposable, FileType, TextDocument, Uri, workspace } from "vscode";
+import { random } from "./math";
 
 const fs = workspace.fs;
+
+export const dirname = (fsPath: string): string => {
+    return path.dirname(fsPath);
+};
+
+export const leafname = (fsPath: string): string => {
+    const basename = path.basename(fsPath);
+    const ext = path.extname(basename);
+    return basename.substring(0, basename.length - ext.length);
+};
 
 export const exists = async (fsPath: string): Promise<boolean> => {
     try {
@@ -60,3 +72,38 @@ export const modAttrs = async (source: string) => {
         ;
 };
 
+//  TempDocument Helpers  ---
+export interface DisposableFile extends Disposable {
+    uri: Uri;
+}
+
+export async function writeTempFile({
+    folder = os.tmpdir(),
+    prefix = "file",
+    ext = "tmp",
+    content = "",
+}): Promise<DisposableFile> {
+    while (true) {
+        const tmpPath = path.join(folder, `${prefix}-${random(100000, 999999)}.${ext}`);
+        if (!await exists(tmpPath)) {
+            await writeFile(tmpPath, content);
+            return {
+                uri: Uri.file(tmpPath),
+                dispose: () => deleteFile(tmpPath)
+            };
+        }
+    }
+}
+
+export async function eclTempFile(document: TextDocument): Promise<DisposableFile> {
+    let tmpFile: DisposableFile = {
+        uri: document.uri,
+        dispose: () => { }
+    };
+    if (document.isUntitled) {
+        tmpFile = await writeTempFile({ prefix: leafname(document.fileName), content: document.getText(), folder: workspace.workspaceFolders[0]?.uri?.fsPath, ext: "ecl" });
+    } else if (document.isDirty) {
+        tmpFile = await writeTempFile({ prefix: leafname(document.fileName), content: document.getText(), folder: dirname(document.fileName), ext: "ecl" });
+    }
+    return tmpFile;
+}

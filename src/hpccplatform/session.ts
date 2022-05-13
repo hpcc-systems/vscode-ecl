@@ -4,6 +4,7 @@ import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuD
 import { LaunchConfigState } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
 import { ECL_MODE } from "../mode";
+import { eclTempFile } from "../util/fs";
 
 const isMultiRoot = () => vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 1;
 
@@ -72,12 +73,8 @@ class Session {
         return this._launchConfig.checkSyntax(uri);
     }
 
-    submit(uri: vscode.Uri) {
-        return this._launchConfig.submit(uri, this.targetCluster, "submit");
-    }
-
-    compile(uri: vscode.Uri) {
-        return this._launchConfig.submit(uri, this.targetCluster, "compile");
+    submit(uri: vscode.Uri, compileOnly: boolean = false) {
+        return this._launchConfig.submit(uri, this.targetCluster, compileOnly ? "compile" : "submit");
     }
 
     fetchRecordDef(lf: string) {
@@ -303,9 +300,9 @@ class SessionManager {
         });
     }
 
-    submit(doc: { uri: vscode.Uri }) {
+    submitURI(uri: vscode.Uri, compileOnly: boolean = false) {
         if (this.session) {
-            return this.session.submit(doc.uri).then(wu => {
+            return this.session.submit(uri, compileOnly).then(wu => {
                 this._onDidCreateWorkunit.fire(wu);
                 return wu;
             }).catch(e => {
@@ -314,14 +311,18 @@ class SessionManager {
         }
     }
 
-    compile(doc: { uri: vscode.Uri }) {
+    async submit(doc: vscode.TextDocument, compileOnly: boolean = false) {
         if (this.session) {
-            return this.session.compile(doc.uri).then(wu => {
-                this._onDidCreateWorkunit.fire(wu);
-                return wu;
-            }).catch(e => {
-                vscode.window.showErrorMessage(e.message);
-            });
+            const eclConfig = vscode.workspace.getConfiguration("ecl");
+            if (eclConfig.get("saveOnSubmit", false)) {
+                await doc.save();
+            }
+            const tmpFile = await eclTempFile(doc);
+            try {
+                await this.submitURI(tmpFile.uri, compileOnly);
+            } finally {
+                tmpFile.dispose();
+            }
         }
     }
 

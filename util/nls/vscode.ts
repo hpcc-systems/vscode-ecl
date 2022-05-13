@@ -9,18 +9,20 @@ const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
 const en = JSON.parse(fs.readFileSync("./package.nls.json", "utf-8"));
 
 function fix(item: any, what: string): boolean {
-    const key = item[what];
+    let key = item[what];
     if (key === undefined) return false;
-    if (key[0] === "%" && key[key.length - 1] === "%") return false;
-    if (item[what] && !en[key]) {
-        en[key] = item[what];
-        item[what] = `%${key}%`;
-        return true;
-    } else if (item[what] === en[key]) {
-        item[what] = `%${key}%`;
-        return true;
+    let retVal = false;
+    if (key[0] !== "%" || key[key.length - 1] !== "%") {
+        key = `%${key}%`;
+        item[what] = key;
+        retVal = retVal || true;
     }
-    return false;
+    key = key.substring(1, key.length - 1);
+    if (!en[key]) {
+        en[key] = key;
+        retVal = retVal || true;
+    }
+    return retVal;
 }
 
 export function fixPackage() {

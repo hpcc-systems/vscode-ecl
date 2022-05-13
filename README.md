@@ -11,6 +11,9 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.19.x
+* Added `ecl.saveOnSyntaxCheck` and `ecl.saveOnSubmit` option to ECL Settings (defaulting to off to match ECL IDE behaviour).
+
 ### v2.15.x
 * Add `path` option to launch configuration (to assist with proxy servers).
 
@@ -244,6 +247,12 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
   // Force global 'proxySupport' to 'fallback'
   "ecl.forceProxySupport": false
+
+  // Save file prior to syntax check
+  "ecl.saveOnSyntaxCheck": false
+
+  // Save file prior to submission
+  "ecl.saveOnSubmit": false
 ```
 
 #### ECL Launch Settings

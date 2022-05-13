@@ -98,7 +98,7 @@
         },
         {
             "name": "NLS Util",
-            "program": "${workspaceFolder}/lib-util/vscode-ecl/util/index.js",
+            "program": "${workspaceFolder}/lib-util/index.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"

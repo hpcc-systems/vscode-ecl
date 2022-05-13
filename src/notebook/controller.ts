@@ -49,7 +49,7 @@ export class Controller {
             tmpPath = `${path.join(dirname, jobname)}.tmp`;
             await writeFile(tmpPath, cell.document.getText());
             const uri = vscode.Uri.file(tmpPath);
-            const wu = await sessionManager.submit({ uri });
+            const wu = await sessionManager.submitURI(uri);
             deleteFile(tmpPath);
             tmpPath = "";
             if (wu) {
