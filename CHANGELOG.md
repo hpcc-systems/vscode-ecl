@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.19.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.18.0...v2.19.0) (2022-05-14)
+
+
+### Features
+
+*  Add basic telemetry support ([d451cd2](https://github.com/hpcc-systems/vscode-ecl/commit/d451cd2d08601d6d39d1135b4e93457d7301736c))
+* **ecl:**  Optionally save active file on submit / syntax check ([afdd1df](https://github.com/hpcc-systems/vscode-ecl/commit/afdd1dfba4587e2278ffd200e87d2fefbf70ea8f)), closes [#297](https://github.com/hpcc-systems/vscode-ecl/issues/297)
+
 ## [2.18.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.17.4...v2.18.0) (2022-05-11)
 
 
