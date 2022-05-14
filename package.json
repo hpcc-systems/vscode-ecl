@@ -64,6 +64,7 @@
     "@typescript-eslint/parser": "5.23.0",
     "@vscode/debugadapter": "1.55.1",
     "@vscode/debugprotocol": "1.55.1",
+    "@vscode/extension-telemetry": "0.5.1",
     "adm-zip": "0.5.9",
     "antlr4": "~4.9.3",
     "assert": "2.0.0",
@@ -863,7 +864,7 @@
       "properties": {
         "ecl.eclccArgs": {
           "type": "array",
-          "scope": "resource",
+          "scope": "application",
           "items": {
             "type": "string"
           },
@@ -872,7 +873,7 @@
         },
         "ecl.eclccSyntaxArgs": {
           "type": "array",
-          "scope": "resource",
+          "scope": "application",
           "items": {
             "type": "string"
           },
@@ -881,31 +882,31 @@
         },
         "ecl.syntaxCheckOnSave": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": true,
           "description": "%Run 'eclcc -syntax' on save%"
         },
         "ecl.syntaxCheckOnLoad": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": true,
           "description": "%Run 'eclcc -syntax' on load%"
         },
         "ecl.saveOnSyntaxCheck": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": false,
           "description": "%Save file prior to syntax check%"
         },
         "ecl.saveOnSubmit": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": false,
           "description": "%Save file prior to submission%"
         },
         "ecl.includeFolders": {
           "type": "array",
-          "scope": "resource",
+          "scope": "application",
           "items": {
             "type": "string"
           },
@@ -914,19 +915,19 @@
         },
         "ecl.eclccPath": {
           "type": "string",
-          "scope": "resource",
+          "scope": "application",
           "default": "",
           "description": "%Override eclcc auto detection%"
         },
         "ecl.eclccLogFile": {
           "type": "string",
-          "scope": "resource",
+          "scope": "application",
           "default": "",
           "description": "%Write eclcc log file to specified file%"
         },
         "ecl.legacyMode": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": false,
           "description": "%Add '-legacy' argument to eclcc%"
         },
@@ -938,37 +939,37 @@
         },
         "ecl.launchConfiguration": {
           "type": "string",
-          "scope": "resource",
+          "scope": "application",
           "default": "",
           "description": "%Default launch configuration%"
         },
         "ecl.targetCluster": {
           "type": "object",
-          "scope": "resource",
+          "scope": "application",
           "default": {},
           "description": "%Target cluster (per launch configuration)%"
         },
         "ecl.pinnedLaunchConfigurations": {
           "type": "object",
-          "scope": "resource",
+          "scope": "application",
           "default": {},
           "description": "%Pinned launch configurations%"
         },
         "ecl.WUAutoOpen": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": false,
           "description": "%Automatically open Workunits on creation%"
         },
         "ecl.forceProxySupport": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": false,
           "description": "%Force global 'proxySupport' to 'fallback'%"
         },
         "dashy.libraryLocation": {
           "type": "string",
-          "scope": "resource",
+          "scope": "application",
           "enum": [
             "latest",
             "localPath"
@@ -978,7 +979,7 @@
         },
         "dashy.localPath": {
           "type": "string",
-          "scope": "resource",
+          "scope": "application",
           "default": "",
           "description": "%Dashy Library Path (libraryLocation === \"localPath\")%"
         },
@@ -992,19 +993,19 @@
         },
         "kel.kelPath": {
           "type": "string",
-          "scope": "resource",
+          "scope": "application",
           "default": "",
           "description": "%Override KEL auto detection%"
         },
         "kel.syntaxCheckOnSave": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": true,
           "description": "%Check syntax on save%"
         },
         "kel.generateLocation": {
           "type": "string",
-          "scope": "resource",
+          "scope": "application",
           "enum": [
             "Same Folder",
             "Child Folder"
@@ -1014,19 +1015,19 @@
         },
         "kel.generateOnSave": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": false,
           "description": "%Generate ECL on save%"
         },
         "kel.syntaxCheckOnLoad": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": true,
           "description": "%Check syntax on load%"
         },
         "kel.syntaxCheckFromGrammar": {
           "type": "boolean",
-          "scope": "resource",
+          "scope": "application",
           "default": false,
           "description": "%Check syntax with KEL grammar (fast)%"
         }

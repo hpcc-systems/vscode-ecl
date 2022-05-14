@@ -7,6 +7,7 @@
         "outDir": "lib-es6",
         "jsx": "react",
         "allowJs": true,
+        "resolveJsonModule": true,
         "sourceMap": true,
         "noImplicitAny": false,
         "noEmitOnError": false,

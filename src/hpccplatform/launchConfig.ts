@@ -7,6 +7,7 @@ import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments }
 import { showEclStatus } from "../ecl/clientTools";
 import localize from "../util/localize";
 import { readFile } from "../util/fs";
+import { reporter } from "../telemetry";
 
 const fs = vscode.workspace.fs;
 
@@ -466,6 +467,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     checkSyntax(fileUri: vscode.Uri): Promise<CheckResponse> {
+        reporter.sendTelemetryEvent("launchConfig.checkSyntax.start");
         return this.locateClientTools(fileUri).then(clientTools => {
             if (!clientTools) {
                 throw new Error();
@@ -476,9 +478,11 @@ export class LaunchConfig implements LaunchRequestArguments {
                         logger.warning(`syntaxCheck-warning:  ${fileUri.fsPath} ${errors.unknown().toString()}`);
                     }
                     logger.debug(`syntaxCheck-resolve:  ${fileUri.fsPath} ${errors.errors().length} total.`);
+                    reporter.sendTelemetryEvent("launchConfig.checkSyntax.success", {}, { "errorCount": errors.all().length });
                     return { errors: errors.all(), checked: errors.checked() };
                 }).catch(e => {
                     logger.debug(`syntaxCheck-reject:  ${fileUri.fsPath} ${e.msg}`);
+                    reporter.sendTelemetryErrorEvent("launchConfig.checkSyntax.fail", { "message": e?.msg });
                     vscode.window.showInformationMessage(`${localize("Syntax check exception")}:  ${fileUri.fsPath} ${e.msg}`);
                     return Promise.resolve({ errors: [], checked: [] });
                 });
@@ -627,6 +631,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     async submit(fileUri: vscode.Uri, targetCluster: string, mode: LaunchMode) {
         // const args = await this.localResolveDebugConfiguration(filePath);
         // logger.debug("launchRequest:  " + JSON.stringify(args));
+        reporter.sendTelemetryEvent("launchConfig.submit.start");
         return vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             title: localize("Submit ECL"),
@@ -636,24 +641,30 @@ export class LaunchConfig implements LaunchRequestArguments {
             logger.info(`Fetch build version.${os.EOL}`);
             const pathParts = path.parse(filePath);
             let failedWU: Workunit;
+            reporter.sendTelemetryEvent("launchConfig.submit.fetchBuild");
             return this.fetchBuild().then(build => {
                 progress.report({ increment: 10, message: localize("Locating Client Tools") });
                 logger.info(`Locating Client Tools.${os.EOL}`);
+                reporter.sendTelemetryEvent("launchConfig.submit.locateClientTools");
                 return this.locateClientTools(fileUri, build);
             }).then((clientTools) => {
                 progress.report({ increment: 10, message: localize("Creating Archive") });
                 logger.info(`Client Tools:  ${clientTools.eclccPath}.${os.EOL}`);
                 logger.info(`Generating archive.${os.EOL}`);
                 if (pathParts.ext.toLowerCase() === ".xml") {
+                    reporter.sendTelemetryEvent("launchConfig.submit.xmlFile");
                     return xmlFile(filePath);
                 } else {
+                    reporter.sendTelemetryEvent("launchConfig.submit.createArchive");
                     return clientTools.createArchive(filePath);
                 }
             }).then(archive => {
                 progress.report({ increment: 10, message: localize("Verifying Archive") });
                 if (this.abortSubmitOnError && archive.err.hasError()) {
+                    reporter.sendTelemetryEvent("launchConfig.submit.abortSubmitOnError");
                     throw new Error(`${localize("ECL Syntax Error(s)")}:\n  ${archive.err.errors().map(e => e.msg).join("\n  ")}`);
                 } else if (archive.content.length === 0) {
+                    reporter.sendTelemetryErrorEvent("launchConfig.submit.EmptyArchive");
                     throw new Error(`${localize("Empty Archive")}:\n  ${archive.err.all().map(e => e.msg).join("\n  ")}`);
                 }
                 logger.info(`Archive Size: ${archive.content.length}.${os.EOL}`);
@@ -661,6 +672,7 @@ export class LaunchConfig implements LaunchRequestArguments {
             }).then(archive => {
                 progress.report({ increment: 10, message: localize("Creating Workunit") });
                 logger.info(`Creating workunit.${os.EOL}`);
+                reporter.sendTelemetryEvent("launchConfig.submit.createWorkunit");
                 return this.createWorkunit().then(wu => {
                     failedWU = wu;
                     return [wu, archive] as [Workunit, any];
@@ -675,6 +687,7 @@ export class LaunchConfig implements LaunchRequestArguments {
                     for (let retry = 1; retry <= attempts; ++retry) {
                         progress.report({ increment: 3, message: `${localize("Updating Workunit")} ${wu.Wuid} (${retry} of ${attempts})` });
                         logger.info(`Updating workunit (${retry} of ${attempts}).${os.EOL}`);
+                        reporter.sendTelemetryEvent("launchConfig.submit.update", {}, { "attempt": retry });
                         await wu.update({
                             Jobname: pathParts.name,
                             QueryText: archive.content,
@@ -692,18 +705,22 @@ export class LaunchConfig implements LaunchRequestArguments {
                             lastError = e || lastError;
                         });
                     }
+                    reporter.sendTelemetryErrorEvent("launchConfig.submit.update", { "message": lastError?.message });
                     reject(lastError);
                 });
             }).then((wu) => {
                 progress.report({ increment: 10, message: `${localize("Submitting workunit")} ${wu.Wuid}` });
                 logger.info(`Submitting workunit:  ${wu.Wuid}.${os.EOL}`);
+                reporter.sendTelemetryEvent("launchConfig.submit.submit");
                 return wu.submit(targetCluster, action(mode), this.resultLimit);
             }).then((wu) => {
                 progress.report({ increment: 10, message: `${localize("Submitted workunit")} ${wu.Wuid}` });
                 logger.info(`Submitted:  ${this.wuDetailsUrl(wu.Wuid)}.${os.EOL}`);
                 failedWU = undefined;
+                reporter.sendTelemetryEvent("launchConfig.submit.success");
                 return wu;
             }).catch(e => {
+                reporter.sendTelemetryErrorEvent("launchConfig.submit.catch", { "message": e?.message });
                 logger.info(`Launch failed - ${e.message}.${os.EOL}`);
                 logger.debug("launchConfig.submit");
                 if (failedWU) {
