@@ -19,6 +19,20 @@
             "password": ""
         },
         {
+            "name": "play",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "http",
+            "serverAddress": "play.hpccsystems.com",
+            "port": 8010,
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "vscode_user",
+            "password": ""
+        },
+        {
             "name": "localhost (https)",
             "type": "ecl",
             "request": "launch",

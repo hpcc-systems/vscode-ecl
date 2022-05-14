@@ -49,7 +49,6 @@ export class ECLCommands {
 
     checkSyntax() {
         if (vscode.window.activeTextEditor) {
-            vscode.window.activeTextEditor.document.save();
             checkTextDocument(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
         }
     }
@@ -68,15 +67,13 @@ export class ECLCommands {
 
     submit() {
         if (vscode.window.activeTextEditor) {
-            vscode.window.activeTextEditor.document.save();
             sessionManager.submit(vscode.window.activeTextEditor.document);
         }
     }
 
     compile() {
         if (vscode.window.activeTextEditor) {
-            vscode.window.activeTextEditor.document.save();
-            sessionManager.compile(vscode.window.activeTextEditor.document);
+            sessionManager.submit(vscode.window.activeTextEditor.document, true);
         }
     }
 
