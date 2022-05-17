@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.19.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.19.0...v2.19.1) (2022-05-17)
+
+
+### Bug Fixes
+
+* Unable to override default eclcc version ([0c17947](https://github.com/hpcc-systems/vscode-ecl/commit/0c179475cd4839e156c1869b83c22f4902944879))
+
 ## [2.19.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.18.0...v2.19.0) (2022-05-14)
 
 
