@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.19.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.19.1...v2.19.2) (2022-06-20)
+
+
+### Bug Fixes
+
+*  ECL Data not accessible in OJS ([a51f228](https://github.com/hpcc-systems/vscode-ecl/commit/a51f228600e44fcd32b2aa9251da0680670d6a51))
+
 ### [2.19.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.19.0...v2.19.1) (2022-05-17)
 
 
