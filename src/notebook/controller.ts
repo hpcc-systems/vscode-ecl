@@ -78,7 +78,7 @@ export class Controller {
             .filter(c => c !== cell)
             .forEach(otherCell => {
                 otherCell.outputs.forEach(op => {
-                    op.items.filter(item => item.mime === "application/json")
+                    op.items.filter(item => item.mime === "text/x-json")
                         .forEach(item => {
                             try {
                                 eclResults = { ...eclResults, ...JSON.parse(item.data.toString()) };
