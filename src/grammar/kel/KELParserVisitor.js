@@ -1,4 +1,4 @@
-// Generated from ./KELParser.g4 by ANTLR 4.9.1
+// Generated from ./KELParser.g4 by ANTLR 4.10.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
@@ -78,6 +78,12 @@ export default class KELParserVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by KELParser#spcImport.
+	visitSpcImport(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by KELParser#inlinePackage.
 	visitInlinePackage(ctx) {
 	  return this.visitChildren(ctx);
@@ -146,6 +152,12 @@ export default class KELParserVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by KELParser#formatSpec.
 	visitFormatSpec(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#likeSpec.
+	visitLikeSpec(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

@@ -14,7 +14,8 @@ interface RawNotebookCell {
 }
 
 export class Serializer implements vscode.NotebookSerializer {
-    async deserializeNotebook(content: Uint8Array, _token: vscode.CancellationToken): Promise<vscode.NotebookData> {
+
+    deserializeNotebook(content: Uint8Array, _token: vscode.CancellationToken): vscode.NotebookData {
         const contents = new TextDecoder("utf-8").decode(content);
 
         let raw: RawNotebookCell[];
@@ -36,7 +37,7 @@ export class Serializer implements vscode.NotebookSerializer {
         return new vscode.NotebookData(cells);
     }
 
-    async serializeNotebook(data: vscode.NotebookData, _token: vscode.CancellationToken): Promise<Uint8Array> {
+    serializeNotebook(data: vscode.NotebookData, _token: vscode.CancellationToken): Uint8Array {
         const contents: RawNotebookCell[] = [];
 
         for (const cell of data.cells) {

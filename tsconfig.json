@@ -26,10 +26,13 @@
                 "./node_modules/@hpcc-js/*",
                 "../hpcc-js/packages/*"
             ]
-        }
+        },
+        "types": [
+            "vscode-notebook-renderer"
+        ]
     },
     "include": [
         "./src/**/*.ts",
         "./src/**/*.tsx"
-    ]
+    ],
 }

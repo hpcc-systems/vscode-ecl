@@ -1,5 +1,5 @@
 import { Range, TextDocument } from "vscode";
-import { error } from "antlr4";
+import antlr4 from "antlr4";
 
 export interface Antlr4Error {
     source: string;
@@ -9,7 +9,7 @@ export interface Antlr4Error {
     error: { message: string };
 }
 
-export class ErrorListener extends error.ErrorListener {
+export class ErrorListener extends antlr4.error.ErrorListener {
 
     errors: Antlr4Error[] = [];
 

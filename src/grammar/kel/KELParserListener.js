@@ -1,4 +1,4 @@
-// Generated from ./KELParser.g4 by ANTLR 4.9.1
+// Generated from ./KELParser.g4 by ANTLR 4.10.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
@@ -113,6 +113,15 @@ export default class KELParserListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by KELParser#spcImport.
+	enterSpcImport(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#spcImport.
+	exitSpcImport(ctx) {
+	}
+
+
 	// Enter a parse tree produced by KELParser#inlinePackage.
 	enterInlinePackage(ctx) {
 	}
@@ -218,6 +227,15 @@ export default class KELParserListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by KELParser#formatSpec.
 	exitFormatSpec(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#likeSpec.
+	enterLikeSpec(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#likeSpec.
+	exitLikeSpec(ctx) {
 	}
 
 

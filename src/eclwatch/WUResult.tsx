@@ -5,7 +5,7 @@ import { IOptions, Result, XSDXMLNode } from "@hpcc-js/comms";
 import { WUInfo } from "@hpcc-js/comms";
 import { Common, Table } from "@hpcc-js/dgrid";
 import { hashSum } from "@hpcc-js/util";
-import { Stack, Checkbox, ContextualMenu, ContextualMenuItemType, DefaultButton, Dialog, DialogFooter, DialogType, IContextualMenuItem, Label, PrimaryButton, ProgressIndicator, SpinButton, Spinner } from "@fluentui/react";
+import { Stack, Checkbox, ContextualMenu, ContextualMenuItemType, DefaultButton, Dialog, DialogFooter, DialogType, IContextualMenuItem, PrimaryButton, ProgressIndicator, SpinButton } from "@fluentui/react";
 import * as copy from "copy-to-clipboard";
 import { VisualizationComponent } from "./hpccVizAdapter";
 import { Store } from "./WUResultStore";

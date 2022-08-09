@@ -1,7 +1,7 @@
 /* eslint-disable */
 const path = require("path");
 
-const makeConfig = (argv, { entry, target = "node", libraryTarget = "commonjs", dist = "dist", externals = {} }) => ({
+const makeConfig = (argv, { entry, target = "node", library = { type: "commonjs" }, dist = "dist", externals = {} }) => ({
     mode: argv.mode,
     devtool: argv.mode === "production" ? false : "source-map",
     target,
@@ -11,7 +11,7 @@ const makeConfig = (argv, { entry, target = "node", libraryTarget = "commonjs", 
     output: {
         path: path.resolve(__dirname, dist),
         filename: "[name].js",
-        libraryTarget,
+        library,
         globalObject: "this",
         devtoolModuleFilenameTemplate: "../[resource-path]",
     },
@@ -63,7 +63,7 @@ const makeConfig = (argv, { entry, target = "node", libraryTarget = "commonjs", 
     },
 
     experiments: {
-        outputModule: libraryTarget === "module"
+        outputModule: library?.type === "module"
     },
 
     plugins: [],
@@ -93,9 +93,10 @@ module.exports = (env, argv) => [
     makeConfig(argv, {
         entry: {
             eclwatch: "./lib-es6/eclwatch.js",
-            renderer: "./lib-es6/renderer.js"
+            wuRenderer: "./lib-es6/notebook-renderers/wuRenderer.js",
+            ojsRenderer: "./lib-es6/notebook-renderers/ojsRenderer.js"
         },
         target: "web",
-        libraryTarget: "module"
-    })
+        library: { type: "module" }
+    }),
 ];

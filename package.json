@@ -68,7 +68,7 @@
     "@vscode/debugprotocol": "1.57.0",
     "@vscode/extension-telemetry": "0.6.2",
     "adm-zip": "0.5.9",
-    "antlr4": "~4.10.1",
+    "antlr4": "4.10.1",
     "assert": "2.0.0",
     "browserify-zlib": "0.2.0",
     "buffer": "6.0.3",
@@ -115,6 +115,8 @@
   "activationEvents": [
     "onLanguage:ecl",
     "onNotebook:ecl-notebook",
+    "onRenderer:ecl-notebook-wurenderer",
+    "onRenderer:ecl-notebook-ojsrenderer",
     "onLanguage:kel",
     "workspaceContains:*.ecl",
     "workspaceContains:*.ecllib",
@@ -537,6 +539,22 @@
           "dark": "./resources/dark/dashy-edit.svg",
           "light": "./resources/light/dashy-edit.svg"
         }
+      },
+      {
+        "command": "notebook.cell.public",
+        "title": "%Public%",
+        "icon": {
+          "dark": "./resources/dark/eye.svg",
+          "light": "./resources/light/eye.svg"
+        }
+      },
+      {
+        "command": "notebook.cell.private",
+        "title": "%Private%",
+        "icon": {
+          "dark": "./resources/dark/eye-closed.svg",
+          "light": "./resources/light/eye-closed.svg"
+        }
       }
     ],
     "menus": {
@@ -745,6 +763,18 @@
           "command": "ecl.openECLWatchExternal",
           "when": "view == hpccPlatform && viewItem == ECLResultNode",
           "group": "inline"
+        }
+      ],
+      "notebook/cell/title": [
+        {
+          "command": "notebook.cell.public",
+          "when": "notebookType == ecl-notebook && notebookCellType == code && isPublic",
+          "group": "inline@3"
+        },
+        {
+          "command": "notebook.cell.private",
+          "when": "notebookType == ecl-notebook && notebookCellType == code && isPrivate",
+          "group": "inline@3"
         }
       ]
     },
@@ -1049,12 +1079,22 @@
     ],
     "notebookRenderer": [
       {
-        "id": "ojs-notebook-renderer",
+        "id": "ecl-notebook-wurenderer",
+        "displayName": "Workunit Renderer",
+        "entrypoint": "./dist/wuRenderer.js",
+        "mimeTypes": [
+          "application/hpcc.wu+json"
+        ],
+        "requiresMessaging": "always"
+      },
+      {
+        "id": "ecl-notebook-ojsrenderer",
         "displayName": "ObservableJS Renderer",
-        "entrypoint": "./dist/renderer.js",
+        "entrypoint": "./dist/ojsRenderer.js",
         "mimeTypes": [
           "application/hpcc.ojs+json"
-        ]
+        ],
+        "requiresMessaging": "always"
       }
     ],
     "debuggers": [
