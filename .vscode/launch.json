@@ -25,9 +25,9 @@
             "outFiles": [
                 "${workspaceRoot}/dist/*.js"
             ],
-            "stopOnEntry": false,
             "sourceMaps": true,
-            "internalConsoleOptions": "neverOpen"
+            "internalConsoleOptions": "neverOpen",
+            "debugWebviews": true,
         },
         {
             "name": "Launch Web Extension",

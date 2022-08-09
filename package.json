@@ -5,7 +5,7 @@
   "publisher": "hpcc-systems",
   "displayName": "ECL Language",
   "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
-  "icon": "resources/eclIcon.png",
+  "icon": "resources/hpcc-icon.png",
   "categories": [
     "Programming Languages",
     "Snippets",
@@ -42,58 +42,60 @@
     "update-major": "npx npm-check-updates -u",
     "update": "npx npm-check-updates -u -t minor"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@vscode/webview-ui-toolkit": "^1.0.0"
+  },
   "devDependencies": {
-    "@fluentui/react": "8.67.3",
-    "@hpcc-js/common": "2.69.0",
-    "@hpcc-js/comms": "2.76.0",
+    "@fluentui/react": "8.87.1",
+    "@hpcc-js/common": "2.71.0",
+    "@hpcc-js/comms": "2.78.2",
     "@hpcc-js/ddl-shim": "2.19.1",
-    "@hpcc-js/dgrid": "2.31.2",
-    "@hpcc-js/loader": "2.103.2",
-    "@hpcc-js/marshaller": "2.24.12",
-    "@hpcc-js/observable-md": "2.52.7",
-    "@hpcc-js/util": "2.47.1",
+    "@hpcc-js/dgrid2": "2.3.0",
+    "@hpcc-js/loader": "2.103.6",
+    "@hpcc-js/marshaller": "2.24.16",
+    "@hpcc-js/observable-md": "2.53.0",
+    "@hpcc-js/util": "2.48.0",
     "@types/mocha": "9.1.1",
-    "@types/node": "17.0.31",
-    "@types/react": "17.0.45",
-    "@types/react-dom": "17.0.16",
+    "@types/node": "17.0.45",
+    "@types/react": "17.0.48",
+    "@types/react-dom": "17.0.17",
     "@types/tmp": "0.2.3",
-    "@types/vscode": "1.59.0",
+    "@types/vscode": "1.70.0",
     "@types/vscode-notebook-renderer": "1.60.0",
-    "@typescript-eslint/eslint-plugin": "5.23.0",
-    "@typescript-eslint/parser": "5.23.0",
-    "@vscode/debugadapter": "1.55.1",
-    "@vscode/debugprotocol": "1.55.1",
-    "@vscode/extension-telemetry": "0.5.1",
+    "@typescript-eslint/eslint-plugin": "5.33.0",
+    "@typescript-eslint/parser": "5.33.0",
+    "@vscode/debugadapter": "1.57.0",
+    "@vscode/debugprotocol": "1.57.0",
+    "@vscode/extension-telemetry": "0.6.2",
     "adm-zip": "0.5.9",
-    "antlr4": "~4.9.3",
+    "antlr4": "~4.10.1",
     "assert": "2.0.0",
     "browserify-zlib": "0.2.0",
     "buffer": "6.0.3",
-    "copy-to-clipboard": "3.3.1",
+    "copy-to-clipboard": "3.3.2",
     "copyfiles": "2.4.1",
     "css-loader": "6.7.1",
-    "diff": "5.0.0",
-    "eslint": "8.15.0",
+    "diff": "5.1.0",
+    "eslint": "8.21.0",
     "mocha": "9.2.2",
     "npm-run-all": "4.1.5",
-    "original-fs": "1.1.0",
+    "original-fs": "1.2.0",
     "os-browserify": "0.3.0",
     "path-browserify": "1.0.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "rimraf": "3.0.2",
     "source-map-loader": "3.0.1",
-    "standard-version": "9.3.2",
+    "standard-version": "9.5.0",
     "stream-browserify": "3.0.0",
     "style-loader": "3.3.1",
     "tmp": "0.2.1",
     "tslib": "2.4.0",
-    "typescript": "4.6.4",
+    "typescript": "4.7.4",
     "use-resize-observer": "8.0.0",
-    "vsce": "2.7.0",
-    "webpack": "5.72.1",
-    "webpack-cli": "4.9.2"
+    "vsce": "2.10.0",
+    "webpack": "5.74.0",
+    "webpack-cli": "4.10.0"
   },
   "author": {
     "name": "HPCC Systems®"
@@ -103,7 +105,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.59.0"
+    "vscode": "^1.70.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
@@ -821,7 +823,7 @@
         {
           "id": "hpccPlatform",
           "name": "HPCC Platform",
-          "icon": "resources/ecl-explorer.svg",
+          "icon": "resources/hpcc-icon-bw.svg",
           "contextualTitle": "HPCC Platform",
           "when": "hpccPlatformActive"
         }
@@ -840,14 +842,14 @@
         {
           "id": "hpccResources",
           "title": "hpcc-systems",
-          "icon": "resources/ecl-explorer.svg"
+          "icon": "resources/hpcc-icon-bw.svg"
         }
       ],
       "panel": [
         {
           "id": "ecl-watch-lite",
           "title": "HPCC",
-          "icon": "resources/ecl-explorer.svg",
+          "icon": "resources/hpcc-icon-bw.svg",
           "when": "resourceLangId == ecl"
         }
       ]
