@@ -13,5 +13,5 @@
 	"ecl.debugLogging": true,
 	"ecl.launchConfiguration": "not found",
 	"ecl.targetCluster": {},
-	"svg.preview.background": "black"
+	"svg.preview.background": "dark-transparent"
 }
