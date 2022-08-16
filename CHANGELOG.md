@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.20.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.19.2...v2.20.0) (2022-08-16)
+
+
+### Features
+
+*  Switch to new branding ([3de9f12](https://github.com/hpcc-systems/vscode-ecl/commit/3de9f121615690d7f63fd90fce7f931483911f2b))
+
+
+### Bug Fixes
+
+* **notebooks:**  Initial load fails to display ([3d5ed26](https://github.com/hpcc-systems/vscode-ecl/commit/3d5ed26c84548338e83a1deaa99a4f37e7035f15))
+
 ### [2.19.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.19.1...v2.19.2) (2022-06-20)
 
 
