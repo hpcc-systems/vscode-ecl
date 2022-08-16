@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.20.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.20.0...v2.20.1) (2022-08-16)
+
+
+### Bug Fixes
+
+*  Add missing resources ([bde7a67](https://github.com/hpcc-systems/vscode-ecl/commit/bde7a67a14563fbea22a11cdf939910b0dad4307))
+
 ## [2.20.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.19.2...v2.20.0) (2022-08-16)
 
 
