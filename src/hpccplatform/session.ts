@@ -33,6 +33,10 @@ class Session {
         return this._launchConfig.user;
     }
 
+    get password() {
+        return this._launchConfig.password;
+    }
+
     get targetCluster() {
         return this._targetCluster || this._launchConfig.targetCluster;
     }
@@ -298,6 +302,15 @@ class SessionManager {
             errors: [],
             checked: []
         });
+    }
+
+    nbSubmitURI(uri: vscode.Uri, compileOnly: boolean = false): Promise<Workunit> | undefined {
+        if (this.session) {
+            return this.session.submit(uri, compileOnly).then(wu => {
+                this._onDidCreateWorkunit.fire(wu);
+                return wu;
+            });
+        }
     }
 
     submitURI(uri: vscode.Uri, compileOnly: boolean = false) {

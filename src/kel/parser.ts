@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { Antlr4Error, ErrorListener } from "../util/errorListener";
 
-import * as antlr4 from "antlr4";
+import antlr4 from "antlr4";
 import KELLexer from "../grammar/kel/KELLexer";
 import KELParser from "../grammar/kel/KELParser";
 import { KELVisitor } from "./visitor";
