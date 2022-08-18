@@ -1,4 +1,4 @@
-.dgrid_Common  {
+.dgrid_Common {
     font-family: var(--vscode-font-family);
 }
 
@@ -14,7 +14,7 @@
 }
 
 .dgrid_Common .dgrid-row-table {
-    height:unset;
+    height: unset;
 }
 
 .dgrid_Common .dgrid-header-row {
@@ -24,6 +24,7 @@
 .dgrid_Common .dgrid-header-row:focus {
     outline-width: 0px;
 }
+
 .dgrid_Common .dgrid-header.dgrid-header-scroll {
     background-color: var(--vscode-editor-background);
 }
@@ -49,6 +50,6 @@
 }
 
 .dgrid_Common .dgrid-fakeline {
-    border:0px;
-    margin:2px;
+    border: 0px;
+    margin: 2px;
 }
