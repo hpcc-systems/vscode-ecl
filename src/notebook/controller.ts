@@ -143,15 +143,17 @@ export class Controller {
         }
     }
 
-    private async executeOJS(cell: vscode.NotebookCell, cells: vscode.NotebookCell[]): Promise<vscode.NotebookCellOutputItem> {
+    private async executeOJS(cell: vscode.NotebookCell): Promise<vscode.NotebookCellOutputItem> {
         const items = [];
-        cell.notebook.getCells().filter(c => c !== cell).forEach(otherCell => {
+
+        const cells = cell.notebook.getCells(new vscode.NotebookRange(0, cell.index));
+        for (const otherCell of cells) {
             otherCell.outputs.forEach(op => {
                 op.items.filter(item => item.mime === "application/hpcc.wu+json").forEach(item => {
                     items.push(item);
                 });
             });
-        });
+        }
 
         const eclResults: WUOutput[] = [];
         for (const item of items) {
@@ -186,16 +188,16 @@ export class Controller {
         execution.executionOrder = ++this._executionOrder;
         execution.start(Date.now());
         const cellOutput = new vscode.NotebookCellOutput([], {});
-        execution.replaceOutput(cellOutput);
+        await execution.replaceOutput(cellOutput);
         switch (cell.document.languageId) {
             case "ecl":
                 cellOutput.items.push(await this.executeECL(cell));
                 break;
             case "ojs":
-                cellOutput.items.push(await this.executeOJS(cell, cells));
+                cellOutput.items.push(await this.executeOJS(cell));
                 break;
         }
-        execution.replaceOutput(cellOutput);
+        await execution.replaceOutput(cellOutput);
         execution.end(true, Date.now());
     }
 
