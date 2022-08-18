@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.21.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.20.1...v2.21.0) (2022-08-18)
+
+
+### Features
+
+* **notebook:** Add tabbed result view for WU renderer ([8b5d2c4](https://github.com/hpcc-systems/vscode-ecl/commit/8b5d2c4dab43d8ea21a2c952c17d3aec8947785c)), closes [#317](https://github.com/hpcc-systems/vscode-ecl/issues/317)
+
+
+### Bug Fixes
+
+*  Executing several cells ([54b9788](https://github.com/hpcc-systems/vscode-ecl/commit/54b97883312921a6db1a7386ca9eebde1e7c963e)), closes [#315](https://github.com/hpcc-systems/vscode-ecl/issues/315)
+* **notebook:**  Add ObservableJS dependency ([5f84ed0](https://github.com/hpcc-systems/vscode-ecl/commit/5f84ed04757dbb916c9c92e8e4245c746778d723)), closes [#314](https://github.com/hpcc-systems/vscode-ecl/issues/314)
+* **notebook:**  Suppress WU panel on notebook submit ([8058f48](https://github.com/hpcc-systems/vscode-ecl/commit/8058f48b18fd4fac10edf1159fff9e5d3fa9d220)), closes [#316](https://github.com/hpcc-systems/vscode-ecl/issues/316)
+
 ### [2.20.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.20.0...v2.20.1) (2022-08-16)
 
 
