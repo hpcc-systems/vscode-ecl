@@ -111,7 +111,9 @@
     "color": "#CFB69A",
     "theme": "light"
   },
-  "extensionDependencies": [],
+  "extensionDependencies": [
+    "GordonSmith.observable-js"
+  ],
   "activationEvents": [
     "onLanguage:ecl",
     "onNotebook:ecl-notebook",
