@@ -45,8 +45,10 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
             this.navigateTo(launchRequestArgs, "", 0, false);
         });
 
-        sessionManager.onDidCreateWorkunit(wu => {
-            this.navigateTo(sessionManager.session.launchRequestArgs, wu.Wuid);
+        sessionManager.onDidCreateWorkunit(evt => {
+            if (evt.source !== "notebook") {
+                this.navigateTo(sessionManager.session.launchRequestArgs, evt.workunit.Wuid);
+            }
         });
 
         vscode.commands.registerCommand("ecl.watch.lite.openECLWatchExternal", async () => {

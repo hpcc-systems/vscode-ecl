@@ -22,14 +22,14 @@ export class ECLWatchTree extends Tree {
             this.refresh();
         });
 
-        sessionManager.onDidCreateWorkunit(wu => {
+        sessionManager.onDidCreateWorkunit(evt => {
             vscode.commands.executeCommand("workbench.files.action.focusFilesExplorer");
             vscode.commands.executeCommand("hpccPlatform.focus");
             if (this._rendered) {
                 this.refresh();
                 const eclConfig = vscode.workspace.getConfiguration("ecl");
                 if (eclConfig.get<boolean>("WUAutoOpen")) {
-                    vscode.env.openExternal(vscode.Uri.parse(`${wu.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${wu.Wuid}`));
+                    vscode.env.openExternal(vscode.Uri.parse(`${evt.workunit.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${evt.workunit.Wuid}`));
                 }
             }
         });
