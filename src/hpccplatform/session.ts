@@ -114,6 +114,11 @@ class Session {
     }
 }
 
+export interface ICreateWorkunit {
+    source: "editor" | "notebook" | "debugger";
+    workunit: Workunit
+}
+
 class SessionManager {
 
     private _globalSession?: Session;
@@ -122,8 +127,8 @@ class SessionManager {
     private _onDidChangeSession: vscode.EventEmitter<LaunchRequestArguments> = new vscode.EventEmitter<LaunchRequestArguments>();
     readonly onDidChangeSession: vscode.Event<LaunchRequestArguments> = this._onDidChangeSession.event;
 
-    private _onDidCreateWorkunit: vscode.EventEmitter<Workunit> = new vscode.EventEmitter<Workunit>();
-    readonly onDidCreateWorkunit: vscode.Event<Workunit> = this._onDidCreateWorkunit.event;
+    private _onDidCreateWorkunit: vscode.EventEmitter<ICreateWorkunit> = new vscode.EventEmitter<ICreateWorkunit>();
+    readonly onDidCreateWorkunit: vscode.Event<ICreateWorkunit> = this._onDidCreateWorkunit.event;
 
     private _onDidPing: vscode.EventEmitter<LaunchConfigState> = new vscode.EventEmitter<LaunchConfigState>();
     readonly onDidPing: vscode.Event<LaunchConfigState> = this._onDidPing.event;
@@ -203,7 +208,7 @@ class SessionManager {
                     if (this.session && this.isActiveECL) {
                         vscode.window.showWarningMessage(`${localize("Submitting ECL via the Run/Debug page is being deprecated.  Please use the new Submit + Compile buttons at the top of the ECL Editor")}.`);
                         this.session.submit(this.activeUri).then(wu => {
-                            this._onDidCreateWorkunit.fire(wu);
+                            this._onDidCreateWorkunit.fire({ source: "debugger", workunit: wu });
                         });
                     }
                     break;
@@ -307,7 +312,7 @@ class SessionManager {
     nbSubmitURI(uri: vscode.Uri, compileOnly: boolean = false): Promise<Workunit> | undefined {
         if (this.session) {
             return this.session.submit(uri, compileOnly).then(wu => {
-                this._onDidCreateWorkunit.fire(wu);
+                this._onDidCreateWorkunit.fire({ source: "notebook", workunit: wu });
                 return wu;
             });
         }
@@ -316,7 +321,7 @@ class SessionManager {
     submitURI(uri: vscode.Uri, compileOnly: boolean = false) {
         if (this.session) {
             return this.session.submit(uri, compileOnly).then(wu => {
-                this._onDidCreateWorkunit.fire(wu);
+                this._onDidCreateWorkunit.fire({ source: "editor", workunit: wu });
                 return wu;
             }).catch(e => {
                 vscode.window.showErrorMessage(e.message);
