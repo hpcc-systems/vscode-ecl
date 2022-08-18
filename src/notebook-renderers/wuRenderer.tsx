@@ -3,6 +3,7 @@ import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { IOptions, Workunit } from "@hpcc-js/comms";
 import type { WUOutput } from "../notebook/controller";
+import { WUOutputSummary, WUOutputTables } from "./WUOutputTable";
 
 export const activate: ActivationFunction = context => {
 
@@ -47,10 +48,7 @@ class WURenderer {
         this._data = data.json();
         this._element = element;
         if (this._data.results) {
-            render(<>
-                <div>{this._data.wuid}</div>
-                <div>Results:  {Object.keys(this._data.results).map(key => `${key} ${Array.isArray(this._data.results[key]) ? `(${(this._data.results[key] as any).length} Rows)` : `[${this._data.results[key]}]`}`).join(", ")}</div>
-            </>, this._element);
+            render(<WUOutputTables {...this._data} />, this._element);
         } else {
             this.context.postMessage({ command: "fetchConfig", name: this._data.configuration });
         }
