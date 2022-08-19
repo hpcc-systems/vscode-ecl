@@ -18,7 +18,7 @@ export class Tree implements TreeDataProvider<Item> {
     }
 
     refresh(): void {
-        this._onDidChangeTreeData.fire(undefined);
+        this._onDidChangeTreeData.fire(null);
     }
 
     getTreeItem(node: Item): TreeItem | Thenable<TreeItem> {

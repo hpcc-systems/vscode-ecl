@@ -1,1 +1,72 @@
-[{"kind":1,"language":"markdown","value":"# Hello and Welcome!","outputs":[]},{"kind":2,"language":"ecl","value":"/*\r\n    Example code - use without restriction.  \r\n*/\r\nLayout_Person := RECORD\r\n  UNSIGNED1 PersonID;\r\n  STRING15  FirstName;\r\n  STRING25  LastName;\r\nEND;\r\n\r\nallPeople := DATASET([ {1,'Fred','Smith'},\r\n                       {2,'Joe','Blow'},\r\n                       {3,'Jane','Smith'}], Layout_Person);\r\n\r\nOUTPUT(allPeople, NAMED('allPeople'));","outputs":[{"mime":"application/json","data":[123,10,9,34,97,108,108,80,101,111,112,108,101,34,58,32,91,10,9,9,123,10,9,9,9,34,112,101,114,115,111,110,105,100,34,58,32,49,44,10,9,9,9,34,102,105,114,115,116,110,97,109,101,34,58,32,34,70,114,101,100,32,32,32,32,32,32,32,32,32,32,32,34,44,10,9,9,9,34,108,97,115,116,110,97,109,101,34,58,32,34,83,109,105,116,104,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,34,10,9,9,125,44,10,9,9,123,10,9,9,9,34,112,101,114,115,111,110,105,100,34,58,32,50,44,10,9,9,9,34,102,105,114,115,116,110,97,109,101,34,58,32,34,74,111,101,32,32,32,32,32,32,32,32,32,32,32,32,34,44,10,9,9,9,34,108,97,115,116,110,97,109,101,34,58,32,34,66,108,111,119,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,34,10,9,9,125,44,10,9,9,123,10,9,9,9,34,112,101,114,115,111,110,105,100,34,58,32,51,44,10,9,9,9,34,102,105,114,115,116,110,97,109,101,34,58,32,34,74,97,110,101,32,32,32,32,32,32,32,32,32,32,32,34,44,10,9,9,9,34,108,97,115,116,110,97,109,101,34,58,32,34,83,109,105,116,104,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,34,10,9,9,125,10,9,93,10,125]}]},{"kind":2,"language":"ojs","value":"Inputs.table(allPeople)","outputs":[{"mime":"application/hpcc.ojs+json","data":[123,10,9,34,99,111,100,101,34,58,32,34,73,110,112,117,116,115,46,116,97,98,108,101,40,97,108,108,80,101,111,112,108,101,41,34,44,10,9,34,102,111,108,100,101,114,34,58,32,34,47,99,58,47,85,115,101,114,115,47,103,111,114,100,111,110,47,103,105,116,47,118,115,99,111,100,101,45,101,99,108,47,101,99,108,45,115,97,109,112,108,101,47,110,111,116,101,98,111,111,107,115,34,44,10,9,34,101,99,108,82,101,115,117,108,116,115,34,58,32,123,10,9,9,34,97,108,108,80,101,111,112,108,101,34,58,32,91,10,9,9,9,123,10,9,9,9,9,34,112,101,114,115,111,110,105,100,34,58,32,49,44,10,9,9,9,9,34,102,105,114,115,116,110,97,109,101,34,58,32,34,70,114,101,100,32,32,32,32,32,32,32,32,32,32,32,34,44,10,9,9,9,9,34,108,97,115,116,110,97,109,101,34,58,32,34,83,109,105,116,104,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,34,10,9,9,9,125,44,10,9,9,9,123,10,9,9,9,9,34,112,101,114,115,111,110,105,100,34,58,32,50,44,10,9,9,9,9,34,102,105,114,115,116,110,97,109,101,34,58,32,34,74,111,101,32,32,32,32,32,32,32,32,32,32,32,32,34,44,10,9,9,9,9,34,108,97,115,116,110,97,109,101,34,58,32,34,66,108,111,119,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,34,10,9,9,9,125,44,10,9,9,9,123,10,9,9,9,9,34,112,101,114,115,111,110,105,100,34,58,32,51,44,10,9,9,9,9,34,102,105,114,115,116,110,97,109,101,34,58,32,34,74,97,110,101,32,32,32,32,32,32,32,32,32,32,32,34,44,10,9,9,9,9,34,108,97,115,116,110,97,109,101,34,58,32,34,83,109,105,116,104,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,34,10,9,9,9,125,10,9,9,93,10,9,125,10,125]}]}]
+{
+    "id": "8ee428b2-bcfe-4228-9f8c-ae2542bdcaa0",
+    "files": [],
+    "nodes": [
+        {
+            "id": "330c54b6-328d-4c80-9f26-d856383a8a63",
+            "name": "",
+            "value": "x = 1;\r\nz = 2;\r\nx + z;",
+            "mode": "js",
+            "shared": true,
+            "outputs": [
+                "eCA9IDE7DQp6ID0gMjsNCnggKyB6Ow=="
+            ]
+        },
+        {
+            "id": "3775c466-b4be-45dc-849e-5270cd6b9a70",
+            "name": "",
+            "value": "x",
+            "mode": "js",
+            "outputs": [
+                "eA=="
+            ]
+        },
+        {
+            "id": "f31fa0da-d310-4cba-977d-047c39a9d57a",
+            "name": "",
+            "value": "z",
+            "mode": "js",
+            "outputs": [
+                "eg=="
+            ]
+        },
+        {
+            "id": "a5482448-0c1d-4201-b9a4-809d304508bf",
+            "name": "",
+            "value": "ParentRec := RECORD\r\n    INTEGER1  NameID;\r\n    STRING20  Name;\r\nEND;\r\n\r\nChildRec := RECORD\r\n    INTEGER1  NameID;\r\n    STRING20  Addr;\r\nEND;\r\n\r\nDenormedRec := RECORD\r\n    ParentRec;\r\n    INTEGER1 NumRows;\r\n    DATASET(ChildRec) Children {MAXCOUNT(5)};\r\nEND;\r\n\r\nNamesTable := DATASET([ {1, 'Gavin'}, \r\n                        {2, 'Liz'}, \r\n                        {3, 'Mr Nobody'}, \r\n                        {4, 'Anywhere'}], \r\n                      ParentRec);            \r\n\r\nNormAddrs := DATASET([{1, '10 Malt Lane'},     \r\n                      {2, '10 Malt Lane'},     \r\n                      {2, '3 The cottages'},     \r\n                      {4, 'Here'},     \r\n                      {4, 'There'},     \r\n                      {4, 'Near'},     \r\n                      {4, 'Far'}], \r\n                     ChildRec);    \r\n\r\nDenormedRec ParentLoad(ParentRec L) := TRANSFORM\r\n    SELF.NumRows := 0;\r\n    SELF.Children := [];\r\n    SELF := L;\r\nEND;\r\n\r\n//Ptbl := TABLE(NamesTable, DenormedRec);\r\nPtbl := PROJECT(NamesTable, ParentLoad(LEFT));\r\nOUTPUT(Ptbl, NAMED('ParentDataReady'));\r\n\r\nDenormedRec DeNormThem(DenormedRec L, ChildRec R, INTEGER C) := TRANSFORM\r\n    SELF.NumRows := C;\r\n    SELF.Children := L.Children + R;\r\n    SELF := L;\r\nEND;\r\n\r\nDeNormedRecs := DENORMALIZE(Ptbl, NormAddrs, \r\n                            LEFT.NameID = RIGHT.NameID, \r\n                            DeNormThem(LEFT, RIGHT, COUNTER));\r\n\r\nOUTPUT(DeNormedRecs, NAMED('NestedChildDataset'));\r\n\r\n// *******************************\r\n\r\nParentRec ParentOut(DenormedRec L) := TRANSFORM\r\n    SELF := L;\r\nEND;\r\n\r\nPout := PROJECT(DeNormedRecs, ParentOut(LEFT));\r\nOUTPUT(Pout, NAMED('ParentExtracted'));\r\n\r\n// /* Using Form 1 of NORMALIZE */\r\nChildRec NewChildren(DenormedRec L, INTEGER C) := TRANSFORM\r\n    SELF := L.Children[C];\r\nEND;\r\nNewChilds := NORMALIZE(DeNormedRecs, LEFT.NumRows, NewChildren(LEFT, COUNTER));\r\n\r\n// /* Using Form 2 of NORMALIZE */\r\n// ChildRec NewChildren(ChildRec L) := TRANSFORM\r\n//     SELF := L;\r\n// END;\r\n\r\n// NewChilds := NORMALIZE(DeNormedRecs, LEFT.Children, NewChildren(RIGHT));\r\n\r\n// /* Using Form 2 of NORMALIZE with inline TRANSFORM*/\r\n// NewChilds := NORMALIZE(DeNormedRecs, LEFT.Children, TRANSFORM(RIGHT));\r\n\r\nOUTPUT(NewChilds, NAMED('ChildrenExtracted'));\r\n",
+            "mode": "ecl",
+            "shared": true,
+            "outputs": [
+                "UGFyZW50RXh0cmFjdGVkID0gW3sibmFtZWlkIjoxLCJuYW1lIjoiR2F2aW4gICAgICAgICAgICAgICAifSx7Im5hbWVpZCI6MiwibmFtZSI6IkxpeiAgICAgICAgICAgICAgICAgIn0seyJuYW1laWQiOjMsIm5hbWUiOiJNciBOb2JvZHkgICAgICAgICAgICJ9LHsibmFtZWlkIjo0LCJuYW1lIjoiQW55d2hlcmUgICAgICAgICAgICAifV07UGFyZW50RGF0YVJlYWR5ID0gW3sibmFtZWlkIjoxLCJuYW1lIjoiR2F2aW4gICAgICAgICAgICAgICAiLCJudW1yb3dzIjowLCJjaGlsZHJlbiI6eyJSb3ciOltdfX0seyJuYW1laWQiOjIsIm5hbWUiOiJMaXogICAgICAgICAgICAgICAgICIsIm51bXJvd3MiOjAsImNoaWxkcmVuIjp7IlJvdyI6W119fSx7Im5hbWVpZCI6MywibmFtZSI6Ik1yIE5vYm9keSAgICAgICAgICAgIiwibnVtcm93cyI6MCwiY2hpbGRyZW4iOnsiUm93IjpbXX19LHsibmFtZWlkIjo0LCJuYW1lIjoiQW55d2hlcmUgICAgICAgICAgICAiLCJudW1yb3dzIjowLCJjaGlsZHJlbiI6eyJSb3ciOltdfX1dO05lc3RlZENoaWxkRGF0YXNldCA9IFt7Im5hbWVpZCI6MSwibmFtZSI6IkdhdmluICAgICAgICAgICAgICAgIiwibnVtcm93cyI6MSwiY2hpbGRyZW4iOnsiUm93IjpbeyJuYW1laWQiOjEsImFkZHIiOiIxMCBNYWx0IExhbmUgICAgICAgICJ9XX19LHsibmFtZWlkIjoyLCJuYW1lIjoiTGl6ICAgICAgICAgICAgICAgICAiLCJudW1yb3dzIjoyLCJjaGlsZHJlbiI6eyJSb3ciOlt7Im5hbWVpZCI6MiwiYWRkciI6IjEwIE1hbHQgTGFuZSAgICAgICAgIn0seyJuYW1laWQiOjIsImFkZHIiOiIzIFRoZSBjb3R0YWdlcyAgICAgICJ9XX19LHsibmFtZWlkIjozLCJuYW1lIjoiTXIgTm9ib2R5ICAgICAgICAgICAiLCJudW1yb3dzIjowLCJjaGlsZHJlbiI6eyJSb3ciOltdfX0seyJuYW1laWQiOjQsIm5hbWUiOiJBbnl3aGVyZSAgICAgICAgICAgICIsIm51bXJvd3MiOjQsImNoaWxkcmVuIjp7IlJvdyI6W3sibmFtZWlkIjo0LCJhZGRyIjoiSGVyZSAgICAgICAgICAgICAgICAifSx7Im5hbWVpZCI6NCwiYWRkciI6IlRoZXJlICAgICAgICAgICAgICAgIn0seyJuYW1laWQiOjQsImFkZHIiOiJOZWFyICAgICAgICAgICAgICAgICJ9LHsibmFtZWlkIjo0LCJhZGRyIjoiRmFyICAgICAgICAgICAgICAgICAifV19fV07Q2hpbGRyZW5FeHRyYWN0ZWQgPSBbeyJuYW1laWQiOjEsImFkZHIiOiIxMCBNYWx0IExhbmUgICAgICAgICJ9LHsibmFtZWlkIjoyLCJhZGRyIjoiMTAgTWFsdCBMYW5lICAgICAgICAifSx7Im5hbWVpZCI6MiwiYWRkciI6IjMgVGhlIGNvdHRhZ2VzICAgICAgIn0seyJuYW1laWQiOjQsImFkZHIiOiJIZXJlICAgICAgICAgICAgICAgICJ9LHsibmFtZWlkIjo0LCJhZGRyIjoiVGhlcmUgICAgICAgICAgICAgICAifSx7Im5hbWVpZCI6NCwiYWRkciI6Ik5lYXIgICAgICAgICAgICAgICAgIn0seyJuYW1laWQiOjQsImFkZHIiOiJGYXIgICAgICAgICAgICAgICAgICJ9XTs="
+            ]
+        },
+        {
+            "id": "75e5ca1c-c19d-44fb-8c83-09a062c6aa27",
+            "name": "",
+            "value": "Inputs.table(ParentDataReady)",
+            "mode": "js",
+            "outputs": [
+                "SW5wdXRzLnRhYmxlKFBhcmVudERhdGFSZWFkeSk="
+            ]
+        },
+        {
+            "id": "a1f2cc8b-d20d-42be-bbef-be886795e3bb",
+            "name": "",
+            "value": "ParentExtracted ",
+            "mode": "js",
+            "outputs": [
+                "UGFyZW50RXh0cmFjdGVkIA=="
+            ]
+        },
+        {
+            "id": "783f8ec0-0f25-4db2-944e-3fcb78222e6d",
+            "name": "",
+            "value": "ParentDataReady ",
+            "mode": "js",
+            "shared": true,
+            "outputs": [
+                "UGFyZW50RGF0YVJlYWR5IA=="
+            ]
+        }
+    ]
+}

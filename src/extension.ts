@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { initialize } from "./util/localize";
 import { activate as telemetryActivate, deactivate as telemetryDeactivate, reporter } from "./telemetry";
-import { activate as notebookActivate } from "./notebook/main";
+import { activate as notebookActivate } from "./notebook";
 
 export function activate(context: vscode.ExtensionContext): void {
     performance.mark("extension-start");

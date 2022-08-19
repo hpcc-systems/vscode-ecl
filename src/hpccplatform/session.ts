@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { WUQuery, Workunit, ClientTools } from "@hpcc-js/comms";
-import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration } from "./launchConfig";
+import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration, IExecFile } from "./launchConfig";
 import { LaunchConfigState } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
 import { ECL_MODE } from "../mode";
@@ -105,11 +105,11 @@ class Session {
         return this._launchConfig.bundleList();
     }
 
-    bundleInstall(bundleUrl: string) {
+    bundleInstall(bundleUrl: string): Promise<IExecFile> {
         return this._launchConfig.bundleInstall(bundleUrl);
     }
 
-    bundleUninstall(name: string) {
+    bundleUninstall(name: string): Promise<IExecFile> {
         return this._launchConfig.bundleUninstall(name);
     }
 }
@@ -253,7 +253,7 @@ class SessionManager {
     }
 
     private get isActiveECL() {
-        return this.activeDocument && vscode.languages.match(ECL_MODE, this.activeDocument) > 0;
+        return this.activeDocument && this.activeDocument.languageId === "ecl";
     }
 
     private get pinnedSession() {

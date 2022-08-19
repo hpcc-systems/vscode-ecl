@@ -11,6 +11,12 @@ import { reporter } from "../telemetry";
 
 const fs = vscode.workspace.fs;
 
+export interface IExecFile {
+    code: number;
+    stderr: string;
+    stdout: string;
+}
+
 const logger = scopedLogger("launchConfig.ts");
 
 const PROXY_WARNING = localize("User setting 'http.proxySupport' is set to 'override'.\nThis will prevent ECL from targetting 'Trustwave' signed sites and will also prevent 'rejectUnauthorized: false' from working.\nSetting this to 'fallback' will resolve these issues.");
@@ -620,13 +626,13 @@ export class LaunchConfig implements LaunchRequestArguments {
         });
     }
 
-    bundleInstall(bundleUrl: string) {
+    bundleInstall(bundleUrl: string): Promise<IExecFile> {
         return this.locateClientTools().then((clientTools) => {
             return clientTools.bundleInstall(bundleUrl);
         });
     }
 
-    bundleUninstall(name: string) {
+    bundleUninstall(name: string): Promise<IExecFile> {
         return this.locateClientTools().then((clientTools) => {
             return clientTools.bundleUninstall(name);
         });

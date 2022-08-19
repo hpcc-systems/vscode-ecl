@@ -1,4 +1,4 @@
-import { ClientTools, IBundle } from "@hpcc-js/comms";
+import { ClientTools, IBundle, clearAllClientToolsCache } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { locateAllClientTools } from "../debugger/launchRequestArguments";
 import { sessionManager } from "../hpccplatform/session";
@@ -139,6 +139,7 @@ class ClientToolsTree extends Tree {
         });
 
         vscode.commands.registerCommand("hpccResources.clientTools.refresh", () => {
+            clearAllClientToolsCache();
             this.refresh();
         });
 
