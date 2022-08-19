@@ -28,7 +28,7 @@ export class Controller {
     readonly label = "ECL Notebook";
     readonly supportedLanguages = ["ecl", "ojs"];
 
-    private readonly _controller: vscode.NotebookController;
+    readonly _controller: vscode.NotebookController;
     private _executionOrder = 0;
 
     constructor() {

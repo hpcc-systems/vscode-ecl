@@ -10,6 +10,7 @@ interface RawNotebookCell {
     kind: vscode.NotebookCellKind;
     language: string;
     value: string;
+    metadata: { [key: string]: any };
     outputs: RawNotebookOutput[];
 }
 
@@ -27,6 +28,8 @@ export class Serializer implements vscode.NotebookSerializer {
 
         const cells = raw.map(item => {
             const retVal = new vscode.NotebookCellData(item.kind, item.value, item.language);
+            retVal.metadata = retVal.metadata || {};
+            retVal.metadata.custom = retVal.metadata.custom || {};
             if (item.outputs) {
                 const cellOutput = new vscode.NotebookCellOutput(item.outputs.map(item => new vscode.NotebookCellOutputItem(Uint8Array.from(item.data), item.mime)));
                 retVal.outputs = [cellOutput];
@@ -38,6 +41,7 @@ export class Serializer implements vscode.NotebookSerializer {
     }
 
     serializeNotebook(data: vscode.NotebookData, _token: vscode.CancellationToken): Uint8Array {
+
         const contents: RawNotebookCell[] = [];
 
         for (const cell of data.cells) {
@@ -49,12 +53,15 @@ export class Serializer implements vscode.NotebookSerializer {
 
             });
 
-            contents.push({
+            const sCell = {
                 kind: cell.kind,
                 language: cell.languageId,
                 value: cell.value,
+                metadata: cell.metadata || {},
                 outputs
-            });
+            };
+            sCell.metadata.custom = sCell.metadata.custom || {};
+            contents.push(sCell);
         }
 
         return new TextEncoder().encode(JSON.stringify(contents));

@@ -548,7 +548,8 @@
         "icon": {
           "dark": "./resources/dark/eye.svg",
           "light": "./resources/light/eye.svg"
-        }
+        },
+        "enablement": "false"
       },
       {
         "command": "notebook.cell.private",
@@ -556,7 +557,8 @@
         "icon": {
           "dark": "./resources/dark/eye-closed.svg",
           "light": "./resources/light/eye-closed.svg"
-        }
+        },
+        "enablement": "false"
       }
     ],
     "menus": {

@@ -84,4 +84,3 @@ export const WUOutputTables: React.FunctionComponent<WUOutput> = (output: WUOutp
         }
     </Pivot>;
 };
-
