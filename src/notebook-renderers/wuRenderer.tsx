@@ -2,7 +2,7 @@ import type { ActivationFunction, RendererContext } from "vscode-notebook-render
 import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { IOptions, Workunit } from "@hpcc-js/comms";
-import type { WUOutput } from "../notebook/controller";
+import type { WUOutput } from "../notebook/controller/controller";
 import { WUOutputSummary, WUOutputTables } from "./WUOutputTable";
 
 export const activate: ActivationFunction = context => {

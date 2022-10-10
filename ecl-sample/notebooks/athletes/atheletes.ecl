@@ -1,20 +1,20 @@
 r := RECORD
-    UNSIGNED4 id;
+    UNSIGNED INTEGER4 id;
     VARSTRING name;
     VARSTRING nationality;
     VARSTRING sex;
     VARSTRING date_of_birth;
     REAL height;
-    REAL weight;
+    UNSIGNED INTEGER4 weight;
     VARSTRING sport;
-    UNSIGNED4 gold;
-    UNSIGNED4 silver;
-    UNSIGNED4 bronze;
+    UNSIGNED INTEGER4 gold;
+    UNSIGNED INTEGER4 silver;
+    UNSIGNED INTEGER4 bronze;
     VARSTRING info;
 END;
 
-d := DATASET('~::athletes.csv', r, CSV);
+sprayed := DATASET('~::athletes.csv', r, CSV);
 
-d2 := d(date_of_birth != 'date_of_birth');
+athletes := CHOOSEN(sprayed(date_of_birth != 'date_of_birth' AND height > 0 AND weight > 0), ALL); 
 
-OUTPUT(d2, NAMED('athletes'), ALL);
+OUTPUT(athletes, NAMED('athletes')); 

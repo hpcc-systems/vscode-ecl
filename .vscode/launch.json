@@ -14,20 +14,31 @@
             "name": "Launch Extension",
             "type": "extensionHost",
             "request": "launch",
-            // path to VSCode executable
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceRoot}",
-                //"--enable-proposed-api",
                 "${workspaceRoot}\\ecl-sample"
             ],
             "outFiles": [
-                "${workspaceRoot}/dist/*.js"
+                "${workspaceRoot}/src/**/*.js",
+                "${workspaceRoot}/src/notebook-renderers/**/*.js"
+            ]
+        },
+        {
+            "name": "Launch Extension With Other Extensions",
+            "type": "extensionHost",
+            "request": "launch",
+            // path to VSCode executable
+            "args": [
+                //                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceRoot}",
+                "${workspaceRoot}\\ecl-sample"
             ],
-            "sourceMaps": true,
-            "internalConsoleOptions": "neverOpen",
-            "debugWebviews": true,
+            "outFiles": [
+                "${workspaceRoot}/src/**/*.js",
+                "${workspaceRoot}/src/notebook-renderers/**/*.js"
+            ]
         },
         {
             "name": "Launch Web Extension",
@@ -41,25 +52,6 @@
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
             ]
-        },
-        {
-            "name": "Launch Extension With Other Extensions",
-            "type": "extensionHost",
-            "request": "launch",
-            // path to VSCode executable
-            "runtimeExecutable": "${execPath}",
-            "args": [
-                //                "--disable-extensions",
-                "--extensionDevelopmentPath=${workspaceRoot}",
-                //"--enable-proposed-api",
-                "${workspaceRoot}\\ecl-sample"
-            ],
-            "outFiles": [
-                "${workspaceRoot}/dist/*.js"
-            ],
-            "stopOnEntry": false,
-            "sourceMaps": true,
-            "internalConsoleOptions": "neverOpen"
         },
         {
             "name": "Launch Server Adapter",

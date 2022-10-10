@@ -3,7 +3,7 @@ import * as React from "react";
 import { Pivot, PivotItem, IPivotStyles, IStyleSet, DetailsList, IColumn, DetailsListLayoutMode, SelectionMode } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
 import { ThemeProvider } from "../eclwatch/themeGenerator";
-import { WUOutput } from "../notebook/controller";
+import { WUOutput } from "../notebook/controller/controller";
 
 const bodyStyles = window.getComputedStyle(document.body);
 

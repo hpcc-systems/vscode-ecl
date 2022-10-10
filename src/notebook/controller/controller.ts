@@ -1,13 +1,23 @@
 import * as vscode from "vscode";
 import * as path from "path";
+import { v4 as uuidv4 } from "uuid";
+import { parseCell } from "@hpcc-js/observable-shim";
+import { ohq } from "@hpcc-js/observablehq-compiler";
+import { reporter } from "../../telemetry/index";
 import { hashSum } from "@hpcc-js/util";
-import { sessionManager } from "../hpccplatform/session";
-import { deleteFile, writeFile } from "../util/fs";
-import { LaunchConfig, launchConfiguration, LaunchRequestArguments } from "../hpccplatform/launchConfig";
-import { IConnection, IOptions, Workunit } from "@hpcc-js/comms";
+import { sessionManager } from "../../hpccplatform/session";
+import { deleteFile, writeFile } from "../../util/fs";
+import { launchConfiguration, LaunchRequestArguments } from "../../hpccplatform/launchConfig";
+import { IOptions } from "@hpcc-js/comms";
 
 function encodeID(id: string) {
     return id.split(" ").join("_");
+}
+
+function encode(str: string) {
+    return str
+        .split("`").join("\\`")
+        ;
 }
 
 export interface WUOutput {
@@ -16,19 +26,26 @@ export interface WUOutput {
     results: { [id: string]: object };
 }
 
+export interface OJSCell {
+    node: ohq.Node
+    ojsSource: string;
+}
+
 export interface OJSOutput {
-    code: string;
+    uri: string;
     folder: string;
-    eclResults: WUOutput[];
+    notebook: ohq.Notebook;
+    cell: OJSCell;
+    otherCells: OJSCell[]
 }
 
 export class Controller {
     readonly controllerId = "ecl-kernal";
     readonly notebookType = "ecl-notebook";
     readonly label = "ECL Notebook";
-    readonly supportedLanguages = ["ecl", "ojs"];
+    readonly supportedLanguages = ["ecl", "ojs", "omd", "html", "svg", "dot", "mermaid", "tex"];
 
-    readonly _controller: vscode.NotebookController;
+    private readonly _controller: vscode.NotebookController;
     private _executionOrder = 0;
 
     constructor() {
@@ -57,21 +74,6 @@ export class Controller {
             }
         });
 
-        const ojsMessagaging = vscode.notebooks.createRendererMessaging("ecl-notebook-ojsrenderer");
-        ojsMessagaging.onDidReceiveMessage(event => {
-            switch (event.message.command) {
-                case "fetchConfigs":
-                    const configurations = {};
-                    event.message.names.forEach(name => {
-                        configurations[name] = this.configToIOptions(launchConfiguration(name));
-                    });
-                    ojsMessagaging.postMessage({
-                        type: "fetchConfigsResponse",
-                        configurations
-                    }, event.editor);
-                    break;
-            }
-        });
     }
 
     configToIOptions(config?: LaunchRequestArguments): IOptions {
@@ -129,6 +131,8 @@ export class Controller {
                     wuid: wu.Wuid,
                     results: outputs
                 };
+                cell.metadata.node.result = retVal;
+                console.log(cell.metadata.node.result);
                 return vscode.NotebookCellOutputItem.json(retVal, "application/hpcc.wu+json");
             }
         } catch (e) {
@@ -143,67 +147,80 @@ export class Controller {
         }
     }
 
-    private async executeOJS(cell: vscode.NotebookCell): Promise<vscode.NotebookCellOutputItem> {
-        const items = [];
-
-        const cells = cell.notebook.getCells(new vscode.NotebookRange(0, cell.index));
-        for (const otherCell of cells) {
-            otherCell.outputs.forEach(op => {
-                op.items.filter(item => item.mime === "application/hpcc.wu+json").forEach(item => {
-                    items.push(item);
-                });
-            });
+    ojsSource(cell: vscode.NotebookCell) {
+        switch (cell.document.languageId) {
+            case "ojs":
+                return cell.document.getText();
+            case "omd":
+                return `md\`${encode(cell.document.getText())}\``;
+            case "html":
+                return `htl.html\`${encode(cell.document.getText())}\``;
+            case "tex":
+                return `tex.block\`${encode(cell.document.getText())}\``;
+            case "sql":
+                return `${cell.metadata.node?.name} = db.sql\`${encode(cell.document.getText())}\`;`;
+            case "javascript":
+                return `{${cell.document.getText()}}`;
+            default:
+                return `${cell.document.languageId}\`${cell.document.getText()}\``;
         }
-
-        const eclResults: WUOutput[] = [];
-        for (const item of items) {
-            try {
-                eclResults.push(JSON.parse(item.data.toString()));
-                // const config = launchConfiguration(data.configuration);
-                // if (config) {
-                //     const wu = Workunit.attach(this.configToIOptions(config), data.wuid);
-                //     await wu.watchUntilComplete();
-                //     await wu.fetchResults().then(results => {
-                //         return Promise.all(results.map(r => r.fetchRows())).then(resultRows => {
-                //             results.forEach((r, i) => {
-                //                 eclResults[r.Name] = resultRows[i];
-                //             });
-                //         });
-                //     });
-                // }
-            } catch (e) {
-            }
-        }
-
-        const retVal: OJSOutput = {
-            code: cell.document.getText(),
-            folder: path.dirname(cell.document.uri.path),
-            eclResults
-        };
-        return vscode.NotebookCellOutputItem.json(retVal, "application/hpcc.ojs+json");
     }
 
-    private async executeCell(cell: vscode.NotebookCell, cells: vscode.NotebookCell[]): Promise<void> {
+    private ojsCell(cell: vscode.NotebookCell): OJSCell {
+        return {
+            node: cell.metadata.node ?? { id: uuidv4(), mode: cell.document.languageId, value: cell.document.getText() },
+            ojsSource: this.ojsSource(cell)
+        };
+    }
+
+    private ojsOutput(cell: vscode.NotebookCell, uri: vscode.Uri, otherCells: vscode.NotebookCell[]): OJSOutput {
+        const folder = path.dirname(cell.document.uri.path);
+
+        return {
+            uri: uri.toString(),
+            folder,
+            notebook: cell.notebook.metadata.notebook,
+            cell: this.ojsCell(cell),
+            otherCells: otherCells.map(c => this.ojsCell(c))
+        };
+    }
+
+    private executeOJS(cell: vscode.NotebookCell, notebook: vscode.NotebookDocument, otherCells: vscode.NotebookCell[]): vscode.NotebookCellOutputItem {
+        try {
+            parseCell(this.ojsSource(cell));
+        } catch (e: any) {
+            const msg = e?.message ?? "Unknown Error";
+            return vscode.NotebookCellOutputItem.stderr(msg);
+        }
+        const ojsOutput = this.ojsOutput(cell, notebook.uri, otherCells);
+        return vscode.NotebookCellOutputItem.json(ojsOutput, "application/hpcc.ojs+json");
+    }
+
+    private async executeCell(cell: vscode.NotebookCell, notebook: vscode.NotebookDocument, otherCells: vscode.NotebookCell[]) {
         const execution = this._controller.createNotebookCellExecution(cell);
         execution.executionOrder = ++this._executionOrder;
         execution.start(Date.now());
-        const cellOutput = new vscode.NotebookCellOutput([], {});
-        await execution.replaceOutput(cellOutput);
+        let outputItem: vscode.NotebookCellOutputItem;
         switch (cell.document.languageId) {
             case "ecl":
-                cellOutput.items.push(await this.executeECL(cell));
+                outputItem = await this.executeECL(cell);
                 break;
             case "ojs":
-                cellOutput.items.push(await this.executeOJS(cell));
+            case "html":
+            case "dot":
+            case "mermaid":
+            default:
+                outputItem = this.executeOJS(cell, notebook, otherCells);
                 break;
         }
-        await execution.replaceOutput(cellOutput);
-        execution.end(true, Date.now());
+        await execution.replaceOutput([new vscode.NotebookCellOutput([outputItem])]);
+        execution.end(outputItem?.mime.indexOf(".stderr") < 0, Date.now());
     }
 
-    private async execute(cells: vscode.NotebookCell[], _notebook: vscode.NotebookDocument, _controller: vscode.NotebookController): Promise<void> {
+    private async execute(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument): Promise<void> {
         for (const cell of cells) {
-            await this.executeCell(cell, cells);
+            reporter.sendTelemetryEvent("controller.execute.cell");
+            this.executeCell(cell, notebook, cells.filter(c => c !== cell));
         }
     }
 }

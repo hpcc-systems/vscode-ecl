@@ -94,7 +94,7 @@ module.exports = (env, argv) => [
         entry: {
             eclwatch: "./lib-es6/eclwatch.js",
             wuRenderer: "./lib-es6/notebook-renderers/wuRenderer.js",
-            ojsRenderer: "./lib-es6/notebook-renderers/ojsRenderer.js"
+            ojsRenderer: "./lib-es6/notebook/renderers/renderer.js"
         },
         target: "web",
         library: { type: "module" }

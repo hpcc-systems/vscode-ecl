@@ -1,30 +1,14 @@
 import * as vscode from "vscode";
-import { Controller } from "./controller";
-import { Serializer } from "./serializer";
+import { Controller } from "./controller/controller";
+import { Serializer } from "./controller/serializer";
+import { Commands } from "./controller/command";
 
 export function activate(ctx: vscode.ExtensionContext) {
-    const controller = new Controller();
-    ctx.subscriptions.push(controller);
-    ctx.subscriptions.push(vscode.workspace.registerNotebookSerializer("ecl-notebook", new Serializer()));
-
-    let publicCell: boolean = true;
-
-    vscode.commands.executeCommand("setContext", "isPublic", publicCell);
-    vscode.commands.executeCommand("setContext", "isPrivate", !publicCell);
-
-    vscode.commands.registerCommand("notebook.cell.public", (cell: vscode.NotebookCell) => {
-        cell.metadata["custom"]["public"] = false;
-        publicCell = false;
-        vscode.commands.executeCommand("setContext", "isPublic", publicCell);
-        vscode.commands.executeCommand("setContext", "isPrivate", !publicCell);
-    });
-
-    vscode.commands.registerCommand("notebook.cell.private", (cell: vscode.NotebookCell) => {
-        cell.metadata["custom"]["public"] = true;
-        publicCell = true;
-        vscode.commands.executeCommand("setContext", "isPublic", publicCell);
-        vscode.commands.executeCommand("setContext", "isPrivate", !publicCell);
-    });
+    ctx.subscriptions.push(vscode.workspace.registerNotebookSerializer("ecl-notebook", new Serializer(), {
+        transientOutputs: true
+    }));
+    ctx.subscriptions.push(new Controller());
+    Commands.attach(ctx);
 
     vscode.window.onDidChangeNotebookEditorSelection(evt => {
         for (let i = evt.notebookEditor.selection.start; i < evt.notebookEditor.selection.end; ++i) {
