@@ -5,6 +5,7 @@ import type { OJSOutput } from "../controller/serializer";
 import { compile } from "@hpcc-js/observablehq-compiler";
 import { Runtime } from "@observablehq/runtime";
 import { Inspector } from "@observablehq/inspector";
+import { Uri } from "vscode";
 
 interface Renderer {
     runtime: ohq.Runtime;
@@ -53,13 +54,13 @@ export const activate: ActivationFunction = context => {
                                 div.innerText = "...pending...";
                                 inspector.pending();
                             },
-                            fulfilled(value: any) {
+                            fulfilled(value: any, name?: string) {
                                 resolve();
-                                inspector.fulfilled(value);
+                                inspector.fulfilled(value, name);
                             },
-                            rejected(error: any) {
+                            rejected(error: any, name?: string) {
                                 resolve();
-                                inspector.rejected(error);
+                                inspector.rejected(error, name);
                             }
                         };
                     }
@@ -79,9 +80,9 @@ export const activate: ActivationFunction = context => {
     }
 
     async function createRenderer(data: OJSOutput): Promise<Renderer> {
-        if (!notebooks[data.uri]) {
+        if (!notebooks[data.notebookId]) {
             const runtime = new Runtime() as ohq.Runtime;
-            notebooks[data.uri] = compile({ files: data.notebook.files, nodes: [] } as unknown as ohq.Notebook, { baseUrl: data.folder })
+            notebooks[data.notebookId] = compile({ files: data.files, nodes: [] } as unknown as ohq.Notebook, { baseUrl: data.folder })
                 .then(define => {
                     return {
                         runtime,
@@ -90,17 +91,17 @@ export const activate: ActivationFunction = context => {
                     };
                 });
         }
-        return notebooks[data.uri];
+        return notebooks[data.notebookId];
     }
 
-    async function render(id: any, data: OJSOutput, element?: HTMLElement) {
+    async function render(vscodeOutputId: any, data: OJSOutput, element?: HTMLElement) {
         data.folder = `https://file+.vscode-resource.vscode-cdn.net${data.folder}`;
         const renderer = await createRenderer(data);
-        await update(data.cell.node.id, renderer, data.cell.ojsSource, element);
-        vscodeId[id] = data.cell.node.id;
+        await update(data.cell.nodeId, renderer, data.cell.ojsSource, element);
+        vscodeId[vscodeOutputId] = data.cell.nodeId;
 
         for (const cell of data.otherCells) {
-            update(cell.node.id, renderer, cell.ojsSource);
+            update(cell.nodeId, renderer, cell.ojsSource);
         }
     }
 

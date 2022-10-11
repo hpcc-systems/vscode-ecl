@@ -16,8 +16,8 @@
         },
         {
             "type": "npm",
-            "label": "bundle watch",
-            "script": "bundle-watch",
+            "label": "bundle-ext watch",
+            "script": "bundle-ext-watch",
             "problemMatcher": [],
             "presentation": {
                 "group": "group-build"
@@ -27,7 +27,7 @@
             "label": "build",
             "dependsOn": [
                 "compile watch",
-                "bundle watch"
+                "bundle-ext watch"
             ],
             "group": {
                 "kind": "build",

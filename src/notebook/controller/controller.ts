@@ -2,13 +2,13 @@ import type { IOptions } from "@hpcc-js/comms";
 
 import * as path from "path";
 import * as vscode from "vscode";
-import { parseCell } from "@hpcc-js/observable-shim";
+import { parseModule } from "@hpcc-js/observable-shim";
 import { hashSum } from "@hpcc-js/util";
 import { reporter } from "../../telemetry/index";
 import { sessionManager } from "../../hpccplatform/session";
 import { deleteFile, writeFile } from "../../util/fs";
 import { launchConfiguration, LaunchRequestArguments } from "../../hpccplatform/launchConfig";
-import { OJSOutput, serializer, WUOutput } from "./serializer";
+import { MIME, OJSOutput, serializer, WUOutput } from "./serializer";
 
 function encodeID(id: string) {
     return id.split(" ").join("_");
@@ -101,49 +101,37 @@ export class Controller {
                     });
                 }));
 
-                const retVal: WUOutput = serializer.wuOutput(sessionManager.session.name, wu.Wuid, outputs);
-                outputItems.push(vscode.NotebookCellOutputItem.json(retVal, "application/hpcc.wu+json"));
-
-                // try {
-                //     const wuOutput = JSON.parse(Buffer.from(outputItem.data).toString());
-                //     for (const key in wuOutput.results) {
-                //         const ojsOutput: OJSOutput = {
-                //             cell: {
-                //                 node: { id: `${key}`, value: `${key} = ${wuOutput.results[key]}`, mode: "js" },
-                //                 ojsSource: `${key} = ${wuOutput.results[key]}`
-                //             },
-                //             uri: notebook.uri.toString(),
-                //             folder: "",
-                //             notebook: { nodes: [], files: [] },
-                //             otherCells: []
-                //         };
-                //         outputItems.push(vscode.NotebookCellOutputItem.json(ojsOutput, "application/hpcc.ojs+json"));
-                //     }
-                // } catch (e) { }
-
-                return outputItems;
+                const ojsOutput: OJSOutput = serializer.ojsOutput(cell, cell.notebook.uri, []);
+                ojsOutput.cell.ojsSource = "";
+                try {
+                    for (const key in outputs) {
+                        ojsOutput.cell.ojsSource += `${key} = ${JSON.stringify(outputs[key])};`;
+                    }
+                    outputItems.push(vscode.NotebookCellOutputItem.json(ojsOutput, MIME));
+                } catch (e) { }
             }
         } catch (e) {
             if (e.message.indexOf("0003:  Definition must contain EXPORT or SHARED value") >= 0) {
-                return [vscode.NotebookCellOutputItem.text("...no action...")];
+                outputItems.push(vscode.NotebookCellOutputItem.text("...no action..."));
             }
-            return [vscode.NotebookCellOutputItem.error(e)];
+            outputItems.push(vscode.NotebookCellOutputItem.error(e));
         } finally {
             if (tmpPath) {
                 deleteFile(tmpPath);
             }
         }
+        return outputItems;
     }
 
     private executeOJS(cell: vscode.NotebookCell, notebook: vscode.NotebookDocument, otherCells: vscode.NotebookCell[]): vscode.NotebookCellOutputItem {
         try {
-            parseCell(serializer.ojsSource(cell));
+            parseModule(serializer.ojsSource(cell));
         } catch (e: any) {
             const msg = e?.message ?? "Unknown Error";
             return vscode.NotebookCellOutputItem.stderr(msg);
         }
         const ojsOutput = serializer.ojsOutput(cell, notebook.uri, otherCells);
-        return vscode.NotebookCellOutputItem.json(ojsOutput, "application/hpcc.ojs+json");
+        return vscode.NotebookCellOutputItem.json(ojsOutput, MIME);
     }
 
     private async executeCell(cell: vscode.NotebookCell, notebook: vscode.NotebookDocument, otherCells: vscode.NotebookCell[]) {

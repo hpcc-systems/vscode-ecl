@@ -29,6 +29,7 @@
             "name": "Launch Extension With Other Extensions",
             "type": "extensionHost",
             "request": "launch",
+            "debugWebviews": true,
             // path to VSCode executable
             "args": [
                 //                "--disable-extensions",

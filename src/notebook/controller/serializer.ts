@@ -5,6 +5,8 @@ import { NotebookSerializer, CancellationToken, NotebookData, NotebookCellData, 
 import { v4 as uuidv4 } from "uuid";
 import { TextDecoder, TextEncoder } from "util";
 
+export const MIME = "application/hpcc.ojs+json";
+
 export interface WUOutput {
     configuration: string;
     wuid: string;
@@ -12,14 +14,14 @@ export interface WUOutput {
 }
 
 export interface OJSCell {
-    node: Readonly<ohq.Node>
+    nodeId: string | number;
     ojsSource: string;
 }
 
 export interface OJSOutput {
-    uri: string;
+    notebookId: string;
     folder: string;
-    notebook: ohq.Notebook;
+    files: ohq.File[], // notebook: ohq.Notebook;
     cell: OJSCell;
     otherCells: OJSCell[];
 }
@@ -28,11 +30,6 @@ function encode(str: string) {
     return str
         .split("`").join("\\`")
         ;
-}
-
-interface RawNotebookOutput {
-    mime: string;
-    data: string;
 }
 
 interface Meta {
@@ -103,7 +100,7 @@ export class Serializer implements NotebookSerializer {
 
     ojsCell(cell: NotebookCell): OJSCell {
         return {
-            node: this.node(cell),
+            nodeId: this.node(cell).id,
             ojsSource: this.ojsSource(cell)
         };
     }
@@ -125,9 +122,9 @@ export class Serializer implements NotebookSerializer {
         // }
 
         return {
-            uri: uri.toString(),
+            notebookId: cell.notebook.metadata.id,
             folder,
-            notebook: this._meta.notebook[cell.notebook.metadata.id],
+            files: this._meta.notebook[cell.notebook.metadata.id].files,
             cell: this.ojsCell(cell),
             otherCells: otherCells.map(c => this.ojsCell(c))
         };
@@ -161,7 +158,7 @@ export class Serializer implements NotebookSerializer {
                     mode = "markdown";
                     break;
                 case "ecl":
-                    kind = NotebookCellKind.Markup;
+                    kind = NotebookCellKind.Code;
                     mode = "ecl";
                     break;
                 case "js":
@@ -180,8 +177,18 @@ export class Serializer implements NotebookSerializer {
             this._meta.node[node.id] = node;
 
             const items: NotebookCellOutputItem[] = [];
-            node.outputs?.forEach(output => {
-                items.push(new NotebookCellOutputItem(new Uint8Array(Buffer.from(output.data, "base64")), output.mime));
+            node.outputs?.forEach(data => {
+                const ojsOutput: OJSOutput = {
+                    cell: {
+                        nodeId: node.id,
+                        ojsSource: Buffer.from(data, "base64").toString()
+                    },
+                    files: notebook.files,
+                    folder: "",
+                    notebookId: notebook.id,
+                    otherCells: []
+                };
+                items.push(NotebookCellOutputItem.json(ojsOutput, MIME));
             });
             retVal.outputs = [new NotebookCellOutput(items)];
             return retVal;
@@ -200,7 +207,7 @@ export class Serializer implements NotebookSerializer {
 
         for (const cell of data.cells) {
             let mode: string;
-            const outputs: RawNotebookOutput[] = [];
+            const outputs: string[] = [];
             switch (cell.kind) {
                 case NotebookCellKind.Markup:
                     mode = "md";
@@ -212,16 +219,20 @@ export class Serializer implements NotebookSerializer {
                             break;
                         case "ecl":
                             mode = "ecl";
-                            cell.outputs?.forEach(op => {
-                                op.items.forEach(item => {
-                                    outputs.push({ mime: item.mime, data: Buffer.from(item.data).toString("base64") });
-                                });
-                            });
                             break;
                         default:
                             mode = cell.languageId;
                     }
             }
+            cell.outputs?.forEach(op => {
+                op.items.forEach(item => {
+                    try {
+                        const json: OJSOutput = JSON.parse(Buffer.from(item.data).toString());
+                        json.otherCells = [];
+                        outputs.push(Buffer.from(json.cell.ojsSource).toString("base64"));
+                    } catch (e) { }
+                });
+            });
             const node = this._meta.node[cell.metadata?.id];
             const item: ohq.Node = {
                 id: cell.metadata?.id ?? uuidv4(),
@@ -229,7 +240,7 @@ export class Serializer implements NotebookSerializer {
                 ...node,
                 value: cell.value,
                 mode,
-                outputs: outputs
+                outputs
             };
             jsonNotebook.nodes.push(item);
         }
