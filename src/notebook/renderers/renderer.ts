@@ -1,9 +1,10 @@
 import type { CellFunc, compileFunc, ohq } from "@hpcc-js/observablehq-compiler";
+import type { ActivationFunction } from "vscode-notebook-renderer";
+import type { OJSOutput } from "../controller/serializer";
+
 import { compile } from "@hpcc-js/observablehq-compiler";
 import { Runtime } from "@observablehq/runtime";
 import { Inspector } from "@observablehq/inspector";
-import type { ActivationFunction } from "vscode-notebook-renderer";
-import type { OJSOutput } from "../controller/controller";
 
 interface Renderer {
     runtime: ohq.Runtime;
@@ -11,7 +12,7 @@ interface Renderer {
     main: ohq.Module;
 }
 
-interface Cell {
+interface OutputItem {
     text: string;
     element?: HTMLElement;
     renderer: Renderer;
@@ -20,8 +21,8 @@ interface Cell {
 export const activate: ActivationFunction = context => {
 
     const notebooks: { [uri: string]: Promise<Renderer> } = {};
-    const cells: { [id: string | number]: Cell } = {};
-    let vscodeId: { [id: string]: string | number } = {};
+    const cells: { [id: string | number]: OutputItem } = {};
+    let vscodeId: { [id: string]: (string | number)[] } = {};
 
     async function update(id: string | number, renderer: Renderer, text: string, element?: HTMLElement) {
 
@@ -96,7 +97,10 @@ export const activate: ActivationFunction = context => {
         data.folder = `https://file+.vscode-resource.vscode-cdn.net${data.folder}`;
         const renderer = await createRenderer(data);
         await update(data.cell.node.id, renderer, data.cell.ojsSource, element);
-        vscodeId[id] = data.cell.node.id;
+        if (!vscodeId[id]) {
+            vscodeId[id] = [];
+        }
+        vscodeId[id].push(data.cell.node.id);
 
         for (const cell of data.otherCells) {
             update(cell.node.id, renderer, cell.ojsSource);
@@ -118,7 +122,7 @@ export const activate: ActivationFunction = context => {
 
         async disposeOutputItem(id?: string) {
             if (id) {
-                disposeCell(vscodeId[id]);
+                vscodeId[id].forEach(disposeCell);
                 delete vscodeId[id];
             } else {
                 Object.keys(cells).map(disposeCell);

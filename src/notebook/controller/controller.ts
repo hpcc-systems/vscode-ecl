@@ -1,42 +1,17 @@
-import * as vscode from "vscode";
+import type { IOptions } from "@hpcc-js/comms";
+
 import * as path from "path";
-import { v4 as uuidv4 } from "uuid";
+import * as vscode from "vscode";
 import { parseCell } from "@hpcc-js/observable-shim";
-import { ohq } from "@hpcc-js/observablehq-compiler";
-import { reporter } from "../../telemetry/index";
 import { hashSum } from "@hpcc-js/util";
+import { reporter } from "../../telemetry/index";
 import { sessionManager } from "../../hpccplatform/session";
 import { deleteFile, writeFile } from "../../util/fs";
 import { launchConfiguration, LaunchRequestArguments } from "../../hpccplatform/launchConfig";
-import { IOptions } from "@hpcc-js/comms";
+import { OJSOutput, serializer, WUOutput } from "./serializer";
 
 function encodeID(id: string) {
     return id.split(" ").join("_");
-}
-
-function encode(str: string) {
-    return str
-        .split("`").join("\\`")
-        ;
-}
-
-export interface WUOutput {
-    configuration: string;
-    wuid: string;
-    results: { [id: string]: object };
-}
-
-export interface OJSCell {
-    node: ohq.Node
-    ojsSource: string;
-}
-
-export interface OJSOutput {
-    uri: string;
-    folder: string;
-    notebook: ohq.Notebook;
-    cell: OJSCell;
-    otherCells: OJSCell[]
 }
 
 export class Controller {
@@ -73,7 +48,6 @@ export class Controller {
                     break;
             }
         });
-
     }
 
     configToIOptions(config?: LaunchRequestArguments): IOptions {
@@ -126,13 +100,7 @@ export class Controller {
                     });
                 }));
 
-                const retVal: WUOutput = {
-                    configuration: sessionManager.session.name,
-                    wuid: wu.Wuid,
-                    results: outputs
-                };
-                cell.metadata.node.result = retVal;
-                console.log(cell.metadata.node.result);
+                const retVal: WUOutput = serializer.wuOutput(sessionManager.session.name, wu.Wuid, outputs);
                 return vscode.NotebookCellOutputItem.json(retVal, "application/hpcc.wu+json");
             }
         } catch (e) {
@@ -147,52 +115,14 @@ export class Controller {
         }
     }
 
-    ojsSource(cell: vscode.NotebookCell) {
-        switch (cell.document.languageId) {
-            case "ojs":
-                return cell.document.getText();
-            case "omd":
-                return `md\`${encode(cell.document.getText())}\``;
-            case "html":
-                return `htl.html\`${encode(cell.document.getText())}\``;
-            case "tex":
-                return `tex.block\`${encode(cell.document.getText())}\``;
-            case "sql":
-                return `${cell.metadata.node?.name} = db.sql\`${encode(cell.document.getText())}\`;`;
-            case "javascript":
-                return `{${cell.document.getText()}}`;
-            default:
-                return `${cell.document.languageId}\`${cell.document.getText()}\``;
-        }
-    }
-
-    private ojsCell(cell: vscode.NotebookCell): OJSCell {
-        return {
-            node: cell.metadata.node ?? { id: uuidv4(), mode: cell.document.languageId, value: cell.document.getText() },
-            ojsSource: this.ojsSource(cell)
-        };
-    }
-
-    private ojsOutput(cell: vscode.NotebookCell, uri: vscode.Uri, otherCells: vscode.NotebookCell[]): OJSOutput {
-        const folder = path.dirname(cell.document.uri.path);
-
-        return {
-            uri: uri.toString(),
-            folder,
-            notebook: cell.notebook.metadata.notebook,
-            cell: this.ojsCell(cell),
-            otherCells: otherCells.map(c => this.ojsCell(c))
-        };
-    }
-
     private executeOJS(cell: vscode.NotebookCell, notebook: vscode.NotebookDocument, otherCells: vscode.NotebookCell[]): vscode.NotebookCellOutputItem {
         try {
-            parseCell(this.ojsSource(cell));
+            parseCell(serializer.ojsSource(cell));
         } catch (e: any) {
             const msg = e?.message ?? "Unknown Error";
             return vscode.NotebookCellOutputItem.stderr(msg);
         }
-        const ojsOutput = this.ojsOutput(cell, notebook.uri, otherCells);
+        const ojsOutput = serializer.ojsOutput(cell, notebook.uri, otherCells);
         return vscode.NotebookCellOutputItem.json(ojsOutput, "application/hpcc.ojs+json");
     }
 
@@ -200,21 +130,39 @@ export class Controller {
         const execution = this._controller.createNotebookCellExecution(cell);
         execution.executionOrder = ++this._executionOrder;
         execution.start(Date.now());
-        let outputItem: vscode.NotebookCellOutputItem;
+        const outputItems: vscode.NotebookCellOutputItem[] = [];
         switch (cell.document.languageId) {
             case "ecl":
-                outputItem = await this.executeECL(cell);
+                const outputItem = await this.executeECL(cell);
+                // outputItems.push(outputItem);
+                try {
+                    const wuOutput = JSON.parse(Buffer.from(outputItem.data).toString());
+                    for (const key in wuOutput.results) {
+                        const ojsOutput: OJSOutput = {
+                            cell: {
+                                node: { id: `${key}`, value: `${key} = ${wuOutput.results[key]}`, mode: "js" },
+                                ojsSource: `${key} = ${wuOutput.results[key]}`
+                            },
+                            uri: notebook.uri.toString(),
+                            folder: "",
+                            notebook: { nodes: [], files: [] },
+                            otherCells: []
+                        };
+                        outputItems.push(vscode.NotebookCellOutputItem.json(ojsOutput, "application/hpcc.ojs+json"));
+                    }
+                } catch (e) { }
                 break;
             case "ojs":
             case "html":
             case "dot":
             case "mermaid":
             default:
-                outputItem = this.executeOJS(cell, notebook, otherCells);
+                outputItems.push(this.executeOJS(cell, notebook, otherCells));
                 break;
         }
-        await execution.replaceOutput([new vscode.NotebookCellOutput([outputItem])]);
-        execution.end(outputItem?.mime.indexOf(".stderr") < 0, Date.now());
+        // serializer.node(cell).output = outputItem;
+        await execution.replaceOutput([new vscode.NotebookCellOutput(outputItems)]);
+        execution.end(outputItems.every(op => op.mime.indexOf(".stderr") < 0), Date.now());
     }
 
     private async execute(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument): Promise<void> {

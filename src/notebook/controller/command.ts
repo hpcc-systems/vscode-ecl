@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { serializer } from "./serializer";
 
 export let commands: Commands;
 export class Commands {
@@ -13,18 +14,23 @@ export class Commands {
         vscode.commands.executeCommand("setContext", "isPrivate", !publicCell);
 
         vscode.commands.registerCommand("notebook.cell.public", (cell: vscode.NotebookCell) => {
-            cell.metadata["custom"]["public"] = false;
+            serializer.node(cell).shared = false;
             publicCell = false;
             vscode.commands.executeCommand("setContext", "isPublic", publicCell);
             vscode.commands.executeCommand("setContext", "isPrivate", !publicCell);
         });
 
         vscode.commands.registerCommand("notebook.cell.private", (cell: vscode.NotebookCell) => {
-            cell.metadata["custom"]["public"] = true;
+            serializer.node(cell).shared = true;
             publicCell = true;
             vscode.commands.executeCommand("setContext", "isPublic", publicCell);
             vscode.commands.executeCommand("setContext", "isPrivate", !publicCell);
         });
+
+        vscode.window.onDidChangeActiveTextEditor(e => {
+            vscode.commands.executeCommand("setContext", "cellLangId", e.document.languageId);
+        });
+
     }
 
     static attach(ctx: vscode.ExtensionContext): Commands {

@@ -86,7 +86,7 @@
     "copyfiles": "2.4.1",
     "css-loader": "6.7.1",
     "diff": "5.1.0",
-    "eslint": "8.24.0",
+    "eslint": "8.25.0",
     "mocha": "9.2.2",
     "npm-run-all": "4.1.5",
     "original-fs": "1.2.0",
@@ -98,7 +98,7 @@
     "rollup": "2.79.1",
     "rollup-plugin-postcss": "4.0.2",
     "rollup-plugin-sourcemaps": "0.6.3",
-    "source-map-loader": "4.0.0",
+    "source-map-loader": "4.0.1",
     "standard-version": "9.5.0",
     "stream-browserify": "3.0.0",
     "style-loader": "3.3.1",
@@ -562,8 +562,7 @@
         "icon": {
           "dark": "./resources/dark/eye.svg",
           "light": "./resources/light/eye.svg"
-        },
-        "enablement": "false"
+        }
       },
       {
         "command": "notebook.cell.private",
@@ -571,8 +570,7 @@
         "icon": {
           "dark": "./resources/dark/eye-closed.svg",
           "light": "./resources/light/eye-closed.svg"
-        },
-        "enablement": "false"
+        }
       }
     ],
     "menus": {
@@ -786,12 +784,12 @@
       "notebook/cell/title": [
         {
           "command": "notebook.cell.public",
-          "when": "notebookType == ecl-notebook && notebookCellType == code && isPublic",
+          "when": "notebookType == ecl-notebook && cellLangId == ecl && isPublic",
           "group": "inline@3"
         },
         {
           "command": "notebook.cell.private",
-          "when": "notebookType == ecl-notebook && notebookCellType == code && isPrivate",
+          "when": "notebookType == ecl-notebook && cellLangId == ecl && isPrivate",
           "group": "inline@3"
         }
       ]
