@@ -24,17 +24,13 @@ export class ECLStatusBar {
 
     monitor() {
         window.onDidChangeActiveTextEditor(event => {
-            if (event && window.activeTextEditor) {
-                if (!this._statusBarEntry) {
-                    return;
-                }
-                if (!window.activeTextEditor) {
-                    this._statusBarEntry.hide();
-                } else if (languages.match(ECL_MODE, window.activeTextEditor.document)) {
-                    this._statusBarEntry.show();
-                } else {
-                    this._statusBarEntry.hide();
-                }
+            if (!this._statusBarEntry) {
+                return;
+            }
+            if (event?.document?.languageId === "ecl") {
+                this._statusBarEntry.show();
+            } else {
+                this._statusBarEntry.hide();
             }
         }, null, this._ctx.subscriptions);
     }

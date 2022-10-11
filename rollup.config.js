@@ -1,51 +1,23 @@
 import alias from "@rollup/plugin-alias";
 import commonjs from "@rollup/plugin-commonjs";
-import nodeResolve from "@rollup/plugin-node-resolve";
 import sourcemaps from "rollup-plugin-sourcemaps";
+import nodeResolve from "@rollup/plugin-node-resolve";
 import postcss from "rollup-plugin-postcss";
 
-import pkg from "./package.json";
-
-const node_libs = [
-    "buffer",
-    "child_process",
-    "crypto",
-    "events",
-    "fs",
-    "http",
-    "https",
-    "net",
-    "os",
-    "path",
-    "process",
-    "stream",
-    "timers",
-    "url",
-    "zlib"
-];
-
-export const isVSCode = (id) => id === "vscode";
-export const isNode = (id) => node_libs.indexOf(id) >= 0;
-export const isHpcc = (id) => id.indexOf("@hpcc-js") === 0;
-
-export function external(id) {
-    return isVSCode(id) || isNode(id);
-}
-
-export function external2(id) {
-    return isVSCode(id) || isNode(id) || isHpcc(id);
-}
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pkg = require("./package.json");
 
 const plugins = [
     alias({
+        entries: [
+            { find: "@hpcc-js/common", replacement: "@hpcc-js/common" }
+        ]
     }),
     nodeResolve({
+        moduleDirectories: ["./node_modules", "../hpcc-js/node_modules"],
         preferBuiltins: true
     }),
-    commonjs({
-        namedExports: {
-        }
-    }),
+    commonjs(),
     sourcemaps(),
     postcss({
         extensions: [".css"],
@@ -54,33 +26,33 @@ const plugins = [
 ];
 
 export default [{
-    input: "lib-es6/extension",
-    external: external,
+    input: "./lib-es6/notebook/renderers/wuRenderer",
     output: [{
-        file: pkg.main,
-        format: "commonjs",
+        file: "dist/wuRenderer.js",
+        format: "es",
         sourcemap: true,
         name: pkg.name
     }],
-    plugins
+    treeshake: {
+        moduleSideEffects: (id, external) => {
+            if (id.indexOf(".css") >= 0) return true;
+            return false;
+        }
+    },
+    plugins: plugins
 }, {
-    input: "lib-es6/debugger",
-    external: external,
+    input: "./lib-es6/notebook/renderers/ojsRenderer",
     output: [{
-        file: "./dist/debugger.js",
-        format: "commonjs",
+        file: "dist/ojsRenderer.js",
+        format: "es",
         sourcemap: true,
         name: pkg.name
     }],
-    plugins
-}, {
-    input: "lib-es6/observable",
-    external: external2,
-    output: [{
-        file: "./dist/observable.js",
-        format: "amd",
-        sourcemap: true,
-        name: pkg.name
-    }],
-    plugins
+    treeshake: {
+        moduleSideEffects: (id, external) => {
+            if (id.indexOf(".css") >= 0) return true;
+            return false;
+        }
+    },
+    plugins: plugins
 }];

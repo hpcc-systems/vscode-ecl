@@ -1,4 +1,5 @@
-import * as vscode from "vscode";
+import { NotebookSerializer, CancellationToken, NotebookData, NotebookCellData, NotebookCellKind, NotebookCellOutput, NotebookCellOutputItem } from "vscode";
+import type { ohq } from "@hpcc-js/observablehq-compiler";
 import { TextDecoder, TextEncoder } from "util";
 
 interface RawNotebookOutput {
@@ -7,15 +8,16 @@ interface RawNotebookOutput {
 }
 
 interface RawNotebookCell {
-    kind: vscode.NotebookCellKind;
+    kind: NotebookCellKind;
     language: string;
     value: string;
+    metadata: { [key: string]: any };
     outputs: RawNotebookOutput[];
 }
 
-export class Serializer implements vscode.NotebookSerializer {
+export class Serializer implements NotebookSerializer {
 
-    deserializeNotebook(content: Uint8Array, _token: vscode.CancellationToken): vscode.NotebookData {
+    deserializeNotebook(content: Uint8Array, _token: CancellationToken): NotebookData {
         const contents = new TextDecoder("utf-8").decode(content);
 
         let raw: RawNotebookCell[];
@@ -26,18 +28,21 @@ export class Serializer implements vscode.NotebookSerializer {
         }
 
         const cells = raw.map(item => {
-            const retVal = new vscode.NotebookCellData(item.kind, item.value, item.language);
+            const retVal = new NotebookCellData(item.kind, item.value, item.language);
+            retVal.metadata = retVal.metadata || {};
+            retVal.metadata.custom = retVal.metadata.custom || {};
             if (item.outputs) {
-                const cellOutput = new vscode.NotebookCellOutput(item.outputs.map(item => new vscode.NotebookCellOutputItem(Uint8Array.from(item.data), item.mime)));
+                const cellOutput = new NotebookCellOutput(item.outputs.map(item => new NotebookCellOutputItem(Uint8Array.from(item.data), item.mime)));
                 retVal.outputs = [cellOutput];
             }
             return retVal;
         });
 
-        return new vscode.NotebookData(cells);
+        return new NotebookData(cells);
     }
 
-    serializeNotebook(data: vscode.NotebookData, _token: vscode.CancellationToken): Uint8Array {
+    serializeNotebook(data: NotebookData, _token: CancellationToken): Uint8Array {
+
         const contents: RawNotebookCell[] = [];
 
         for (const cell of data.cells) {
@@ -49,12 +54,15 @@ export class Serializer implements vscode.NotebookSerializer {
 
             });
 
-            contents.push({
+            const sCell = {
                 kind: cell.kind,
                 language: cell.languageId,
                 value: cell.value,
+                metadata: cell.metadata || {},
                 outputs
-            });
+            };
+            sCell.metadata.custom = sCell.metadata.custom || {};
+            contents.push(sCell);
         }
 
         return new TextEncoder().encode(JSON.stringify(contents));

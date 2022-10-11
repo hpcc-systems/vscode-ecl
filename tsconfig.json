@@ -1,15 +1,17 @@
 {
     "compilerOptions": {
         "rootDir": "./src",
-        "module": "es2020",
-        "moduleResolution": "node",
-        "target": "ES2019",
         "outDir": "lib-es6",
+        "target": "ES2021",
+        "module": "ES6",
+        "moduleResolution": "Node",
+        "declaration": true,
+        "declarationDir": "./types",
+        "sourceMap": true,
+        "declarationMap": true,
         "jsx": "react",
         "allowJs": true,
         "resolveJsonModule": true,
-        "sourceMap": true,
-        "noImplicitAny": false,
         "noEmitOnError": false,
         "noUnusedLocals": false,
         "strictNullChecks": false,
@@ -17,9 +19,10 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "skipLibCheck": true,
+        "noImplicitAny": false,
         "lib": [
-            "dom",
-            "ES2019"
+            "DOM",
+            "ES2021"
         ],
         "paths": {
             "@hpcc-js/*": [
