@@ -22,7 +22,7 @@ export const activate: ActivationFunction = context => {
 
     const notebooks: { [uri: string]: Promise<Renderer> } = {};
     const cells: { [id: string | number]: OutputItem } = {};
-    let vscodeId: { [id: string]: (string | number)[] } = {};
+    let vscodeId: { [id: string]: string | number } = {};
 
     async function update(id: string | number, renderer: Renderer, text: string, element?: HTMLElement) {
 
@@ -97,10 +97,7 @@ export const activate: ActivationFunction = context => {
         data.folder = `https://file+.vscode-resource.vscode-cdn.net${data.folder}`;
         const renderer = await createRenderer(data);
         await update(data.cell.node.id, renderer, data.cell.ojsSource, element);
-        if (!vscodeId[id]) {
-            vscodeId[id] = [];
-        }
-        vscodeId[id].push(data.cell.node.id);
+        vscodeId[id] = data.cell.node.id;
 
         for (const cell of data.otherCells) {
             update(cell.node.id, renderer, cell.ojsSource);
@@ -122,7 +119,7 @@ export const activate: ActivationFunction = context => {
 
         async disposeOutputItem(id?: string) {
             if (id) {
-                vscodeId[id].forEach(disposeCell);
+                disposeCell(vscodeId[id]);
                 delete vscodeId[id];
             } else {
                 Object.keys(cells).map(disposeCell);

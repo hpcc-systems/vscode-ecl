@@ -1,5 +1,5 @@
 import type { ActivationFunction, RendererContext } from "vscode-notebook-renderer";
-import type { WUOutput } from "../notebook/controller/serializer";
+import type { WUOutput } from "../controller/serializer";
 
 import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";

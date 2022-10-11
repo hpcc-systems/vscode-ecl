@@ -8,12 +8,7 @@
             "value": "123123;\r\n'Hello and Welcome!'",
             "mode": "ecl",
             "shared": true,
-            "outputs": [
-                {
-                    "mime": "application/hpcc.ojs+json",
-                    "data": "ewoJImNlbGwiOiB7CgkJIm5vZGUiOiB7CgkJCSJpZCI6ICJSZXN1bHRfMSIsCgkJCSJ2YWx1ZSI6ICJSZXN1bHRfMSA9IDEyMzEyMyIsCgkJCSJtb2RlIjogImpzIgoJCX0sCgkJIm9qc1NvdXJjZSI6ICJSZXN1bHRfMSA9IDEyMzEyMyIKCX0sCgkidXJpIjogImZpbGU6Ly8vZCUzQS9Vc2Vycy9nb3Jkb24vZ2l0L3ZzY29kZS1lY2wvZWNsLXNhbXBsZS9ub3RlYm9va3MvdGVzdC5lY2xuYiIsCgkiZm9sZGVyIjogIiIsCgkibm90ZWJvb2siOiB7CgkJIm5vZGVzIjogW10sCgkJImZpbGVzIjogW10KCX0sCgkib3RoZXJDZWxscyI6IFtdCn0="
-                }
-            ]
+            "outputs": []
         },
         {
             "id": "783f8ec0-0f25-4db2-944e-3fcb78222e6d",

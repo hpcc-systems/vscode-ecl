@@ -65,8 +65,9 @@ export class Controller {
         this._controller.dispose();
     }
 
-    private async executeECL(cell: vscode.NotebookCell): Promise<vscode.NotebookCellOutputItem> {
+    private async executeECL(cell: vscode.NotebookCell): Promise<vscode.NotebookCellOutputItem[]> {
         let tmpPath: string;
+        const outputItems: vscode.NotebookCellOutputItem[] = [];
         try {
             const basename = path.basename(cell.document.uri.fsPath, ".eclnb");
             const dirname = path.dirname(cell.document.uri.fsPath);
@@ -101,13 +102,32 @@ export class Controller {
                 }));
 
                 const retVal: WUOutput = serializer.wuOutput(sessionManager.session.name, wu.Wuid, outputs);
-                return vscode.NotebookCellOutputItem.json(retVal, "application/hpcc.wu+json");
+                outputItems.push(vscode.NotebookCellOutputItem.json(retVal, "application/hpcc.wu+json"));
+
+                // try {
+                //     const wuOutput = JSON.parse(Buffer.from(outputItem.data).toString());
+                //     for (const key in wuOutput.results) {
+                //         const ojsOutput: OJSOutput = {
+                //             cell: {
+                //                 node: { id: `${key}`, value: `${key} = ${wuOutput.results[key]}`, mode: "js" },
+                //                 ojsSource: `${key} = ${wuOutput.results[key]}`
+                //             },
+                //             uri: notebook.uri.toString(),
+                //             folder: "",
+                //             notebook: { nodes: [], files: [] },
+                //             otherCells: []
+                //         };
+                //         outputItems.push(vscode.NotebookCellOutputItem.json(ojsOutput, "application/hpcc.ojs+json"));
+                //     }
+                // } catch (e) { }
+
+                return outputItems;
             }
         } catch (e) {
             if (e.message.indexOf("0003:  Definition must contain EXPORT or SHARED value") >= 0) {
-                return vscode.NotebookCellOutputItem.text("...no action...");
+                return [vscode.NotebookCellOutputItem.text("...no action...")];
             }
-            return vscode.NotebookCellOutputItem.error(e);
+            return [vscode.NotebookCellOutputItem.error(e)];
         } finally {
             if (tmpPath) {
                 deleteFile(tmpPath);
@@ -133,24 +153,8 @@ export class Controller {
         const outputItems: vscode.NotebookCellOutputItem[] = [];
         switch (cell.document.languageId) {
             case "ecl":
-                const outputItem = await this.executeECL(cell);
-                // outputItems.push(outputItem);
-                try {
-                    const wuOutput = JSON.parse(Buffer.from(outputItem.data).toString());
-                    for (const key in wuOutput.results) {
-                        const ojsOutput: OJSOutput = {
-                            cell: {
-                                node: { id: `${key}`, value: `${key} = ${wuOutput.results[key]}`, mode: "js" },
-                                ojsSource: `${key} = ${wuOutput.results[key]}`
-                            },
-                            uri: notebook.uri.toString(),
-                            folder: "",
-                            notebook: { nodes: [], files: [] },
-                            otherCells: []
-                        };
-                        outputItems.push(vscode.NotebookCellOutputItem.json(ojsOutput, "application/hpcc.ojs+json"));
-                    }
-                } catch (e) { }
+                const eclOutputItems = await this.executeECL(cell);
+                eclOutputItems.forEach(eclOutputItem => outputItems.push(eclOutputItem));
                 break;
             case "ojs":
             case "html":
