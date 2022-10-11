@@ -5,7 +5,6 @@ import type { OJSOutput } from "../controller/serializer";
 import { compile } from "@hpcc-js/observablehq-compiler";
 import { Runtime } from "@observablehq/runtime";
 import { Inspector } from "@observablehq/inspector";
-import { Uri } from "vscode";
 
 interface Renderer {
     runtime: ohq.Runtime;

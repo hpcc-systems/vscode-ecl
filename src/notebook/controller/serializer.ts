@@ -185,7 +185,7 @@ export class Serializer implements NotebookSerializer {
                     },
                     files: notebook.files,
                     folder: "",
-                    notebookId: notebook.id,
+                    notebookId: notebook.id!,
                     otherCells: []
                 };
                 items.push(NotebookCellOutputItem.json(ojsOutput, MIME));
@@ -197,7 +197,7 @@ export class Serializer implements NotebookSerializer {
         const retVal = new NotebookData(cells);
         retVal.metadata = retVal.metadata ?? {};
         retVal.metadata.id = notebook.id;
-        this._meta.notebook[notebook.id] = notebook;
+        this._meta.notebook[notebook.id!] = notebook;
         return retVal;
     }
 
@@ -233,7 +233,7 @@ export class Serializer implements NotebookSerializer {
                     } catch (e) { }
                 });
             });
-            const node = this._meta.node[cell.metadata?.id];
+            const node: Partial<ohq.Node> = this._meta.node[cell.metadata?.id];
             const item: ohq.Node = {
                 id: cell.metadata?.id ?? uuidv4(),
                 name: "",

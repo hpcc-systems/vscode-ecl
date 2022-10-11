@@ -8,7 +8,7 @@ import { reporter } from "../../telemetry/index";
 import { sessionManager } from "../../hpccplatform/session";
 import { deleteFile, writeFile } from "../../util/fs";
 import { launchConfiguration, LaunchRequestArguments } from "../../hpccplatform/launchConfig";
-import { MIME, OJSOutput, serializer, WUOutput } from "./serializer";
+import { MIME, OJSOutput, serializer } from "./serializer";
 
 function encodeID(id: string) {
     return id.split(" ").join("_");
@@ -18,7 +18,7 @@ export class Controller {
     readonly controllerId = "ecl-kernal";
     readonly notebookType = "ecl-notebook";
     readonly label = "ECL Notebook";
-    readonly supportedLanguages = ["ecl", "ojs", "omd", "html", "svg", "dot", "mermaid", "tex"];
+    readonly supportedLanguages = ["ecl", "ojs", "omd", "html", "svg", "dot", "mermaid", "tex", "sql"];
 
     private readonly _controller: vscode.NotebookController;
     private _executionOrder = 0;
@@ -145,9 +145,14 @@ export class Controller {
                 eclOutputItems.forEach(eclOutputItem => outputItems.push(eclOutputItem));
                 break;
             case "ojs":
+            case "omd":
             case "html":
+            case "svg":
             case "dot":
             case "mermaid":
+            case "tex":
+            case "sql":
+            case "javascript":
             default:
                 outputItems.push(this.executeOJS(cell, notebook, otherCells));
                 break;
