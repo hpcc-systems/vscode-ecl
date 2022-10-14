@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.22.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.21.0...v2.22.0) (2022-10-14)
+
+
+### Features
+
+* Auto focus problems on syntax check ([7ce6c0f](https://github.com/hpcc-systems/vscode-ecl/commit/7ce6c0f6c93ac8faa55c17cc7b9a4857ae6dbc90)), closes [#325](https://github.com/hpcc-systems/vscode-ecl/issues/325)
+
 ## [2.21.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.20.1...v2.21.0) (2022-08-18)
 
 
