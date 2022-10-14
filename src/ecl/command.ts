@@ -49,12 +49,14 @@ export class ECLCommands {
 
     checkSyntax() {
         if (vscode.window.activeTextEditor) {
+            vscode.commands.executeCommand("workbench.panel.markers.view.focus");
             checkTextDocument(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
         }
     }
 
     checkSyntaxAll() {
         if (vscode.workspace.workspaceFolders) {
+            vscode.commands.executeCommand("workbench.panel.markers.view.focus");
             for (const wsf of vscode.workspace.workspaceFolders) {
                 checkWorkspace(wsf);
             }
