@@ -214,6 +214,10 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     get user() {
+        const creds = credentials[this.serverAddress];
+        if (creds?.verified) {
+            return creds.user;
+        }
         return config(this._lcID, "user", "vscode_user");
     }
 
