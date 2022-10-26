@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.0...v2.22.1) (2022-10-26)
+
+
+### Bug Fixes
+
+*  On demand User ID is not propagated correctly ([be12936](https://github.com/hpcc-systems/vscode-ecl/commit/be129362762c86fff942ecb33c4a45689ca16c76)), closes [#328](https://github.com/hpcc-systems/vscode-ecl/issues/328)
+
 ## [2.22.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.21.0...v2.22.0) (2022-10-14)
 
 
