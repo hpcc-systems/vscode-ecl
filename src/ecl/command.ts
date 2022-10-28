@@ -29,7 +29,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submit", this.submit));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.compile", this.compile));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
-        ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm));
+        ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", editor => this.searchTerm(editor)));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showWUDetails", this.showWUDetails));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal));
@@ -80,14 +80,31 @@ export class ECLCommands {
     }
 
     showLanguageReference() {
-        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse("https://hpccsystems.com/training/documentation/ecl-language-reference/html"));
+        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse("https://hpccsystems.com/wp-content/uploads/2022/_documents/ECLR_EN_US/index.html"));
     }
 
+    protected _html;
     searchTerm(editor: vscode.TextEditor) {
         if (vscode.window.activeTextEditor) {
             const range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
             const searchTerm = editor.document.getText(range);
-            vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`https://hpccsystems.com/training/documentation/ecl-language-reference/html/${searchTerm}.html`));
+            if (!this._html) {
+                this._html = fetch("https://hpccsystems.com/wp-content/uploads/2022/_documents/ECLR_EN_US/index.html")
+                    .then(response => response.text())
+                    .then(html => [...html.matchAll(/<a href="(.*)">([\s\S]*?)<\/a>/g)])
+                    .then(matches => matches.map(row => {
+                        const cleaned = row[2].split("\n").map(str => str.trim()).join(" ");
+                        return [row[0], row[1], cleaned];
+                    }))
+                    ;
+            }
+            this._html.then(async (links: [string, string, string][]) => {
+                const matches = links.filter(row => row[2].toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0);
+                const picked = await vscode.window.showQuickPick(matches.map(row => ({ label: row[2], row })), { canPickMany: false });
+                if (picked) {
+                    vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`https://hpccsystems.com/wp-content/uploads/2022/_documents/ECLR_EN_US/${picked.row[1]}`));
+                }
+            });
         }
     }
 
