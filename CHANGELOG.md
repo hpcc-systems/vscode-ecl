@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.21.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.2...v2.21.1) (2022-12-09)
+
+
+### Bug Fixes
+
+* **notebook:** Disable public/private button ([92fe461](https://github.com/hpcc-systems/vscode-ecl/commit/92fe461da615ddd9fc3e2270bf4de5671a1498c2))
+
 ### [2.22.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.1...v2.22.2) (2022-10-28)
 
 
