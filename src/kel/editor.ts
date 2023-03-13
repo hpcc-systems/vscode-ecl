@@ -22,7 +22,7 @@ export class Editor {
     }
 
     onOpenWatcher() {
-        vscode.workspace.onDidSaveTextDocument(doc => {
+        vscode.workspace.onDidOpenTextDocument(doc => {
             if (doc.languageId !== "kel" || this._ignoreNextSave.has(doc)) {
                 return;
             }
