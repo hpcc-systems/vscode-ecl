@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.3...v2.22.4) (2023-03-14)
+
 ### [2.22.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.21.1...v2.22.3) (2022-12-09)
 
 
