@@ -13,7 +13,7 @@ export class ECLEditor {
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
 
-        this.visibleCheckSyntax();
+        this.onOpenWatcher();
         this.onSaveWatcher();
         ctx.subscriptions.push(vscode.languages.registerCompletionItemProvider(ECL_MODE, this._completionProvider, ".", '\"'));
         ctx.subscriptions.push(vscode.languages.registerDefinitionProvider(ECL_MODE, this._definitionProvider));
@@ -26,10 +26,19 @@ export class ECLEditor {
         return eclEditor;
     }
 
-    visibleCheckSyntax() {
-        for (const te of vscode.window.visibleTextEditors) {
-            checkTextDocument(te.document, vscode.workspace.getConfiguration("ecl", te.document.uri));
-        }
+    onOpenWatcher() {
+        vscode.workspace.onDidOpenTextDocument((document) => {
+            if (document.languageId !== "ecl" || this._ignoreNextSave.has(document)) {
+                return;
+            }
+            const eclConfig = vscode.workspace.getConfiguration("ecl", document.uri);
+            const formatPromise: PromiseLike<void> = Promise.resolve();
+            if (!!eclConfig["syntaxCheckOnLoad"]) {
+                formatPromise.then(() => {
+                    checkTextDocument(document, eclConfig);
+                });
+            }
+        }, null, this._ctx.subscriptions);
     }
 
     private _ignoreNextSave = new WeakSet<vscode.TextDocument>();
