@@ -77,7 +77,7 @@
     "@vscode/debugadapter": "1.59.0",
     "@vscode/debugprotocol": "1.59.0",
     "@vscode/extension-telemetry": "0.6.2",
-    "@vscode/vsce": "2.18.0",
+    "@vscode/vsce": "2.19.0",
     "acorn-walk": "8.2.0",
     "adm-zip": "0.5.10",
     "antlr4": "4.11.0",
