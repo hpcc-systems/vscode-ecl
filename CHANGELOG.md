@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.5](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.4...v2.22.5) (2023-05-26)
+
+
+### Bug Fixes
+
+*  Mismatch between types and engine ([81df48b](https://github.com/hpcc-systems/vscode-ecl/commit/81df48b27120337e980cb22e1eebdbe3231ce3ee))
+
 ### [2.22.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.3...v2.22.4) (2023-03-14)
 
 ### [2.22.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.21.1...v2.22.3) (2022-12-09)
