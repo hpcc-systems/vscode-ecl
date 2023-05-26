@@ -120,7 +120,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.70.0"
+    "vscode": "^1.76.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
