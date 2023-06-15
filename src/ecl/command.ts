@@ -27,6 +27,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxAll", this.checkSyntaxAll));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxClear", this.checkSyntaxClear));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submit", this.submit));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submitNoArchive", this.submitNoArchive));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.compile", this.compile));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
         ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", editor => this.searchTerm(editor)));
@@ -69,13 +70,19 @@ export class ECLCommands {
 
     submit() {
         if (vscode.window.activeTextEditor) {
-            sessionManager.submit(vscode.window.activeTextEditor.document);
+            sessionManager.submit(vscode.window.activeTextEditor.document, "submit");
+        }
+    }
+
+    submitNoArchive() {
+        if (vscode.window.activeTextEditor) {
+            sessionManager.submit(vscode.window.activeTextEditor.document, "submitNoArchive");
         }
     }
 
     compile() {
         if (vscode.window.activeTextEditor) {
-            sessionManager.submit(vscode.window.activeTextEditor.document, true);
+            sessionManager.submit(vscode.window.activeTextEditor.document, "compile");
         }
     }
 

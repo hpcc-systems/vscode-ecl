@@ -22,7 +22,7 @@ const logger = scopedLogger("launchConfig.ts");
 const PROXY_WARNING = localize("User setting 'http.proxySupport' is set to 'override'.\nThis will prevent ECL from targetting 'Trustwave' signed sites and will also prevent 'rejectUnauthorized: false' from working.\nSetting this to 'fallback' will resolve these issues.");
 const SET_FALLBACK = localize("Set to 'fallback'");
 
-function xmlFile(programPath: string): Thenable<{ err: EclccErrors, content: string }> {
+function rawFile(programPath: string): Thenable<{ err: EclccErrors, content: string }> {
     return readFile(programPath).then(content => {
         return { err: new EclccErrors("", []), content };
     });
@@ -129,6 +129,7 @@ function action(mode: LaunchMode) {
         case "debug":
             return WUUpdate.Action.Debug;
         case "submit":
+        case "submitNoArchive":
         default:
             return WUUpdate.Action.Run;
     }
@@ -661,9 +662,9 @@ export class LaunchConfig implements LaunchRequestArguments {
                 progress.report({ increment: 10, message: localize("Creating Archive") });
                 logger.info(`Client Tools:  ${clientTools.eclccPath}.${os.EOL}`);
                 logger.info(`Generating archive.${os.EOL}`);
-                if (pathParts.ext.toLowerCase() === ".xml") {
-                    reporter.sendTelemetryEvent("launchConfig.submit.xmlFile");
-                    return xmlFile(filePath);
+                if (mode === "submitNoArchive" || pathParts.ext.toLowerCase() === ".xml") {
+                    reporter.sendTelemetryEvent("launchConfig.submit.rawFile");
+                    return rawFile(filePath);
                 } else {
                     reporter.sendTelemetryEvent("launchConfig.submit.createArchive");
                     return clientTools.createArchive(filePath);

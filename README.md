@@ -11,6 +11,9 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.23.x
+* Added `ecl.submitNoArchive` command, submits raw content of editor to server without creating an archive first.
+
 ### v2.19.x
 * Added `ecl.saveOnSyntaxCheck` and `ecl.saveOnSubmit` option to ECL Settings (defaulting to off to match ECL IDE behaviour).
 
@@ -155,7 +158,7 @@ The following ECL specific commands are available.  Note:  These commands will *
 |![Submit](resources/light-png/play.png) Submit | F5 | Submit ECL |
 |![Compile](resources/light-png/build.png) Compile | | Compile ECL |
 |![Syntax Check](resources/light-png/check.png) Syntax Check | F7 | Save and check syntax of current file |
-| Sign ECL | | Digitally sign ECL file |
+| Submit (No Archive) | ctrl/cmd+F5 | Submit raw ECL without creating an archive |
 | Verify ECL Signature | | Verify ECL Digital Signature |
 | Language Reference Lookup | shift+F1 | For the currently selected text, search the online ECL language reference |
 | Insert Record Definition | ctrl/cmd+I R | Fetches record definition for given logical file |
@@ -268,8 +271,9 @@ Submitting ECL using VS-Code requires specifying the target environment within t
   "protocol": "http",
   "serverAddress": "localhost",
   "port": 8010,
-  "path": "",
   "targetCluster": "hthor",
+  "path": "",
+  "abortSubmitOnError": true,
   "rejectUnauthorized": true,
   "resultLimit": 100,
   "timeoutSecs": 60,

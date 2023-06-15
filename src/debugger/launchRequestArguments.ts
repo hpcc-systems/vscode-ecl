@@ -2,7 +2,7 @@ import { DebugProtocol } from "@vscode/debugprotocol";
 import { locateAllClientTools as commsLocateAllClientTools } from "@hpcc-js/comms";
 
 export type LaunchProtocol = "http" | "https";
-export type LaunchMode = "submit" | "compile" | "publish" | "debug";
+export type LaunchMode = "submit" | "submitNoArchive" | "compile" | "publish" | "debug";
 
 export enum LaunchConfigState {
     Unknown,

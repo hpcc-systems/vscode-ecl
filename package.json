@@ -227,6 +227,17 @@
         "enablement": "ecl.connected"
       },
       {
+        "command": "ecl.submitNoArchive",
+        "category": "ECL",
+        "title": "%Submit (No Archive)%",
+        "description": "%Submit Raw ECL to HPCC Platform%",
+        "icon": {
+          "light": "resources/light/play.svg",
+          "dark": "resources/dark/play.svg"
+        },
+        "enablement": "ecl.connected"
+      },
+      {
         "command": "ecl.compile",
         "category": "ECL",
         "title": "%Compile%",
@@ -616,6 +627,11 @@
         },
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "ecl.submitNoArchive",
+          "group": "navigation@900"
+        },
+        {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.compile",
           "group": "navigation@910"
         },
@@ -832,6 +848,12 @@
         "command": "ecl.submit",
         "key": "f5",
         "mac": "f5",
+        "when": "editorTextFocus && editorLangId == ecl"
+      },
+      {
+        "command": "ecl.submitNoArchive",
+        "key": "ctrl+f5",
+        "mac": "cmd+f5",
         "when": "editorTextFocus && editorLangId == ecl"
       },
       {
@@ -1248,6 +1270,7 @@
             "port": 8010,
             "path": "",
             "targetCluster": "hthor",
+            "abortSubmitOnError": true,
             "rejectUnauthorized": true,
             "resultLimit": 100,
             "timeoutSecs": 60,
@@ -1268,6 +1291,7 @@
               "port": 8010,
               "path": "",
               "targetCluster": "hthor",
+              "abortSubmitOnError": true,
               "rejectUnauthorized": true,
               "resultLimit": 100,
               "timeoutSecs": 60,
@@ -1287,6 +1311,7 @@
               "port": 18010,
               "path": "",
               "targetCluster": "hthor",
+              "abortSubmitOnError": true,
               "rejectUnauthorized": false,
               "resultLimit": 100,
               "timeoutSecs": 60,
