@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { WUQuery, Workunit, ClientTools } from "@hpcc-js/comms";
 import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration, IExecFile } from "./launchConfig";
-import { LaunchConfigState } from "../debugger/launchRequestArguments";
+import { LaunchConfigState, LaunchMode } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
 import { ECL_MODE } from "../mode";
 import { eclTempFile } from "../util/fs";
@@ -77,8 +77,8 @@ class Session {
         return this._launchConfig.checkSyntax(uri);
     }
 
-    submit(uri: vscode.Uri, compileOnly: boolean = false) {
-        return this._launchConfig.submit(uri, this.targetCluster, compileOnly ? "compile" : "submit");
+    submit(uri: vscode.Uri, mode: LaunchMode = "submit") {
+        return this._launchConfig.submit(uri, this.targetCluster, mode);
     }
 
     fetchRecordDef(lf: string) {
@@ -309,18 +309,18 @@ class SessionManager {
         });
     }
 
-    nbSubmitURI(uri: vscode.Uri, compileOnly: boolean = false): Promise<Workunit> | undefined {
+    nbSubmitURI(uri: vscode.Uri, mode: LaunchMode = "submit"): Promise<Workunit> | undefined {
         if (this.session) {
-            return this.session.submit(uri, compileOnly).then(wu => {
+            return this.session.submit(uri, mode).then(wu => {
                 this._onDidCreateWorkunit.fire({ source: "notebook", workunit: wu });
                 return wu;
             });
         }
     }
 
-    submitURI(uri: vscode.Uri, compileOnly: boolean = false) {
+    submitURI(uri: vscode.Uri, mode: LaunchMode = "submit") {
         if (this.session) {
-            return this.session.submit(uri, compileOnly).then(wu => {
+            return this.session.submit(uri, mode).then(wu => {
                 this._onDidCreateWorkunit.fire({ source: "editor", workunit: wu });
                 return wu;
             }).catch(e => {
@@ -329,7 +329,7 @@ class SessionManager {
         }
     }
 
-    async submit(doc: vscode.TextDocument, compileOnly: boolean = false) {
+    async submit(doc: vscode.TextDocument, mode: LaunchMode = "submit") {
         if (this.session) {
             const eclConfig = vscode.workspace.getConfiguration("ecl");
             if (eclConfig.get("saveOnSubmit", false)) {
@@ -337,7 +337,7 @@ class SessionManager {
             }
             const tmpFile = await eclTempFile(doc);
             try {
-                await this.submitURI(tmpFile.uri, compileOnly);
+                await this.submitURI(tmpFile.uri, mode);
             } finally {
                 tmpFile.dispose();
             }
