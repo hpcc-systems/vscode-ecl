@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import { Pivot, PivotItem, IPivotStyles, IStyleSet, DetailsList, IColumn, DetailsListLayoutMode, SelectionMode } from "@fluentui/react";
+import { Pivot, PivotItem, IPivotStyles, DetailsList, IColumn, DetailsListLayoutMode, SelectionMode, IStyleFunctionOrObject, IPivotStyleProps } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
 import { ThemeProvider } from "../../eclwatch/themeGenerator";
 import { WUOutput } from "../controller/serializer";
@@ -13,7 +13,7 @@ const foreColour = bodyStyles.getPropertyValue("--vscode-input-foreground") || "
 const themeProvider = new ThemeProvider(foreColour, backColor);
 themeProvider.loadThemeForColor(bodyStyles.getPropertyValue("--vscode-progressBar-background") || "navy");
 
-const pivotStyles: Partial<IStyleSet<IPivotStyles>> = {
+const pivotStyles: IStyleFunctionOrObject<IPivotStyleProps, IPivotStyles> = {
     link: {
         fontSize: bodyStyles.getPropertyValue("--vscode-font-size"),
         lineHeight: 32,

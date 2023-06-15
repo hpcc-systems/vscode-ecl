@@ -11,7 +11,9 @@
 	},
 	"editor.insertSpaces": true,
 	"ecl.debugLogging": true,
-	"ecl.launchConfiguration": "not found",
-	"ecl.targetCluster": {},
+	"ecl.launchConfiguration": "localhost",
+	"ecl.targetCluster": {
+		"localhost": "thor"
+	},
 	"svg.preview.background": "dark-transparent"
 }

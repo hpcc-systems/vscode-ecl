@@ -11,6 +11,21 @@
     ],
     "configurations": [
         {
+            "name": "localhost",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "http",
+            "serverAddress": "localhost",
+            "port": 8010,
+            "path": "",
+            "targetCluster": "hthor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "vscode_user",
+            "password": ""
+        },
+        {
             "name": "Launch Extension",
             "type": "extensionHost",
             "request": "launch",

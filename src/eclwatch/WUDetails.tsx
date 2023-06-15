@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Pivot, PivotItem, IPivotStyles, Spinner, ILabelStyles, IStyleSet, initializeIcons, MessageBar, MessageBarType } from "@fluentui/react";
+import { Pivot, PivotItem, IPivotStyles, Spinner, initializeIcons, MessageBar, MessageBarType, IStyleFunctionOrObject, IPivotStyleProps } from "@fluentui/react";
 import { Workunit, WUInfo, Result } from "@hpcc-js/comms";
 import { WUIssues, WUResult } from "./WUResult";
 import { HolyGrail } from "./HolyGrail";
@@ -8,7 +8,7 @@ initializeIcons();
 
 const bodyStyles = window.getComputedStyle(document.body);
 
-const pivotStyles: Partial<IStyleSet<IPivotStyles>> = {
+const pivotStyles: IStyleFunctionOrObject<IPivotStyleProps, IPivotStyles> = {
     link: {
         fontSize: bodyStyles.getPropertyValue("--vscode-font-size"),
         lineHeight: 32,
@@ -21,7 +21,7 @@ const pivotStyles: Partial<IStyleSet<IPivotStyles>> = {
     },
 };
 
-const labelStyles: Partial<IStyleSet<ILabelStyles>> = {
+const labelStyles: IStyleFunctionOrObject<IPivotStyleProps, IPivotStyles> = {
     root: { marginTop: 10 },
 };
 
