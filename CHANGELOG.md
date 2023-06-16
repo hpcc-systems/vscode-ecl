@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.5...v2.23.0) (2023-06-16)
+
+
+### Features
+
+*  Add ecl.submitNoArchive command ([4f3620c](https://github.com/hpcc-systems/vscode-ecl/commit/4f3620c7a8069ff8e6e84f9545eac796337baa68)), closes [#345](https://github.com/hpcc-systems/vscode-ecl/issues/345)
+*  Added pingInterval setting ([1d675be](https://github.com/hpcc-systems/vscode-ecl/commit/1d675bef30b23db3500d398f9adc8e190447300f))
+* Point ECL help to new website ([99c173a](https://github.com/hpcc-systems/vscode-ecl/commit/99c173a2ba91ebd587d9e302a44b3bfeec01fe4d))
+
 ### [2.22.5](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.4...v2.22.5) (2023-05-26)
 
 
