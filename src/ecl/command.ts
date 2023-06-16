@@ -23,22 +23,23 @@ export class ECLCommands {
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", this.checkSyntax));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxAll", this.checkSyntaxAll));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxClear", this.checkSyntaxClear));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submit", this.submit));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submitNoArchive", this.submitNoArchive));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.compile", this.compile));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference));
-        ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", editor => this.searchTerm(editor)));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showWUDetails", this.showWUDetails));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", this.checkSyntax, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxAll", this.checkSyntaxAll, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxClear", this.checkSyntaxClear, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submit", this.submit, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submitNoArchive", this.submitNoArchive, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.compile", this.compile, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showStandardLibraryReference", this.showStandardLibraryReference, this));
+        ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showWUDetails", this.showWUDetails, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.importModFile", this.importModFile));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.copyAsEclID", this.copyAsEclID));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.importModFile", this.importModFile, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.copyAsEclID", this.copyAsEclID, this));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -86,30 +87,43 @@ export class ECLCommands {
         }
     }
 
+    private ECLR_EN_US = "https://hpccsystems.com/wp-content/uploads/_documents/ECLR_EN_US";
     showLanguageReference() {
-        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse("https://hpccsystems.com/wp-content/uploads/2022/_documents/ECLR_EN_US/index.html"));
+        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`${this.ECLR_EN_US}/index.html`));
     }
 
-    protected _html;
+    private SLR_EN_US = "https://hpccsystems.com/wp-content/uploads/_documents/SLR_EN_US";
+    showStandardLibraryReference() {
+        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`${this.SLR_EN_US}/index.html`));
+    }
+
+    async parseIndex(url: string): Promise<[string, string, string, string][]> {
+        return fetch(`${url}/index.html`)
+            .then(response => response.text())
+            .then(html => [...html.matchAll(/<a\s+href="([^"]+)">([^<]+)<\/a>/g)])
+            .then(matches => matches.map(row => {
+                const cleaned = row[2].split("\n").map(str => str.trim()).join(" ");
+                return [row[0], row[1], cleaned, url];
+            }));
+    }
+
+    protected _html: Promise<[string, string, string, string][]>;
     searchTerm(editor: vscode.TextEditor) {
         if (vscode.window.activeTextEditor) {
             const range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
             const searchTerm = editor.document.getText(range);
             if (!this._html) {
-                this._html = fetch("https://hpccsystems.com/wp-content/uploads/2022/_documents/ECLR_EN_US/index.html")
-                    .then(response => response.text())
-                    .then(html => [...html.matchAll(/<a href="(.*)">([\s\S]*?)<\/a>/g)])
-                    .then(matches => matches.map(row => {
-                        const cleaned = row[2].split("\n").map(str => str.trim()).join(" ");
-                        return [row[0], row[1], cleaned];
-                    }))
-                    ;
+                const langRef = this.parseIndex(this.ECLR_EN_US);
+                const stdLib = this.parseIndex(this.SLR_EN_US);
+                this._html = Promise.all([langRef, stdLib]).then(([langRef, stdLib]) => {
+                    return langRef.concat(stdLib);
+                });
             }
-            this._html.then(async (links: [string, string, string][]) => {
+            this._html.then(async (links: [string, string, string, string][]) => {
                 const matches = links.filter(row => row[2].toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0);
                 const picked = await vscode.window.showQuickPick(matches.map(row => ({ label: row[2], row })), { canPickMany: false });
                 if (picked) {
-                    vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`https://hpccsystems.com/wp-content/uploads/2022/_documents/ECLR_EN_US/${picked.row[1]}`));
+                    vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`${picked.row[3]}/${picked.row[1]}`));
                 }
             });
         }

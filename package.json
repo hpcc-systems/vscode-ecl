@@ -297,6 +297,12 @@
         "description": "%Opens the ECL language reference website in external browser%"
       },
       {
+        "command": "ecl.showStandardLibraryReference",
+        "category": "ECL",
+        "title": "%Standard Library Website%",
+        "description": "%Opens the ECL Standard Library website in external browser%"
+      },
+      {
         "command": "ecl.searchTerm",
         "category": "ECL",
         "title": "%Language Reference Lookup%",
