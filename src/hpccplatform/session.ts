@@ -222,6 +222,10 @@ class SessionManager {
                 const targetCluster = eclConfig.get<object>("targetCluster")[launchConfig];
                 this.switchTo(launchConfig, targetCluster);
             }
+
+            if (e.affectsConfiguration("ecl.pingInterval")) {
+                this.monitorConnection();
+            }
         });
 
         const eclConfig = vscode.workspace.getConfiguration("ecl");
@@ -351,6 +355,20 @@ class SessionManager {
     }
 
     protected _monitor = {};
+    monitorConnection() {
+        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        const pingInterval = eclConfig.get("pingInterval", 5);
+        for (const key in this._monitor) {
+            clearInterval(this._monitor[key]);
+        }
+        this.updateConnection();
+        if (!isNaN(pingInterval) && pingInterval > 0) {
+            this._monitor[this.session.id] = setInterval(() => {
+                this.updateConnection();
+            }, pingInterval * 1000);
+        }
+    }
+
     switchTo(id?: string, targetCluster?: string) {
         if (!this.session || this.session.id !== id) {
             vscode.commands.executeCommand("setContext", "ecl.connected", false);
@@ -367,15 +385,7 @@ class SessionManager {
         }
         this.updateSettings();
         this.refreshStatusBar();
-        if (!this._monitor[this.session.id]) {
-            for (const key in this._monitor) {
-                clearInterval(this._monitor[key]);
-            }
-            this.updateConnection();
-            this._monitor[this.session.id] = setInterval(() => {
-                this.updateConnection();
-            }, 5000);
-        }
+        this.monitorConnection();
     }
 
     updateSettings() {

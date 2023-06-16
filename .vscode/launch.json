@@ -36,8 +36,7 @@
                 "${workspaceRoot}\\ecl-sample"
             ],
             "outFiles": [
-                "${workspaceRoot}/src/**/*.js",
-                "${workspaceRoot}/src/notebook-renderers/**/*.js"
+                "${workspaceRoot}/dist/**/*.js"
             ]
         },
         {
@@ -45,15 +44,13 @@
             "type": "extensionHost",
             "request": "launch",
             "debugWebviews": true,
-            // path to VSCode executable
+            "runtimeExecutable": "${execPath}",
             "args": [
-                //                "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceRoot}",
                 "${workspaceRoot}\\ecl-sample"
             ],
             "outFiles": [
-                "${workspaceRoot}/src/**/*.js",
-                "${workspaceRoot}/src/notebook-renderers/**/*.js"
+                "${workspaceRoot}/dist/**/*.js"
             ]
         },
         {

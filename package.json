@@ -1064,6 +1064,12 @@
           "default": false,
           "description": "%Force global 'proxySupport' to 'fallback'%"
         },
+        "ecl.pingInterval": {
+          "type": "number",
+          "scope": "resource",
+          "default": 5,
+          "description": "%Ping interval (secs, -1 to disable)%"
+        },
         "dashy.libraryLocation": {
           "type": "string",
           "scope": "resource",

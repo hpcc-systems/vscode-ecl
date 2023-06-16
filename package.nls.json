@@ -62,6 +62,7 @@
     "Override eclcc auto detection": "Override eclcc auto detection",
     "Pin launch configuration": "Pin launch configuration",
     "Pin launch configuration to current document": "Pin launch configuration to current document",
+    "Ping interval (secs, -1 to disable)": "Ping interval (secs, -1 to disable)",
     "Pinned launch configurations": "Pinned launch configurations",
     "Private": "Private",
     "Public": "Public",
