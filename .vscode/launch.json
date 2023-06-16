@@ -36,7 +36,7 @@
                 "${workspaceRoot}\\ecl-sample"
             ],
             "outFiles": [
-                "${workspaceRoot}/dist/**/*.js"
+                "${workspaceFolder}/dist/**/*.js"
             ]
         },
         {
@@ -50,7 +50,7 @@
                 "${workspaceRoot}\\ecl-sample"
             ],
             "outFiles": [
-                "${workspaceRoot}/dist/**/*.js"
+                "${workspaceFolder}/dist/**/*.js"
             ]
         },
         {

@@ -14,6 +14,7 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 ### v2.23.x
 * Added `ecl.submitNoArchive` command, submits raw content of editor to server without creating an archive first.
 * Added `ecl.pingInterval` setting, allows user to change or disable the "server alive" ping.
+* Updated shift+F1 help to use new HPCC Systems website and include the Standard Library.
 
 ### v2.19.x
 * Added `ecl.saveOnSyntaxCheck` and `ecl.saveOnSubmit` option to ECL Settings (defaulting to off to match ECL IDE behaviour).
