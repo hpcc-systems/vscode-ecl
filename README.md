@@ -13,6 +13,7 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ### v2.23.x
 * Added `ecl.submitNoArchive` command, submits raw content of editor to server without creating an archive first.
+* Added `ecl.pingInterval` setting, allows user to change or disable the "server alive" ping.
 
 ### v2.19.x
 * Added `ecl.saveOnSyntaxCheck` and `ecl.saveOnSubmit` option to ECL Settings (defaulting to off to match ECL IDE behaviour).
@@ -256,6 +257,9 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
   // Save file prior to submission
   "ecl.saveOnSubmit": false
+
+  // Ping interval (secs, -1 to disable)
+  "ecl.pingInterval": 5
 ```
 
 #### ECL Launch Settings

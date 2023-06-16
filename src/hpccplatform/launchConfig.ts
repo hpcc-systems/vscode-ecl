@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Ping, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, Service, WorkunitsService } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Ping, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
