@@ -5,6 +5,7 @@ export interface State {
     path: string;
     user: string;
     password: string;
+    rejectUnauthorized: boolean;
     wuid: string;
     result?: number;
 }

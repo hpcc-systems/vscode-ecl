@@ -76,6 +76,7 @@ function render(state: State) {
         vscode.setState(state);
         ReactDOM.render(<WUDetails
             baseUrl={join(`${state.protocol}://${state.serverAddress}:${state.port}`, state.path)}
+            rejectUnauthorized={state.rejectUnauthorized}
             wuid={state.wuid}
             user={state.user}
             password={state.password}
@@ -97,6 +98,7 @@ if (document.location.protocol === "file:") {
         path: "",
         user: "gosmith",
         password: "",
+        rejectUnauthorized: false,
         wuid: "W20210304-144316"
     });
 }

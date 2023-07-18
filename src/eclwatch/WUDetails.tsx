@@ -35,6 +35,7 @@ export interface WUDetailsProps {
     password: string;
     wuid: string;
     sequence?: number;
+    rejectUnauthorized: boolean;
 }
 
 export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
@@ -42,7 +43,8 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
     user,
     password,
     wuid,
-    sequence
+    sequence,
+    rejectUnauthorized
 }) => {
 
     const pivotRef = React.useRef<HTMLDivElement>(null);
@@ -78,7 +80,7 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
         if (wuid) {
             setSpinnerMessage("Loading...");
             update(false, [], []);
-            const wu = Workunit.attach({ baseUrl, userID: user, password }, wuid);
+            const wu = Workunit.attach({ baseUrl, userID: user, password, rejectUnauthorized }, wuid);
             wu.refresh().then(() => {
                 if (!canceled) {
                     if (wu.isComplete()) {
