@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.0...v2.23.1) (2023-07-18)
+
+
+### Bug Fixes
+
+*  Honour rejectUnauthorized in WUDetails ([48c3f46](https://github.com/hpcc-systems/vscode-ecl/commit/48c3f46c07277a4a14f1fb5679f449b90a3bdaa2))
+
 ## [2.23.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.22.5...v2.23.0) (2023-06-16)
 
 
