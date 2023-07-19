@@ -217,13 +217,9 @@ export class WUResultTable extends Common {
         this.renderHtml(false);
     }
 
-    @publish(undefined, "string", "URL to WsWorkunits")
-    baseUrl: { (): string, (_: string): WUResultTable };
-    @publish(undefined, "string", "Workunit ID")
-    user: { (): string, (_: string): WUResultTable };
-    @publish(undefined, "string", "User ID")
-    password: { (): string, (_: string): WUResultTable };
-    @publish(undefined, "string", "Password")
+    @publish(undefined, "object", "IOptions")
+    opts: { (): IOptions, (_: IOptions): WUResultTable };
+    @publish(undefined, "string", "Wuid")
     wuid: { (): string, (_: string): WUResultTable };
     @publish(undefined, "string", "Result Name")
     resultName: { (): string, (_: string): WUResultTable };
@@ -235,17 +231,12 @@ export class WUResultTable extends Common {
     logicalFile: { (): string, (_: string): WUResultTable };
 
     calcResult(): Result | null {
-        const opts: IOptions = {
-            baseUrl: this.baseUrl(),
-            userID: this.user(),
-            password: this.password()
-        };
         if (this.wuid() && this.resultName()) {
-            return Result.attach(opts, this.wuid(), this.resultName());
+            return Result.attach(this.opts(), this.wuid(), this.resultName());
         } else if (this.wuid() && this.sequence() !== undefined) {
-            return Result.attach(opts, this.wuid(), this.sequence());
+            return Result.attach(this.opts(), this.wuid(), this.sequence());
         } else if (this.logicalFile()) {
-            return Result.attachLogicalFile(opts, this.cluster(), this.logicalFile());
+            return Result.attachLogicalFile(this.opts(), this.cluster(), this.logicalFile());
         }
         return null;
     }
@@ -311,7 +302,7 @@ export class WUResultTable extends Common {
     update(domNode, element) {
         super.update(domNode, element);
         const hash = hashSum({
-            wsWorkunitsUrl: this.baseUrl(),
+            opts: hashSum(this.opts()),
             wuid: this.wuid(),
             resultName: this.resultName(),
             sequence: this.sequence(),
@@ -402,17 +393,13 @@ export class WUResultTable extends Common {
 WUResultTable.prototype._class += " eclwatch_WUResultTable";
 
 interface WUResultProps {
-    baseUrl: string;
-    user: string;
-    password: string;
+    opts: IOptions;
     wuid: string;
     sequence: number;
 }
 
 export const WUResult: React.FunctionComponent<WUResultProps> = ({
-    baseUrl,
-    user,
-    password,
+    opts,
     wuid,
     sequence,
 }) => {
@@ -422,9 +409,7 @@ export const WUResult: React.FunctionComponent<WUResultProps> = ({
     ).current;
 
     table
-        .baseUrl(baseUrl)
-        .user(user)
-        .password(password)
+        .opts(opts)
         .wuid(wuid)
         .sequence(sequence)
         ;

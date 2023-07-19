@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Pivot, PivotItem, IPivotStyles, Spinner, initializeIcons, MessageBar, MessageBarType, IStyleFunctionOrObject, IPivotStyleProps } from "@fluentui/react";
-import { Workunit, WUInfo, Result } from "@hpcc-js/comms";
+import { Workunit, WUInfo, Result, IOptions } from "@hpcc-js/comms";
 import { WUIssues, WUResult } from "./WUResult";
 import { HolyGrail } from "./HolyGrail";
 
@@ -30,21 +30,15 @@ const getTabId = (itemKey: string) => {
 };
 
 export interface WUDetailsProps {
-    baseUrl: string;
-    user: string;
-    password: string;
+    opts: IOptions;
     wuid: string;
     sequence?: number;
-    rejectUnauthorized: boolean;
 }
 
 export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
-    baseUrl,
-    user,
-    password,
+    opts,
     wuid,
     sequence,
-    rejectUnauthorized
 }) => {
 
     const pivotRef = React.useRef<HTMLDivElement>(null);
@@ -80,7 +74,7 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
         if (wuid) {
             setSpinnerMessage("Loading...");
             update(false, [], []);
-            const wu = Workunit.attach({ baseUrl, userID: user, password, rejectUnauthorized }, wuid);
+            const wu = Workunit.attach(opts, wuid);
             wu.refresh().then(() => {
                 if (!canceled) {
                     if (wu.isComplete()) {
@@ -107,11 +101,11 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
         return () => {
             canceled = true;
         };
-    }, [baseUrl, wuid]);
+    }, [opts.baseUrl, wuid]);
 
     React.useEffect(() => {
         setSelectedKey(sequence === undefined ? "" + 0 : "" + sequence);
-    }, [baseUrl, wuid, sequence]);
+    }, [opts.baseUrl, wuid, sequence]);
 
     const hasIssues = exceptions.length > 0;
     const hasResults = results.length > 0;
@@ -151,7 +145,7 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
             main={selected === "issues" ?
                 <WUIssues exceptions={exceptions} />
                 : hasResults ?
-                    <WUResult baseUrl={baseUrl} user={user} password={password} wuid={wuid} sequence={parseInt(selectedKey)} />
+                    <WUResult opts={opts} wuid={wuid} sequence={parseInt(selectedKey)} />
                     : undefined
             }
         />;

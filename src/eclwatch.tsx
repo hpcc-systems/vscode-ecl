@@ -2,8 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { WUDetails } from "./eclwatch/WUDetails";
 import { ThemeProvider } from "./eclwatch/themeGenerator";
-import { join } from "@hpcc-js/util";
-import { LoadedMessage, Messages, ProxyCancelMessage, ProxySendMessage, State, vscode } from "./eclwatch/messages";
+import { LoadedMessage, ProxyCancelMessage, ProxySendMessage, State, vscode } from "./eclwatch/messages";
 import { hookSend } from "@hpcc-js/comms";
 
 const bodyStyles = window.getComputedStyle(document.body);
@@ -75,11 +74,8 @@ function render(state: State) {
     if (state) {
         vscode.setState(state);
         ReactDOM.render(<WUDetails
-            baseUrl={join(`${state.protocol}://${state.serverAddress}:${state.port}`, state.path)}
-            rejectUnauthorized={state.rejectUnauthorized}
+            opts={state}
             wuid={state.wuid}
-            user={state.user}
-            password={state.password}
             sequence={state.result}
         />, placeholder);
     }
@@ -92,13 +88,9 @@ function rerender() {
 //  Local debugging without VS Code
 if (document.location.protocol === "file:") {
     render({
-        protocol: "https",
-        serverAddress: "play.hpccsystems.com",
-        port: "18010",
-        path: "",
-        user: "gosmith",
+        baseUrl: "https://play.hpccsystems.com:18010",
+        userID: "gosmith",
         password: "",
-        rejectUnauthorized: false,
         wuid: "W20210304-144316"
     });
 }

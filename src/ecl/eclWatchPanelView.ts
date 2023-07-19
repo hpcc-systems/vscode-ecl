@@ -1,22 +1,12 @@
 import * as vscode from "vscode";
 import { send } from "@hpcc-js/comms";
 import { hashSum } from "@hpcc-js/util";
-import { LaunchProtocol } from "../debugger/launchRequestArguments";
+import { LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { wuDetailsUrl, wuResultUrl } from "../hpccplatform/launchConfig";
 import { sessionManager } from "../hpccplatform/session";
 import type { Messages } from "../eclwatch/messages";
 
-interface PartialLaunchRequestArgumentss {
-    protocol: LaunchProtocol;
-    serverAddress: string;
-    port: number;
-    path: string;
-    user?: string;
-    password?: string;
-    rejectUnauthorized?: boolean;
-}
-
-interface NavigateParams extends PartialLaunchRequestArgumentss {
+interface NavigateParams extends LaunchRequestArguments {
     wuid: string;
     result?: number;
     show: boolean;
@@ -111,7 +101,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                             command: "proxyResponse",
                             id: message.id,
                             response
-                        });
+                        } as Messages);
                         delete abortControllers[message.id];
                     });
                     break;
@@ -130,9 +120,9 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
     }
 
     private _prevHash: string;
-    navigateTo(launchRequestArgs: PartialLaunchRequestArgumentss, wuid: string, result?: number, show = true) {
-        const { protocol, serverAddress, port, path, user, password, rejectUnauthorized } = launchRequestArgs;
-        this._currParams = { protocol, serverAddress, port, path, user, password, rejectUnauthorized, wuid, result, show };
+    navigateTo(launchRequestArgs: LaunchRequestArguments, wuid: string, result?: number, show = true) {
+        const { protocol, serverAddress, port, path, user, password, rejectUnauthorized, name, type, targetCluster } = launchRequestArgs;
+        this._currParams = { protocol, serverAddress, port, path, user, password, rejectUnauthorized, name, type, targetCluster, wuid, result, show };
         if (!this._webviewView) {
             this._initialParams = this._currParams;
             if (show) {
@@ -143,7 +133,18 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
             if (this._prevHash !== hash) {
                 this._prevHash = hash;
                 this._webviewView.title = this._currParams?.wuid;
-                this._webviewView.webview.postMessage({ command: "navigate", data: this._currParams });
+                this._webviewView.webview.postMessage({
+                    command: "navigate",
+                    data: {
+                        baseUrl: this._currParams.protocol + "://" + this._currParams.serverAddress + ":" + this._currParams.port + "/",
+                        userID: this._currParams.user,
+                        password: this._currParams.password,
+                        rejectUnauthorized: this._currParams.rejectUnauthorized,
+                        timeoutSecs: this._currParams.timeoutSecs,
+                        wuid: this._currParams.wuid,
+                        result: this._currParams.result
+                    }
+                } as Messages);
                 if (show) {
                     this._webviewView.show(true);
                 }

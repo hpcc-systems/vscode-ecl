@@ -1,11 +1,6 @@
-export interface State {
-    protocol: string;
-    serverAddress: string;
-    port: string;
-    path: string;
-    user: string;
-    password: string;
-    rejectUnauthorized: boolean;
+import type { IOptions } from "@hpcc-js/comms";
+
+export interface State extends IOptions {
     wuid: string;
     result?: number;
 }
@@ -22,6 +17,11 @@ export const vscode = acquireVsCodeApi();
 
 export interface Message {
     callbackID?: string;
+}
+
+export interface NavigateMessage extends Message {
+    command: "navigate";
+    data: State;
 }
 
 export interface LoadedMessage extends Message {
@@ -41,9 +41,15 @@ export interface ProxySendMessage extends Message {
     }
 }
 
+export interface ProxyResponseMessage extends Message {
+    command: "proxyResponse";
+    id: number;
+    response: any;
+}
+
 export interface ProxyCancelMessage extends Message {
     command: "proxyCancel";
     id: number;
 }
 
-export type Messages = LoadedMessage | ProxySendMessage | ProxyCancelMessage;
+export type Messages = NavigateMessage | LoadedMessage | ProxySendMessage | ProxyResponseMessage | ProxyCancelMessage;
