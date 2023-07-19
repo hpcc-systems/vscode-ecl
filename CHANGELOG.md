@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.1...v2.23.2) (2023-07-19)
+
+
+### Bug Fixes
+
+*  Persist entire IOptions through results view ([1c57fba](https://github.com/hpcc-systems/vscode-ecl/commit/1c57fbae25f45a1a1e12b564428a1ce112b4a643))
+
 ### [2.23.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.0...v2.23.1) (2023-07-18)
 
 
