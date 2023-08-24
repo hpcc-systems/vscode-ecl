@@ -1,13 +1,16 @@
 import { ClientTools } from "@hpcc-js/comms";
 import * as vscode from "vscode";
+import * as os from "os";
 import { sessionManager } from "../hpccplatform/session";
+
+const PATH_SEP = os.platform() === "win32" ? ";" : ":";
 
 export function eclTerminal(ct: ClientTools) {
     const ver = ct.versionSync();
     const terminal = vscode.window.createTerminal({
         name: `ECL v${ver.major}.${ver.minor}.${ver.patch}`,
         env: {
-            PATH: `${ct.binPath};${process.env.PATH}`
+            PATH: `${ct.binPath}${PATH_SEP}${process.env.PATH}`
         }
     });
     terminal.show();
