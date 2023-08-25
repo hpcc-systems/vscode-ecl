@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.2...v2.23.3) (2023-08-25)
+
+
+### Bug Fixes
+
+*  Clienttools terminal will fail on *nix platforms ([f1e0a7a](https://github.com/hpcc-systems/vscode-ecl/commit/f1e0a7a965d5fb17a5f5b2c2c798ab6c73104846))
+
 ### [2.23.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.1...v2.23.2) (2023-07-19)
 
 
