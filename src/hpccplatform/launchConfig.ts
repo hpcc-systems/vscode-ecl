@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Ping, Workunit, WUQuery, WUUpdate, Topology, EclccErrors, IOptions, LogicalFile, TpLogicalClusterQuery, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Ping, Workunit, WUQuery, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
@@ -536,7 +536,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         return this._buildPromise;
     }
 
-    targetClusters(): Promise<TpLogicalClusterQuery.TpLogicalCluster[]> {
+    targetClusters(): Promise<WsTopology.TpLogicalCluster[]> {
         return this.checkCredentials().then(credentials => {
             const topology = Topology.attach(this.opts(credentials));
             return topology.fetchLogicalClusters();
