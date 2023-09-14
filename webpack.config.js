@@ -28,8 +28,19 @@ const makeConfig = (argv, { entry, target = "node", library = { type: "commonjs"
             use: ["style-loader", "css-loader"],
         }, {
             test: /\.js$/,
-            use: ["source-map-loader"],
-            enforce: "pre"
+            enforce: "pre",
+            use: [
+                {
+                    loader: "source-map-loader",
+                    options: {
+                        filterSourceMappingUrl: (url, resourcePath) => {
+                            if (resourcePath.includes("undici")) {
+                                return false;
+                            }
+                            return true;
+                        },
+                    }
+                }]
         }]
     },
 
