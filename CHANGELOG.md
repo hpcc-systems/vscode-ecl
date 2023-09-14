@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.4](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.3...v2.23.4) (2023-09-14)
+
+
+### Bug Fixes
+
+*  rejectUnauthorized fails in VSCode v1.82.0 ([31f33e8](https://github.com/hpcc-systems/vscode-ecl/commit/31f33e861c4f6fbbace587b71dd452625256a165))
+
 ### [2.23.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.2...v2.23.3) (2023-08-25)
 
 
