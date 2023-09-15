@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.6](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.5...v2.23.6) (2023-09-15)
+
+
+### Bug Fixes
+
+*  Rollback changes to tsconfig.json ([4870b64](https://github.com/hpcc-systems/vscode-ecl/commit/4870b646e1ef54c86528fc13611e98b1dd067fdf))
+
 ### [2.23.5](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.3...v2.23.5) (2023-09-15)
 
 
