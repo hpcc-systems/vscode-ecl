@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
 import localize from "../util/localize";
 import { Item, Tree } from "./tree";
+import { eclWatchPanelView } from "./eclWatchPanelView";
 
 const PrevWeeks: string[] = ["Last Week", "Two Weeks Ago", "Three Weeks Ago", "Four Weeks Ago", "Five Weeks Ago", "Six Weeks Ago", "Seven Weeks Ago"].map(localize);
 
@@ -28,8 +29,19 @@ export class ECLWatchTree extends Tree {
             if (this._rendered) {
                 this.refresh();
                 const eclConfig = vscode.workspace.getConfiguration("ecl");
-                if (eclConfig.get<boolean>("WUAutoOpen")) {
-                    vscode.env.openExternal(vscode.Uri.parse(`${evt.workunit.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${evt.workunit.Wuid}`));
+                const wuShowResults = eclConfig.get<string>("WUShowResults");
+                switch (wuShowResults) {
+                    case "disabled":
+                        break;
+                    case "external":
+                        vscode.env.openExternal(vscode.Uri.parse(`${evt.workunit.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${evt.workunit.Wuid}`));
+                        break;
+                    case "internal":
+                    default:
+                        if (evt.source !== "notebook") {
+                            eclWatchPanelView.navigateTo(sessionManager.session.launchRequestArgs, evt.workunit.Wuid);
+                        }
+                        break;
                 }
             }
         });

@@ -218,7 +218,7 @@ All commands in the Result View are available via context menu.
 
 The following Visual Studio Code settings are available for the ECL extension.  These can be set in user preferences (`ctrl/cmd+,`) or directly in your current workspace (`.vscode/settings.json`):
 
-```javascript
+```typescript
 
   // Override eclcc auto detection.
   "ecl.eclccPath": ""
@@ -247,8 +247,8 @@ The following Visual Studio Code settings are available for the ECL extension.  
   // Debug level logging (requires restart).
   "ecl.debugLogging": false
 
-  // Automatically open Workunits on creation.
-  "ecl.WUAutoOpen": false
+  // Show results after submitting a workunit.
+  "ecl.WUShowResults": internal | external | disabled
 
   // Force global 'proxySupport' to 'fallback'
   "ecl.forceProxySupport": false

@@ -1063,7 +1063,19 @@
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "%Automatically open Workunits on creation%"
+          "description": "%Automatically open Workunits on creation%",
+          "deprecationMessage": "%Use WUSubmitAction instead%"
+        },
+        "ecl.WUShowResults": {
+          "type": "string",
+          "scope": "resource",
+          "enum": [
+            "internal",
+            "external",
+            "disabled"
+          ],
+          "default": "internal",
+          "description": "%Show results after submitting a workunit%"
         },
         "ecl.forceProxySupport": {
           "type": "boolean",
