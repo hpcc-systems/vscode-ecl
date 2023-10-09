@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.7](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.6...v2.23.7) (2023-10-09)
+
+
+### Bug Fixes
+
+* Cell tracking issue, with unsaved notebooks ([8365ee6](https://github.com/hpcc-systems/vscode-ecl/commit/8365ee6f65d00594881f9d43b49273b8aa1a1aef))
+
 ### [2.23.6](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.5...v2.23.6) (2023-09-15)
 
 
