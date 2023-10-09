@@ -65,6 +65,19 @@ export class Controller {
                     break;
             }
         });
+
+        vscode.workspace.onDidChangeNotebookDocument(evt => {
+            for (const contentChange of evt.contentChanges) {
+                for (const removed of contentChange.removedCells) {
+                    const execution = this._controller.createNotebookCellExecution(removed);
+                    execution.executionOrder = ++this._executionOrder;
+                    execution.start(Date.now());
+                    execution.clearOutput(removed);
+                    execution.end(true, Date.now());
+                }
+            }
+        });
+
     }
 
     configToIOptions(config?: LaunchRequestArguments): IOptions {
