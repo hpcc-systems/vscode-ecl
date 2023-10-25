@@ -82,7 +82,7 @@
     "@vscode/vsce": "2.21.0",
     "acorn-walk": "8.2.0",
     "adm-zip": "0.5.10",
-    "antlr4": "4.11.0",
+    "antlr4": "4.13.1",
     "assert": "2.1.0",
     "browserify-zlib": "0.2.0",
     "buffer": "6.0.3",

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { Antlr4Error, ErrorListener } from "../util/errorListener";
 
-import antlr4 from "antlr4";
+import { CharStream, CommonTokenStream } from "antlr4";
 import KELLexer from "../grammar/kel/KELLexer";
 import KELParser from "../grammar/kel/KELParser";
 import { KELVisitor } from "./visitor";
@@ -18,17 +18,17 @@ export function parse(doc: vscode.TextDocument): Parsed {
     const retVal: Parsed = {
         errors: []
     };
-    const chars = new antlr4.InputStream(doc.getText());
+    const chars = new CharStream(doc.getText());
     const lexer = new KELLexer(chars);
-    const tokens = new antlr4.CommonTokenStream(lexer);
-    const parser = new KELParser(tokens) as unknown as antlr4.Parser;
+    const tokens = new CommonTokenStream(lexer);
+    const parser = new KELParser(tokens);
     parser.buildParseTrees = true;
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
     try {
         const tree = parser.program();
         const visitor = new KELVisitor();
-        visitor.visitProgram(tree);
+        tree.accept(visitor);
         const kelConfig = vscode.workspace.getConfiguration("kel", doc.uri);
         retVal.errors = kelConfig.get("syntaxCheckFromGrammar") ? errorListener.errors.filter(row => !visitor.eclBodyContains(row.start, row.stop)) : [];
     } catch (e) {

@@ -1,3 +1,4 @@
+import { EclBodyContext, EclExpressionContext, EclFragmentContext, EntityMappingContext, ProgramContext } from "../grammar/kel/KELParser";
 import KELParserVisitor from "../grammar/kel/KELParserVisitor";
 
 interface ECLLocation {
@@ -6,7 +7,7 @@ interface ECLLocation {
     text?: string;
 }
 
-export class KELVisitor extends KELParserVisitor {
+export class KELVisitor extends KELParserVisitor<void> {
 
     _eclLocations: ECLLocation[] = [];
 
@@ -30,31 +31,31 @@ export class KELVisitor extends KELParserVisitor {
         return ctx.symbol.text;
     }
 
-    visitProgram(ctx) {
-        const children = super.visitProgram(ctx);
+    visitProgram = (ctx: ProgramContext) => {
+        const children = this.visitChildren(ctx);
         return children;
     }
 
-    visitEntityMapping(ctx) {
-        const children = super.visitEntityMapping(ctx);
+    visitEntityMapping = (ctx: EntityMappingContext) => {
+        const children = this.visitChildren(ctx);
         this._eclLocations.push({ start: ctx.start.start, stop: ctx.stop.stop, text: ctx.getText() });
         return children;
     }
 
-    visitEclExpression(ctx) {
-        const children = super.visitEclExpression(ctx);
+    visitEclExpression = (ctx: EclExpressionContext) => {
+        const children = this.visitChildren(ctx);
         this._eclLocations.push({ start: ctx.start.start, stop: ctx.stop.stop, text: ctx.getText() });
         return children;
     }
 
-    visitEclFragment(ctx) {
-        const children = super.visitEclFragment(ctx);
+    visitEclFragment = (ctx: EclFragmentContext) => {
+        const children = this.visitChildren(ctx);
         this._eclLocations.push({ start: ctx.start.start, stop: ctx.stop.stop, text: ctx.getText() });
         return children;
     }
 
-    visitEclBody(ctx) {
-        const children = super.visitEclBody(ctx);
+    visitEclBody = (ctx: EclBodyContext) => {
+        const children = this.visitChildren(ctx);
         this._eclLocations.push({ start: ctx.start.start, stop: ctx.stop.stop, text: ctx.getText() });
         return children;
     }
