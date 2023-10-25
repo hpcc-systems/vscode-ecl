@@ -17,7 +17,9 @@
   "scripts": {
     "clean": "rimraf --glob out lib* dist types hpcc-systems.ecl.vsix",
     "copy-resources": "copyfiles -f ./node_modules/@hpcc-js/ddl-shim/schema/v2.json ./dist",
-    "gen-grammar": "wsl -e ./scripts/grammar-generate.sh",
+    "gen-grammar": "run-script-os",
+    "gen-grammar:win32": "wsl -e ./scripts/grammar-generate.sh",
+    "gen-grammar:linux": "./scripts/grammar-generate.sh",
     "gen-nls": "node ./lib-util/index.js",
     "compile": "tsc",
     "compile-watch": "npm run compile -- -watch",
@@ -100,6 +102,7 @@
     "rollup": "3.29.1",
     "rollup-plugin-postcss": "4.0.2",
     "rollup-plugin-sourcemaps": "0.6.3",
+    "run-script-os": "^1.1.6",
     "source-map-loader": "4.0.1",
     "standard-version": "9.5.0",
     "stream-browserify": "3.0.0",

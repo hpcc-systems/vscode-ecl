@@ -1,11 +1,20 @@
 #!/bin/bash
 
+cd ./grammar/ecl
+java -jar ../antlr-4.10.1-complete.jar -Dlanguage=JavaScript -o ../../src/grammar/ecl -visitor -Xexact-output-dir ./*.g4
+cd ../..
+
 cd ./grammar/kel
-java -jar ../antlr-4.10.1-complete.jar -Dlanguage=JavaScript -o ../../src/grammar/kel -visitor -Xexact-output-dir ./*.g4
+if ls *.g4 >/dev/null 2>&1; then
+    java -jar ../antlr-4.10.1-complete.jar -Dlanguage=JavaScript -o ../../src/grammar/kel -visitor -Xexact-output-dir ./*.g4
+fi
 cd ../..
 
 cd ./grammar/salt
-java -jar ../antlr-4.10.1-complete.jar -Dlanguage=JavaScript -o ../../src/grammar/salt -visitor -Xexact-output-dir ./*.g4
+
+if ls *.g4 >/dev/null 2>&1; then
+    java -jar ../antlr-4.10.1-complete.jar -Dlanguage=JavaScript -o ../../src/grammar/salt -visitor -Xexact-output-dir ./*.g4
+fi
 cd ../..
 
 # cd ./grammar/dude

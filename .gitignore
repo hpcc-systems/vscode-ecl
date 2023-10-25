@@ -1,7 +1,12 @@
 /.eclcc
 /dist*
 /ecl-sample/.vscode/settings.json
-/grammar
+/grammar/ecl/.*
+/grammar/kel/.*
+/grammar/kel/*.g4
+/grammar/salt/.*
+/grammar/salt/*.g4
+/grammar/*.jar
 /images
 /lib*
 /node_modules
