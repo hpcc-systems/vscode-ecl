@@ -11,6 +11,10 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.24.x
+* Added context menu to ECL bundles and ECL Client Tools
+* Added `ecl.WUShowResults` setting, allows user to control how results are displayed after submitting a workunit.
+
 ### v2.23.x
 * Added `ecl.submitNoArchive` command, submits raw content of editor to server without creating an archive first.
 * Added `ecl.pingInterval` setting, allows user to change or disable the "server alive" ping.

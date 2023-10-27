@@ -801,6 +801,21 @@
           "group": "inline"
         },
         {
+          "command": "hpccResources.bundles.homepage",
+          "when": "view == hpccResources.bundles && viewItem =~ /^BundlesItem/",
+          "group": "navigation@10"
+        },
+        {
+          "command": "hpccResources.bundles.install",
+          "when": "view == hpccResources.bundles && viewItem == BundlesItem",
+          "group": "navigation@20"
+        },
+        {
+          "command": "hpccResources.bundles.uninstall",
+          "when": "view == hpccResources.bundles && viewItem == BundlesItemInstalled",
+          "group": "navigation@30"
+        },
+        {
           "command": "hpccResources.clientTools.activate",
           "when": "view == hpccResources.clientTools && viewItem == ClientToolsItemDeactive",
           "group": "inline"
@@ -814,6 +829,21 @@
           "command": "hpccResources.clientTools.terminal",
           "when": "view == hpccResources.clientTools && viewItem =~ /^ClientToolsItem/",
           "group": "inline"
+        },
+        {
+          "command": "hpccResources.clientTools.activate",
+          "when": "view == hpccResources.clientTools && viewItem == ClientToolsItemDeactive",
+          "group": "navigation@10"
+        },
+        {
+          "command": "hpccResources.clientTools.deactivate",
+          "when": "view == hpccResources.clientTools && viewItem == ClientToolsItemActive",
+          "group": "navigation@20"
+        },
+        {
+          "command": "hpccResources.clientTools.terminal",
+          "when": "view == hpccResources.clientTools && viewItem =~ /^ClientToolsItem/",
+          "group": "navigation@30"
         },
         {
           "command": "ecl.openECLWatchExternal",
