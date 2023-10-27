@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.24.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.7...v2.24.0) (2023-10-27)
+
+
+### Features
+
+*  Add  WUShowResults setting ([75613c0](https://github.com/hpcc-systems/vscode-ecl/commit/75613c0e4044a1764144d88f2a665bcca2b227d9))
+
 ### [2.23.7](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.6...v2.23.7) (2023-10-09)
 
 
