@@ -44,12 +44,14 @@
     "update": "npx npm-check-updates -u -t minor"
   },
   "dependencies": {
-    "@vscode/webview-ui-toolkit": "1.2.2"
+    "@vscode/webview-ui-toolkit": "1.2.2",
+    "csv": "^6.3.5",
+    "exceljs": "^4.4.0"
   },
   "devDependencies": {
     "@fluentui/react": "8.111.2",
     "@hpcc-js/common": "2.71.11",
-    "@hpcc-js/comms": "2.84.2",
+    "@hpcc-js/comms": "2.85.0",
     "@hpcc-js/ddl-shim": "2.20.5",
     "@hpcc-js/dgrid2": "2.3.11",
     "@hpcc-js/loader": "2.104.28",
@@ -87,6 +89,7 @@
     "copy-to-clipboard": "3.3.3",
     "copyfiles": "2.4.1",
     "css-loader": "6.8.1",
+    "csv-writer": "1.6.0",
     "diff": "5.1.0",
     "eslint": "8.49.0",
     "mocha": "10.2.0",
@@ -357,6 +360,36 @@
         "title": "%Copy WUID%"
       },
       {
+        "command": "hpccPlatform.browseECLWatch",
+        "category": "ECL",
+        "title": "%Browse ECL Watch%"
+      },
+      {
+        "command": "hpccPlatform.openResults",
+        "category": "ECL",
+        "title": "%Open Results%"
+      },
+      {
+        "command": "hpccPlatform.browseMetrics",
+        "category": "ECL",
+        "title": "%Browse Metrics%"
+      },
+      {
+        "command": "hpccPlatform.openECL",
+        "category": "ECL",
+        "title": "%Open ECL%"
+      },
+      {
+        "command": "hpccPlatform.saveWUAs",
+        "category": "ECL",
+        "title": "%Save Data to File%"
+      },
+      {
+        "command": "ecl.saveResultAs",
+        "category": "ECL",
+        "title": "%Save Result to File%"
+      },
+      {
         "command": "hpccPlatform.abortWU",
         "category": "ECL",
         "title": "%Abort Workunit%",
@@ -429,6 +462,17 @@
         "category": "ECL",
         "title": "%All workunits%",
         "description": "%Showing all workunits%",
+        "icon": {
+          "light": "resources/light/organization.svg",
+          "dark": "resources/dark/organization.svg"
+        },
+        "enablement": "ecl.connected"
+      },
+      {
+        "command": "hpccPlatform.showECL",
+        "category": "ECL",
+        "title": "%Show ECL%",
+        "description": "%Showing the ECL code%",
         "icon": {
           "light": "resources/light/organization.svg",
           "dark": "resources/dark/organization.svg"
@@ -771,21 +815,46 @@
           "group": "inline"
         },
         {
-          "command": "hpccPlatform.copyWUID",
-          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
-          "group": "navigation@900"
-        },
-        {
-          "command": "hpccPlatform.abortWU",
+          "command": "hpccPlatform.openResults",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "navigation@910"
         },
         {
-          "command": "hpccPlatform.deleteWU",
+          "command": "hpccPlatform.browseMetrics",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "navigation@920"
         },
         {
+          "command": "hpccPlatform.browseECLWatch",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "navigation@930"
+        },
+        {
+          "command": "hpccPlatform.openECL",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "navigation@940"
+        },
+        {
+          "command": "hpccPlatform.saveWUAs",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "navigation@950"
+        },
+        {
+          "command": "hpccPlatform.copyWUID",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "2copy"
+        },
+        {
+          "command": "hpccPlatform.abortWU",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "3action@910"
+        },
+        {
+          "command": "hpccPlatform.deleteWU",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "3action@920"
+        },
+        {
           "command": "hpccResources.bundles.homepage",
           "when": "view == hpccResources.bundles && viewItem =~ /^BundlesItem/",
           "group": "inline"
@@ -799,21 +868,6 @@
           "command": "hpccResources.bundles.uninstall",
           "when": "view == hpccResources.bundles && viewItem == BundlesItemInstalled",
           "group": "inline"
-        },
-        {
-          "command": "hpccResources.bundles.homepage",
-          "when": "view == hpccResources.bundles && viewItem =~ /^BundlesItem/",
-          "group": "navigation@10"
-        },
-        {
-          "command": "hpccResources.bundles.install",
-          "when": "view == hpccResources.bundles && viewItem == BundlesItem",
-          "group": "navigation@20"
-        },
-        {
-          "command": "hpccResources.bundles.uninstall",
-          "when": "view == hpccResources.bundles && viewItem == BundlesItemInstalled",
-          "group": "navigation@30"
         },
         {
           "command": "hpccResources.clientTools.activate",
@@ -831,19 +885,14 @@
           "group": "inline"
         },
         {
-          "command": "hpccResources.clientTools.activate",
-          "when": "view == hpccResources.clientTools && viewItem == ClientToolsItemDeactive",
-          "group": "navigation@10"
+          "command": "ecl.saveResultAs",
+          "when": "view == hpccPlatform && viewItem == ECLResultNode",
+          "group": "navigatation@910"
         },
         {
-          "command": "hpccResources.clientTools.deactivate",
-          "when": "view == hpccResources.clientTools && viewItem == ClientToolsItemActive",
-          "group": "navigation@20"
-        },
-        {
-          "command": "hpccResources.clientTools.terminal",
-          "when": "view == hpccResources.clientTools && viewItem =~ /^ClientToolsItem/",
-          "group": "navigation@30"
+          "command": "ecl.openECLWatchExternal",
+          "when": "view == hpccPlatform && viewItem == ECLResultNode",
+          "group": "navigatation@920"
         },
         {
           "command": "ecl.openECLWatchExternal",
@@ -1093,19 +1142,7 @@
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "%Automatically open Workunits on creation%",
-          "deprecationMessage": "%Use WUSubmitAction instead%"
-        },
-        "ecl.WUShowResults": {
-          "type": "string",
-          "scope": "resource",
-          "enum": [
-            "internal",
-            "external",
-            "disabled"
-          ],
-          "default": "internal",
-          "description": "%Show results after submitting a workunit%"
+          "description": "%Automatically open Results on creation%"
         },
         "ecl.forceProxySupport": {
           "type": "boolean",

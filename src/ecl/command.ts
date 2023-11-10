@@ -10,6 +10,7 @@ import { eclWatchPanelView } from "./eclWatchPanelView";
 import { ECLResultNode, ECLWUNode } from "./eclWatchTree";
 import localize from "../util/localize";
 import { createDirectory, exists, writeFile } from "../util/fs";
+import { SaveData } from "./saveData";
 
 const IMPORT_MARKER = "//Import:";
 const SKIP = localize("Skip");
@@ -35,6 +36,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showWUDetails", this.showWUDetails, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.saveResultAs", this.saveResultAs, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify, this));
@@ -139,6 +141,11 @@ export class ECLCommands {
         } else if (source instanceof ECLResultNode) {
             vscode.env.openExternal(vscode.Uri.parse(source.url));
         }
+    }
+
+    saveResultAs(source: ECLResultNode) {
+        const saveData = new SaveData(source.getWU());
+        saveData.saveResultAs(source.getResult());
     }
 
     async insertRecordDef() {
