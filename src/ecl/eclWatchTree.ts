@@ -1,9 +1,10 @@
-import { Workunit, WUStateID, Result } from "@hpcc-js/comms";
+import { Workunit, WUStateID, Result, WUInfo, WUDetails } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
 import localize from "../util/localize";
 import { Item, Tree } from "./tree";
 import { eclWatchPanelView } from "./eclWatchPanelView";
+import { SaveData } from "./saveData";
 
 const PrevWeeks: string[] = ["Last Week", "Two Weeks Ago", "Three Weeks Ago", "Four Weeks Ago", "Five Weeks Ago", "Six Weeks Ago", "Seven Weeks Ago"].map(localize);
 
@@ -60,8 +61,28 @@ export class ECLWatchTree extends Tree {
             this.refresh();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.openResults", (wuNode: ECLWUNode) => {
+            wuNode.openResults();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.browseMetrics", (wuNode: ECLWUNode) => {
+            wuNode.browseMetrics();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.browseECLWatch", (wuNode: ECLWUNode) => {
+            wuNode.browseECLWatch();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.openECL", (wuNode: ECLWUNode) => {
+            wuNode.openECL();
+        });
+
         vscode.commands.registerCommand("hpccPlatform.copyWUID", (wuNode: ECLWUNode) => {
             wuNode.copyWuid();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.saveWUAs", (wuNode: ECLWUNode) => {
+            wuNode.saveWUAs();
         });
 
         vscode.commands.registerCommand("hpccPlatform.abortWU", (wuNode: ECLWUNode) => {
@@ -218,10 +239,20 @@ class ECLErrorNode extends Item<ECLWatchTree> {
 export class ECLResultNode extends Item<ECLWatchTree> {
 
     readonly url: string;
+    readonly wu: Workunit;
 
-    constructor(tree: ECLWatchTree, private _result: Result) {
+    constructor(wu: Workunit, tree: ECLWatchTree, private _result: Result) {
         super(tree);
         this.url = `${this._result.BaseUrl}/?Widget=ResultWidget&Wuid=${this._result.Wuid}&Sequence=${this._result.Sequence}`;
+        this.wu = wu;
+    }
+
+    getWU(): Workunit {
+        return this.wu;
+    }
+
+    getResult(): Result {
+        return this._result;
     }
 
     getLabel(): string {
@@ -257,7 +288,7 @@ class ECLOutputsNode extends Item<ECLWatchTree> {
     }
 
     getChildren() {
-        return this._wu.fetchResults().then(results => results.map(result => new ECLResultNode(this._tree, result)));
+        return this._wu.fetchResults().then(results => results.map(result => new ECLResultNode(this._wu, this._tree, result)));
     }
 
     command(): vscode.Command | undefined {
@@ -335,8 +366,34 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         return Circle.question;
     }
 
+    openResults() {
+        eclWatchPanelView.navigateTo(sessionManager.session.launchRequestArgs, this._wu.Wuid);
+    }
+
+    browseMetrics() {
+        vscode.env.openExternal(vscode.Uri.parse(this.url+"/metrics"));
+    }
+
+    browseECLWatch() {
+        vscode.env.openExternal(vscode.Uri.parse(this.url));
+    }
+
+    openECL() {
+        this._wu.fetchQuery().then((inf: WUInfo.Query) => {
+            const ecl = inf.Text;
+            vscode.workspace.openTextDocument({content: ecl, language: "ecl"}).then(document => {
+                vscode.window.showTextDocument(document);
+            });
+        });
+    }
+
     copyWuid() {
         vscode.env.clipboard.writeText(this._wu.Wuid);
+    }
+
+    saveWUAs() {
+        const saveData = new SaveData(this._wu);
+        saveData.saveWUAs(this._wu);
     }
 
     abort() {
@@ -360,7 +417,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     getChildren() {
-        return this._wu.fetchResults().then(results => results.map(result => new ECLResultNode(this._tree, result)));
+        return this._wu.fetchResults().then(results => results.map(result => new ECLResultNode(this._wu, this._tree, result)));
     }
 
     contextValue(): string {
