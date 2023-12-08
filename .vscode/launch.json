@@ -33,7 +33,7 @@
             "args": [
                 "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceRoot}",
-                "${workspaceRoot}\\ecl-sample"
+                "${workspaceRoot}/ecl-sample"
             ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
@@ -47,7 +47,7 @@
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--extensionDevelopmentPath=${workspaceRoot}",
-                "${workspaceRoot}\\ecl-sample"
+                "${workspaceRoot}/ecl-sample"
             ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
