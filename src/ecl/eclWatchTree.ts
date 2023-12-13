@@ -97,6 +97,14 @@ export class ECLWatchTree extends Tree {
             wuNode.delete();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.protectWU", (wuNode: ECLWUNode) => {
+            wuNode.protect();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.unprotectWU", (wuNode: ECLWUNode) => {
+            wuNode.unprotect();
+        });
+
         vscode.commands.registerCommand("hpccPlatform.moveJobUp", (wuNode: ECLWUNode) => {
             wuNode.moveJobUp();
         });
@@ -391,12 +399,12 @@ export class ECLWUNode extends Item<ECLWatchTree> {
 
     getDescription(): string {
         const extras: string[] = [];
-        if (this._wu.Jobname) {
-            extras.push(this._wu.Wuid);
-        }
-        if (!this._tree._myWorkunits && this._wu.Owner) extras.push(this._wu.Owner);
+        if (this._wu.Jobname) extras.push(this._wu.Wuid);
+        if (this._wu.Protected) extras.push("Protected");
         if (!this._wu.isComplete() || this._wu.isDeleted()) extras.push(this._wu.State);
-        return extras.join(" ");
+        if (this._wu.Owner) extras.push(this._wu.Owner);
+        if (this._wu.Cluster) extras.push(this._wu.Cluster);
+        return extras.join(", ");
     }
 
     iconPath() {
@@ -470,7 +478,15 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     resubmit() {
         this._wu.resubmit().then(() => this._tree.refresh(this));
     }
-    
+
+    protect() {
+        this._wu.protect().then(() => this._tree.refresh());
+    }
+
+    unprotect() {
+        this._wu.unprotect().then(() => this._tree.refresh());
+    }
+
     moveJobUp() {
         const service = new SMCService({ baseUrl: this._wu.BaseUrl });
         return service.MoveJobUp({
@@ -596,7 +612,8 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     contextValue(): string {
-        return this._wu.isComplete() ? "ECLWUNodeComplete" : "ECLWUNode";
+        const prot = this._wu.Protected ? ",ECLWUNodeProtected" : ",ECLWUNodeUnprotected";
+        return this._wu.isComplete() ? `ECLWUNodeComplete${prot}` : `ECLWUNode${prot}`;
     }
 }
 
