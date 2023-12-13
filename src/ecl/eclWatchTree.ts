@@ -93,6 +93,16 @@ export class ECLWatchTree extends Tree {
             wuNode.delete();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.protectWU", (wuNode: ECLWUNode) => {
+            wuNode.protect();
+            this.refresh();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.unprotectWU", (wuNode: ECLWUNode) => {
+            wuNode.unprotect();
+            this.refresh();
+        });
+
     }
 
     static attach(ctx: vscode.ExtensionContext) {
@@ -400,6 +410,14 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         this._wu.abort().then(() => this._tree._onDidChangeTreeData.fire(this));
     }
 
+    protect() {
+        this._wu.protect();
+    }
+
+    unprotect() {
+        this._wu.unprotect();
+    }
+
     delete() {
         this._wu.delete().then(() => this._tree.refresh());
     }
@@ -421,7 +439,8 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     contextValue(): string {
-        return this._wu.isComplete() ? "ECLWUNodeComplete" : "ECLWUNode";
+        const prot = this._wu.Protected ? "Protected" : "Unprotected";
+        return this._wu.isComplete() ? `ECLWUNodeComplete,${prot}` : `ECLWUNode,${prot}`;
     }
 }
 

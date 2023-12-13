@@ -51,7 +51,7 @@
   "devDependencies": {
     "@fluentui/react": "8.111.2",
     "@hpcc-js/common": "2.71.11",
-    "@hpcc-js/comms": "2.85.0",
+    "@hpcc-js/comms": "2.86.0",
     "@hpcc-js/ddl-shim": "2.20.5",
     "@hpcc-js/dgrid2": "2.3.11",
     "@hpcc-js/loader": "2.104.28",
@@ -393,13 +393,25 @@
         "command": "hpccPlatform.abortWU",
         "category": "ECL",
         "title": "%Abort Workunit%",
-        "enablement": "viewItem == ECLWUNode"
+        "enablement": "viewItem =~ /ECLWUNode/"
       },
       {
         "command": "hpccPlatform.deleteWU",
         "category": "ECL",
         "title": "%Delete Workunit%",
-        "enablement": "viewItem == ECLWUNodeComplete"
+        "enablement": "viewItem =~ /ECLWUNodeComplete/"
+      },
+      {
+        "command": "hpccPlatform.protectWU",
+        "category": "ECL",
+        "title": "%Protect Workunit%",
+        "enablement": "viewItem =~ /ECLWUNodeComplete/"
+      },
+      {
+        "command": "hpccPlatform.unprotectWU",
+        "category": "ECL",
+        "title": "%Unprotect Workunit%",
+        "enablement": "viewItem =~ /ECLWUNodeComplete/"
       },
       {
         "command": "hpccPlatform.refresh",
@@ -853,6 +865,16 @@
           "command": "hpccPlatform.deleteWU",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "3action@920"
+        },
+        {
+          "when": "viewItem =~ /Unprotected/",
+          "command": "hpccPlatform.protectWU",
+          "group": "3action@930"
+        },
+        {
+          "when": "viewItem =~ /Protected/",
+          "command": "hpccPlatform.unprotectWU",
+          "group": "3action@940"
         },
         {
           "command": "hpccResources.bundles.homepage",
