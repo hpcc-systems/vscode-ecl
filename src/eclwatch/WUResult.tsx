@@ -312,11 +312,15 @@ export class WUResultTable extends Common {
             this._prevHash = hash;
             this._result = this.calcResult();
             if (this._result) {
-                this._result.fetchXMLSchema().then(schema => {
-                    const store = new Store(this._result, schema, this.renderHtml());
-                    this._dgrid?.set("columns", store.columns());
-                    this._dgrid?.set("collection", store);
-                });
+                this._result.fetchXMLSchema()
+                    .then(schema => {
+                        const store = new Store(this._result, schema, this.renderHtml());
+                        this._dgrid?.set("columns", store.columns());
+                        this._dgrid?.set("collection", store);
+                    }).catch(e => {
+                        this._prevHash = undefined;
+                    })
+                    ;
             }
         }
         if (this._prevGrid !== this._dgrid) {

@@ -57,8 +57,8 @@ export class ECLWatchTree extends Tree {
             this.refresh();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.refresh", () => {
-            this.refresh();
+        vscode.commands.registerCommand("hpccPlatform.refresh", (element?: Item) => {
+            this.refresh(element);
         });
 
         vscode.commands.registerCommand("hpccPlatform.openResults", (wuNode: ECLWUNode) => {
@@ -68,7 +68,7 @@ export class ECLWatchTree extends Tree {
         vscode.commands.registerCommand("hpccPlatform.browseMetrics", (wuNode: ECLWUNode) => {
             wuNode.browseMetrics();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.browseECLWatch", (wuNode: ECLWUNode) => {
             wuNode.browseECLWatch();
         });
@@ -107,9 +107,9 @@ export class ECLWatchTree extends Tree {
         vscode.commands.executeCommand("setContext", "hpccPlatform.isAllWorkunits", !this._myWorkunits);
     }
 
-    refresh(): void {
+    refresh(element?: Item): void {
         this.updateMenu();
-        super.refresh();
+        super.refresh(element);
     }
 
     getRootChildren(): vscode.ProviderResult<Item<ECLWatchTree>[]> {
@@ -221,7 +221,6 @@ export const Circle = {
 const globe = new vscode.ThemeIcon("globe");
 
 class ECLErrorNode extends Item<ECLWatchTree> {
-    private _wu: Workunit;
 
     constructor(tree: ECLWatchTree, private _error: Error) {
         super(tree);
@@ -256,7 +255,11 @@ export class ECLResultNode extends Item<ECLWatchTree> {
     }
 
     getLabel(): string {
-        return `${this._result.Name}:  ${this._result.Value}`;
+        return this._result.Name;
+    }
+
+    getDescription(): string {
+        return this._result.Value ?? "";
     }
 
     command(): vscode.Command | undefined {
@@ -270,7 +273,6 @@ export class ECLResultNode extends Item<ECLWatchTree> {
     contextValue(): string {
         return "ECLResultNode";
     }
-
 }
 
 class ECLOutputsNode extends Item<ECLWatchTree> {
@@ -310,26 +312,24 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         this._wu = wu;
         this.url = `${wu.BaseUrl}/?Widget=WUDetailsWidget&Wuid=${wu.Wuid}`;
         if (!this._wu.isComplete()) {
-            let prevStateID;
             this._wu.watchUntilComplete(changes => {
-                if (prevStateID !== this._wu.StateID) {
-                    prevStateID = this._wu.StateID;
-                    this._tree._onDidChangeTreeData.fire(this);
-                }
+                tree.refresh(this);
             });
         }
     }
 
     getLabel(): string {
-        let primary = this._wu.Wuid;
+        return this._wu.Jobname || this._wu.Wuid;
+    }
+
+    getDescription(): string {
         const extras: string[] = [];
-        if (!this._wu.isComplete() || this._wu.isDeleted()) extras.push(this._wu.State);
-        if (!this._tree._myWorkunits && this._wu.Owner) extras.push(this._wu.Owner);
         if (this._wu.Jobname) {
-            primary = this._wu.Jobname;
             extras.push(this._wu.Wuid);
         }
-        return extras.length ? `${primary} (${extras.join(", ")})` : primary;
+        if (!this._tree._myWorkunits && this._wu.Owner) extras.push(this._wu.Owner);
+        if (!this._wu.isComplete() || this._wu.isDeleted()) extras.push(this._wu.State);
+        return extras.join(" ");
     }
 
     iconPath() {
@@ -371,7 +371,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     browseMetrics() {
-        vscode.env.openExternal(vscode.Uri.parse(this.url+"/metrics"));
+        vscode.env.openExternal(vscode.Uri.parse(this.url + "/metrics"));
     }
 
     browseECLWatch() {
@@ -381,7 +381,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     openECL() {
         this._wu.fetchQuery().then((inf: WUInfo.Query) => {
             const ecl = inf.Text;
-            vscode.workspace.openTextDocument({content: ecl, language: "ecl"}).then(document => {
+            vscode.workspace.openTextDocument({ content: ecl, language: "ecl" }).then(document => {
                 vscode.window.showTextDocument(document);
             });
         });
@@ -397,7 +397,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     abort() {
-        this._wu.abort().then(() => this._tree._onDidChangeTreeData.fire(this));
+        this._wu.abort().then(() => this._tree.refresh(this));
     }
 
     delete() {

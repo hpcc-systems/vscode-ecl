@@ -186,7 +186,10 @@ export class Store {
 
     fetchRange(options): Promise<any[]> {
         const retVal = new Deferred();
-        this._request(options.start, options.end).then(response => retVal.resolve(response));
+        this._request(options.start, options.end)
+            .then(response => retVal.resolve(response))
+            .catch(e => retVal.reject(e))
+            ;
         return new QueryResults(retVal.then(response => response.data), {
             totalLength: retVal.then(response => response.totalLength)
         });

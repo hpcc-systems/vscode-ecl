@@ -3,8 +3,8 @@ import { ExtensionContext, Event, EventEmitter, TreeItem, TreeDataProvider, Comm
 export class Tree implements TreeDataProvider<Item> {
     _ctx: ExtensionContext;
 
-    _onDidChangeTreeData: EventEmitter<Item | null> = new EventEmitter<Item | null>();
-    readonly onDidChangeTreeData: Event<Item | null> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData: EventEmitter<Item | undefined> = new EventEmitter<Item | undefined>();
+    readonly onDidChangeTreeData: Event<Item | undefined> = this._onDidChangeTreeData.event;
 
     protected _treeView: TreeView<Item>;
 
@@ -17,8 +17,8 @@ export class Tree implements TreeDataProvider<Item> {
         });
     }
 
-    refresh(): void {
-        this._onDidChangeTreeData.fire(null);
+    refresh(element?: Item): void {
+        this._onDidChangeTreeData.fire(element);
     }
 
     getTreeItem(node: Item): TreeItem | Thenable<TreeItem> {
