@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.25.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.24.0...v2.25.0) (2023-12-19)
+
+
+### Features
+
+* Adding matching WU Context Menu functionality from the ECL IDE ([9da291a](https://github.com/hpcc-systems/vscode-ecl/commit/9da291a87431e1da5a736bc95209075ee057e29b))
+
+
+### Bug Fixes
+
+*  Workaround VSCode 1.85.x regression ([014ac55](https://github.com/hpcc-systems/vscode-ecl/commit/014ac55abe0a87aaffee9e05f65742d61cef3d7d))
+
 ## [2.24.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.23.7...v2.24.0) (2023-10-27)
 
 
