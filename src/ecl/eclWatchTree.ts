@@ -1,4 +1,4 @@
-import { Workunit, WUStateID, Result, WUInfo, WUDetails } from "@hpcc-js/comms";
+import { Workunit, WUStateID, Result, WUInfo, WorkunitsService } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
 import localize from "../util/localize";
@@ -93,14 +93,52 @@ export class ECLWatchTree extends Tree {
             wuNode.delete();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.protectWU", (wuNode: ECLWUNode) => {
-            wuNode.protect();
-            this.refresh();
+        vscode.commands.registerCommand("hpccPlatform.setStateCompiled", (wuNode: ECLWUNode) => {
+            wuNode.setStateCompiled();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.unprotectWU", (wuNode: ECLWUNode) => {
-            wuNode.unprotect();
-            this.refresh();
+        vscode.commands.registerCommand("hpccPlatform.setStateRunning", (wuNode: ECLWUNode) => {
+            wuNode.setStateRunning();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateCompleted", (wuNode: ECLWUNode) => {
+            wuNode.setStateCompleted();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateFailed", (wuNode: ECLWUNode) => {
+            wuNode.setStateFailed();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateArchived", (wuNode: ECLWUNode) => {
+            wuNode.setStateArchived();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateAborting", (wuNode: ECLWUNode) => {
+            wuNode.setStateAborting();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateAborted", (wuNode: ECLWUNode) => {
+            wuNode.setStateAborted();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateBlocked", (wuNode: ECLWUNode) => {
+            wuNode.setStateBlocked();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateSubmitted", (wuNode: ECLWUNode) => {
+            wuNode.setStateSubmitted();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateScheduled", (wuNode: ECLWUNode) => {
+            wuNode.setStateScheduled();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateCompiling", (wuNode: ECLWUNode) => {
+            wuNode.setStateCompiling();
+        });
+        
+        vscode.commands.registerCommand("hpccPlatform.setStateWait", (wuNode: ECLWUNode) => {
+            wuNode.setStateWait();
         });
 
     }
@@ -410,12 +448,60 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         this._wu.abort().then(() => this._tree._onDidChangeTreeData.fire(this));
     }
 
-    protect() {
-        this._wu.protect();
+    setState(stateID: WUStateID) {
+        const service = new WorkunitsService({ baseUrl: this._wu.BaseUrl });
+        return service.WUUpdate({
+            Wuid: this._wu.Wuid,
+            State: stateID as unknown as string
+        }).then(() => this._tree.refresh());
     }
 
-    unprotect() {
-        this._wu.unprotect();
+    setStateCompiled() {
+        this.setState(WUStateID.Compiled);
+    }
+
+    setStateRunning() {
+        this.setState(WUStateID.Running);
+    }
+
+    setStateCompleted() {
+        this.setState(WUStateID.Completed);
+    }
+
+    setStateFailed() {
+        this.setState(WUStateID.Failed);
+    }
+
+    setStateArchived() {
+        this.setState(WUStateID.Archived);
+    }
+
+    setStateAborting() {
+        this.setState(WUStateID.Aborting);
+    }
+
+    setStateAborted() {
+        this.setState(WUStateID.Aborted);
+    }
+
+    setStateBlocked() {
+        this.setState(WUStateID.Blocked);
+    }
+
+    setStateSubmitted() {
+        this.setState(WUStateID.Submitted);
+    }
+
+    setStateScheduled() {
+        this.setState(WUStateID.Scheduled);
+    }
+
+    setStateCompiling() {
+        this.setState(WUStateID.Compiling);
+    }
+
+    setStateWait() {
+        this.setState(WUStateID.Wait);
     }
 
     delete() {
@@ -439,8 +525,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     contextValue(): string {
-        const prot = this._wu.Protected ? "Protected" : "Unprotected";
-        return this._wu.isComplete() ? `ECLWUNodeComplete,${prot}` : `ECLWUNode,${prot}`;
+        return this._wu.isComplete() ? "ECLWUNodeComplete" : "ECLWUNode";
     }
 }
 

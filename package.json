@@ -402,16 +402,64 @@
         "enablement": "viewItem =~ /ECLWUNodeComplete/"
       },
       {
-        "command": "hpccPlatform.protectWU",
+        "command": "hpccPlatform.setStateCompiled",
         "category": "ECL",
-        "title": "%Protect Workunit%",
-        "enablement": "viewItem =~ /ECLWUNodeComplete/"
+        "title": "%Compiled%"
       },
       {
-        "command": "hpccPlatform.unprotectWU",
+        "command": "hpccPlatform.setStateRunning",
         "category": "ECL",
-        "title": "%Unprotect Workunit%",
-        "enablement": "viewItem =~ /ECLWUNodeComplete/"
+        "title": "%Running%"
+      },
+      {
+        "command": "hpccPlatform.setStateCompleted",
+        "category": "ECL",
+        "title": "%Completed%"
+      },
+      {
+        "command": "hpccPlatform.setStateFailed",
+        "category": "ECL",
+        "title": "%Failed%"
+      },
+      {
+        "command": "hpccPlatform.setStateArchived",
+        "category": "ECL",
+        "title": "%Archived%"
+      },
+      {
+        "command": "hpccPlatform.setStateAborting",
+        "category": "ECL",
+        "title": "%Aborting%"
+      },
+      {
+        "command": "hpccPlatform.setStateAborted",
+        "category": "ECL",
+        "title": "%Aborted%"
+      },
+      {
+        "command": "hpccPlatform.setStateBlocked",
+        "category": "ECL",
+        "title": "%Blocked%"
+      },
+      {
+        "command": "hpccPlatform.setStateSubmitted",
+        "category": "ECL",
+        "title": "%Submitted%"
+      },
+      {
+        "command": "hpccPlatform.setStateScheduled",
+        "category": "ECL",
+        "title": "%Scheduled%"
+      },
+      {
+        "command": "hpccPlatform.setStateCompiling",
+        "category": "ECL",
+        "title": "%Compiling%"
+      },
+      {
+        "command": "hpccPlatform.setStateWaiting",
+        "category": "ECL",
+        "title": "%Waiting%"
       },
       {
         "command": "hpccPlatform.refresh",
@@ -664,7 +712,63 @@
         }
       }
     ],
+    "submenus": [
+      {
+        "id": "setState",
+        "label": "Set State"
+      }
+    ],
     "menus": {
+      "setState": [
+        {
+            "command": "hpccPlatform.setStateCompiled",
+            "group": "set@01"
+        },
+        {
+            "command": "hpccPlatform.setStateRunning",
+            "group": "set@02"
+        },
+        {
+            "command": "hpccPlatform.setStateCompleted",
+            "group": "set@03"
+        },
+        {
+            "command": "hpccPlatform.setStateFailed",
+            "group": "set@04"
+        },
+        {
+            "command": "hpccPlatform.setStateArchived",
+            "group": "set@05"
+        },
+        {
+            "command": "hpccPlatform.setStateAborting",
+            "group": "set@06"
+        },
+        {
+            "command": "hpccPlatform.setStateAborted",
+            "group": "set@07"
+        },
+        {
+            "command": "hpccPlatform.setStateBlocked",
+            "group": "set@08"
+        },
+        {
+            "command": "hpccPlatform.setStateSubmitted",
+            "group": "set@09"
+        },
+        {
+            "command": "hpccPlatform.setStateScheduled",
+            "group": "set@10"
+        },
+        {
+            "command": "hpccPlatform.setStateCompiling",
+            "group": "set@11"
+        },
+        {
+            "command": "hpccPlatform.setStateWaiting",
+            "group": "set@12"
+        }
+      ],
       "explorer/context": [
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
@@ -867,14 +971,8 @@
           "group": "3action@920"
         },
         {
-          "when": "viewItem =~ /Unprotected/",
-          "command": "hpccPlatform.protectWU",
-          "group": "3action@930"
-        },
-        {
-          "when": "viewItem =~ /Protected/",
-          "command": "hpccPlatform.unprotectWU",
-          "group": "3action@940"
+          "submenu": "setState",
+          "group": "3action@950"
         },
         {
           "command": "hpccResources.bundles.homepage",
