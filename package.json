@@ -51,7 +51,7 @@
   "devDependencies": {
     "@fluentui/react": "8.111.2",
     "@hpcc-js/common": "2.71.11",
-    "@hpcc-js/comms": "2.85.0",
+    "@hpcc-js/comms": "2.86.0",
     "@hpcc-js/ddl-shim": "2.20.5",
     "@hpcc-js/dgrid2": "2.3.11",
     "@hpcc-js/loader": "2.104.28",
@@ -393,13 +393,73 @@
         "command": "hpccPlatform.abortWU",
         "category": "ECL",
         "title": "%Abort Workunit%",
-        "enablement": "viewItem == ECLWUNode"
+        "enablement": "viewItem =~ /ECLWUNode/"
       },
       {
         "command": "hpccPlatform.deleteWU",
         "category": "ECL",
         "title": "%Delete Workunit%",
-        "enablement": "viewItem == ECLWUNodeComplete"
+        "enablement": "viewItem =~ /ECLWUNodeComplete/"
+      },
+      {
+        "command": "hpccPlatform.setStateCompiled",
+        "category": "ECL",
+        "title": "%Compiled%"
+      },
+      {
+        "command": "hpccPlatform.setStateRunning",
+        "category": "ECL",
+        "title": "%Running%"
+      },
+      {
+        "command": "hpccPlatform.setStateCompleted",
+        "category": "ECL",
+        "title": "%Completed%"
+      },
+      {
+        "command": "hpccPlatform.setStateFailed",
+        "category": "ECL",
+        "title": "%Failed%"
+      },
+      {
+        "command": "hpccPlatform.setStateArchived",
+        "category": "ECL",
+        "title": "%Archived%"
+      },
+      {
+        "command": "hpccPlatform.setStateAborting",
+        "category": "ECL",
+        "title": "%Aborting%"
+      },
+      {
+        "command": "hpccPlatform.setStateAborted",
+        "category": "ECL",
+        "title": "%Aborted%"
+      },
+      {
+        "command": "hpccPlatform.setStateBlocked",
+        "category": "ECL",
+        "title": "%Blocked%"
+      },
+      {
+        "command": "hpccPlatform.setStateSubmitted",
+        "category": "ECL",
+        "title": "%Submitted%"
+      },
+      {
+        "command": "hpccPlatform.setStateScheduled",
+        "category": "ECL",
+        "title": "%Scheduled%"
+      },
+      {
+        "command": "hpccPlatform.setStateCompiling",
+        "category": "ECL",
+        "title": "%Compiling%"
+      },
+      {
+        "command": "hpccPlatform.setStateWaiting",
+        "category": "ECL",
+        "title": "%Waiting%"
       },
       {
         "command": "hpccPlatform.refresh",
@@ -652,7 +712,63 @@
         }
       }
     ],
+    "submenus": [
+      {
+        "id": "setState",
+        "label": "Set State"
+      }
+    ],
     "menus": {
+      "setState": [
+        {
+            "command": "hpccPlatform.setStateCompiled",
+            "group": "set@01"
+        },
+        {
+            "command": "hpccPlatform.setStateRunning",
+            "group": "set@02"
+        },
+        {
+            "command": "hpccPlatform.setStateCompleted",
+            "group": "set@03"
+        },
+        {
+            "command": "hpccPlatform.setStateFailed",
+            "group": "set@04"
+        },
+        {
+            "command": "hpccPlatform.setStateArchived",
+            "group": "set@05"
+        },
+        {
+            "command": "hpccPlatform.setStateAborting",
+            "group": "set@06"
+        },
+        {
+            "command": "hpccPlatform.setStateAborted",
+            "group": "set@07"
+        },
+        {
+            "command": "hpccPlatform.setStateBlocked",
+            "group": "set@08"
+        },
+        {
+            "command": "hpccPlatform.setStateSubmitted",
+            "group": "set@09"
+        },
+        {
+            "command": "hpccPlatform.setStateScheduled",
+            "group": "set@10"
+        },
+        {
+            "command": "hpccPlatform.setStateCompiling",
+            "group": "set@11"
+        },
+        {
+            "command": "hpccPlatform.setStateWaiting",
+            "group": "set@12"
+        }
+      ],
       "explorer/context": [
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
@@ -853,6 +969,10 @@
           "command": "hpccPlatform.deleteWU",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "3action@920"
+        },
+        {
+          "submenu": "setState",
+          "group": "3action@950"
         },
         {
           "command": "hpccResources.bundles.homepage",
