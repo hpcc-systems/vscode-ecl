@@ -51,7 +51,7 @@
   "devDependencies": {
     "@fluentui/react": "8.111.2",
     "@hpcc-js/common": "2.71.11",
-    "@hpcc-js/comms": "2.86.0",
+    "@hpcc-js/comms": "2.87.0",
     "@hpcc-js/ddl-shim": "2.20.5",
     "@hpcc-js/dgrid2": "2.3.11",
     "@hpcc-js/loader": "2.104.28",
@@ -462,6 +462,26 @@
         "title": "%Waiting%"
       },
       {
+        "command": "hpccPlatform.moveJobUp",
+        "category": "ECL",
+        "title": "%Up%"
+      },
+      {
+        "command": "hpccPlatform.moveJobDown",
+        "category": "ECL",
+        "title": "%Down%"
+      },
+      {
+        "command": "hpccPlatform.moveJobBack",
+        "category": "ECL",
+        "title": "%Back%"
+      },
+      {
+        "command": "hpccPlatform.moveJobFront",
+        "category": "ECL",
+        "title": "%Front%"
+      },
+      {
         "command": "hpccPlatform.refresh",
         "category": "ECL",
         "title": "%Refresh%",
@@ -716,9 +736,31 @@
       {
         "id": "setState",
         "label": "%Set State%"
+      },
+      {
+        "id": "setPriority",
+        "label": "%Set Priority%"
       }
     ],
     "menus": {
+      "setPriority": [
+        {
+            "command": "hpccPlatform.moveJobUp",
+            "group": "set@01"
+        },
+        {
+            "command": "hpccPlatform.moveJobDown",
+            "group": "set@02"
+        },
+        {
+            "command": "hpccPlatform.moveJobBack",
+            "group": "set@03"
+        },
+        {
+            "command": "hpccPlatform.moveJobFront",
+            "group": "set@04"
+        }
+      ],
       "setState": [
         {
             "command": "hpccPlatform.setStateCompiled",
@@ -969,6 +1011,10 @@
           "command": "hpccPlatform.deleteWU",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "3action@920"
+        },
+        {
+          "submenu": "setPriority",
+          "group": "3action@940"
         },
         {
           "submenu": "setState",
