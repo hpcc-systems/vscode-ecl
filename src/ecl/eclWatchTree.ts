@@ -171,7 +171,7 @@ export class ECLWatchTree extends Tree {
             Descending: false,
             Count: 1
         }).then(workunits => {
-            let year = 1970;
+            let year = 2000;
             let month = 0;
             let day = 1;
             if (workunits.length) {
