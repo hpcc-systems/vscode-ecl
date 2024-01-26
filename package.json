@@ -715,7 +715,7 @@
     "submenus": [
       {
         "id": "setState",
-        "label": "Set State"
+        "label": "%Set State%"
       }
     ],
     "menus": {
