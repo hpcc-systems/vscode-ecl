@@ -115,43 +115,43 @@ export class ECLWatchTree extends Tree {
         vscode.commands.registerCommand("hpccPlatform.setStateRunning", (wuNode: ECLWUNode) => {
             wuNode.setStateRunning();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateCompleted", (wuNode: ECLWUNode) => {
             wuNode.setStateCompleted();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateFailed", (wuNode: ECLWUNode) => {
             wuNode.setStateFailed();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateArchived", (wuNode: ECLWUNode) => {
             wuNode.setStateArchived();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateAborting", (wuNode: ECLWUNode) => {
             wuNode.setStateAborting();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateAborted", (wuNode: ECLWUNode) => {
             wuNode.setStateAborted();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateBlocked", (wuNode: ECLWUNode) => {
             wuNode.setStateBlocked();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateSubmitted", (wuNode: ECLWUNode) => {
             wuNode.setStateSubmitted();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateScheduled", (wuNode: ECLWUNode) => {
             wuNode.setStateScheduled();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateCompiling", (wuNode: ECLWUNode) => {
             wuNode.setStateCompiling();
         });
-        
+
         vscode.commands.registerCommand("hpccPlatform.setStateWait", (wuNode: ECLWUNode) => {
             wuNode.setStateWait();
         });
@@ -560,7 +560,15 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     delete() {
-        this._wu.delete().then(() => this._tree.refresh());
+        const items: vscode.QuickPickItem[] = [];
+        items.push({ label: localize("Yes"), description: `${localize("Delete Workunit")} ${this._wu.Wuid}` });
+        items.push({ label: localize("No"), description: localize("Do not delete") });
+
+        vscode.window.showQuickPick(items, { title: localize("Delete Workunit"), canPickMany: false, placeHolder: localize("Choose Yes or No") }).then(selection => {
+            if (!selection || selection.label == localize("No"))
+                return;
+            this._wu.delete().then(() => this._tree.refresh());
+        });
     }
 
     hasChildren() {
