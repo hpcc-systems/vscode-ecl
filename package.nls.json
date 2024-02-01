@@ -89,6 +89,8 @@
     "Refresh": "Refresh",
     "Refresh Tree": "Refresh Tree",
     "Reject unauthorized calls e.g. SSL certificate errors": "Reject unauthorized calls e.g. SSL certificate errors",
+    "Resubmit": "Resubmit",
+    "Resubmit ECL to HPCC Platform": "Resubmit ECL to HPCC Platform",
     "Reveal Generated ECL in File Explorer": "Reveal Generated ECL in File Explorer",
     "Reveals Generated ECL in File Explorer": "Reveals Generated ECL in File Explorer",
     "Run 'eclcc -syntax' on load": "Run 'eclcc -syntax' on load",

@@ -231,6 +231,17 @@
         "enablement": "ecl.connected"
       },
       {
+        "command": "hpccPlatform.resubmitWU",
+        "category": "ECL",
+        "title": "%Resubmit%",
+        "description": "%Resubmit ECL to HPCC Platform%",
+        "icon": {
+          "light": "resources/light/play.svg",
+          "dark": "resources/dark/play.svg"
+        },
+        "enablement": "ecl.connected"
+      },
+      {
         "command": "ecl.submitNoArchive",
         "category": "ECL",
         "title": "%Submit (No Archive)%",
@@ -1006,6 +1017,11 @@
           "command": "hpccPlatform.abortWU",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "3action@910"
+        },
+        {
+          "command": "hpccPlatform.resubmitWU",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "3action@915"
         },
         {
           "command": "hpccPlatform.deleteWU",

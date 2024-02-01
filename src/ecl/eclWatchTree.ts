@@ -89,6 +89,10 @@ export class ECLWatchTree extends Tree {
             wuNode.abort();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.resubmitWU", (wuNode: ECLWUNode) => {
+            wuNode.resubmit();
+        });
+
         vscode.commands.registerCommand("hpccPlatform.deleteWU", (wuNode: ECLWUNode) => {
             wuNode.delete();
         });
@@ -463,6 +467,10 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         this._wu.abort().then(() => this._tree.refresh(this));
     }
 
+    resubmit() {
+        this._wu.resubmit().then(() => this._tree.refresh(this));
+    }
+    
     moveJobUp() {
         const service = new SMCService({ baseUrl: this._wu.BaseUrl });
         return service.MoveJobUp({
