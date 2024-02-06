@@ -1,4 +1,4 @@
-import { Workunit, WUStateID, Result, WUInfo, WorkunitsService } from "@hpcc-js/comms";
+import { Workunit, WUStateID, Result, WUInfo, WorkunitsService, SMCService } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
 import localize from "../util/localize";
@@ -93,6 +93,21 @@ export class ECLWatchTree extends Tree {
             wuNode.delete();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.moveJobUp", (wuNode: ECLWUNode) => {
+            wuNode.moveJobUp();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.moveJobDown", (wuNode: ECLWUNode) => {
+            wuNode.moveJobDown();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.moveJobBack", (wuNode: ECLWUNode) => {
+            wuNode.moveJobBack();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.moveJobFront", (wuNode: ECLWUNode) => {
+            wuNode.moveJobFront();
+        });
         vscode.commands.registerCommand("hpccPlatform.setStateCompiled", (wuNode: ECLWUNode) => {
             wuNode.setStateCompiled();
         });
@@ -446,6 +461,46 @@ export class ECLWUNode extends Item<ECLWatchTree> {
 
     abort() {
         this._wu.abort().then(() => this._tree.refresh(this));
+    }
+
+    moveJobUp() {
+        const service = new SMCService({ baseUrl: this._wu.BaseUrl });
+        return service.MoveJobUp({
+            ClusterType: this._wu.ClusterFlag,
+            Cluster: this._wu.Cluster,
+            QueueName: this._wu.Queue,
+            Wuid: this._wu.Wuid
+        }).then(() => this._tree.refresh());
+    }
+
+    moveJobDown() {
+        const service = new SMCService({ baseUrl: this._wu.BaseUrl });
+        return service.MoveJobDown({
+            ClusterType: this._wu.ClusterFlag,
+            Cluster: this._wu.Cluster,
+            QueueName: this._wu.Queue,
+            Wuid: this._wu.Wuid
+        }).then(() => this._tree.refresh());
+    }
+
+    moveJobBack() {
+        const service = new SMCService({ baseUrl: this._wu.BaseUrl });
+        return service.MoveJobBack({
+            ClusterType: this._wu.ClusterFlag,
+            Cluster: this._wu.Cluster,
+            QueueName: this._wu.Queue,
+            Wuid: this._wu.Wuid
+        }).then(() => this._tree.refresh());
+    }
+
+    moveJobFront() {
+        const service = new SMCService({ baseUrl: this._wu.BaseUrl });
+        return service.MoveJobFront({
+            ClusterType: this._wu.ClusterFlag,
+            Cluster: this._wu.Cluster,
+            QueueName: this._wu.Queue,
+            Wuid: this._wu.Wuid
+        }).then(() => this._tree.refresh());
     }
 
     setState(stateID: WUStateID) {
