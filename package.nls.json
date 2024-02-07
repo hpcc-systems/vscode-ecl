@@ -22,6 +22,7 @@
     "Check syntax on load": "Check syntax on load",
     "Check syntax on save": "Check syntax on save",
     "Check syntax with KEL grammar (fast)": "Check syntax with KEL grammar (fast)",
+    "Choose Yes or No": "Choose Yes or No",
     "Clear all previously reported ECL Syntax Check results": "Clear all previously reported ECL Syntax Check results",
     "Client Tools Homepage": "Client Tools Homepage",
     "Completed": "Completed",
@@ -39,6 +40,7 @@
     "Default timeout (secs)": "Default timeout (secs)",
     "Delete Workunit": "Delete Workunit",
     "Digitally sign ECL file": "Digitally sign ECL file",
+    "Do not delete": "Do not delete",
     "Down": "Down",
     "ECL Client Tools Terminal": "ECL Client Tools Terminal",
     "ECL Watch": "ECL Watch",
@@ -66,6 +68,7 @@
     "Launch ECL Watch": "Launch ECL Watch",
     "Max result limit for workunit results": "Max result limit for workunit results",
     "My workunits": "My workunits",
+    "No": "No",
     "Open ECL": "Open ECL",
     "Open ECL Watch": "Open ECL Watch",
     "Open ECL Watch in external browser": "Open ECL Watch in external browser",
@@ -136,5 +139,6 @@
     "View ECL Markdown": "View ECL Markdown",
     "Waiting": "Waiting",
     "Write eclcc log file to specified file": "Write eclcc log file to specified file",
+    "Yes": "Yes",
     "eclcc syntax check arguments": "eclcc syntax check arguments"
 }
