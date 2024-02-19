@@ -413,6 +413,18 @@
         "enablement": "viewItem =~ /ECLWUNodeComplete/"
       },
       {
+        "command": "hpccPlatform.protectWU",
+        "category": "ECL",
+        "title": "%Protect Workunit%",
+        "enablement": "viewItem =~ /ECLWUNode/"
+      },
+      {
+        "command": "hpccPlatform.unprotectWU",
+        "category": "ECL",
+        "title": "%Unprotect Workunit%",
+        "enablement": "viewItem =~ /ECLWUNode/"
+      },
+      {
         "command": "hpccPlatform.setStateCompiled",
         "category": "ECL",
         "title": "%Compiled%"
@@ -1029,7 +1041,13 @@
           "group": "3action@920"
         },
         {
-          "submenu": "setPriority",
+          "when": "view == hpccPlatform && viewItem =~ /ECLWUNodeUnprotected/",
+          "command": "hpccPlatform.protectWU",
+          "group": "3action@930"
+        },
+        {
+          "when": "view == hpccPlatform && viewItem =~ /ECLWUNodeProtected/",
+          "command": "hpccPlatform.unprotectWU",
           "group": "3action@940"
         },
         {
