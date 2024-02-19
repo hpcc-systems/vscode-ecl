@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.26.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.26.0...v2.26.1) (2024-02-19)
+
+
+### Bug Fixes
+
+* add translate string to Set State in WU context menu ([d55a5d4](https://github.com/hpcc-systems/vscode-ecl/commit/d55a5d45fa5b69591af7b1482abecd382b5af9bb))
+
 ## [2.26.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.25.0...v2.26.0) (2024-02-19)
 
 
