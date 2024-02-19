@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "ecl",
-  "version": "2.25.0",
+  "version": "2.26.0",
   "publisher": "hpcc-systems",
   "displayName": "ECL Language",
   "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
@@ -768,70 +768,70 @@
     "menus": {
       "setPriority": [
         {
-            "command": "hpccPlatform.moveJobUp",
-            "group": "set@01"
+          "command": "hpccPlatform.moveJobUp",
+          "group": "set@01"
         },
         {
-            "command": "hpccPlatform.moveJobDown",
-            "group": "set@02"
+          "command": "hpccPlatform.moveJobDown",
+          "group": "set@02"
         },
         {
-            "command": "hpccPlatform.moveJobBack",
-            "group": "set@03"
+          "command": "hpccPlatform.moveJobBack",
+          "group": "set@03"
         },
         {
-            "command": "hpccPlatform.moveJobFront",
-            "group": "set@04"
+          "command": "hpccPlatform.moveJobFront",
+          "group": "set@04"
         }
       ],
       "setState": [
         {
-            "command": "hpccPlatform.setStateCompiled",
-            "group": "set@01"
+          "command": "hpccPlatform.setStateCompiled",
+          "group": "set@01"
         },
         {
-            "command": "hpccPlatform.setStateRunning",
-            "group": "set@02"
+          "command": "hpccPlatform.setStateRunning",
+          "group": "set@02"
         },
         {
-            "command": "hpccPlatform.setStateCompleted",
-            "group": "set@03"
+          "command": "hpccPlatform.setStateCompleted",
+          "group": "set@03"
         },
         {
-            "command": "hpccPlatform.setStateFailed",
-            "group": "set@04"
+          "command": "hpccPlatform.setStateFailed",
+          "group": "set@04"
         },
         {
-            "command": "hpccPlatform.setStateArchived",
-            "group": "set@05"
+          "command": "hpccPlatform.setStateArchived",
+          "group": "set@05"
         },
         {
-            "command": "hpccPlatform.setStateAborting",
-            "group": "set@06"
+          "command": "hpccPlatform.setStateAborting",
+          "group": "set@06"
         },
         {
-            "command": "hpccPlatform.setStateAborted",
-            "group": "set@07"
+          "command": "hpccPlatform.setStateAborted",
+          "group": "set@07"
         },
         {
-            "command": "hpccPlatform.setStateBlocked",
-            "group": "set@08"
+          "command": "hpccPlatform.setStateBlocked",
+          "group": "set@08"
         },
         {
-            "command": "hpccPlatform.setStateSubmitted",
-            "group": "set@09"
+          "command": "hpccPlatform.setStateSubmitted",
+          "group": "set@09"
         },
         {
-            "command": "hpccPlatform.setStateScheduled",
-            "group": "set@10"
+          "command": "hpccPlatform.setStateScheduled",
+          "group": "set@10"
         },
         {
-            "command": "hpccPlatform.setStateCompiling",
-            "group": "set@11"
+          "command": "hpccPlatform.setStateCompiling",
+          "group": "set@11"
         },
         {
-            "command": "hpccPlatform.setStateWaiting",
-            "group": "set@12"
+          "command": "hpccPlatform.setStateWaiting",
+          "group": "set@12"
         }
       ],
       "explorer/context": [

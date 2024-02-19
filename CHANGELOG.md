@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.26.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.25.0...v2.26.0) (2024-02-19)
+
+
+### Features
+
+* add a resubmit item in the WU menu ([42f735b](https://github.com/hpcc-systems/vscode-ecl/commit/42f735b0e4e1e7dac161bec41e9f610b5042bacc))
+* Add protect & unprotect workunit to WU context menu ([a249bf3](https://github.com/hpcc-systems/vscode-ecl/commit/a249bf3bbf4175dd106de3ff7eb2b4d30dcdfd44))
+* Add protect & unprotect workunit to WU context menu ([77b7628](https://github.com/hpcc-systems/vscode-ecl/commit/77b7628211326031dd59ee4ccd506c4a79ee2264))
+
+
+### Bug Fixes
+
+* add ask to delete to delete workunits ([404af47](https://github.com/hpcc-systems/vscode-ecl/commit/404af472316c6d01c7583cae02d8559d240508f5))
+* add translate string to Set State in WU context menu ([257fd31](https://github.com/hpcc-systems/vscode-ecl/commit/257fd31ed62167a77d68aa50866b53a04c87217f))
+
 ## [2.25.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.24.0...v2.25.0) (2023-12-19)
 
 
