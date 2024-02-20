@@ -1051,8 +1051,14 @@
           "group": "3action@940"
         },
         {
+          "when": "view == hpccPlatform && viewItem =~ /ECLWUNode/",
           "submenu": "setState",
-          "group": "3action@950"
+          "group": "4action@900"
+        },
+        {
+          "when": "view == hpccPlatform && viewItem =~ /ECLWUNode/",
+          "submenu": "setPriority",
+          "group": "5action@900"
         },
         {
           "command": "hpccResources.bundles.homepage",
