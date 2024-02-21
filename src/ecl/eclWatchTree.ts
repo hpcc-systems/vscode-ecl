@@ -57,6 +57,10 @@ export class ECLWatchTree extends Tree {
             this.refresh();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.userRefresh", () => {
+            this.refresh();
+        });
+
         vscode.commands.registerCommand("hpccPlatform.refresh", (element?: Item) => {
             this.refresh(element);
         });
