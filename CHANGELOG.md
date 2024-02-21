@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.26.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.26.1...v2.26.2) (2024-02-21)
+
+
+### Bug Fixes
+
+* Right click WU->Result has wrong menu item ([01f0687](https://github.com/hpcc-systems/vscode-ecl/commit/01f068782000df5f89822edae8611ad8efcb7c45))
+
 ### [2.26.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.26.0...v2.26.1) (2024-02-19)
 
 
