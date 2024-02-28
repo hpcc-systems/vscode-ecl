@@ -220,6 +220,10 @@
     "viewsWelcome": [],
     "commands": [
       {
+        "command": "ecl.newECLDocument",
+        "title": "ECL File"
+      },
+      {
         "command": "ecl.submit",
         "category": "ECL",
         "title": "%Submit%",
@@ -755,6 +759,7 @@
         }
       }
     ],
+    
     "submenus": [
       {
         "id": "setState",
@@ -766,6 +771,12 @@
       }
     ],
     "menus": {
+      "file/newFile": [
+        {                   
+          "command": "ecl.newECLDocument",
+          "group": "file"
+        }
+      ],
       "setPriority": [
         {
           "command": "hpccPlatform.moveJobUp",
@@ -835,6 +846,11 @@
         }
       ],
       "explorer/context": [
+        {
+          "command": "ecl.newECLDocument",
+          "group": "ecl",
+          "when": "ecl.isActive"
+        },
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.copyAsEclID",
@@ -1130,6 +1146,10 @@
       ]
     },
     "keybindings": [
+      {
+        "command": "ecl.newECLDocument",
+        "key": "Alt+J Alt+N"
+      },
       {
         "command": "ecl.searchTerm",
         "key": "shift+f1",

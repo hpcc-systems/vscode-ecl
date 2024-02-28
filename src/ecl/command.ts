@@ -42,6 +42,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.importModFile", this.importModFile, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.copyAsEclID", this.copyAsEclID, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.newECLDocument", this.newECLDocument, this));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -49,6 +50,13 @@ export class ECLCommands {
             eclCommands = new ECLCommands(ctx);
         }
         return eclCommands;
+    }
+
+    newECLDocument()
+    {
+        vscode.workspace.openTextDocument({ language: "ecl" }).then(document => {
+            vscode.window.showTextDocument(document);
+        });
     }
 
     checkSyntax() {
