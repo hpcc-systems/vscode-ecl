@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.26.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.26.2...v2.26.3) (2024-03-01)
+
+
+### Bug Fixes
+
+* restore the deleted ecl.WUShowResults setting ([cf550b7](https://github.com/hpcc-systems/vscode-ecl/commit/cf550b7eb49eb94a3341e67bd11f3896496a5329))
+
 ### [2.26.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.26.1...v2.26.2) (2024-02-21)
 
 
