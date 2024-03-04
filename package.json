@@ -505,7 +505,7 @@
         "title": "%Front%"
       },
       {
-        "command": "hpccPlatform.refresh",
+        "command": "hpccPlatform.userRefresh",
         "category": "ECL",
         "title": "%Refresh%",
         "description": "%Refresh Tree%",
@@ -949,7 +949,7 @@
           "group": "navigation@20"
         },
         {
-          "command": "hpccPlatform.refresh",
+          "command": "hpccPlatform.userRefresh",
           "when": "view == hpccPlatform",
           "group": "navigation@40"
         },
@@ -1059,6 +1059,11 @@
           "when": "view == hpccPlatform && viewItem =~ /ECLWUNode/",
           "submenu": "setPriority",
           "group": "5action@900"
+        },
+        {
+          "when": "view == hpccPlatform && viewItem =~ /ECLWUNode/",
+          "command": "hpccPlatform.userRefresh",
+          "group": "6action@900"
         },
         {
           "command": "hpccResources.bundles.homepage",
