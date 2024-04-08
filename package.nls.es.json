@@ -128,7 +128,7 @@
     "Submit ECL to HPCC Platform": "Enviar ECL a la plataforma HPCC",
     "Submits ECL to public demo servers, hthor": "Envía ECL a servidores públicos de demostración, hthor",
     "Submitted workunit": "Unidades de trabajo sormitidos",
-    "Submitting ECL via the Run/Debug page is being deprecated.  Please use the new Submit + Compile buttons at the top of the ECL Editor": "El envío de ECL a través de la página Ejecutar / Depurar está obsoleto. Utilice los nuevos botones Enviar + Compilar en la parte superior del Editor ECL",
+    "Submitting ECL via the Run/Debug page is being deprecated. Please use the new Submit + Compile buttons at the top of the ECL Editor": "El envío de ECL a través de la página Ejecutar / Depurar está obsoleto. Utilice los nuevos botones Enviar + Compilar en la parte superior del Editor ECL",
     "Submitting workunit": "Enviar unidad de trabajo",
     "Switch HPCC Platform": "Cambiar HPCC Platform",
     "Switch Target Cluster": "Cambiar sistemas de destino",
