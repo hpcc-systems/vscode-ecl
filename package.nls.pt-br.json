@@ -127,7 +127,7 @@
     "Submit ECL to HPCC Platform": "Submeter ECL para a plataforma HPCC",
     "Submits ECL to public demo servers, hthor": "Submeter ECL para servidores de demonstração públicos, hthor",
     "Submitted workunit": "workunit submetida",
-    "Submitting ECL via the Run/Debug page is being deprecated.  Please use the new Submit + Compile buttons at the top of the ECL Editor": "Submissão de código ECL via opção Run/Debug não é mais suportada. Favor utilizar os novos botões Submit + Compile no canto superior direito da área de edição de código ECL.",
+    "Submitting ECL via the Run/Debug page is being deprecated. Please use the new Submit + Compile buttons at the top of the ECL Editor": "Submissão de código ECL via opção Run/Debug não é mais suportada. Favor utilizar os novos botões Submit + Compile no canto superior direito da área de edição de código ECL.",
     "Submitting workunit": "Submetendo workunit",
     "Switch HPCC Platform": "Mudar plataforma HPCC",
     "Switch Target Cluster": "Mudar cluster de destino",
