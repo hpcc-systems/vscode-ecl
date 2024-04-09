@@ -233,11 +233,11 @@ export class ECLWatchTree extends Tree {
             let idx = 0;
             currDate -= 6;
             curr = new Date(now.getFullYear(), now.getMonth(), currDate);
-            retVal.push(new ECLDateRangeNode(this, PrevWeeks[idx++], curr, new Date(curr.getFullYear(), curr.getMonth(), curr.getDate() + 7)));
+            retVal.push(new ECLDateRangeNode(this, localize(PrevWeeks[idx++]), curr, new Date(curr.getFullYear(), curr.getMonth(), curr.getDate() + 7)));
             while (curr.getMonth() === now.getMonth() && curr >= oldestWeek) {
                 currDate -= 7;
                 curr = new Date(now.getFullYear(), now.getMonth(), currDate);
-                retVal.push(new ECLDateRangeNode(this, PrevWeeks[idx++], curr, new Date(curr.getFullYear(), curr.getMonth(), curr.getDate() + 7)));
+                retVal.push(new ECLDateRangeNode(this, localize(PrevWeeks[idx++]), curr, new Date(curr.getFullYear(), curr.getMonth(), curr.getDate() + 7)));
             }
 
             //  Months
