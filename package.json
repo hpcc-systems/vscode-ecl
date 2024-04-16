@@ -18,7 +18,8 @@
     "clean": "rimraf --glob out lib* dist types hpcc-systems.ecl.vsix",
     "copy-resources": "copyfiles -f ./node_modules/@hpcc-js/ddl-shim/schema/v2.json ./dist",
     "gen-grammar": "wsl -e ./scripts/grammar-generate.sh",
-    "gen-nls": "node ./lib-util/index.js",
+    "gen-nls": "node ./lib-util/generate.js",
+    "merge-nls": "node ./lib-util/merge.js",
     "compile": "tsc",
     "compile-watch": "npm run compile -- -watch",
     "compile-es6": "tsc --module es2020 --outDir ./lib-es6",
@@ -45,6 +46,7 @@
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "1.2.2",
+    "child-process": "^1.0.2",
     "csv": "^6.3.5",
     "exceljs": "^4.4.0"
   },
@@ -740,7 +742,7 @@
       },
       {
         "command": "notebook.cell.name",
-        "title": "Result Name",
+        "title": "%Result Name%",
         "icon": {
           "dark": "./resources/dark/string.svg",
           "light": "./resources/light/string.svg"
@@ -748,7 +750,7 @@
       },
       {
         "command": "notebook.cell.db",
-        "title": "Database Name",
+        "title": "%Database Name%",
         "icon": {
           "dark": "./resources/dark/server-process.svg",
           "light": "./resources/light/server-process.svg"

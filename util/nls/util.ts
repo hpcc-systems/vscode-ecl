@@ -16,7 +16,7 @@ export function encodeKey(id: string): string {
 }
 
 export function sortAndWrite(filePath: string, obj: object) {
-    const keys = Object.keys(obj).sort();
+    const keys = Object.keys(obj).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
     const tmp = {};
     keys.forEach(k => tmp[k] = obj[k]);
     fs.writeFileSync(filePath, JSON.stringify(tmp, undefined, 4), "utf-8");

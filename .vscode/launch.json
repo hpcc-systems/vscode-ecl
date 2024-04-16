@@ -102,8 +102,17 @@
             "webRoot": "${workspaceRoot}"
         },
         {
-            "name": "NLS Util",
-            "program": "${workspaceFolder}/lib-util/index.js",
+            "name": "NLS Generate",
+            "program": "${workspaceFolder}/lib-util/generate.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
+            "name": "NLS Merge",
+            "program": "${workspaceFolder}/lib-util/merge.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
