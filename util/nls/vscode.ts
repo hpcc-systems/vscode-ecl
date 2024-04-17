@@ -8,12 +8,13 @@ const prevWeeks = ["Last Week", "Two Weeks Ago", "Three Weeks Ago", "Four Weeks 
 const tmpDir = "./tmp/";
 
 const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-const en = JSON.parse(fs.readFileSync("./package.nls.json", "utf-8"));
+const en = JSON.parse(fs.readFileSync("./package.nls.json", "utf-8")); 
+const all = {};
 
-export function initLocales() {
+export function addStringArrays(found: object) {
     prevWeeks.forEach( (week) => {
-        if (en[week] === undefined) {
-            en[week] = week;
+        if (found[week] === undefined) {
+            found[week] = week;
         }
     });
 }
@@ -30,9 +31,13 @@ export function googleTrans() {
 
 function fix(item: any, what: string): boolean {
     let key = item[what];
-    if (key === undefined) return false;
+    if (key === undefined || key == "") return false;
     let retVal = false;
-    if (key[0] !== "%" || key[key.length - 1] !== "%") {
+    if (key[0] == "%" || key[key.length - 1] == "%") { 
+        const k = key.substring(1, key.length - 1);
+        all[k] = "";
+    }
+    else if (key[0] !== "%" || key[key.length - 1] !== "%") {
         key = `%${key}%`;
         item[what] = key;
         retVal = retVal || true;
@@ -40,6 +45,7 @@ function fix(item: any, what: string): boolean {
     key = key.substring(1, key.length - 1);
     if (!en[key]) {
         en[key] = key;
+        all[key] = "";
         retVal = retVal || true;
     }
     return retVal;
@@ -69,9 +75,19 @@ export function fixPackage() {
         touched = fix(item, "description") || touched;
     }
 
+    const deleted = {};
+    for (const key in en) {
+        if (all[key] === undefined) {
+            deleted[key] = key;
+        }
+    } 
+
     if (touched) {
         fs.writeFileSync("./package.json", JSON.stringify(pkg, undefined, 2), "utf-8");
         sortAndWrite(tmpDir + "package.nls.missing.json", en);
+    }
+    if (touched || deleted) {
+        sortAndWrite(tmpDir + "package.nls.deleted.json", deleted);
     }
 }
 
@@ -123,14 +139,15 @@ async function runPythonScript(scriptPath: string): Promise<string> {
 }
 
 export function updateLocaleFiles() {
-    initLocales();
     const found = {};
-
     traverseDir("./src", found);
+    addStringArrays(found);
 
     locales.forEach(l => {
         const otherFile = `./package.nls.${l}.json`;
         const otherFileMissing = `${tmpDir}package.nls.${l}.missing.json`;
+        const otherFileDeleted = `${tmpDir}package.nls.${l}.deleted.json`;
+
         let other = {};
         if (fs.existsSync(otherFile)) {
             other = JSON.parse(fs.readFileSync(otherFile, "utf-8"));
@@ -140,7 +157,7 @@ export function updateLocaleFiles() {
 
         const otherMissing = {};
         let touched = false;
-        for (const key in en) {
+        for (const key in all) {
             if (other[key] === undefined) {
                 otherMissing[key] = "";
                 touched = true;
@@ -157,26 +174,50 @@ export function updateLocaleFiles() {
         if (touched) {
             sortAndWrite(otherFileMissing, otherMissing);
         }
+
+        const otherDeleted = {};
+        touched = false;
+        for (const key in other) {
+            if (all[key] === undefined && found[key] === undefined) {
+                otherDeleted[key] = "";
+                touched = true;
+            }
+        }
+
+        if (touched) {
+            sortAndWrite(otherFileDeleted, otherDeleted);
+        }
     });
 }
 
-function mergeLocal(origFile: string, missingFile: string): void {
+function mergeLocal(fileName: string, type: string): void {
+
+    const origFile = fileName.replace(`.${type}.`, ".");
+    const deleteFile = fileName.replace(`.${type}.`, ".deleted.");
 
     if (!fs.existsSync(path.join("./", origFile))) {
         console.log(`Original file not found: ${origFile}`);
         return;
     }
     
-    if (!fs.existsSync(path.join(tmpDir, missingFile))) {
-        console.log(`Translation file not found: ${missingFile}`);
+    if (!fs.existsSync(path.join(tmpDir, fileName))) {
+        console.log(`Translation file not found: ${fileName}`);
         return;
+    }
+
+    let deletes = false;
+    if (fs.existsSync(path.join(tmpDir, fileName))) {
+        deletes = true;
     }
 
     let currentData: any;
     let newData: any;
+    let deletedData: any;
     try {
         currentData = JSON.parse(fs.readFileSync(path.join("./", origFile), "utf-8"));
-        newData = JSON.parse(fs.readFileSync(path.join(tmpDir, missingFile), "utf-8"));
+        newData = JSON.parse(fs.readFileSync(path.join(tmpDir, fileName), "utf-8"));
+        if (deletes)
+            deletedData = JSON.parse(fs.readFileSync(path.join(tmpDir, deleteFile), "utf-8"));
     } catch (err) {
         console.error(`Error reading files: ${err}`);
         return;
@@ -188,6 +229,14 @@ function mergeLocal(origFile: string, missingFile: string): void {
         }
     }
 
+    if (deletes) {
+        for (const fieldName in deletedData) {
+            if (fieldName in currentData) {
+                delete currentData[fieldName];
+            }
+        }
+    }
+
     const mergedFile: string = path.join(tmpDir, origFile);
     sortAndWrite(mergedFile, currentData);
 }
@@ -195,9 +244,9 @@ function mergeLocal(origFile: string, missingFile: string): void {
 export function mergeLocales() {
     for (const fileName of fs.readdirSync(tmpDir)) {
         if (fileName.startsWith("package.nls.") && fileName.includes(".trans.")) {
-            mergeLocal(fileName.replace(".trans.", "."), fileName);
+            mergeLocal(fileName, "trans");
         } else if (fileName == "package.nls.missing.json") {
-            mergeLocal(fileName.replace(".missing.", "."), fileName);
+            mergeLocal(fileName, "missing");
         }
     }
 }
