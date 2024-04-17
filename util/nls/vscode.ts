@@ -54,9 +54,32 @@ export function fixPackage() {
         touched = fix(item, "description") || touched;
     }
 
+    for (const key in pkg.contributes.submenus) {
+        const item = pkg.contributes.submenus[key];
+        touched = fix(item, "label") || touched;
+    }
+    
+    for (const key in pkg.contributes.views) {
+        const items = pkg.contributes.views[key];
+        for (const k in items) {
+            const item = items[k];
+            touched = fix(item, "name") || touched;
+        }
+    }
+
     for (const key in pkg.contributes.configuration.properties) {
         const item = pkg.contributes.configuration.properties[key];
         touched = fix(item, "description") || touched;
+    }
+
+    for (const key in pkg.contributes.notebooks) {
+        const item = pkg.contributes.notebooks[key];
+        touched = fix(item, "displayName") || touched;
+    }
+
+    for (const key in pkg.contributes.notebookRenderer) {
+        const item = pkg.contributes.notebookRenderer[key];
+        touched = fix(item, "displayName") || touched;
     }
 
     for (const key in pkg.contributes.debuggers[0].configurationAttributes.launch.properties) {
