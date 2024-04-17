@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import localize from "../../util/localize";
 import { serializer } from "./serializer";
 
 export let commands: Commands;
@@ -57,7 +58,7 @@ export class Commands {
     async cellName(cell: vscode.NotebookCell) {
         const node = serializer.node(cell);
         node.name = node.name ?? "";
-        const name = await vscode.window.showInputBox({ value: node.name, title: "Result Name", placeHolder: "Result Name" });
+        const name = await vscode.window.showInputBox({ value: node.name, title: localize("Result Name"), placeHolder: localize("Result Name") });
         if (name !== undefined) {
             node.name = name;
         }
@@ -72,7 +73,7 @@ export class Commands {
             name: "",
             ...node?.data?.source,
         };
-        const name = await vscode.window.showInputBox({ value: data.source.name, title: "Database Name", placeHolder: "Database Name" });
+        const name = await vscode.window.showInputBox({ value: data.source.name, title: localize("Database Name"), placeHolder: localize("Database Name") });
         if (name !== undefined) {
             data.source.name = name;
             node.data = data;
