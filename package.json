@@ -1206,17 +1206,17 @@
       "hpccResources": [
         {
           "id": "hpccResources.bundles",
-          "name": "Bundles"
+          "name": "%Bundles%"
         },
         {
           "id": "hpccResources.clientTools",
-          "name": "Client Tools"
+          "name": "%Client Tools%"
         }
       ],
       "explorer": [
         {
           "id": "hpccPlatform",
-          "name": "HPCC Platform",
+          "name": "%HPCC Platform%",
           "icon": "resources/hpcc-icon-bw.svg",
           "contextualTitle": "HPCC Platform",
           "when": "hpccPlatformActive"
@@ -1450,7 +1450,7 @@
       {
         "id": "ecl-notebook",
         "type": "ecl-notebook",
-        "displayName": "ECL Notebook",
+        "displayName": "%ECL Notebook%",
         "selector": [
           {
             "filenamePattern": "*.eclnb"
@@ -1461,7 +1461,7 @@
     "notebookRenderer": [
       {
         "id": "ecl-notebook-wurenderer",
-        "displayName": "Workunit Renderer",
+        "displayName": "%Workunit Renderer%",
         "entrypoint": "./dist/wuRenderer.js",
         "mimeTypes": [
           "application/hpcc.wu+json"
@@ -1470,7 +1470,7 @@
       },
       {
         "id": "ecl-notebook-ojsrenderer",
-        "displayName": "ObservableJS Renderer",
+        "displayName": "%ObservableJS Renderer%",
         "entrypoint": "./dist/ojsRenderer.js",
         "mimeTypes": [
           "application/hpcc.ojs+json"
