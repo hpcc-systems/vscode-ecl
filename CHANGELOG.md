@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.27.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.26.3...v2.27.0) (2024-04-23)
+
+
+### Features
+
+* add refresh to the WU context menu ([664d53a](https://github.com/hpcc-systems/vscode-ecl/commit/664d53a2118adfcf43b9d0738ef8c0bbcb80806f))
+* remove orphan localization strings ([d5cd2fc](https://github.com/hpcc-systems/vscode-ecl/commit/d5cd2fc8acfcb51a8291fde39d05704b80c76c80))
+
+
+### Bug Fixes
+
+* add localize function to input box title and place holder ([ea98e7e](https://github.com/hpcc-systems/vscode-ecl/commit/ea98e7e8c43ae2382c00b0dab9617f00e6badd58))
+* add submenus, views, notebooks, and notebookRenderer to fixPackage ([6af15d6](https://github.com/hpcc-systems/vscode-ecl/commit/6af15d679a4d3941cf0fc68e0b914acbe015f0ee))
+* Localize previous week strings ([9af4232](https://github.com/hpcc-systems/vscode-ecl/commit/9af4232cf59f0776dba4bb0331930837cdff7825))
+* update localizaations and remove orphans strings ([63aca42](https://github.com/hpcc-systems/vscode-ecl/commit/63aca425f42abef5236bbea1ecdedab2e16d0ec1))
+* update localization for English ([70ce140](https://github.com/hpcc-systems/vscode-ecl/commit/70ce140724c893cac09fe96ecb6f009f4ec82a7d))
+* update localization for French ([0ed6d89](https://github.com/hpcc-systems/vscode-ecl/commit/0ed6d89330b86a5d4977536af09b868ba3109f2f))
+* update localization for Portuguese ([810092a](https://github.com/hpcc-systems/vscode-ecl/commit/810092abc739173504c3c972e6061d056653c8c1))
+* update localization for Spanish ([ea83e89](https://github.com/hpcc-systems/vscode-ecl/commit/ea83e899c60bb438af3eb900be970c4273c1e46a))
+* update nls scripts ([e01874c](https://github.com/hpcc-systems/vscode-ecl/commit/e01874c6eb763342d868ec6758663a3e08c06a09))
+* Whitespace in es, pt, and zh localization files ([7368242](https://github.com/hpcc-systems/vscode-ecl/commit/7368242b5b3c736f318e5e7f59128edb0f1e313b))
+
 ### [2.26.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.26.2...v2.26.3) (2024-03-01)
 
 
