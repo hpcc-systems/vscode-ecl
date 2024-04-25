@@ -74,7 +74,7 @@
     "@types/react": "17.0.65",
     "@types/react-dom": "17.0.20",
     "@types/tmp": "0.2.4",
-    "@types/vscode": "1.76.0",
+    "@types/vscode": "1.82.0",
     "@types/vscode-notebook-renderer": "1.72.0",
     "@typescript-eslint/eslint-plugin": "6.7.0",
     "@typescript-eslint/parser": "6.7.0",
@@ -125,15 +125,15 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.76.0",
-    "node": ">=16.0.0"
+    "vscode": "^1.76.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
     "theme": "light"
   },
   "extensionDependencies": [
-    "GordonSmith.observable-js"
+    "GordonSmith.observable-js",
+    "github.copilot-chat"
   ],
   "activationEvents": [
     "onLanguage:ecl",
@@ -147,6 +147,11 @@
     "workspaceContains:*.eclnb",
     "workspaceContains:*.kel",
     "workspaceContains:*.dashy"
+  ],
+  "enabledApiProposals": [
+    "chatParticipant",
+    "chatVariableResolver",
+    "languageModels"
   ],
   "contributes": {
     "languages": [
@@ -221,6 +226,10 @@
     ],
     "viewsWelcome": [],
     "commands": [
+      {
+        "command": "eclagent.doSomething",
+        "title": "Do Something"
+      },
       {
         "command": "ecl.submit",
         "category": "ECL",
@@ -755,6 +764,24 @@
           "dark": "./resources/dark/server-process.svg",
           "light": "./resources/light/server-process.svg"
         }
+      }
+    ],
+    "chatParticipants": [
+      {
+          "id": "chat-ecl.eclagent",
+          "name": "eclagent",
+          "description": "I'm conversant in ECL! What can I teach you?",
+          "isSticky": true,
+          "commands": [
+              {
+                  "name": "teach",
+                  "description": "Pick at random ECL concept then explain it"
+              },
+              {
+                  "name": "play",
+                  "description": "Enter "
+              }
+          ]
       }
     ],
     "submenus": [

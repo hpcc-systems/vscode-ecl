@@ -10,9 +10,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
     initialize().then(() => {
         return Promise.all([
-            import("./ecl/main").then(({ activate }) => activate(context)),
-            import("./kel/main").then(({ activate }) => activate(context)),
-            import("./dashy/main").then(({ activate }) => activate(context))
+            import("./ecl/main.js").then(({ activate }) => activate(context)),
+            import("./kel/main.js").then(({ activate }) => activate(context)),
+            import("./dashy/main.js").then(({ activate }) => activate(context)),
+            import("./chat/main.js").then(({ activate }) => activate(context))
         ]);
     }).then(() => {
         reporter.sendTelemetryEvent("initialized");
