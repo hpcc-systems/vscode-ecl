@@ -770,16 +770,16 @@
       {
           "id": "chat-ecl.eclagent",
           "name": "eclagent",
-          "description": "I'm conversant in ECL! What can I teach you?",
+          "description": "What can I teach you?",
           "isSticky": true,
           "commands": [
               {
                   "name": "teach",
-                  "description": "Pick at random ECL concept then explain it"
+                  "description": "Pick an ECL concept then explain it"
               },
               {
                   "name": "play",
-                  "description": "Enter "
+                  "description": "Tell me somthing"
               }
           ]
       }

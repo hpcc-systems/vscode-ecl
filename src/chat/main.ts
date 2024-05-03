@@ -3,6 +3,18 @@ import * as vscode from "vscode";
 const ECLAGENT_NAMES_COMMAND_ID = "eclagent.doSomething";
 const ECLAGENT_PARTICIPANT_ID = "chat-ecl.eclagent";
 
+const ECLTEACH_TOPICS = [
+    "Overview ",
+    "Constants",
+    "Environment Variables",
+    "Definitions",
+    "Basic Definition Types",
+    "Recordset Filtering",
+    "Function Definitions (Parameter Passing)",
+    "Definition Visibility",
+    "Field and Definition Qualification",
+    "Actions and Definitions"
+];
 interface IECLChatResult extends vscode.ChatResult {
     metadata: {
         command: string;
@@ -22,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
             stream.progress("Picking the right topic to teach...");
             const topic = getTopic(context.history);
             const messages = [
-                new vscode.LanguageModelChatSystemMessage("You are an ECL expert! Your job is to explain ECL concepts. Always start your response by stating what concept you are explaining. Always include code samples."),
+                new vscode.LanguageModelChatSystemMessage("You are an ECL language expert! Your job is to explain ECL concepts. Always start your response by stating what concept you are explaining. Always include code samples."),
                 new vscode.LanguageModelChatUserMessage(topic)
             ];
             const chatResponse = await vscode.lm.sendChatRequest(LANGUAGE_MODEL_ID, messages, {}, token);
@@ -39,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
         } else if (request.command == "play") {
             stream.progress("Preparing to look at some ECL code...");
             const messages = [
-                new vscode.LanguageModelChatSystemMessage("You are an ECL expert! You are also very knowledgable about HPCC."),
+                new vscode.LanguageModelChatSystemMessage("You are an ECL language expert! You are also very knowledgable about HPCC."),
                 new vscode.LanguageModelChatUserMessage("Give small random ECL code samples. " + request.prompt)
             ];
             const chatResponse = await vscode.lm.sendChatRequest(LANGUAGE_MODEL_ID, messages, {}, token);
@@ -49,9 +61,9 @@ export function activate(context: vscode.ExtensionContext) {
             return { metadata: { command: "play" } };
         } else {
             const messages = [
-                new vscode.LanguageModelChatSystemMessage(`You are an ECL expert! Think carefully and step by step like an expert who is good at explaining something.
+                new vscode.LanguageModelChatSystemMessage(`You are an ECL language expert! Think carefully and step by step like an expert who is good at explaining something.
                     Your job is to explain computer science concepts in fun and entertaining way. Always start your response by stating what concept you are explaining. Always include code samples.`),
-                new vscode.LanguageModelChatUserMessage(request.prompt)
+                new vscode.LanguageModelChatUserMessage("In the ECL language, " + request.prompt)
             ];
             const chatResponse = await vscode.lm.sendChatRequest(LANGUAGE_MODEL_ID, messages, {}, token);
             for await (const fragment of chatResponse.stream) {
@@ -156,13 +168,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 // Get a random topic that the ECL agent has not taught in the chat history yet
 function getTopic(history: ReadonlyArray<vscode.ChatRequestTurn | vscode.ChatResponseTurn>): string {
-    const topics = ["import", "modules", "functions", "transforms", "strings"];
     // Filter the chat history to get only the responses from the ecl agent
     const previousEclAgentResponses = history.filter(h => {
         return h instanceof vscode.ChatResponseTurn && h.participant == ECLAGENT_PARTICIPANT_ID;
     }) as vscode.ChatResponseTurn[];
     // Filter the topics to get only the topics that have not been taught by the ecl agent yet
-    const topicsNoRepetition = topics.filter(topic => {
+    const topicsNoRepetition = ECLTEACH_TOPICS.filter(topic => {
         return !previousEclAgentResponses.some(eclAgentResponse => {
             return eclAgentResponse.response.some(r => {
                 return r instanceof vscode.ChatResponseMarkdownPart && r.value.value.includes(topic);
