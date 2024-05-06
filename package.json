@@ -1285,6 +1285,16 @@
       "type": "object",
       "title": "ECL",
       "properties": {
+        "ecl.languageModel": {
+          "type": "string",
+          "scope": "resource",
+          "enum": [
+            "copilot-gpt-3.5-turbo",
+            "copilot-gpt-4"
+          ],
+          "default": "copilot-gpt-3.5-turbo",
+          "description": "%Language Model (faster copilot-gpt-3.5-turbo, slower more powerful copilot-gpt-4%)"
+        },
         "ecl.eclccArgs": {
           "type": "array",
           "scope": "resource",
