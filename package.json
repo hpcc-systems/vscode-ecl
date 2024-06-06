@@ -125,7 +125,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.76.0"
+    "vscode": "^1.90.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
@@ -768,20 +768,20 @@
     ],
     "chatParticipants": [
       {
-          "id": "chat-ecl.eclagent",
-          "name": "eclagent",
-          "description": "What can I teach you?",
-          "isSticky": true,
-          "commands": [
-              {
-                  "name": "teach",
-                  "description": "Pick an ECL concept then explain it"
-              },
-              {
-                  "name": "play",
-                  "description": "Tell me somthing"
-              }
-          ]
+        "id": "chat-ecl.eclagent",
+        "name": "eclagent",
+        "description": "What can I teach you?",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "teach",
+            "description": "Pick an ECL concept then explain it"
+          },
+          {
+            "name": "play",
+            "description": "Tell me somthing"
+          }
+        ]
       }
     ],
     "submenus": [

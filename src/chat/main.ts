@@ -21,6 +21,8 @@ interface IECLChatResult extends vscode.ChatResult {
     }
 }
 
+const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: "copilot", family: "gpt-3.5-turbo" };
+
 export function activate(context: vscode.ExtensionContext) {
 
     // Define an ECL chat handler. 
@@ -29,21 +31,28 @@ export function activate(context: vscode.ExtensionContext) {
         // To talk to an LLM in your subcommand handler implementation, your
         // extension can use VS Code's `requestChatAccess` API to access the Copilot API.
         // The GitHub Copilot Chat extension implements this provider.
-            
+
         const config = vscode.workspace.getConfiguration("ecl");
         const languageModelId: string = config.get("languageModel");
 
         if (request.command == "teach") {
             stream.progress("Picking the right topic to teach...");
             const topic = getTopic(context.history);
-            const messages = [
-                new vscode.LanguageModelChatSystemMessage("You are an ECL language expert! Your job is to explain ECL concepts. Always start your response by stating what concept you are explaining. Always include code samples."),
-                new vscode.LanguageModelChatUserMessage(topic)
-            ];
+            try {
+                const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR);
+                if (model) {
+                    const messages = [
+                        vscode.LanguageModelChatMessage.User("You are an ECL language expert! Your job is to explain ECL concepts. Always start your response by stating what concept you are explaining. Always include code samples."),
+                        vscode.LanguageModelChatMessage.User(topic)
+                    ];
 
-            const chatResponse = await vscode.lm.sendChatRequest(languageModelId, messages, {}, token);
-            for await (const fragment of chatResponse.stream) {
-                stream.markdown(fragment);
+                    const chatResponse = await model.sendRequest(messages, {}, token);
+                    for await (const fragment of chatResponse.text) {
+                        stream.markdown(fragment);
+                    }
+                }
+            } catch (err) {
+                handleError(err, stream);
             }
 
             stream.button({
@@ -52,27 +61,34 @@ export function activate(context: vscode.ExtensionContext) {
             });
 
             return { metadata: { command: "teach" } };
-        } else if (request.command == "play") {
-            stream.progress("Preparing to look at some ECL code...");
-            const messages = [
-                new vscode.LanguageModelChatSystemMessage("You are an ECL language expert! You are also very knowledgable about HPCC."),
-                new vscode.LanguageModelChatUserMessage("Give small random ECL code samples. " + request.prompt)
-            ];
-            const chatResponse = await vscode.lm.sendChatRequest(languageModelId, messages, {}, token);
-            for await (const fragment of chatResponse.stream) {
-                stream.markdown(fragment);
-            }
-            return { metadata: { command: "play" } };
+            // } else if (request.command == "play") {
+            //     stream.progress("Preparing to look at some ECL code...");
+            //     const messages = [
+            //         vscode.LanguageModelChatMessage.User("You are an ECL language expert! You are also very knowledgable about HPCC."),
+            //         vscode.LanguageModelChatMessage.User("Give small random ECL code samples. " + request.prompt)
+            //     ];
+            //     const chatResponse = await vscode.lm.sendChatRequest(languageModelId, messages, {}, token);
+            //     for await (const fragment of chatResponse.stream) {
+            //         stream.markdown(fragment);
+            //     }
+            //     return { metadata: { command: "play" } };
         } else {
-            const messages = [
-                new vscode.LanguageModelChatSystemMessage(`You are an ECL language expert! Think carefully and step by step like an ECL language expert who is good at explaining something.
+            try {
+                const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR);
+                if (model) {
+                    const messages = [
+                        vscode.LanguageModelChatMessage.User(`You are an ECL language expert! Think carefully and step by step like an ECL language expert who is good at explaining something.
                     Your job is to explain computer science concepts in fun and entertaining way. Always start your response by stating what concept you are explaining. Always include code samples.`),
-                new vscode.LanguageModelChatUserMessage("In the ECL language, explain " + request.prompt)
-            ];
-            const chatResponse = await vscode.lm.sendChatRequest(languageModelId, messages, {}, token);
-            for await (const fragment of chatResponse.stream) {
-                // Process the output from the language model
-                stream.markdown(fragment);
+                        vscode.LanguageModelChatMessage.User("In the ECL language, explain " + request.prompt)
+                    ];
+                    const chatResponse = await model.sendRequest(messages, {}, token);
+                    for await (const fragment of chatResponse.text) {
+                        // Process the output from the language model
+                        stream.markdown(fragment);
+                    }
+                }
+            } catch (err) {
+                handleError(err, stream);
             }
 
             return { metadata: { command: "" } };
@@ -123,15 +139,23 @@ export function activate(context: vscode.ExtensionContext) {
             const config = vscode.workspace.getConfiguration("ecl");
             const languageModelId: string = config.get("languageModel");
             const text = textEditor.document.getText();
-            const messages = [
-                new vscode.LanguageModelChatSystemMessage(`You are an ECL expert! Think carefully and step by step.
-                Your job is to be as clear as possible and be encouraging. Be creative. IMPORTANT respond just with code. Do not use markdown!`),
-                new vscode.LanguageModelChatUserMessage(text)
-            ];
 
             let chatResponse: vscode.LanguageModelChatResponse | undefined;
             try {
-                chatResponse = await vscode.lm.sendChatRequest(languageModelId, messages, {}, new vscode.CancellationTokenSource().token);
+                const [model] = await vscode.lm.selectChatModels({ vendor: 'copilot', family: 'gpt-3.5-turbo' });
+                if (!model) {
+                    console.log('Model not found. Please make sure the GitHub Copilot Chat extension is installed and enabled.')
+                    return;
+                }
+
+                const messages = [
+                    vscode.LanguageModelChatMessage.User(`You are an ECL expert! Think carefully and step by step.
+                Your job is to be as clear as possible and be encouraging. Be creative. IMPORTANT respond just with code. Do not use markdown!`),
+                    vscode.LanguageModelChatMessage.User(text)
+                ];
+
+                let chatResponse: vscode.LanguageModelChatResponse | undefined;
+                chatResponse = await model.sendRequest(messages, {}, new vscode.CancellationTokenSource().token);
 
             } catch (err) {
                 // making the chat request might fail because
@@ -140,6 +164,8 @@ export function activate(context: vscode.ExtensionContext) {
                 // - quote limits exceeded
                 if (err instanceof vscode.LanguageModelError) {
                     console.log(err.message, err.code, err.cause);
+                } else {
+                    throw err;
                 }
                 return;
             }
@@ -153,7 +179,7 @@ export function activate(context: vscode.ExtensionContext) {
 
             // Stream the code into the editor as it is coming in from the Language Model
             try {
-                for await (const fragment of chatResponse.stream) {
+                for await (const fragment of chatResponse.text) {
                     await textEditor.edit(edit => {
                         const lastLine = textEditor.document.lineAt(textEditor.document.lineCount - 1);
                         const position = new vscode.Position(lastLine.lineNumber, lastLine.text.length);
@@ -170,6 +196,22 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }),
     );
+}
+
+function handleError(err: any, stream: vscode.ChatResponseStream): void {
+    // making the chat request might fail because
+    // - model does not exist
+    // - user consent not given
+    // - quote limits exceeded
+    if (err instanceof vscode.LanguageModelError) {
+        console.log(err.message, err.code, err.cause);
+        if (err.cause instanceof Error && err.cause.message.includes("off_topic")) {
+            stream.markdown(vscode.l10n.t("I'm sorry, I can only explain computer science concepts."));
+        }
+    } else {
+        // re-throw other errors so they show up in the UI
+        throw err;
+    }
 }
 
 // Get a random topic that the ECL agent has not taught in the chat history yet
