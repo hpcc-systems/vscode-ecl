@@ -53,7 +53,7 @@
   "devDependencies": {
     "@fluentui/react": "8.111.2",
     "@hpcc-js/common": "2.71.11",
-    "@hpcc-js/comms": "2.87.0",
+    "@hpcc-js/comms": "^2.93.0",
     "@hpcc-js/ddl-shim": "2.20.5",
     "@hpcc-js/dgrid2": "2.3.11",
     "@hpcc-js/loader": "2.104.28",
@@ -74,13 +74,14 @@
     "@types/react": "17.0.65",
     "@types/react-dom": "17.0.20",
     "@types/tmp": "0.2.4",
-    "@types/vscode": "1.76.0",
+    "@types/vscode": "1.82.0",
     "@types/vscode-notebook-renderer": "1.72.0",
     "@typescript-eslint/eslint-plugin": "6.7.0",
     "@typescript-eslint/parser": "6.7.0",
     "@vscode/debugadapter": "1.63.0",
     "@vscode/debugprotocol": "1.63.0",
     "@vscode/extension-telemetry": "0.6.2",
+    "@vscode/prompt-tsx": "^0.2.3-alpha",
     "@vscode/vsce": "2.21.0",
     "acorn-walk": "8.2.0",
     "adm-zip": "0.5.10",
@@ -133,7 +134,8 @@
     "theme": "light"
   },
   "extensionDependencies": [
-    "GordonSmith.observable-js"
+    "GordonSmith.observable-js",
+    "github.copilot-chat"
   ],
   "activationEvents": [
     "onLanguage:ecl",
@@ -221,6 +223,30 @@
     ],
     "viewsWelcome": [],
     "commands": [
+      {
+        "command": "eclagent.summarizeFileContent",
+        "title": "Summarize File Content"
+      },
+      {
+          "command": "eclagent.commentFileContent",
+          "title": "Normal Comment"
+      },
+      {
+          "command": "eclagent.commentDetailedFileContent",
+          "title": "Detailed Comment"
+      },
+      {
+          "command": "eclagent.commentTerseFileContent",
+          "title": "Terse Comment"
+      },
+      {
+          "command": "eclagent.redoPrompt",
+          "title": "Redo Last Prompt"
+      },
+      {
+          "command": "eclagent.revertFileContent",
+          "title": "Revert File Content"
+      },
       {
         "command": "ecl.submit",
         "category": "ECL",
@@ -856,6 +882,26 @@
       "editor/context": [
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "eclagent.summarizeFileContent",
+          "group": "aaa@1"
+        },
+        {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "submenu": "comments",
+          "group": "aaa@2"
+        },
+        {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "eclagent.redoPrompt",
+          "group": "aaa@3"
+        },
+        {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
+          "command": "eclagent.revertFileContent",
+          "group": "aaa@4"
+        },
+        {
+          "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.submit",
           "group": "navigation@900"
         },
@@ -993,6 +1039,10 @@
       ],
       "view/item/context": [
         {
+          "submenu": "comments",
+          "group": "navigation@1"
+        },
+        {
           "command": "ecl.openECLWatchExternal",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "inline"
@@ -1111,6 +1161,20 @@
           "command": "ecl.openECLWatchExternal",
           "when": "view == hpccPlatform && viewItem == ECLResultNode",
           "group": "inline"
+        }
+      ],
+      "comments": [
+        {
+            "command": "eclagent.commentFileContent",
+            "group": "navigation@1"
+        },
+        {
+            "command": "eclagent.commentDetailedFileContent",
+            "group": "navigation@2"
+        },
+        {
+            "command": "eclagent.commentTerseFileContent",
+            "group": "navigation@3"
         }
       ],
       "notebook/cell/title": [
