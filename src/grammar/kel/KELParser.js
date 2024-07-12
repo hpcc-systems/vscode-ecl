@@ -1,4 +1,4 @@
-// Generated from ./KELParser.g4 by ANTLR 4.10.1
+// Generated from ./KELParser.g4 by ANTLR 4.13.2
 // jshint ignore: start
 import antlr4 from 'antlr4';
 import KELParserListener from './KELParserListener.js';
@@ -450,7 +450,7 @@ const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
 const decisionsToDFA = atn.decisionToState.map( (ds, index) => new antlr4.dfa.DFA(ds, index) );
 
-const sharedContextCache = new antlr4.PredictionContextCache();
+const sharedContextCache = new antlr4.atn.PredictionContextCache();
 
 export default class KELParser extends antlr4.Parser {
 
@@ -532,22 +532,18 @@ export default class KELParser extends antlr4.Parser {
         this.symbolicNames = KELParser.symbolicNames;
     }
 
-    get atn() {
-        return atn;
-    }
-
 
 
 	program() {
 	    let localctx = new ProgramContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 0, KELParser.RULE_program);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 201;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.OPTION) {
+	        while(_la===46) {
 	            this.state = 198;
 	            this.option();
 	            this.state = 203;
@@ -557,7 +553,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 209;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.ERA || _la===KELParser.PERMITS) {
+	        while(_la===38 || _la===47) {
 	            this.state = 204;
 	            this.annotation();
 	            this.state = 205;
@@ -569,42 +565,42 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 225;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(((((_la - 50)) & ~0x1f) == 0 && ((1 << (_la - 50)) & ((1 << (KELParser.IMPORT - 50)) | (1 << (KELParser.PACKAGE - 50)) | (1 << (KELParser.SHELL - 50)) | (1 << (KELParser.QUERY - 50)) | (1 << (KELParser.USE - 50)) | (1 << (KELParser.GLOBAL - 50)) | (1 << (KELParser.FUNCTION - 50)) | (1 << (KELParser.VIS - 50)) | (1 << (KELParser.RESOURCES - 50)))) !== 0) || _la===KELParser.ID) {
+	        while(((((_la - 50)) & ~0x1f) === 0 && ((1 << (_la - 50)) & 42140757) !== 0) || _la===85) {
 	            this.state = 223;
 	            this._errHandler.sync(this);
 	            switch(this._input.LA(1)) {
-	            case KELParser.IMPORT:
-	            case KELParser.PACKAGE:
-	            case KELParser.SHELL:
-	            case KELParser.QUERY:
-	            case KELParser.USE:
-	            case KELParser.GLOBAL:
-	            case KELParser.FUNCTION:
-	            case KELParser.ID:
+	            case 50:
+	            case 52:
+	            case 54:
+	            case 56:
+	            case 60:
+	            case 66:
+	            case 67:
+	            case 85:
 	                this.state = 212;
 	                this.statement();
 	                this.state = 213;
 	                this.match(KELParser.SEMI);
 	                break;
-	            case KELParser.VIS:
+	            case 73:
 	                this.state = 215;
 	                this.visual_section();
 	                this.state = 217;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
-	                if(_la===KELParser.SEMI) {
+	                if(_la===9) {
 	                    this.state = 216;
 	                    this.match(KELParser.SEMI);
 	                }
 
 	                break;
-	            case KELParser.RESOURCES:
+	            case 75:
 	                this.state = 219;
 	                this.resource_section();
 	                this.state = 221;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
-	                if(_la===KELParser.SEMI) {
+	                if(_la===9) {
 	                    this.state = 220;
 	                    this.match(KELParser.SEMI);
 	                }
@@ -642,12 +638,12 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 232;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.ERA:
+	        case 38:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 230;
 	            this.eraDeclaration();
 	            break;
-	        case KELParser.PERMITS:
+	        case 47:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 231;
 	            this.permitsDeclaration();
@@ -831,7 +827,7 @@ export default class KELParser extends antlr4.Parser {
 	eraDeclaration() {
 	    let localctx = new EraDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 8, KELParser.RULE_eraDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 264;
@@ -847,7 +843,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 273;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 269;
 	            this.match(KELParser.COMMA);
 	            this.state = 270;
@@ -877,7 +873,7 @@ export default class KELParser extends antlr4.Parser {
 	epoch() {
 	    let localctx = new EpochContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 10, KELParser.RULE_epoch);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 278;
@@ -885,7 +881,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 287;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.EQ) {
+	        if(_la===3) {
 	            this.state = 279;
 	            this.match(KELParser.EQ);
 	            this.state = 280;
@@ -897,7 +893,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 284;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.ID) {
+	            if(_la===85) {
 	                this.state = 283;
 	                localctx.sw = this.match(KELParser.ID);
 	            }
@@ -925,7 +921,7 @@ export default class KELParser extends antlr4.Parser {
 	permitsDeclaration() {
 	    let localctx = new PermitsDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 12, KELParser.RULE_permitsDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 289;
@@ -935,7 +931,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 295;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 291;
 	            this.match(KELParser.COMMA);
 	            this.state = 292;
@@ -986,7 +982,7 @@ export default class KELParser extends antlr4.Parser {
 	importStatement() {
 	    let localctx = new ImportStatementContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 16, KELParser.RULE_importStatement);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 327;
 	        this._errHandler.sync(this);
@@ -1002,7 +998,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 306;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 302;
 	                this.match(KELParser.COMMA);
 	                this.state = 303;
@@ -1023,7 +1019,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 315;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 311;
 	                this.match(KELParser.COMMA);
 	                this.state = 312;
@@ -1125,7 +1121,7 @@ export default class KELParser extends antlr4.Parser {
 	packageDeclaration() {
 	    let localctx = new PackageDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 22, KELParser.RULE_packageDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 335;
@@ -1145,7 +1141,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 343; 
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	        } while(((((_la - 50)) & ~0x1f) == 0 && ((1 << (_la - 50)) & ((1 << (KELParser.IMPORT - 50)) | (1 << (KELParser.SHELL - 50)) | (1 << (KELParser.USE - 50)) | (1 << (KELParser.GLOBAL - 50)) | (1 << (KELParser.FUNCTION - 50)))) !== 0) || _la===KELParser.ID);
+	        } while(((((_la - 50)) & ~0x1f) === 0 && ((1 << (_la - 50)) & 197649) !== 0) || _la===85);
 	        this.state = 345;
 	        this.match(KELParser.END);
 	    } catch (re) {
@@ -1228,7 +1224,7 @@ export default class KELParser extends antlr4.Parser {
 	packageExportDeclaration() {
 	    let localctx = new PackageExportDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 26, KELParser.RULE_packageExportDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 355;
@@ -1244,7 +1240,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 364;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 360;
 	            this.match(KELParser.COMMA);
 	            this.state = 361;
@@ -1272,7 +1268,7 @@ export default class KELParser extends antlr4.Parser {
 	entityDeclaration() {
 	    let localctx = new EntityDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 28, KELParser.RULE_entityDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 367;
@@ -1282,7 +1278,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 369;
 	        localctx.t = this._input.LT(1);
 	        _la = this._input.LA(1);
-	        if(!(_la===KELParser.ENTITY || _la===KELParser.ASSOCIATION)) {
+	        if(!(_la===48 || _la===49)) {
 	            localctx.t = this._errHandler.recoverInline(this);
 	        }
 	        else {
@@ -1296,7 +1292,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 376;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 372;
 	            this.match(KELParser.COMMA);
 	            this.state = 373;
@@ -1330,13 +1326,13 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 383;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.FLAT:
-	        case KELParser.QUERY:
+	        case 55:
+	        case 56:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 381;
 	            localctx.fm = this.fieldMapping();
 	            break;
-	        case KELParser.MODEL:
+	        case 59:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 382;
 	            localctx.m = this.modelDeclaration();
@@ -1363,7 +1359,7 @@ export default class KELParser extends antlr4.Parser {
 	fieldMapping() {
 	    let localctx = new FieldMappingContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 32, KELParser.RULE_fieldMapping);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 385;
@@ -1375,7 +1371,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 392;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 388;
 	            this.match(KELParser.COMMA);
 	            this.state = 389;
@@ -1405,12 +1401,12 @@ export default class KELParser extends antlr4.Parser {
 	fileType() {
 	    let localctx = new FileTypeContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 34, KELParser.RULE_fileType);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 397;
 	        _la = this._input.LA(1);
-	        if(!(_la===KELParser.FLAT || _la===KELParser.QUERY)) {
+	        if(!(_la===55 || _la===56)) {
 	        this._errHandler.recoverInline(this);
 	        }
 	        else {
@@ -1436,7 +1432,7 @@ export default class KELParser extends antlr4.Parser {
 	mappingElement() {
 	    let localctx = new MappingElementContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 36, KELParser.RULE_mappingElement);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 456;
 	        this._errHandler.sync(this);
@@ -1473,7 +1469,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 409;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.NULL) {
+	            if(_la===39) {
 	                this.state = 408;
 	                localctx.nspec = this.nullSpec();
 	            }
@@ -1481,7 +1477,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 412;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.FORMAT) {
+	            if(_la===58) {
 	                this.state = 411;
 	                localctx.fspec = this.formatSpec();
 	            }
@@ -1507,7 +1503,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 421;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.NULL) {
+	            if(_la===39) {
 	                this.state = 420;
 	                localctx.nspec = this.nullSpec();
 	            }
@@ -1579,7 +1575,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 447;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.EQ) {
+	            if(_la===3) {
 	                this.state = 445;
 	                this.match(KELParser.EQ);
 	                this.state = 446;
@@ -1630,7 +1626,7 @@ export default class KELParser extends antlr4.Parser {
 	nullSpec() {
 	    let localctx = new NullSpecContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 38, KELParser.RULE_nullSpec);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 458;
@@ -1640,7 +1636,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 461;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(((((_la - 20)) & ~0x1f) == 0 && ((1 << (_la - 20)) & ((1 << (KELParser.HYPHEN - 20)) | (1 << (KELParser.TRUE - 20)) | (1 << (KELParser.FALSE - 20)))) !== 0) || ((((_la - 86)) & ~0x1f) == 0 && ((1 << (_la - 86)) & ((1 << (KELParser.INT - 86)) | (1 << (KELParser.HEXINT - 86)) | (1 << (KELParser.BININT - 86)) | (1 << (KELParser.REAL - 86)) | (1 << (KELParser.STR - 86)) | (1 << (KELParser.TYPDCONST - 86)) | (1 << (KELParser.BAD_BIN - 86)) | (1 << (KELParser.HEX_NO_X - 86)) | (1 << (KELParser.BAD_HEX - 86)) | (1 << (KELParser.BAD_MIX - 86)) | (1 << (KELParser.BAD_REAL_A - 86)) | (1 << (KELParser.BAD_REAL_B - 86)) | (1 << (KELParser.BAD_REAL_C - 86)))) !== 0)) {
+	        if(((((_la - 20)) & ~0x1f) === 0 && ((1 << (_la - 20)) & 6291457) !== 0) || ((((_la - 86)) & ~0x1f) === 0 && ((1 << (_la - 86)) & 4161599) !== 0)) {
 	            this.state = 460;
 	            localctx.c = this.simpleConstant();
 	        }
@@ -1666,7 +1662,7 @@ export default class KELParser extends antlr4.Parser {
 	formatSpec() {
 	    let localctx = new FormatSpecContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 40, KELParser.RULE_formatSpec);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 465;
@@ -1676,13 +1672,13 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 475;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(((((_la - 20)) & ~0x1f) == 0 && ((1 << (_la - 20)) & ((1 << (KELParser.HYPHEN - 20)) | (1 << (KELParser.TRUE - 20)) | (1 << (KELParser.FALSE - 20)))) !== 0) || ((((_la - 86)) & ~0x1f) == 0 && ((1 << (_la - 86)) & ((1 << (KELParser.INT - 86)) | (1 << (KELParser.HEXINT - 86)) | (1 << (KELParser.BININT - 86)) | (1 << (KELParser.REAL - 86)) | (1 << (KELParser.STR - 86)) | (1 << (KELParser.TYPDCONST - 86)) | (1 << (KELParser.BAD_BIN - 86)) | (1 << (KELParser.HEX_NO_X - 86)) | (1 << (KELParser.BAD_HEX - 86)) | (1 << (KELParser.BAD_MIX - 86)) | (1 << (KELParser.BAD_REAL_A - 86)) | (1 << (KELParser.BAD_REAL_B - 86)) | (1 << (KELParser.BAD_REAL_C - 86)))) !== 0)) {
+	        if(((((_la - 20)) & ~0x1f) === 0 && ((1 << (_la - 20)) & 6291457) !== 0) || ((((_la - 86)) & ~0x1f) === 0 && ((1 << (_la - 86)) & 4161599) !== 0)) {
 	            this.state = 467;
 	            this.simpleConstant();
 	            this.state = 472;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 468;
 	                this.match(KELParser.COMMA);
 	                this.state = 469;
@@ -1743,7 +1739,7 @@ export default class KELParser extends antlr4.Parser {
 	compositeIdSpec() {
 	    let localctx = new CompositeIdSpecContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 44, KELParser.RULE_compositeIdSpec);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 484;
@@ -1753,7 +1749,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 490;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 486;
 	            this.match(KELParser.COMMA);
 	            this.state = 487;
@@ -1783,7 +1779,7 @@ export default class KELParser extends antlr4.Parser {
 	modelDeclaration() {
 	    let localctx = new ModelDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 46, KELParser.RULE_modelDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 511;
 	        this._errHandler.sync(this);
@@ -1801,7 +1797,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 502;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 498;
 	                this.match(KELParser.COMMA);
 	                this.state = 499;
@@ -1847,7 +1843,7 @@ export default class KELParser extends antlr4.Parser {
 	submodelDeclaration() {
 	    let localctx = new SubmodelDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 48, KELParser.RULE_submodelDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 531;
 	        this._errHandler.sync(this);
@@ -1859,7 +1855,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 513;
 	            localctx.i = this._input.LT(1);
 	            _la = this._input.LA(1);
-	            if(!(_la===KELParser.UID || _la===KELParser.ID)) {
+	            if(!(_la===57 || _la===85)) {
 	                localctx.i = this._errHandler.recoverInline(this);
 	            }
 	            else {
@@ -1885,7 +1881,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 518;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.ID) {
+	            if(_la===85) {
 	                this.state = 517;
 	                localctx.n = this.match(KELParser.ID);
 	            }
@@ -1897,7 +1893,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 526;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 522;
 	                this.match(KELParser.COMMA);
 	                this.state = 523;
@@ -1930,12 +1926,12 @@ export default class KELParser extends antlr4.Parser {
 	submodelId() {
 	    let localctx = new SubmodelIdContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 50, KELParser.RULE_submodelId);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 533;
 	        _la = this._input.LA(1);
-	        if(!(_la===KELParser.UID || _la===KELParser.ID)) {
+	        if(!(_la===57 || _la===85)) {
 	        this._errHandler.recoverInline(this);
 	        }
 	        else {
@@ -1961,7 +1957,7 @@ export default class KELParser extends antlr4.Parser {
 	useDeclaration() {
 	    let localctx = new UseDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 52, KELParser.RULE_useDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 535;
@@ -1971,7 +1967,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 541;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 537;
 	            this.match(KELParser.COMMA);
 	            this.state = 538;
@@ -1999,7 +1995,7 @@ export default class KELParser extends antlr4.Parser {
 	useKelBaseDeclaration() {
 	    let localctx = new UseKelBaseDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 54, KELParser.RULE_useKelBaseDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 544;
@@ -2021,7 +2017,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 552; 
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	        } while(_la===KELParser.COMMA);
+	        } while(_la===8);
 	        this.state = 554;
 	        this.match(KELParser.RP);
 	    } catch (re) {
@@ -2043,7 +2039,7 @@ export default class KELParser extends antlr4.Parser {
 	useKelQueryDeclaration() {
 	    let localctx = new UseKelQueryDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 56, KELParser.RULE_useKelQueryDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 556;
@@ -2065,7 +2061,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 564; 
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	        } while(_la===KELParser.COMMA);
+	        } while(_la===8);
 	        this.state = 566;
 	        this.match(KELParser.RP);
 	    } catch (re) {
@@ -2087,7 +2083,7 @@ export default class KELParser extends antlr4.Parser {
 	useElement() {
 	    let localctx = new UseElementContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 58, KELParser.RULE_useElement);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 568;
@@ -2130,7 +2126,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 580; 
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	        } while(_la===KELParser.COMMA);
+	        } while(_la===8);
 	        this.state = 582;
 	        this.match(KELParser.RP);
 	    } catch (re) {
@@ -2152,12 +2148,12 @@ export default class KELParser extends antlr4.Parser {
 	useFileType() {
 	    let localctx = new UseFileTypeContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 60, KELParser.RULE_useFileType);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 584;
 	        _la = this._input.LA(1);
-	        if(!(_la===KELParser.FLAT || _la===KELParser.FDC)) {
+	        if(!(_la===55 || _la===63)) {
 	        this._errHandler.recoverInline(this);
 	        }
 	        else {
@@ -2183,7 +2179,7 @@ export default class KELParser extends antlr4.Parser {
 	useClause() {
 	    let localctx = new UseClauseContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 62, KELParser.RULE_useClause);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 586;
@@ -2193,7 +2189,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 592;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 588;
 	            this.match(KELParser.COMMA);
 	            this.state = 589;
@@ -2221,7 +2217,7 @@ export default class KELParser extends antlr4.Parser {
 	useClauseElement() {
 	    let localctx = new UseClauseElementContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 64, KELParser.RULE_useClauseElement);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 595;
@@ -2239,11 +2235,11 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 601;
 	            this._errHandler.sync(this);
 	            switch(this._input.LA(1)) {
-	            case KELParser.ID:
+	            case 85:
 	                this.state = 599;
 	                localctx.e = this.entityMapping();
 	                break;
-	            case KELParser.PERMITS:
+	            case 47:
 	                this.state = 600;
 	                localctx.p = this.permitsClause();
 	                break;
@@ -2253,7 +2249,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 605; 
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	        } while(_la===KELParser.COMMA);
+	        } while(_la===8);
 	        this.state = 607;
 	        this.match(KELParser.RP);
 	    } catch (re) {
@@ -2298,7 +2294,7 @@ export default class KELParser extends antlr4.Parser {
 	nestedEntityMapping() {
 	    let localctx = new NestedEntityMappingContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 68, KELParser.RULE_nestedEntityMapping);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 611;
@@ -2308,11 +2304,11 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 615;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.ID:
+	        case 85:
 	            this.state = 613;
 	            localctx.e1 = this.entityMapping();
 	            break;
-	        case KELParser.PERMITS:
+	        case 47:
 	            this.state = 614;
 	            localctx.p1 = this.permitsClause();
 	            break;
@@ -2322,17 +2318,17 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 624;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 617;
 	            this.match(KELParser.COMMA);
 	            this.state = 620;
 	            this._errHandler.sync(this);
 	            switch(this._input.LA(1)) {
-	            case KELParser.ID:
+	            case 85:
 	                this.state = 618;
 	                localctx.e2 = this.entityMapping();
 	                break;
-	            case KELParser.PERMITS:
+	            case 47:
 	                this.state = 619;
 	                localctx.p2 = this.permitsClause();
 	                break;
@@ -2364,7 +2360,7 @@ export default class KELParser extends antlr4.Parser {
 	entityMapping() {
 	    let localctx = new EntityMappingContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 70, KELParser.RULE_entityMapping);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 687;
 	        this._errHandler.sync(this);
@@ -2387,7 +2383,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 637;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 633;
 	                this.match(KELParser.COMMA);
 	                this.state = 634;
@@ -2413,7 +2409,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 650;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 646;
 	                this.match(KELParser.COMMA);
 	                this.state = 647;
@@ -2443,7 +2439,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 664;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 660;
 	                this.match(KELParser.COMMA);
 	                this.state = 661;
@@ -2479,7 +2475,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 682;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 678;
 	                this.match(KELParser.COMMA);
 	                this.state = 679;
@@ -2512,7 +2508,7 @@ export default class KELParser extends antlr4.Parser {
 	useMappingOverride() {
 	    let localctx = new UseMappingOverrideContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 72, KELParser.RULE_useMappingOverride);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 722;
 	        this._errHandler.sync(this);
@@ -2539,7 +2535,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 695;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.NULL) {
+	            if(_la===39) {
 	                this.state = 694;
 	                localctx.nspec = this.nullSpec();
 	            }
@@ -2547,7 +2543,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 698;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.FORMAT) {
+	            if(_la===58) {
 	                this.state = 697;
 	                localctx.fspec = this.formatSpec();
 	            }
@@ -2566,7 +2562,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 704;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.NULL) {
+	            if(_la===39) {
 	                this.state = 703;
 	                localctx.nspec = this.nullSpec();
 	            }
@@ -2596,7 +2592,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 713;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.LIKE) {
+	            if(_la===79) {
 	                this.state = 712;
 	                localctx.lspec = this.likeSpec();
 	            }
@@ -2647,7 +2643,7 @@ export default class KELParser extends antlr4.Parser {
 	dotId() {
 	    let localctx = new DotIdContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 74, KELParser.RULE_dotId);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 724;
@@ -2655,7 +2651,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 729;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.DOT) {
+	        while(_la===7) {
 	            this.state = 725;
 	            this.match(KELParser.DOT);
 	            this.state = 726;
@@ -2712,18 +2708,18 @@ export default class KELParser extends antlr4.Parser {
 	permitsSpec() {
 	    let localctx = new PermitsSpecContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 78, KELParser.RULE_permitsSpec);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 748;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.ID:
+	        case 85:
 	            localctx = new VariablePermitsContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 737;
 	            this.dotId();
 	            break;
-	        case KELParser.LSQUARE:
+	        case 13:
 	            localctx = new ConstantPermitsContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 738;
@@ -2733,7 +2729,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 744;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 740;
 	                this.match(KELParser.COMMA);
 	                this.state = 741;
@@ -2881,46 +2877,46 @@ export default class KELParser extends antlr4.Parser {
 	logicPredicate() {
 	    let localctx = new LogicPredicateContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 84, KELParser.RULE_logicPredicate);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 789;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.LP:
-	        case KELParser.LCURL:
-	        case KELParser.LSQUARE:
-	        case KELParser.HYPHEN:
-	        case KELParser.NOT:
-	        case KELParser.TRUE:
-	        case KELParser.FALSE:
-	        case KELParser.LINK:
-	        case KELParser.UID:
-	        case KELParser.MODEL:
-	        case KELParser.SID:
-	        case KELParser.SINT:
-	        case KELParser.PID:
-	        case KELParser.PSID:
-	        case KELParser.ID:
-	        case KELParser.INT:
-	        case KELParser.HEXINT:
-	        case KELParser.BININT:
-	        case KELParser.REAL:
-	        case KELParser.STR:
-	        case KELParser.TYPDCONST:
-	        case KELParser.BAD_BIN:
-	        case KELParser.HEX_NO_X:
-	        case KELParser.BAD_HEX:
-	        case KELParser.BAD_MIX:
-	        case KELParser.BAD_REAL_A:
-	        case KELParser.BAD_REAL_B:
-	        case KELParser.BAD_REAL_C:
+	        case 1:
+	        case 11:
+	        case 13:
+	        case 20:
+	        case 36:
+	        case 41:
+	        case 42:
+	        case 43:
+	        case 57:
+	        case 59:
+	        case 81:
+	        case 82:
+	        case 83:
+	        case 84:
+	        case 85:
+	        case 86:
+	        case 87:
+	        case 88:
+	        case 89:
+	        case 90:
+	        case 91:
+	        case 101:
+	        case 102:
+	        case 103:
+	        case 104:
+	        case 105:
+	        case 106:
+	        case 107:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 780;
 	            localctx.ex1 = this.expression();
 	            this.state = 785;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 781;
 	                this.match(KELParser.COMMA);
 	                this.state = 782;
@@ -2930,7 +2926,7 @@ export default class KELParser extends antlr4.Parser {
 	                _la = this._input.LA(1);
 	            }
 	            break;
-	        case KELParser.RARROW:
+	        case 30:
 	            this.enterOuterAlt(localctx, 2);
 
 	            break;
@@ -2956,7 +2952,7 @@ export default class KELParser extends antlr4.Parser {
 	logicProductions() {
 	    let localctx = new LogicProductionsContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 86, KELParser.RULE_logicProductions);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 791;
@@ -2964,7 +2960,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 796;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 792;
 	            this.match(KELParser.COMMA);
 	            this.state = 793;
@@ -3019,7 +3015,7 @@ export default class KELParser extends antlr4.Parser {
 	entityProductions() {
 	    let localctx = new EntityProductionsContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 90, KELParser.RULE_entityProductions);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 803;
@@ -3027,7 +3023,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 808;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 804;
 	            this.match(KELParser.COMMA);
 	            this.state = 805;
@@ -3055,7 +3051,7 @@ export default class KELParser extends antlr4.Parser {
 	entityProduction() {
 	    let localctx = new EntityProductionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 92, KELParser.RULE_entityProduction);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 811;
@@ -3067,7 +3063,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 818;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 814;
 	            localctx.op = this.match(KELParser.COMMA);
 	            this.state = 815;
@@ -3097,7 +3093,7 @@ export default class KELParser extends antlr4.Parser {
 	functionStatement() {
 	    let localctx = new FunctionStatementContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 94, KELParser.RULE_functionStatement);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 823;
@@ -3109,7 +3105,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 827;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.LP) {
+	        if(_la===1) {
 	            this.state = 826;
 	            localctx.ps = this.fparams();
 	        }
@@ -3137,7 +3133,7 @@ export default class KELParser extends antlr4.Parser {
 	fparams() {
 	    let localctx = new FparamsContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 96, KELParser.RULE_fparams);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 832;
@@ -3147,7 +3143,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 838;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 834;
 	            this.match(KELParser.COMMA);
 	            this.state = 835;
@@ -3212,39 +3208,39 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 850;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.LP:
-	        case KELParser.LCURL:
-	        case KELParser.LSQUARE:
-	        case KELParser.HYPHEN:
-	        case KELParser.NOT:
-	        case KELParser.TRUE:
-	        case KELParser.FALSE:
-	        case KELParser.LINK:
-	        case KELParser.UID:
-	        case KELParser.MODEL:
-	        case KELParser.SID:
-	        case KELParser.SINT:
-	        case KELParser.PID:
-	        case KELParser.PSID:
-	        case KELParser.ID:
-	        case KELParser.INT:
-	        case KELParser.HEXINT:
-	        case KELParser.BININT:
-	        case KELParser.REAL:
-	        case KELParser.STR:
-	        case KELParser.TYPDCONST:
-	        case KELParser.BAD_BIN:
-	        case KELParser.HEX_NO_X:
-	        case KELParser.BAD_HEX:
-	        case KELParser.BAD_MIX:
-	        case KELParser.BAD_REAL_A:
-	        case KELParser.BAD_REAL_B:
-	        case KELParser.BAD_REAL_C:
+	        case 1:
+	        case 11:
+	        case 13:
+	        case 20:
+	        case 36:
+	        case 41:
+	        case 42:
+	        case 43:
+	        case 57:
+	        case 59:
+	        case 81:
+	        case 82:
+	        case 83:
+	        case 84:
+	        case 85:
+	        case 86:
+	        case 87:
+	        case 88:
+	        case 89:
+	        case 90:
+	        case 91:
+	        case 101:
+	        case 102:
+	        case 103:
+	        case 104:
+	        case 105:
+	        case 106:
+	        case 107:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 848;
 	            localctx.kel = this.expression();
 	            break;
-	        case KELParser.ECL:
+	        case 44:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 849;
 	            localctx.ecl = this.eclExpression();
@@ -3271,7 +3267,7 @@ export default class KELParser extends antlr4.Parser {
 	queryDeclaration() {
 	    let localctx = new QueryDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 102, KELParser.RULE_queryDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 852;
@@ -3283,7 +3279,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 856;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.LP) {
+	        if(_la===1) {
 	            this.state = 855;
 	            localctx.ps = this.qparams();
 	        }
@@ -3295,7 +3291,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 864;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 860;
 	            this.match(KELParser.COMMA);
 	            this.state = 861;
@@ -3307,7 +3303,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 870;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.ASOF) {
+	        while(_la===71) {
 	            this.state = 867;
 	            this.asof();
 	            this.state = 872;
@@ -3317,7 +3313,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 874;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.USING) {
+	        if(_la===72) {
 	            this.state = 873;
 	            this.using();
 	        }
@@ -3325,7 +3321,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 877;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.USE) {
+	        if(_la===60) {
 	            this.state = 876;
 	            this.useClause();
 	        }
@@ -3349,7 +3345,7 @@ export default class KELParser extends antlr4.Parser {
 	qparams() {
 	    let localctx = new QparamsContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 104, KELParser.RULE_qparams);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 879;
@@ -3359,7 +3355,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 885;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 881;
 	            this.match(KELParser.COMMA);
 	            this.state = 882;
@@ -3389,7 +3385,7 @@ export default class KELParser extends antlr4.Parser {
 	qparam() {
 	    let localctx = new QparamContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 106, KELParser.RULE_qparam);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 905;
 	        this._errHandler.sync(this);
@@ -3414,7 +3410,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 895;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.UID || _la===KELParser.ID) {
+	            if(_la===57 || _la===85) {
 	                this.state = 894;
 	                localctx.at = this.simpleTypeId();
 	            }
@@ -3467,13 +3463,13 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 911;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.UID:
-	        case KELParser.ID:
+	        case 57:
+	        case 85:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 907;
 	            localctx.simple = this.simpleTypeId();
 	            break;
-	        case KELParser.SET:
+	        case 70:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 908;
 	            localctx.isSet = this.match(KELParser.SET);
@@ -3504,12 +3500,12 @@ export default class KELParser extends antlr4.Parser {
 	simpleTypeId() {
 	    let localctx = new SimpleTypeIdContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 110, KELParser.RULE_simpleTypeId);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 913;
 	        _la = this._input.LA(1);
-	        if(!(_la===KELParser.UID || _la===KELParser.ID)) {
+	        if(!(_la===57 || _la===85)) {
 	        this._errHandler.recoverInline(this);
 	        }
 	        else {
@@ -3535,7 +3531,7 @@ export default class KELParser extends antlr4.Parser {
 	asof() {
 	    let localctx = new AsofContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 112, KELParser.RULE_asof);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 915;
@@ -3549,7 +3545,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 921;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.COMMA) {
+	        if(_la===8) {
 	            this.state = 919;
 	            this.match(KELParser.COMMA);
 	            this.state = 920;
@@ -3602,7 +3598,7 @@ export default class KELParser extends antlr4.Parser {
 	shellDeclaration() {
 	    let localctx = new ShellDeclarationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 116, KELParser.RULE_shellDeclaration);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 928;
@@ -3614,7 +3610,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 932;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.LP) {
+	        if(_la===1) {
 	            this.state = 931;
 	            localctx.ps = this.qparams();
 	        }
@@ -3626,7 +3622,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 939;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.ASOF) {
+	        while(_la===71) {
 	            this.state = 936;
 	            this.asof();
 	            this.state = 941;
@@ -3636,7 +3632,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 943;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.USING) {
+	        if(_la===72) {
 	            this.state = 942;
 	            this.using();
 	        }
@@ -3644,7 +3640,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 946;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.USE) {
+	        if(_la===60) {
 	            this.state = 945;
 	            this.useClause();
 	        }
@@ -3668,7 +3664,7 @@ export default class KELParser extends antlr4.Parser {
 	visual_section() {
 	    let localctx = new Visual_sectionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 118, KELParser.RULE_visual_section);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 948;
@@ -3676,10 +3672,10 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 952;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << KELParser.LP) | (1 << KELParser.RP) | (1 << KELParser.EQ) | (1 << KELParser.DQUOTE) | (1 << KELParser.LT) | (1 << KELParser.GT) | (1 << KELParser.DOT) | (1 << KELParser.COMMA) | (1 << KELParser.SEMI) | (1 << KELParser.COLON) | (1 << KELParser.LCURL) | (1 << KELParser.RCURL) | (1 << KELParser.LSQUARE) | (1 << KELParser.RSQUARE) | (1 << KELParser.STAR) | (1 << KELParser.SIGIL) | (1 << KELParser.AMP) | (1 << KELParser.TILDE) | (1 << KELParser.EXCLAIM) | (1 << KELParser.HYPHEN) | (1 << KELParser.MOD) | (1 << KELParser.PLUS) | (1 << KELParser.FSLASH) | (1 << KELParser.CARET) | (1 << KELParser.PIPE) | (1 << KELParser.DEFEQ) | (1 << KELParser.NEQ) | (1 << KELParser.LTGT) | (1 << KELParser.LARROW) | (1 << KELParser.RARROW) | (1 << KELParser.GTEQ))) !== 0) || ((((_la - 32)) & ~0x1f) == 0 && ((1 << (_la - 32)) & ((1 << (KELParser.LEQ - 32)) | (1 << (KELParser.NNEQ - 32)) | (1 << (KELParser.IN - 32)) | (1 << (KELParser.OR - 32)) | (1 << (KELParser.NOT - 32)) | (1 << (KELParser.AND - 32)) | (1 << (KELParser.ERA - 32)) | (1 << (KELParser.NULL - 32)) | (1 << (KELParser.DIV - 32)) | (1 << (KELParser.TRUE - 32)) | (1 << (KELParser.FALSE - 32)) | (1 << (KELParser.LINK - 32)) | (1 << (KELParser.ECL - 32)) | (1 << (KELParser.RETURNS - 32)) | (1 << (KELParser.OPTION - 32)) | (1 << (KELParser.PERMITS - 32)) | (1 << (KELParser.ENTITY - 32)) | (1 << (KELParser.ASSOCIATION - 32)) | (1 << (KELParser.IMPORT - 32)) | (1 << (KELParser.FROM - 32)) | (1 << (KELParser.PACKAGE - 32)) | (1 << (KELParser.END - 32)) | (1 << (KELParser.SHELL - 32)) | (1 << (KELParser.FLAT - 32)) | (1 << (KELParser.QUERY - 32)) | (1 << (KELParser.UID - 32)) | (1 << (KELParser.FORMAT - 32)) | (1 << (KELParser.MODEL - 32)) | (1 << (KELParser.USE - 32)) | (1 << (KELParser.KELBASE - 32)) | (1 << (KELParser.KELQUERY - 32)) | (1 << (KELParser.FDC - 32)))) !== 0) || ((((_la - 64)) & ~0x1f) == 0 && ((1 << (_la - 64)) & ((1 << (KELParser.FILTER - 64)) | (1 << (KELParser.HINT - 64)) | (1 << (KELParser.GLOBAL - 64)) | (1 << (KELParser.FUNCTION - 64)) | (1 << (KELParser.DATASET - 64)) | (1 << (KELParser.OF - 64)) | (1 << (KELParser.SET - 64)) | (1 << (KELParser.ASOF - 64)) | (1 << (KELParser.USING - 64)) | (1 << (KELParser.VIS - 64)) | (1 << (KELParser.RESOURCES - 64)) | (1 << (KELParser.ENDRESOURCES - 64)) | (1 << (KELParser.AS - 64)) | (1 << (KELParser.SPC - 64)) | (1 << (KELParser.LIKE - 64)) | (1 << (KELParser.DOUBLESTRING - 64)) | (1 << (KELParser.SID - 64)) | (1 << (KELParser.SINT - 64)) | (1 << (KELParser.PID - 64)) | (1 << (KELParser.PSID - 64)) | (1 << (KELParser.ID - 64)) | (1 << (KELParser.INT - 64)) | (1 << (KELParser.HEXINT - 64)) | (1 << (KELParser.BININT - 64)) | (1 << (KELParser.REAL - 64)) | (1 << (KELParser.STR - 64)) | (1 << (KELParser.TYPDCONST - 64)) | (1 << (KELParser.ESC - 64)) | (1 << (KELParser.SEP_COMMENT - 64)) | (1 << (KELParser.ML_COMMENT - 64)) | (1 << (KELParser.MLMS_COMMENT - 64)))) !== 0) || ((((_la - 96)) & ~0x1f) == 0 && ((1 << (_la - 96)) & ((1 << (KELParser.EMPTY_JAVADOC - 96)) | (1 << (KELParser.JAVADOC_OPEN - 96)) | (1 << (KELParser.NEWLINE - 96)) | (1 << (KELParser.COMMENT - 96)) | (1 << (KELParser.WS - 96)) | (1 << (KELParser.BAD_BIN - 96)) | (1 << (KELParser.HEX_NO_X - 96)) | (1 << (KELParser.BAD_HEX - 96)) | (1 << (KELParser.BAD_MIX - 96)) | (1 << (KELParser.BAD_REAL_A - 96)) | (1 << (KELParser.BAD_REAL_B - 96)) | (1 << (KELParser.BAD_REAL_C - 96)) | (1 << (KELParser.ML_COMMENT_START - 96)) | (1 << (KELParser.MLMS_COMMENT_START - 96)) | (1 << (KELParser.JD_COMMENT_START - 96)))) !== 0)) {
+	        while((((_la) & ~0x1f) === 0 && ((1 << _la) & 4294967294) !== 0) || ((((_la - 32)) & ~0x1f) === 0 && ((1 << (_la - 32)) & 4294967295) !== 0) || ((((_la - 64)) & ~0x1f) === 0 && ((1 << (_la - 64)) & 4294966271) !== 0) || ((((_la - 96)) & ~0x1f) === 0 && ((1 << (_la - 96)) & 32767) !== 0)) {
 	            this.state = 949;
 	            _la = this._input.LA(1);
-	            if(_la<=0 || _la===KELParser.ENDVIS) {
+	            if(_la<=0 || _la===74) {
 	            this._errHandler.recoverInline(this);
 	            }
 	            else {
@@ -3711,7 +3707,7 @@ export default class KELParser extends antlr4.Parser {
 	resource_section() {
 	    let localctx = new Resource_sectionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 120, KELParser.RULE_resource_section);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 957;
@@ -3719,10 +3715,10 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 961;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << KELParser.LP) | (1 << KELParser.RP) | (1 << KELParser.EQ) | (1 << KELParser.DQUOTE) | (1 << KELParser.LT) | (1 << KELParser.GT) | (1 << KELParser.DOT) | (1 << KELParser.COMMA) | (1 << KELParser.SEMI) | (1 << KELParser.COLON) | (1 << KELParser.LCURL) | (1 << KELParser.RCURL) | (1 << KELParser.LSQUARE) | (1 << KELParser.RSQUARE) | (1 << KELParser.STAR) | (1 << KELParser.SIGIL) | (1 << KELParser.AMP) | (1 << KELParser.TILDE) | (1 << KELParser.EXCLAIM) | (1 << KELParser.HYPHEN) | (1 << KELParser.MOD) | (1 << KELParser.PLUS) | (1 << KELParser.FSLASH) | (1 << KELParser.CARET) | (1 << KELParser.PIPE) | (1 << KELParser.DEFEQ) | (1 << KELParser.NEQ) | (1 << KELParser.LTGT) | (1 << KELParser.LARROW) | (1 << KELParser.RARROW) | (1 << KELParser.GTEQ))) !== 0) || ((((_la - 32)) & ~0x1f) == 0 && ((1 << (_la - 32)) & ((1 << (KELParser.LEQ - 32)) | (1 << (KELParser.NNEQ - 32)) | (1 << (KELParser.IN - 32)) | (1 << (KELParser.OR - 32)) | (1 << (KELParser.NOT - 32)) | (1 << (KELParser.AND - 32)) | (1 << (KELParser.ERA - 32)) | (1 << (KELParser.NULL - 32)) | (1 << (KELParser.DIV - 32)) | (1 << (KELParser.TRUE - 32)) | (1 << (KELParser.FALSE - 32)) | (1 << (KELParser.LINK - 32)) | (1 << (KELParser.ECL - 32)) | (1 << (KELParser.RETURNS - 32)) | (1 << (KELParser.OPTION - 32)) | (1 << (KELParser.PERMITS - 32)) | (1 << (KELParser.ENTITY - 32)) | (1 << (KELParser.ASSOCIATION - 32)) | (1 << (KELParser.IMPORT - 32)) | (1 << (KELParser.FROM - 32)) | (1 << (KELParser.PACKAGE - 32)) | (1 << (KELParser.END - 32)) | (1 << (KELParser.SHELL - 32)) | (1 << (KELParser.FLAT - 32)) | (1 << (KELParser.QUERY - 32)) | (1 << (KELParser.UID - 32)) | (1 << (KELParser.FORMAT - 32)) | (1 << (KELParser.MODEL - 32)) | (1 << (KELParser.USE - 32)) | (1 << (KELParser.KELBASE - 32)) | (1 << (KELParser.KELQUERY - 32)) | (1 << (KELParser.FDC - 32)))) !== 0) || ((((_la - 64)) & ~0x1f) == 0 && ((1 << (_la - 64)) & ((1 << (KELParser.FILTER - 64)) | (1 << (KELParser.HINT - 64)) | (1 << (KELParser.GLOBAL - 64)) | (1 << (KELParser.FUNCTION - 64)) | (1 << (KELParser.DATASET - 64)) | (1 << (KELParser.OF - 64)) | (1 << (KELParser.SET - 64)) | (1 << (KELParser.ASOF - 64)) | (1 << (KELParser.USING - 64)) | (1 << (KELParser.VIS - 64)) | (1 << (KELParser.ENDVIS - 64)) | (1 << (KELParser.RESOURCES - 64)) | (1 << (KELParser.AS - 64)) | (1 << (KELParser.SPC - 64)) | (1 << (KELParser.LIKE - 64)) | (1 << (KELParser.DOUBLESTRING - 64)) | (1 << (KELParser.SID - 64)) | (1 << (KELParser.SINT - 64)) | (1 << (KELParser.PID - 64)) | (1 << (KELParser.PSID - 64)) | (1 << (KELParser.ID - 64)) | (1 << (KELParser.INT - 64)) | (1 << (KELParser.HEXINT - 64)) | (1 << (KELParser.BININT - 64)) | (1 << (KELParser.REAL - 64)) | (1 << (KELParser.STR - 64)) | (1 << (KELParser.TYPDCONST - 64)) | (1 << (KELParser.ESC - 64)) | (1 << (KELParser.SEP_COMMENT - 64)) | (1 << (KELParser.ML_COMMENT - 64)) | (1 << (KELParser.MLMS_COMMENT - 64)))) !== 0) || ((((_la - 96)) & ~0x1f) == 0 && ((1 << (_la - 96)) & ((1 << (KELParser.EMPTY_JAVADOC - 96)) | (1 << (KELParser.JAVADOC_OPEN - 96)) | (1 << (KELParser.NEWLINE - 96)) | (1 << (KELParser.COMMENT - 96)) | (1 << (KELParser.WS - 96)) | (1 << (KELParser.BAD_BIN - 96)) | (1 << (KELParser.HEX_NO_X - 96)) | (1 << (KELParser.BAD_HEX - 96)) | (1 << (KELParser.BAD_MIX - 96)) | (1 << (KELParser.BAD_REAL_A - 96)) | (1 << (KELParser.BAD_REAL_B - 96)) | (1 << (KELParser.BAD_REAL_C - 96)) | (1 << (KELParser.ML_COMMENT_START - 96)) | (1 << (KELParser.MLMS_COMMENT_START - 96)) | (1 << (KELParser.JD_COMMENT_START - 96)))) !== 0)) {
+	        while((((_la) & ~0x1f) === 0 && ((1 << _la) & 4294967294) !== 0) || ((((_la - 32)) & ~0x1f) === 0 && ((1 << (_la - 32)) & 4294967295) !== 0) || ((((_la - 64)) & ~0x1f) === 0 && ((1 << (_la - 64)) & 4294963199) !== 0) || ((((_la - 96)) & ~0x1f) === 0 && ((1 << (_la - 96)) & 32767) !== 0)) {
 	            this.state = 958;
 	            _la = this._input.LA(1);
-	            if(_la<=0 || _la===KELParser.ENDRESOURCES) {
+	            if(_la<=0 || _la===76) {
 	            this._errHandler.recoverInline(this);
 	            }
 	            else {
@@ -3777,7 +3773,7 @@ export default class KELParser extends antlr4.Parser {
 	booleanDisjunction() {
 	    let localctx = new BooleanDisjunctionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 124, KELParser.RULE_booleanDisjunction);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 968;
@@ -3785,7 +3781,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 973;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.OR) {
+	        while(_la===35) {
 	            this.state = 969;
 	            localctx.op = this.match(KELParser.OR);
 	            this.state = 970;
@@ -3813,7 +3809,7 @@ export default class KELParser extends antlr4.Parser {
 	booleanConjunction() {
 	    let localctx = new BooleanConjunctionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 126, KELParser.RULE_booleanConjunction);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 976;
@@ -3821,7 +3817,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 981;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.AND) {
+	        while(_la===37) {
 	            this.state = 977;
 	            localctx.op = this.match(KELParser.AND);
 	            this.state = 978;
@@ -3853,40 +3849,40 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 987;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.NOT:
+	        case 36:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 984;
 	            localctx.op = this.match(KELParser.NOT);
 	            this.state = 985;
 	            localctx.t = this.booleanTerm();
 	            break;
-	        case KELParser.LP:
-	        case KELParser.LCURL:
-	        case KELParser.LSQUARE:
-	        case KELParser.HYPHEN:
-	        case KELParser.TRUE:
-	        case KELParser.FALSE:
-	        case KELParser.LINK:
-	        case KELParser.UID:
-	        case KELParser.MODEL:
-	        case KELParser.SID:
-	        case KELParser.SINT:
-	        case KELParser.PID:
-	        case KELParser.PSID:
-	        case KELParser.ID:
-	        case KELParser.INT:
-	        case KELParser.HEXINT:
-	        case KELParser.BININT:
-	        case KELParser.REAL:
-	        case KELParser.STR:
-	        case KELParser.TYPDCONST:
-	        case KELParser.BAD_BIN:
-	        case KELParser.HEX_NO_X:
-	        case KELParser.BAD_HEX:
-	        case KELParser.BAD_MIX:
-	        case KELParser.BAD_REAL_A:
-	        case KELParser.BAD_REAL_B:
-	        case KELParser.BAD_REAL_C:
+	        case 1:
+	        case 11:
+	        case 13:
+	        case 20:
+	        case 41:
+	        case 42:
+	        case 43:
+	        case 57:
+	        case 59:
+	        case 81:
+	        case 82:
+	        case 83:
+	        case 84:
+	        case 85:
+	        case 86:
+	        case 87:
+	        case 88:
+	        case 89:
+	        case 90:
+	        case 91:
+	        case 101:
+	        case 102:
+	        case 103:
+	        case 104:
+	        case 105:
+	        case 106:
+	        case 107:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 986;
 	            localctx.a = this.booleanAtom();
@@ -3913,7 +3909,7 @@ export default class KELParser extends antlr4.Parser {
 	booleanAtom() {
 	    let localctx = new BooleanAtomContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 130, KELParser.RULE_booleanAtom);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 989;
@@ -3921,11 +3917,11 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 992;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(((((_la - 3)) & ~0x1f) == 0 && ((1 << (_la - 3)) & ((1 << (KELParser.EQ - 3)) | (1 << (KELParser.LT - 3)) | (1 << (KELParser.GT - 3)) | (1 << (KELParser.NEQ - 3)) | (1 << (KELParser.LTGT - 3)) | (1 << (KELParser.LARROW - 3)) | (1 << (KELParser.GTEQ - 3)) | (1 << (KELParser.LEQ - 3)) | (1 << (KELParser.NNEQ - 3)) | (1 << (KELParser.IN - 3)))) !== 0)) {
+	        if(((((_la - 3)) & ~0x1f) === 0 && ((1 << (_la - 3)) & 4143972365) !== 0)) {
 	            this.state = 990;
 	            localctx.op = this._input.LT(1);
 	            _la = this._input.LA(1);
-	            if(!(((((_la - 3)) & ~0x1f) == 0 && ((1 << (_la - 3)) & ((1 << (KELParser.EQ - 3)) | (1 << (KELParser.LT - 3)) | (1 << (KELParser.GT - 3)) | (1 << (KELParser.NEQ - 3)) | (1 << (KELParser.LTGT - 3)) | (1 << (KELParser.LARROW - 3)) | (1 << (KELParser.GTEQ - 3)) | (1 << (KELParser.LEQ - 3)) | (1 << (KELParser.NNEQ - 3)) | (1 << (KELParser.IN - 3)))) !== 0))) {
+	            if(!(((((_la - 3)) & ~0x1f) === 0 && ((1 << (_la - 3)) & 4143972365) !== 0))) {
 	                localctx.op = this._errHandler.recoverInline(this);
 	            }
 	            else {
@@ -3955,7 +3951,7 @@ export default class KELParser extends antlr4.Parser {
 	valueExpression() {
 	    let localctx = new ValueExpressionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 132, KELParser.RULE_valueExpression);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 994;
@@ -3963,11 +3959,11 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 999;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.HYPHEN || _la===KELParser.PLUS) {
+	        while(_la===20 || _la===22) {
 	            this.state = 995;
 	            localctx.op = this._input.LT(1);
 	            _la = this._input.LA(1);
-	            if(!(_la===KELParser.HYPHEN || _la===KELParser.PLUS)) {
+	            if(!(_la===20 || _la===22)) {
 	                localctx.op = this._errHandler.recoverInline(this);
 	            }
 	            else {
@@ -3999,7 +3995,7 @@ export default class KELParser extends antlr4.Parser {
 	valueTerm() {
 	    let localctx = new ValueTermContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 134, KELParser.RULE_valueTerm);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 1002;
@@ -4007,11 +4003,11 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1007;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(((((_la - 15)) & ~0x1f) == 0 && ((1 << (_la - 15)) & ((1 << (KELParser.STAR - 15)) | (1 << (KELParser.MOD - 15)) | (1 << (KELParser.FSLASH - 15)) | (1 << (KELParser.DIV - 15)))) !== 0)) {
+	        while(((((_la - 15)) & ~0x1f) === 0 && ((1 << (_la - 15)) & 33554753) !== 0)) {
 	            this.state = 1003;
 	            localctx.op = this._input.LT(1);
 	            _la = this._input.LA(1);
-	            if(!(((((_la - 15)) & ~0x1f) == 0 && ((1 << (_la - 15)) & ((1 << (KELParser.STAR - 15)) | (1 << (KELParser.MOD - 15)) | (1 << (KELParser.FSLASH - 15)) | (1 << (KELParser.DIV - 15)))) !== 0))) {
+	            if(!(((((_la - 15)) & ~0x1f) === 0 && ((1 << (_la - 15)) & 33554753) !== 0))) {
 	                localctx.op = this._errHandler.recoverInline(this);
 	            }
 	            else {
@@ -4043,7 +4039,7 @@ export default class KELParser extends antlr4.Parser {
 	valueFactor() {
 	    let localctx = new ValueFactorContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 136, KELParser.RULE_valueFactor);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 1037;
 	        this._errHandler.sync(this);
@@ -4066,7 +4062,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1015;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.COLON) {
+	            if(_la===10) {
 	                this.state = 1013;
 	                localctx.op = this.match(KELParser.COLON);
 	                this.state = 1014;
@@ -4114,7 +4110,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1032;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 1028;
 	                this.match(KELParser.COMMA);
 	                this.state = 1029;
@@ -4147,7 +4143,7 @@ export default class KELParser extends antlr4.Parser {
 	valueAtom() {
 	    let localctx = new ValueAtomContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 138, KELParser.RULE_valueAtom);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 1050;
 	        this._errHandler.sync(this);
@@ -4167,7 +4163,7 @@ export default class KELParser extends antlr4.Parser {
 	                this.state = 1043; 
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
-	            } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << KELParser.LP) | (1 << KELParser.DOT) | (1 << KELParser.LCURL))) !== 0));
+	            } while((((_la) & ~0x1f) === 0 && ((1 << _la) & 2178) !== 0));
 	            break;
 
 	        case 2:
@@ -4229,17 +4225,17 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1055;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.LP:
+	        case 1:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1052;
 	            localctx.f = this.funcOrFilter();
 	            break;
-	        case KELParser.LCURL:
+	        case 11:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1053;
 	            localctx.p = this.entityProjection();
 	            break;
-	        case KELParser.DOT:
+	        case 7:
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 1054;
 	            localctx.fs = this.fieldSelector();
@@ -4266,7 +4262,7 @@ export default class KELParser extends antlr4.Parser {
 	funcOrFilter() {
 	    let localctx = new FuncOrFilterContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 142, KELParser.RULE_funcOrFilter);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 1085;
 	        this._errHandler.sync(this);
@@ -4304,7 +4300,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1070;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.COMMA) {
+	            if(_la===8) {
 	                this.state = 1068;
 	                localctx.op2 = this.match(KELParser.COMMA);
 	                this.state = 1069;
@@ -4324,7 +4320,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1080;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 1076;
 	                localctx.op = this.match(KELParser.COMMA);
 	                this.state = 1077;
@@ -4384,7 +4380,7 @@ export default class KELParser extends antlr4.Parser {
 	linkExp() {
 	    let localctx = new LinkExpContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 146, KELParser.RULE_linkExp);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 1091;
@@ -4400,7 +4396,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1097;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.LSQUARE) {
+	        if(_la===13) {
 	            this.state = 1096;
 	            this.linkSpec();
 	        }
@@ -4488,7 +4484,7 @@ export default class KELParser extends antlr4.Parser {
 	entityProjection() {
 	    let localctx = new EntityProjectionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 152, KELParser.RULE_entityProjection);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 1113;
@@ -4498,7 +4494,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1119;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 1115;
 	            this.match(KELParser.COMMA);
 	            this.state = 1116;
@@ -4569,7 +4565,7 @@ export default class KELParser extends antlr4.Parser {
 	patternModel() {
 	    let localctx = new PatternModelContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 156, KELParser.RULE_patternModel);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 1130;
@@ -4581,7 +4577,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1137;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 1133;
 	            this.match(KELParser.COMMA);
 	            this.state = 1134;
@@ -4611,25 +4607,25 @@ export default class KELParser extends antlr4.Parser {
 	patternSubmodel() {
 	    let localctx = new PatternSubmodelContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 158, KELParser.RULE_patternSubmodel);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 1156;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.PID:
+	        case 83:
 	            localctx = new SingleValuedPatternSubmodelContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1142;
 	            this.match(KELParser.PID);
 	            break;
-	        case KELParser.LCURL:
-	        case KELParser.PSID:
+	        case 11:
+	        case 84:
 	            localctx = new MultiValuedPatternSubmodelContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1144;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.PSID) {
+	            if(_la===84) {
 	                this.state = 1143;
 	                localctx.n = this.match(KELParser.PSID);
 	            }
@@ -4641,7 +4637,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1152;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===KELParser.COMMA) {
+	            while(_la===8) {
 	                this.state = 1148;
 	                this.match(KELParser.COMMA);
 	                this.state = 1149;
@@ -4752,7 +4748,7 @@ export default class KELParser extends antlr4.Parser {
 	tableProperty() {
 	    let localctx = new TablePropertyContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 164, KELParser.RULE_tableProperty);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 1180;
 	        this._errHandler.sync(this);
@@ -4775,7 +4771,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1176;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===KELParser.COMMA) {
+	            if(_la===8) {
 	                this.state = 1174;
 	                this.match(KELParser.COMMA);
 	                this.state = 1175;
@@ -4829,7 +4825,7 @@ export default class KELParser extends antlr4.Parser {
 	qualifiedId() {
 	    let localctx = new QualifiedIdContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 168, KELParser.RULE_qualifiedId);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 1184;
@@ -4837,7 +4833,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1189;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.DOT) {
+	        while(_la===7) {
 	            this.state = 1185;
 	            this.match(KELParser.DOT);
 	            this.state = 1186;
@@ -4869,27 +4865,27 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1197;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.ID:
+	        case 85:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1192;
 	            localctx.id = this.match(KELParser.ID);
 	            break;
-	        case KELParser.UID:
+	        case 57:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1193;
 	            localctx.id = this.match(KELParser.UID);
 	            break;
-	        case KELParser.SINT:
+	        case 82:
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 1194;
 	            localctx.id = this.match(KELParser.SINT);
 	            break;
-	        case KELParser.PID:
+	        case 83:
 	            this.enterOuterAlt(localctx, 4);
 	            this.state = 1195;
 	            localctx.pid = this.match(KELParser.PID);
 	            break;
-	        case KELParser.PSID:
+	        case 84:
 	            this.enterOuterAlt(localctx, 5);
 	            this.state = 1196;
 	            localctx.psid = this.match(KELParser.PSID);
@@ -4920,22 +4916,22 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1203;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.ID:
+	        case 85:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1199;
 	            localctx.id = this.match(KELParser.ID);
 	            break;
-	        case KELParser.UID:
+	        case 57:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1200;
 	            localctx.id = this.match(KELParser.UID);
 	            break;
-	        case KELParser.PID:
+	        case 83:
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 1201;
 	            localctx.id = this.match(KELParser.PID);
 	            break;
-	        case KELParser.PSID:
+	        case 84:
 	            this.enterOuterAlt(localctx, 4);
 	            this.state = 1202;
 	            localctx.id = this.match(KELParser.PSID);
@@ -4989,12 +4985,12 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1209;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.ID:
+	        case 85:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1207;
 	            localctx.id = this.match(KELParser.ID);
 	            break;
-	        case KELParser.UID:
+	        case 57:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1208;
 	            localctx.id = this.match(KELParser.UID);
@@ -5025,28 +5021,28 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1214;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.HYPHEN:
-	        case KELParser.TRUE:
-	        case KELParser.FALSE:
-	        case KELParser.INT:
-	        case KELParser.HEXINT:
-	        case KELParser.BININT:
-	        case KELParser.REAL:
-	        case KELParser.STR:
-	        case KELParser.TYPDCONST:
-	        case KELParser.BAD_BIN:
-	        case KELParser.HEX_NO_X:
-	        case KELParser.BAD_HEX:
-	        case KELParser.BAD_MIX:
-	        case KELParser.BAD_REAL_A:
-	        case KELParser.BAD_REAL_B:
-	        case KELParser.BAD_REAL_C:
+	        case 20:
+	        case 41:
+	        case 42:
+	        case 86:
+	        case 87:
+	        case 88:
+	        case 89:
+	        case 90:
+	        case 91:
+	        case 101:
+	        case 102:
+	        case 103:
+	        case 104:
+	        case 105:
+	        case 106:
+	        case 107:
 	            localctx = new NonSetConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1211;
 	            this.simpleConstant();
 	            break;
-	        case KELParser.LSQUARE:
+	        case 13:
 	            localctx = new EmptySetConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1212;
@@ -5147,13 +5143,13 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1233;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.INT:
+	        case 86:
 	            localctx = new DecIntConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1224;
 	            localctx.i = this.match(KELParser.INT);
 	            break;
-	        case KELParser.HYPHEN:
+	        case 20:
 	            localctx = new NegIntConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1225;
@@ -5161,37 +5157,37 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1226;
 	            localctx.i = this.match(KELParser.INT);
 	            break;
-	        case KELParser.HEXINT:
+	        case 87:
 	            localctx = new HexConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 1227;
 	            localctx.i = this.match(KELParser.HEXINT);
 	            break;
-	        case KELParser.BININT:
+	        case 88:
 	            localctx = new BinConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 4);
 	            this.state = 1228;
 	            localctx.i = this.match(KELParser.BININT);
 	            break;
-	        case KELParser.BAD_HEX:
+	        case 103:
 	            localctx = new BadHexConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 5);
 	            this.state = 1229;
 	            localctx.i = this.match(KELParser.BAD_HEX);
 	            break;
-	        case KELParser.BAD_BIN:
+	        case 101:
 	            localctx = new BadBinConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 6);
 	            this.state = 1230;
 	            localctx.i = this.match(KELParser.BAD_BIN);
 	            break;
-	        case KELParser.HEX_NO_X:
+	        case 102:
 	            localctx = new NoFlagHexConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 7);
 	            this.state = 1231;
 	            localctx.i = this.match(KELParser.HEX_NO_X);
 	            break;
-	        case KELParser.BAD_MIX:
+	        case 104:
 	            localctx = new BadMixConstantContext(this, localctx);
 	            this.enterOuterAlt(localctx, 8);
 	            this.state = 1232;
@@ -5223,13 +5219,13 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1241;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.REAL:
+	        case 89:
 	            localctx = new RealConstContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1235;
 	            localctx.r = this.match(KELParser.REAL);
 	            break;
-	        case KELParser.HYPHEN:
+	        case 20:
 	            localctx = new RealConstContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1236;
@@ -5237,19 +5233,19 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1237;
 	            localctx.r = this.match(KELParser.REAL);
 	            break;
-	        case KELParser.BAD_REAL_A:
+	        case 105:
 	            localctx = new BadRealConstContext(this, localctx);
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 1238;
 	            localctx.r = this.match(KELParser.BAD_REAL_A);
 	            break;
-	        case KELParser.BAD_REAL_B:
+	        case 106:
 	            localctx = new BadRealConstContext(this, localctx);
 	            this.enterOuterAlt(localctx, 4);
 	            this.state = 1239;
 	            localctx.r = this.match(KELParser.BAD_REAL_B);
 	            break;
-	        case KELParser.BAD_REAL_C:
+	        case 107:
 	            localctx = new BadRealConstContext(this, localctx);
 	            this.enterOuterAlt(localctx, 5);
 	            this.state = 1240;
@@ -5277,7 +5273,7 @@ export default class KELParser extends antlr4.Parser {
 	eclExpression() {
 	    let localctx = new EclExpressionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 186, KELParser.RULE_eclExpression);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 1243;
@@ -5291,7 +5287,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1249;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===KELParser.FROM) {
+	        if(_la===51) {
 	            this.state = 1247;
 	            this.match(KELParser.FROM);
 	            this.state = 1248;
@@ -5358,7 +5354,7 @@ export default class KELParser extends antlr4.Parser {
 	eclFragment() {
 	    let localctx = new EclFragmentContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 190, KELParser.RULE_eclFragment);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.state = 1272;
 	        this._errHandler.sync(this);
@@ -5371,7 +5367,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.state = 1263;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << KELParser.LP) | (1 << KELParser.EQ) | (1 << KELParser.DQUOTE) | (1 << KELParser.LT) | (1 << KELParser.GT) | (1 << KELParser.DOT) | (1 << KELParser.COMMA) | (1 << KELParser.SEMI) | (1 << KELParser.COLON) | (1 << KELParser.LCURL) | (1 << KELParser.RCURL) | (1 << KELParser.LSQUARE) | (1 << KELParser.RSQUARE) | (1 << KELParser.STAR) | (1 << KELParser.SIGIL) | (1 << KELParser.AMP) | (1 << KELParser.TILDE) | (1 << KELParser.EXCLAIM) | (1 << KELParser.HYPHEN) | (1 << KELParser.MOD) | (1 << KELParser.PLUS) | (1 << KELParser.FSLASH) | (1 << KELParser.CARET) | (1 << KELParser.PIPE) | (1 << KELParser.DEFEQ) | (1 << KELParser.NEQ) | (1 << KELParser.LTGT) | (1 << KELParser.LARROW) | (1 << KELParser.RARROW) | (1 << KELParser.GTEQ))) !== 0) || ((((_la - 32)) & ~0x1f) == 0 && ((1 << (_la - 32)) & ((1 << (KELParser.LEQ - 32)) | (1 << (KELParser.NNEQ - 32)) | (1 << (KELParser.IN - 32)) | (1 << (KELParser.OR - 32)) | (1 << (KELParser.NOT - 32)) | (1 << (KELParser.AND - 32)) | (1 << (KELParser.ERA - 32)) | (1 << (KELParser.NULL - 32)) | (1 << (KELParser.DIV - 32)) | (1 << (KELParser.TRUE - 32)) | (1 << (KELParser.FALSE - 32)) | (1 << (KELParser.LINK - 32)) | (1 << (KELParser.ECL - 32)) | (1 << (KELParser.RETURNS - 32)) | (1 << (KELParser.OPTION - 32)) | (1 << (KELParser.PERMITS - 32)) | (1 << (KELParser.ENTITY - 32)) | (1 << (KELParser.ASSOCIATION - 32)) | (1 << (KELParser.IMPORT - 32)) | (1 << (KELParser.FROM - 32)) | (1 << (KELParser.PACKAGE - 32)) | (1 << (KELParser.END - 32)) | (1 << (KELParser.SHELL - 32)) | (1 << (KELParser.FLAT - 32)) | (1 << (KELParser.QUERY - 32)) | (1 << (KELParser.UID - 32)) | (1 << (KELParser.FORMAT - 32)) | (1 << (KELParser.MODEL - 32)) | (1 << (KELParser.USE - 32)) | (1 << (KELParser.KELBASE - 32)) | (1 << (KELParser.KELQUERY - 32)) | (1 << (KELParser.FDC - 32)))) !== 0) || ((((_la - 64)) & ~0x1f) == 0 && ((1 << (_la - 64)) & ((1 << (KELParser.FILTER - 64)) | (1 << (KELParser.HINT - 64)) | (1 << (KELParser.GLOBAL - 64)) | (1 << (KELParser.FUNCTION - 64)) | (1 << (KELParser.DATASET - 64)) | (1 << (KELParser.OF - 64)) | (1 << (KELParser.SET - 64)) | (1 << (KELParser.ASOF - 64)) | (1 << (KELParser.USING - 64)) | (1 << (KELParser.VIS - 64)) | (1 << (KELParser.ENDVIS - 64)) | (1 << (KELParser.RESOURCES - 64)) | (1 << (KELParser.ENDRESOURCES - 64)) | (1 << (KELParser.AS - 64)) | (1 << (KELParser.SPC - 64)) | (1 << (KELParser.LIKE - 64)) | (1 << (KELParser.DOUBLESTRING - 64)) | (1 << (KELParser.SID - 64)) | (1 << (KELParser.SINT - 64)) | (1 << (KELParser.PID - 64)) | (1 << (KELParser.PSID - 64)) | (1 << (KELParser.ID - 64)) | (1 << (KELParser.INT - 64)) | (1 << (KELParser.HEXINT - 64)) | (1 << (KELParser.BININT - 64)) | (1 << (KELParser.REAL - 64)) | (1 << (KELParser.STR - 64)) | (1 << (KELParser.TYPDCONST - 64)) | (1 << (KELParser.ESC - 64)) | (1 << (KELParser.SEP_COMMENT - 64)) | (1 << (KELParser.ML_COMMENT - 64)) | (1 << (KELParser.MLMS_COMMENT - 64)))) !== 0) || ((((_la - 96)) & ~0x1f) == 0 && ((1 << (_la - 96)) & ((1 << (KELParser.EMPTY_JAVADOC - 96)) | (1 << (KELParser.JAVADOC_OPEN - 96)) | (1 << (KELParser.NEWLINE - 96)) | (1 << (KELParser.COMMENT - 96)) | (1 << (KELParser.WS - 96)) | (1 << (KELParser.BAD_BIN - 96)) | (1 << (KELParser.HEX_NO_X - 96)) | (1 << (KELParser.BAD_HEX - 96)) | (1 << (KELParser.BAD_MIX - 96)) | (1 << (KELParser.BAD_REAL_A - 96)) | (1 << (KELParser.BAD_REAL_B - 96)) | (1 << (KELParser.BAD_REAL_C - 96)) | (1 << (KELParser.ML_COMMENT_START - 96)) | (1 << (KELParser.MLMS_COMMENT_START - 96)) | (1 << (KELParser.JD_COMMENT_START - 96)))) !== 0)) {
+	            while((((_la) & ~0x1f) === 0 && ((1 << _la) & 4294967290) !== 0) || ((((_la - 32)) & ~0x1f) === 0 && ((1 << (_la - 32)) & 4294967295) !== 0) || ((((_la - 64)) & ~0x1f) === 0 && ((1 << (_la - 64)) & 4294967295) !== 0) || ((((_la - 96)) & ~0x1f) === 0 && ((1 << (_la - 96)) & 32767) !== 0)) {
 	                this.state = 1260;
 	                this.eclBody();
 	                this.state = 1265;
@@ -5386,7 +5382,7 @@ export default class KELParser extends antlr4.Parser {
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1267;
 	            _la = this._input.LA(1);
-	            if(_la<=0 || _la===KELParser.LP || _la===KELParser.RP) {
+	            if(_la<=0 || _la===1 || _la===2) {
 	            this._errHandler.recoverInline(this);
 	            }
 	            else {
@@ -5439,7 +5435,7 @@ export default class KELParser extends antlr4.Parser {
 	eclImportList() {
 	    let localctx = new EclImportListContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 192, KELParser.RULE_eclImportList);
-	    var _la = 0; // Token type
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 1274;
@@ -5447,7 +5443,7 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1279;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===KELParser.COMMA) {
+	        while(_la===8) {
 	            this.state = 1275;
 	            this.match(KELParser.COMMA);
 	            this.state = 1276;
@@ -5479,12 +5475,12 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1284;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.ID:
+	        case 85:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1282;
 	            this.dotId();
 	            break;
-	        case KELParser.SIGIL:
+	        case 16:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1283;
 	            this.match(KELParser.SIGIL);
@@ -5515,13 +5511,13 @@ export default class KELParser extends antlr4.Parser {
 	        this.state = 1290;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case KELParser.UID:
-	        case KELParser.ID:
+	        case 57:
+	        case 85:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 1286;
 	            localctx.simple = this.simpleTypeId();
 	            break;
-	        case KELParser.SET:
+	        case 70:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 1287;
 	            localctx.isSet = this.match(KELParser.SET);
@@ -6025,8 +6021,8 @@ class OptionStrContext extends OptionContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.name = null; // Token;
-        this.value = null; // Token;
+        this.name = null;;
+        this.value = null;;
         super.copyFrom(ctx);
     }
 
@@ -6083,8 +6079,8 @@ class OptionIntContext extends OptionContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.name = null; // Token;
-        this.value = null; // Token;
+        this.name = null;;
+        this.value = null;;
         super.copyFrom(ctx);
     }
 
@@ -6141,7 +6137,7 @@ class OptionBoolContext extends OptionContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.name = null; // Token;
+        this.name = null;;
         super.copyFrom(ctx);
     }
 
@@ -6198,8 +6194,8 @@ class EraDeclarationContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_eraDeclaration;
-        this.name = null; // Token
-        this.type = null; // Token
+        this.name = null;
+        this.type = null;
     }
 
 	ERA() {
@@ -6286,9 +6282,9 @@ class EpochContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_epoch;
-        this.name = null; // Token
-        this.nulltype = null; // Token
-        this.sw = null; // Token
+        this.name = null;
+        this.nulltype = null;
+        this.sw = null;
     }
 
 	ID = function(i) {
@@ -6902,7 +6898,7 @@ class PackageExportDeclarationContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_packageExportDeclaration;
-        this.name = null; // Token
+        this.name = null;
     }
 
 	SHELL() {
@@ -6981,7 +6977,7 @@ class EntityDeclarationContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_entityDeclaration;
-        this.t = null; // Token
+        this.t = null;
     }
 
 	ID() {
@@ -7068,8 +7064,8 @@ class EntityPropertyContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_entityProperty;
-        this.fm = null; // FieldMappingContext
-        this.m = null; // ModelDeclarationContext
+        this.fm = null;
+        this.m = null;
     }
 
 	fieldMapping() {
@@ -7117,7 +7113,7 @@ class FieldMappingContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_fieldMapping;
-        this.m = null; // MappingElementContext
+        this.m = null;
     }
 
 	fileType() {
@@ -7239,14 +7235,14 @@ class MappingElementContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_mappingElement;
-        this.t = null; // Token
-        this.i = null; // Token
-        this.nspec = null; // NullSpecContext
-        this.fspec = null; // FormatSpecContext
-        this.from = null; // DotIdContext
-        this.lspec = null; // LikeSpecContext
-        this.c = null; // CompositeIdSpecContext
-        this.u = null; // Token
+        this.t = null;
+        this.i = null;
+        this.nspec = null;
+        this.fspec = null;
+        this.from = null;
+        this.lspec = null;
+        this.c = null;
+        this.u = null;
     }
 
 	ID = function(i) {
@@ -7326,7 +7322,7 @@ class NullSpecContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_nullSpec;
-        this.c = null; // SimpleConstantContext
+        this.c = null;
     }
 
 	NULL() {
@@ -7596,7 +7592,7 @@ class ComplexModelContext extends ModelDeclarationContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.md = null; // Token;
+        this.md = null;;
         super.copyFrom(ctx);
     }
 
@@ -7664,7 +7660,7 @@ class SingleRowModelContext extends ModelDeclarationContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.md = null; // Token;
+        this.md = null;;
         super.copyFrom(ctx);
     }
 
@@ -7736,8 +7732,8 @@ class ExplicitSubModelContext extends SubmodelDeclarationContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.n = null; // Token;
-        this.b = null; // Token;
+        this.n = null;;
+        this.b = null;;
         super.copyFrom(ctx);
     }
 
@@ -7805,7 +7801,7 @@ class SingleValueSubModelContext extends SubmodelDeclarationContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -7846,7 +7842,7 @@ class RemainderSubModelContext extends SubmodelDeclarationContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.b = null; // Token;
+        this.b = null;;
         super.copyFrom(ctx);
     }
 
@@ -8012,7 +8008,7 @@ class UseKelBaseDeclarationContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_useKelBaseDeclaration;
-        this.attr = null; // DotIdContext
+        this.attr = null;
     }
 
 	USE() {
@@ -8095,7 +8091,7 @@ class UseKelQueryDeclarationContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_useKelQueryDeclaration;
-        this.attr = null; // DotIdContext
+        this.attr = null;
     }
 
 	USE() {
@@ -8179,11 +8175,11 @@ class UseElementContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_useElement;
-        this.attr = null; // DotIdContext
-        this.t = null; // UseFileTypeContext
-        this.ne = null; // NestedEntityMappingContext
-        this.e = null; // EntityMappingContext
-        this.p = null; // PermitsClauseContext
+        this.attr = null;
+        this.t = null;
+        this.ne = null;
+        this.e = null;
+        this.p = null;
     }
 
 	LP() {
@@ -8408,10 +8404,10 @@ class UseClauseElementContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_useClauseElement;
-        this.attr = null; // Token
-        this.t = null; // UseClauseFileTypeContext
-        this.e = null; // EntityMappingContext
-        this.p = null; // PermitsClauseContext
+        this.attr = null;
+        this.t = null;
+        this.e = null;
+        this.p = null;
     }
 
 	LP() {
@@ -8544,11 +8540,11 @@ class NestedEntityMappingContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_nestedEntityMapping;
-        this.child = null; // Token
-        this.e1 = null; // EntityMappingContext
-        this.p1 = null; // PermitsClauseContext
-        this.e2 = null; // EntityMappingContext
-        this.p2 = null; // PermitsClauseContext
+        this.child = null;
+        this.e1 = null;
+        this.p1 = null;
+        this.e2 = null;
+        this.p2 = null;
     }
 
 	LP() {
@@ -8634,9 +8630,9 @@ class EntityMappingContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_entityMapping;
-        this.e = null; // Token
-        this.p = null; // Token
-        this.f = null; // EclBodyContext
+        this.e = null;
+        this.p = null;
+        this.f = null;
     }
 
 	ID = function(i) {
@@ -8762,11 +8758,11 @@ class NormalMappingOverrideContext extends UseMappingOverrideContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.ef = null; // Token;
-        this.from = null; // DotIdContext;
-        this.nspec = null; // NullSpecContext;
-        this.fspec = null; // FormatSpecContext;
-        this.lspec = null; // LikeSpecContext;
+        this.ef = null;;
+        this.from = null;;
+        this.nspec = null;;
+        this.fspec = null;;
+        this.lspec = null;;
         super.copyFrom(ctx);
     }
 
@@ -8827,8 +8823,8 @@ class ConstantMappingOverrideContext extends UseMappingOverrideContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.ef = null; // Token;
-        this.c = null; // SimpleConstantContext;
+        this.ef = null;;
+        this.c = null;;
         super.copyFrom(ctx);
     }
 
@@ -9192,7 +9188,7 @@ class ConstantDeclStatementContext extends LogicStatementContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.c = null; // Token;
+        this.c = null;;
         super.copyFrom(ctx);
     }
 
@@ -9237,9 +9233,9 @@ class LogicPropertyStatementContext extends LogicStatementContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.c = null; // Token;
-        this.p = null; // LogicPredicateContext;
-        this.mvp = null; // Token;
+        this.c = null;;
+        this.p = null;;
+        this.mvp = null;;
         super.copyFrom(ctx);
     }
 
@@ -9304,7 +9300,7 @@ class EntityGeneratorStatementContext extends LogicStatementContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.p = null; // LogicPredicateContext;
+        this.p = null;;
         super.copyFrom(ctx);
     }
 
@@ -9365,8 +9361,8 @@ class LogicPredicateContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_logicPredicate;
-        this.ex1 = null; // ExpressionContext
-        this.ex2 = null; // ExpressionContext
+        this.ex1 = null;
+        this.ex2 = null;
     }
 
 	expression = function(i) {
@@ -9491,8 +9487,8 @@ class LogicProductionContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_logicProduction;
-        this.name = null; // Token
-        this.ex = null; // ExpressionContext
+        this.name = null;
+        this.ex = null;
     }
 
 	DEFEQ() {
@@ -9606,10 +9602,10 @@ class EntityProductionContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_entityProduction;
-        this.name = null; // Token
-        this.e1 = null; // ExpressionContext
-        this.op = null; // Token
-        this.e2 = null; // ExpressionContext
+        this.name = null;
+        this.e1 = null;
+        this.op = null;
+        this.e2 = null;
     }
 
 	LP() {
@@ -9684,8 +9680,8 @@ class FunctionStatementContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_functionStatement;
-        this.name = null; // Token
-        this.ps = null; // FparamsContext
+        this.name = null;
+        this.ps = null;
     }
 
 	FUNCTION() {
@@ -9749,8 +9745,8 @@ class FparamsContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_fparams;
-        this.q1 = null; // FparamContext
-        this.q2 = null; // FparamContext
+        this.q1 = null;
+        this.q2 = null;
     }
 
 	LP() {
@@ -9821,8 +9817,8 @@ class FparamContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_fparam;
-        this.pt = null; // ParamTypeIdContext
-        this.id = null; // Token
+        this.pt = null;
+        this.id = null;
     }
 
 	ID() {
@@ -9870,8 +9866,8 @@ class FunctionBodyContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_functionBody;
-        this.kel = null; // ExpressionContext
-        this.ecl = null; // EclExpressionContext
+        this.kel = null;
+        this.ecl = null;
     }
 
 	expression() {
@@ -9919,8 +9915,8 @@ class QueryDeclarationContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_queryDeclaration;
-        this.name = null; // Token
-        this.ps = null; // QparamsContext
+        this.name = null;
+        this.ps = null;
     }
 
 	QUERY() {
@@ -10022,8 +10018,8 @@ class QparamsContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_qparams;
-        this.q1 = null; // QparamContext
-        this.q2 = null; // QparamContext
+        this.q1 = null;
+        this.q2 = null;
     }
 
 	LP() {
@@ -10094,13 +10090,13 @@ class QparamContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_qparam;
-        this.pt = null; // ParamTypeIdContext
-        this.id = null; // Token
-        this.at = null; // SimpleTypeIdContext
-        this.sid = null; // Token
-        this.pid = null; // Token
-        this.dstype = null; // DotIdContext
-        this.dsid = null; // Token
+        this.pt = null;
+        this.id = null;
+        this.at = null;
+        this.sid = null;
+        this.pid = null;
+        this.dstype = null;
+        this.dsid = null;
     }
 
 	ID() {
@@ -10172,8 +10168,8 @@ class ParamTypeIdContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_paramTypeId;
-        this.simple = null; // SimpleTypeIdContext
-        this.isSet = null; // Token
+        this.simple = null;
+        this.isSet = null;
     }
 
 	simpleTypeId() {
@@ -10272,7 +10268,7 @@ class AsofContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_asof;
-        this.eraname = null; // Token
+        this.eraname = null;
     }
 
 	ASOF() {
@@ -10390,9 +10386,9 @@ class ShellDeclarationContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_shellDeclaration;
-        this.name = null; // Token
-        this.ps = null; // QparamsContext
-        this.ex = null; // ExpressionContext
+        this.name = null;
+        this.ps = null;
+        this.ex = null;
     }
 
 	SHELL() {
@@ -10585,7 +10581,7 @@ class ExpressionContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_expression;
-        this.be = null; // BooleanDisjunctionContext
+        this.be = null;
     }
 
 	booleanDisjunction() {
@@ -10629,7 +10625,7 @@ class BooleanDisjunctionContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_booleanDisjunction;
-        this.op = null; // Token
+        this.op = null;
     }
 
 	booleanConjunction = function(i) {
@@ -10692,7 +10688,7 @@ class BooleanConjunctionContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_booleanConjunction;
-        this.op = null; // Token
+        this.op = null;
     }
 
 	booleanTerm = function(i) {
@@ -10755,9 +10751,9 @@ class BooleanTermContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_booleanTerm;
-        this.op = null; // Token
-        this.t = null; // BooleanTermContext
-        this.a = null; // BooleanAtomContext
+        this.op = null;
+        this.t = null;
+        this.a = null;
     }
 
 	NOT() {
@@ -10809,9 +10805,9 @@ class BooleanAtomContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_booleanAtom;
-        this.e1 = null; // ValueExpressionContext
-        this.op = null; // Token
-        this.e2 = null; // ValueExpressionContext
+        this.e1 = null;
+        this.op = null;
+        this.e2 = null;
     }
 
 	valueExpression = function(i) {
@@ -10902,9 +10898,9 @@ class ValueExpressionContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_valueExpression;
-        this.l = null; // ValueTermContext
-        this.op = null; // Token
-        this.r = null; // ValueTermContext
+        this.l = null;
+        this.op = null;
+        this.r = null;
     }
 
 	valueTerm = function(i) {
@@ -10979,9 +10975,9 @@ class ValueTermContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_valueTerm;
-        this.l = null; // ValueFactorContext
-        this.op = null; // Token
-        this.r = null; // ValueFactorContext
+        this.l = null;
+        this.op = null;
+        this.r = null;
     }
 
 	valueFactor = function(i) {
@@ -11095,9 +11091,9 @@ class PropValueFactorContext extends ValueFactorContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.a = null; // ValueAtomContext;
-        this.op = null; // Token;
-        this.tp = null; // TablePropertyContext;
+        this.a = null;;
+        this.op = null;;
+        this.tp = null;;
         super.copyFrom(ctx);
     }
 
@@ -11142,8 +11138,8 @@ class ScopedValueFactorContext extends ValueFactorContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.ref = null; // QualifiedIdContext;
-        this.se = null; // ScopeExpressionContext;
+        this.ref = null;;
+        this.se = null;;
         super.copyFrom(ctx);
     }
 
@@ -11188,7 +11184,7 @@ class NestedValueFactorContext extends ValueFactorContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.e = null; // ExpressionContext;
+        this.e = null;;
         super.copyFrom(ctx);
     }
 
@@ -11233,8 +11229,8 @@ class UnaryValueFactorContext extends ValueFactorContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.op = null; // Token;
-        this.f = null; // ValueFactorContext;
+        this.op = null;;
+        this.f = null;;
         super.copyFrom(ctx);
     }
 
@@ -11275,7 +11271,7 @@ class ConstValueFactorContext extends ValueFactorContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.c = null; // ConstantContext;
+        this.c = null;;
         super.copyFrom(ctx);
     }
 
@@ -11398,7 +11394,7 @@ class ProjValueAtomContext extends ValueAtomContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.p = null; // EntityProjectionContext;
+        this.p = null;;
         super.copyFrom(ctx);
     }
 
@@ -11435,7 +11431,7 @@ class IdValueAtomContext extends ValueAtomContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.id = null; // LeadingIdContext;
+        this.id = null;;
         super.copyFrom(ctx);
     }
 
@@ -11472,7 +11468,7 @@ class AutoMatchValueAtomContext extends ValueAtomContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.sid = null; // Token;
+        this.sid = null;;
         super.copyFrom(ctx);
     }
 
@@ -11509,7 +11505,7 @@ class PatternModelAtomContext extends ValueAtomContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.m = null; // PatternModelContext;
+        this.m = null;;
         super.copyFrom(ctx);
     }
 
@@ -11546,8 +11542,8 @@ class QueryOpValueAtomContext extends ValueAtomContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.base = null; // LeadingIdContext;
-        this.qo = null; // QueryFuncOpContext;
+        this.base = null;;
+        this.qo = null;;
         super.copyFrom(ctx);
     }
 
@@ -11639,9 +11635,9 @@ class QueryFuncOpContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_queryFuncOp;
-        this.f = null; // FuncOrFilterContext
-        this.p = null; // EntityProjectionContext
-        this.fs = null; // FieldSelectorContext
+        this.f = null;
+        this.p = null;
+        this.fs = null;
     }
 
 	funcOrFilter() {
@@ -11693,14 +11689,14 @@ class FuncOrFilterContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_funcOrFilter;
-        this.p1 = null; // PairContext
-        this.op1 = null; // Token
-        this.p2 = null; // PairContext
-        this.op2 = null; // Token
-        this.def = null; // ExpressionContext
-        this.e1 = null; // ExpressionContext
-        this.op = null; // Token
-        this.e2 = null; // ExpressionContext
+        this.p1 = null;
+        this.op1 = null;
+        this.p2 = null;
+        this.op2 = null;
+        this.def = null;
+        this.e1 = null;
+        this.op = null;
+        this.e2 = null;
     }
 
 	LP() {
@@ -11782,9 +11778,9 @@ class PairContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_pair;
-        this.test = null; // ExpressionContext
-        this.op = null; // Token
-        this.value = null; // ExpressionContext
+        this.test = null;
+        this.op = null;
+        this.value = null;
     }
 
 	expression = function(i) {
@@ -11839,9 +11835,9 @@ class LinkExpContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_linkExp;
-        this.start = null; // ExpressionContext
-        this.body = null; // ValueAtomContext
-        this.end = null; // ExpressionContext
+        this.start = null;
+        this.body = null;
+        this.end = null;
     }
 
 	LINK() {
@@ -11928,8 +11924,8 @@ class LinkSpecContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_linkSpec;
-        this.from = null; // PropertyIdContext
-        this.to = null; // PropertyIdContext
+        this.from = null;
+        this.to = null;
     }
 
 	LSQUARE() {
@@ -12039,9 +12035,9 @@ class EntityProjectionContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_entityProjection;
-        this.b = null; // Token
-        this.e1 = null; // NamedExpressionContext
-        this.e2 = null; // NamedExpressionContext
+        this.b = null;
+        this.e1 = null;
+        this.e2 = null;
     }
 
 	RCURL() {
@@ -12112,8 +12108,8 @@ class NamedExpressionContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_namedExpression;
-        this.n = null; // Token
-        this.ex = null; // ExpressionContext
+        this.n = null;
+        this.ex = null;
     }
 
 	DEFEQ() {
@@ -12290,7 +12286,7 @@ class MultiValuedPatternSubmodelContext extends PatternSubmodelContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.n = null; // Token;
+        this.n = null;;
         super.copyFrom(ctx);
     }
 
@@ -12367,7 +12363,7 @@ class FieldSelectorContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_fieldSelector;
-        this.id = null; // FieldIdContext
+        this.id = null;
     }
 
 	DOT() {
@@ -12430,8 +12426,8 @@ class ExplicitScopeExpressionContext extends ScopeExpressionContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.se = null; // ValueAtomContext;
-        this.p = null; // TablePropertyContext;
+        this.se = null;;
+        this.p = null;;
         super.copyFrom(ctx);
     }
 
@@ -12476,7 +12472,7 @@ class OuterScopeExpressionContext extends ScopeExpressionContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.p = null; // TablePropertyContext;
+        this.p = null;;
         super.copyFrom(ctx);
     }
 
@@ -12517,7 +12513,7 @@ class SelfScopeExpressionContext extends ScopeExpressionContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.p = null; // TablePropertyContext;
+        this.p = null;;
         super.copyFrom(ctx);
     }
 
@@ -12562,9 +12558,9 @@ class TablePropertyContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_tableProperty;
-        this.id = null; // TablePropIdContext
-        this.v = null; // ExpressionContext
-        this.w = null; // ExpressionContext
+        this.id = null;
+        this.v = null;
+        this.w = null;
     }
 
 	tablePropId() {
@@ -12674,8 +12670,8 @@ class QualifiedIdContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_qualifiedId;
-        this.id1 = null; // LeadingIdContext
-        this.id2 = null; // FieldIdContext
+        this.id1 = null;
+        this.id2 = null;
     }
 
 	leadingId() {
@@ -12742,9 +12738,9 @@ class LeadingIdContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_leadingId;
-        this.id = null; // Token
-        this.pid = null; // Token
-        this.psid = null; // Token
+        this.id = null;
+        this.pid = null;
+        this.psid = null;
     }
 
 	ID() {
@@ -12804,7 +12800,7 @@ class FieldIdContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_fieldId;
-        this.id = null; // Token
+        this.id = null;
     }
 
 	ID() {
@@ -12860,7 +12856,7 @@ class TablePropIdContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_tablePropId;
-        this.id = null; // Token
+        this.id = null;
     }
 
 	ID() {
@@ -12904,7 +12900,7 @@ class PropertyIdContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_propertyId;
-        this.id = null; // Token
+        this.id = null;
     }
 
 	ID() {
@@ -13066,7 +13062,7 @@ class GeneralIntConstantContext extends SimpleConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // IntConstantContext;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13103,7 +13099,7 @@ class TypedConstantContext extends SimpleConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.t = null; // Token;
+        this.t = null;;
         super.copyFrom(ctx);
     }
 
@@ -13140,7 +13136,7 @@ class StringConstantContext extends SimpleConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.s = null; // Token;
+        this.s = null;;
         super.copyFrom(ctx);
     }
 
@@ -13177,7 +13173,7 @@ class FalseConstantContext extends SimpleConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.b = null; // Token;
+        this.b = null;;
         super.copyFrom(ctx);
     }
 
@@ -13214,7 +13210,7 @@ class GeneralRealConstantContext extends SimpleConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.r = null; // RealConstantContext;
+        this.r = null;;
         super.copyFrom(ctx);
     }
 
@@ -13251,7 +13247,7 @@ class TrueConstantContext extends SimpleConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.b = null; // Token;
+        this.b = null;;
         super.copyFrom(ctx);
     }
 
@@ -13311,7 +13307,7 @@ class DecIntConstantContext extends IntConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13348,7 +13344,7 @@ class NegIntConstantContext extends IntConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13389,7 +13385,7 @@ class BadBinConstantContext extends IntConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13426,7 +13422,7 @@ class HexConstantContext extends IntConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13463,7 +13459,7 @@ class BadHexConstantContext extends IntConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13500,7 +13496,7 @@ class BadMixConstantContext extends IntConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13537,7 +13533,7 @@ class BinConstantContext extends IntConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13574,7 +13570,7 @@ class NoFlagHexConstantContext extends IntConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.i = null; // Token;
+        this.i = null;;
         super.copyFrom(ctx);
     }
 
@@ -13634,7 +13630,7 @@ class BadRealConstContext extends RealConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.r = null; // Token;
+        this.r = null;;
         super.copyFrom(ctx);
     }
 
@@ -13679,7 +13675,7 @@ class RealConstContext extends RealConstantContext {
 
     constructor(parser, ctx) {
         super(parser);
-        this.r = null; // Token;
+        this.r = null;;
         super.copyFrom(ctx);
     }
 
@@ -14032,8 +14028,8 @@ class ReturnTypeIdContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = KELParser.RULE_returnTypeId;
-        this.simple = null; // SimpleTypeIdContext
-        this.isSet = null; // Token
+        this.simple = null;
+        this.isSet = null;
     }
 
 	simpleTypeId() {

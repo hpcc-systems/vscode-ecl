@@ -1,13 +1,13 @@
-import { getColorFromString, IColor, IThemeRules, loadTheme, ThemeGenerator, themeRulesStandardCreator } from "@fluentui/react";
+import { getColorFromString, IColor, IThemeRules, loadTheme, ThemeGenerator as FluentThemeGenerator, themeRulesStandardCreator } from "@fluentui/react";
 
-export class ThemeProvider {
+class ThemeGenerator {
     private themeRules: IThemeRules;
 
     constructor(foreground: string, background: string) {
         const themeRules = themeRulesStandardCreator();
-        ThemeGenerator.insureSlots(this.themeRules, false);
-        ThemeGenerator.setSlot(themeRules.backgroundColor, getColorFromString(background), false, true, true);
-        ThemeGenerator.setSlot(themeRules.foregroundColor, getColorFromString(foreground), false, true, true);
+        FluentThemeGenerator.insureSlots(this.themeRules, false);
+        FluentThemeGenerator.setSlot(themeRules.backgroundColor, getColorFromString(background), false, true, true);
+        FluentThemeGenerator.setSlot(themeRules.foregroundColor, getColorFromString(foreground), false, true, true);
         this.themeRules = themeRules;
     }
 
@@ -15,12 +15,22 @@ export class ThemeProvider {
         const newColor: IColor = getColorFromString(primary);
 
         const themeRules = this.themeRules;
-        ThemeGenerator.setSlot(themeRules.primaryColor, newColor.str, false, true, true);
+        FluentThemeGenerator.setSlot(themeRules.primaryColor, newColor.str, false, true, true);
         this.themeRules = themeRules;
-        const theme = ThemeGenerator.getThemeAsJson(this.themeRules);
+        const theme = FluentThemeGenerator.getThemeAsJson(this.themeRules);
         loadTheme({
             ...{ palette: theme },
             isInverted: false,
         });
     }
+}
+
+export function initTheme() {
+    const bodyStyles = window.getComputedStyle(document.body);
+
+    const backColor = bodyStyles.getPropertyValue("--vscode-editor-background") || "white";
+    const foreColour = bodyStyles.getPropertyValue("--vscode-input-foreground") || "black";
+
+    const themeProvider = new ThemeGenerator(foreColour, backColor);
+    themeProvider.loadThemeForColor(bodyStyles.getPropertyValue("--vscode-progressBar-background") || "navy");
 }

@@ -150,6 +150,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
     private _getHtmlForWebview(webview: vscode.Webview) {
         // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "dist", "eclwatch.js"));
+        const stylesheetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "dist", "eclwatch.css"));
 
         // Use a nonce to only allow a specific script to be run.
         const nonce = getNonce();
@@ -184,6 +185,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
             bottom:4px;
         }
     </style>
+    <link rel="stylesheet" type="text/css" href="${stylesheetUri}">
 </head>
 
 <body>

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { WUQuery, Workunit, ClientTools } from "@hpcc-js/comms";
+import { WsWorkunits, Workunit, ClientTools } from "@hpcc-js/comms";
 import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration, IExecFile } from "./launchConfig";
 import { LaunchConfigState, LaunchMode } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
@@ -61,7 +61,7 @@ class Session {
         return wuResultUrl(this._launchConfig, wuid, sequence);
     }
 
-    wuQuery(request: WUQuery.Request): Promise<Workunit[]> {
+    wuQuery(request: Partial<WsWorkunits.WUQuery>): Promise<Workunit[]> {
         return this._launchConfig.wuQuery(request);
     }
 
@@ -296,7 +296,7 @@ class SessionManager {
         return this.session?.wuResultUrl(wuid, sequence);
     }
 
-    wuQuery(request: WUQuery.Request): Promise<Workunit[]> {
+    wuQuery(request: Partial<WsWorkunits.WUQuery>): Promise<Workunit[]> {
         if (this.session) {
             return this.session.wuQuery(request);
         }
@@ -459,7 +459,11 @@ class SessionManager {
         }
         this._statusBarPin.text = isPinned ? "$(pinned)" : "$(pin)";
         this._statusBarPin.tooltip = (isPinned ? localize("Unpin") : localize("Pin")) + ` ${localize("launch configuration to current document")}.`;
-        this.isActiveECL ? this._statusBarPin.show() : this._statusBarPin.hide();
+        if (this.isActiveECL) {
+            this._statusBarPin.show();
+        } else {
+            this._statusBarPin.hide();
+        }
     }
 
     stateIcon(state: LaunchConfigState): string {
@@ -479,13 +483,21 @@ class SessionManager {
     refreshLaunchStatusBar(state: LaunchConfigState) {
         this._statusBarLaunch.text = `${this.stateIcon(state)} ${isMultiRoot() ? this.session?.id : this.session?.name}`;
         this._statusBarLaunch.tooltip = localize("HPCC Platform Launch Configuration");
-        this.isActiveECL ? this._statusBarLaunch.show() : this._statusBarLaunch.hide();
+        if (this.isActiveECL) {
+            this._statusBarLaunch.show();
+        } else {
+            this._statusBarLaunch.hide();
+        }
     }
 
     refreshTCStatusBar() {
         this._statusBarTargetCluster.text = this.session.targetCluster;
         this._statusBarTargetCluster.tooltip = localize("HPCC Platform TargetCluster");
-        this.isActiveECL ? this._statusBarTargetCluster.show() : this._statusBarTargetCluster.hide();
+        if (this.isActiveECL) {
+            this._statusBarTargetCluster.show();
+        } else {
+            this._statusBarTargetCluster.hide();
+        }
     }
 
     refreshStatusBar(state: LaunchConfigState = LaunchConfigState.Unknown) {

@@ -1,6 +1,6 @@
 import type { CellFunc, compileFunc, ohq } from "@hpcc-js/observablehq-compiler";
 import type { ActivationFunction } from "vscode-notebook-renderer";
-import type { OJSOutput } from "../controller/serializer";
+import type { OJSOutput } from "../controller/serializer-types";
 
 import { compile } from "@hpcc-js/observablehq-compiler";
 import { Runtime } from "@observablehq/runtime";
@@ -18,7 +18,7 @@ interface OutputItem {
     renderer: Renderer;
 }
 
-export const activate: ActivationFunction = context => {
+export const activate: ActivationFunction = () => {
 
     const notebooks: { [uri: string]: Promise<Renderer> } = {};
     const cells: { [id: string | number]: OutputItem } = {};
@@ -42,7 +42,7 @@ export const activate: ActivationFunction = context => {
                 value: text,
             });
             await new Promise<void>(resolve => {
-                cellFunc(renderer.runtime, renderer.main, (name?: string, id?: string | number): ohq.Inspector => {
+                cellFunc(renderer.runtime, renderer.main, (_name?: string, _id?: string | number): ohq.Inspector => {
                     if (element) {
                         const div = document.createElement("div");
                         element.appendChild(div);

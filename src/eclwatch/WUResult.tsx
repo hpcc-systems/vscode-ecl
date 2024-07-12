@@ -1,16 +1,16 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { publish } from "@hpcc-js/common";
+import { useConst } from "@fluentui/react-hooks";
 import { IOptions, Result, XSDXMLNode } from "@hpcc-js/comms";
-import { WUInfo } from "@hpcc-js/comms";
+import { WsWorkunits } from "@hpcc-js/comms";
 import { Common, Table } from "@hpcc-js/dgrid";
 import { hashSum } from "@hpcc-js/util";
 import { Stack, Checkbox, ContextualMenu, ContextualMenuItemType, DefaultButton, Dialog, DialogFooter, DialogType, IContextualMenuItem, PrimaryButton, ProgressIndicator, SpinButton } from "@fluentui/react";
-import * as copy from "copy-to-clipboard";
+import copy from "copy-to-clipboard";
 import { VisualizationComponent } from "./hpccVizAdapter";
 import { Store } from "./WUResultStore";
 
-import "../../src/eclwatch/WUResult.css";
+import "./WUResult.css";
 
 function typeTPL(type: string, isSet: boolean) {
     const prefix = isSet ? "SET OF " : "";
@@ -217,19 +217,6 @@ export class WUResultTable extends Common {
         this.renderHtml(false);
     }
 
-    @publish(undefined, "object", "IOptions")
-    opts: { (): IOptions, (_: IOptions): WUResultTable };
-    @publish(undefined, "string", "Wuid")
-    wuid: { (): string, (_: string): WUResultTable };
-    @publish(undefined, "string", "Result Name")
-    resultName: { (): string, (_: string): WUResultTable };
-    @publish(undefined, "number", "Sequence Number")
-    sequence: { (): number, (_: number): WUResultTable };
-    @publish("", "string", "Cluster")
-    cluster: { (): string, (_: string): WUResultTable };
-    @publish("", "string", "Logical File Name")
-    logicalFile: { (): string, (_: string): WUResultTable };
-
     calcResult(): Result | null {
         if (this.wuid() && this.resultName()) {
             return Result.attach(this.opts(), this.wuid(), this.resultName());
@@ -396,6 +383,27 @@ export class WUResultTable extends Common {
 }
 WUResultTable.prototype._class += " eclwatch_WUResultTable";
 
+export interface WUResultTable {
+    opts(): IOptions;
+    opts(_: IOptions): this;
+    wuid(): string;
+    wuid(_: string): this;
+    resultName(): string;
+    resultName(_: string): this;
+    sequence(): number;
+    sequence(_: number): this;
+    cluster(): string;
+    cluster(_: string): this;
+    logicalFile(): string;
+    logicalFile(_: string): this;
+}
+WUResultTable.prototype.publish("opts", null, "object", "Options");
+WUResultTable.prototype.publish("wuid", null, "string", "Workunit ID");
+WUResultTable.prototype.publish("resultName", null, "string", "Result Name");
+WUResultTable.prototype.publish("sequence", null, "number", "Sequence");
+WUResultTable.prototype.publish("cluster", null, "string", "Cluster");
+WUResultTable.prototype.publish("logicalFile", null, "string", "Logical File");
+
 interface WUResultProps {
     opts: IOptions;
     wuid: string;
@@ -408,22 +416,24 @@ export const WUResult: React.FunctionComponent<WUResultProps> = ({
     sequence,
 }) => {
 
-    const table = React.useRef(
-        new WUResultTable()
-    ).current;
+    const table = useConst(() => new WUResultTable());
 
-    table
-        .opts(opts)
-        .wuid(wuid)
-        .sequence(sequence)
-        ;
+    React.useEffect(() => {
+        if (table) {
+            table
+                .opts(opts)
+                .wuid(wuid)
+                .sequence(sequence)
+                ;
+        }
+    }, [table, opts, wuid, sequence]);
 
     return <VisualizationComponent widget={table} debounce={false}>
     </VisualizationComponent>;
 };
 
 interface WUIssues {
-    exceptions: WUInfo.ECLException[];
+    exceptions: WsWorkunits.ECLException[];
 }
 
 export const WUIssues: React.FunctionComponent<WUIssues> = ({

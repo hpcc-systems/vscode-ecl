@@ -5,7 +5,7 @@ import { kelStatusBar } from "./status";
 import * as cp from "child_process";
 import * as path from "path";
 import * as os from "os";
-import * as AdmZip from "adm-zip";
+import AdmZip from "adm-zip";
 import localize from "../util/localize";
 import { exists, isDirectory, readDirectory } from "../util/fs";
 
@@ -276,7 +276,7 @@ export function selectCTVersion() {
             if (item) {
                 const eclConfig = workspace.getConfiguration("kel");
                 eclConfig.update("kelPath", item.kelPath);
-                showKelStatus(item.label, !!item.kelPath, !!item.kelPath ? item.kelPath : "");
+                showKelStatus(item.label, !!item.kelPath, item.kelPath ? item.kelPath : "");
             }
             input.hide();
         });

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Ping, Workunit, WUQuery, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
@@ -309,13 +309,13 @@ export class LaunchConfig implements LaunchRequestArguments {
         const service = new WorkunitsService(this.opts(credentials));
         const queryPromise = service.Ping();
         return Promise.race([timeoutPrommise, queryPromise])
-            .then((response: string | Ping.Response) => {
+            .then((response: string | WsWorkunits.WsWorkunitsPingResponse) => {
                 if (typeof response === "string") {
                     logger.debug("ping response:  " + response);
                     return LaunchConfigState.Unreachable;
                 } else {
-                    logger.debug("ping response:  " + response.result);
-                    return response.result ? LaunchConfigState.Ok : LaunchConfigState.Unreachable;
+                    logger.debug("ping response:  " + response);
+                    return response ? LaunchConfigState.Ok : LaunchConfigState.Unreachable;
                 }
             }).catch(e => {
                 logger.debug("ping exception:  " + e?.message || e);
@@ -324,7 +324,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     private ping(timeout: number = 5000): Promise<LaunchConfigState> {
-        const timeoutPrommise = new Promise((resolve, reject) => {
+        const timeoutPrommise = new Promise<string>((resolve, reject) => {
             setTimeout(() => {
                 resolve("timeout");
             }, timeout);
@@ -543,7 +543,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         });
     }
 
-    wuQuery(request: WUQuery.Request): Promise<Workunit[]> {
+    wuQuery(request: Partial<WsWorkunits.WUQuery>): Promise<Workunit[]> {
         return this.checkCredentials().then(credentials => {
             return Workunit.query(this.opts(credentials), request);
         });
@@ -689,7 +689,7 @@ export class LaunchConfig implements LaunchRequestArguments {
                     return [wu, archive] as [Workunit, any];
                 });
             }).then(([wu, archive]) => {
-                // eslint-disable-next-line no-async-promise-executor
+                 
                 progress.report({ increment: 10, message: `${localize("Updating Workunit")} ${wu.Wuid}` });
                 // eslint-disable-next-line no-async-promise-executor
                 return new Promise<Workunit>(async (resolve, reject) => {

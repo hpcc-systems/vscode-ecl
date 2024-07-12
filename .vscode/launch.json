@@ -55,7 +55,7 @@
         },
         {
             "name": "Launch Web Extension",
-            "type": "pwa-extensionHost",
+            "type": "extensionHost",
             "debugWebWorkerHost": true,
             "request": "launch",
             "args": [
@@ -65,6 +65,15 @@
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
             ]
+        },
+        {
+            "name": "Launch esbuild.mjs",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/esbuild.mjs",
+            "args": [
+                "--mode=development"
+            ],
         },
         {
             "name": "Launch Server Adapter",
@@ -83,7 +92,7 @@
         },
         {
             "name": "webview-test",
-            "type": "pwa-msedge",
+            "type": "msedge",
             "request": "launch",
             "url": "file:///${workspaceRoot}/webview-test.html",
             "runtimeArgs": [
@@ -92,8 +101,15 @@
             "webRoot": "${workspaceRoot}"
         },
         {
+            "name": "http://webview-test",
+            "type": "msedge",
+            "request": "launch",
+            "url": "http://localhost:8000/webview-test.html",
+            "webRoot": "${workspaceRoot}"
+        },
+        {
             "name": "index",
-            "type": "pwa-msedge",
+            "type": "msedge",
             "request": "launch",
             "url": "file:///${workspaceRoot}/index.html",
             "runtimeArgs": [
@@ -108,7 +124,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
+            "type": "node"
         },
         {
             "name": "NLS Merge",
@@ -117,7 +133,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
+            "type": "node"
         }
     ]
 }

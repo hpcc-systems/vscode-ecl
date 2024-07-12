@@ -33,7 +33,7 @@ export class ECLEditor {
             }
             const eclConfig = vscode.workspace.getConfiguration("ecl", document.uri);
             const formatPromise: PromiseLike<void> = Promise.resolve();
-            if (!!eclConfig["syntaxCheckOnLoad"]) {
+            if (eclConfig["syntaxCheckOnLoad"]) {
                 formatPromise.then(() => {
                     checkTextDocument(document, eclConfig);
                 });
@@ -53,7 +53,7 @@ export class ECLEditor {
                 if (eclConfig["formatOnSave"] && vscode.window.activeTextEditor.document === document) {
                     //  TODO Auto Format  ---
                 }
-                if (!!eclConfig["syntaxCheckOnSave"]) {
+                if (eclConfig["syntaxCheckOnSave"]) {
                     formatPromise.then(() => {
                         checkTextDocument(document, eclConfig);
                     });

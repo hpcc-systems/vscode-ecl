@@ -2,7 +2,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { Workunit, Result } from "@hpcc-js/comms";
 import { eclStatusBar } from "./status";
-import ExcelJS from "exceljs";
+import * as ExcelJS from "exceljs";
 import { createArrayCsvWriter } from "csv-writer";
 import localize from "../util/localize";
 
@@ -29,7 +29,7 @@ export class SaveData {
         this._wu = wu;
     }
 
-    async askFileSave(resultName: string="") {
+    async askFileSave(resultName: string = "") {
         this._type = SaveFileType.UNKNOWN;
         const filePath = this._saveType == SaveType.RESULT ? this.filePathResult(this._wu.Wuid, resultName) : this._wu.Wuid;
         const filts = {};
@@ -44,7 +44,7 @@ export class SaveData {
             filters: filts
         };
 
-       await vscode.window.showSaveDialog(options).then(fileInfos => {
+        await vscode.window.showSaveDialog(options).then(fileInfos => {
             this._filePath = fileInfos.fsPath;
             if (fileInfos.fsPath.endsWith(".csv")) {
                 this._type = SaveFileType.CSV;
@@ -53,7 +53,7 @@ export class SaveData {
             }
         });
     }
-    
+
     async saveWUAs(wu: Workunit) {
         this._saveType = SaveType.WORKUNIT;
         this._wu = wu;
@@ -68,7 +68,7 @@ export class SaveData {
         await this.askFileSave(result.Name);
         if (this._type != SaveFileType.UNKNOWN) {
             this.saveResultFile(result);
-        }        
+        }
     }
 
     async saveResultFile(result: Result) {
@@ -83,10 +83,10 @@ export class SaveData {
         if (userLimit) {
             if (this._type == SaveFileType.WORKBOOK)
                 this._workbook = new ExcelJS.Workbook();
-            this.blockSave(res, userLimit);  
-        }     
+            this.blockSave(res, userLimit);
+        }
     }
-        
+
     async saveDataFile() {
         const results = await this._wu.fetchResults();
         this._numResults = results.length;
@@ -98,10 +98,10 @@ export class SaveData {
                 this._workbook = new ExcelJS.Workbook();
             for (const result of results) {
                 await this.blockSave(result, userLimit);
-            }            
-        } 
+            }
+        }
     }
-        
+
     async blockSave(result, maxRows) {
         const pieceSize = 5000;
         const totalRows = result.Total > maxRows ? maxRows : result.Total;
@@ -114,7 +114,7 @@ export class SaveData {
         if (this._type == SaveFileType.CSV) {
             this._createCsvWriter = createArrayCsvWriter;
             eclStatusBar.showClientTools(`${result.Name} saving`, localize("CSV File"));
-            this._dataRows = [];            
+            this._dataRows = [];
         } else {
             this._sheet = this._workbook.addWorksheet(result.Name);
         }
@@ -158,7 +158,7 @@ export class SaveData {
                     break;
                 }
                 const filePath = this._saveType == SaveType.RESULT ? this._filePath : this.filePathResult(this._filePath, result.Name, ".csv");
-                    
+
                 this._csvWriter = this._createCsvWriter({
                     path: filePath,
                     header
@@ -194,13 +194,13 @@ export class SaveData {
             });
         });
     }
-    
+
     async askRowCount(results): Promise<number> {
         let maxRowsFound = 0;
 
         for (const result of results) {
             if (result.Total > maxRowsFound)
-            maxRowsFound = result.Total;
+                maxRowsFound = result.Total;
         }
         let userLimit = -1;
         if (maxRowsFound > this._maxRows) {
@@ -234,7 +234,7 @@ export class SaveData {
         return rows.length == 0 ? 0 : Number(rows);
     }
 
-    filePathResult(filePath: string, resultName: string, ext: string=""): string {
+    filePathResult(filePath: string, resultName: string, ext: string = ""): string {
         let newFilePath = this._saveType == SaveType.RESULT ? filePath : path.join(path.parse(filePath).dir, path.parse(filePath).name);
 
         if (resultName) {

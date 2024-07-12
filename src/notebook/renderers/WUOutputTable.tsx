@@ -2,16 +2,9 @@
 import * as React from "react";
 import { Pivot, PivotItem, IPivotStyles, DetailsList, IColumn, DetailsListLayoutMode, SelectionMode, IStyleFunctionOrObject, IPivotStyleProps } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
-import { ThemeProvider } from "../../eclwatch/themeGenerator";
-import { WUOutput } from "../controller/serializer";
+import { WUOutput } from "../controller/serializer-types";
 
 const bodyStyles = window.getComputedStyle(document.body);
-
-const backColor = bodyStyles.getPropertyValue("--vscode-editor-background") || "white";
-const foreColour = bodyStyles.getPropertyValue("--vscode-input-foreground") || "black";
-
-const themeProvider = new ThemeProvider(foreColour, backColor);
-themeProvider.loadThemeForColor(bodyStyles.getPropertyValue("--vscode-progressBar-background") || "navy");
 
 const pivotStyles: IStyleFunctionOrObject<IPivotStyleProps, IPivotStyles> = {
     link: {
@@ -40,25 +33,27 @@ interface WUOutputTableProps {
 export const WUOutputTable: React.FunctionComponent<WUOutputTableProps> = ({
     result
 }) => {
+    const columns = useConst(() => {
+        return Object.keys(result[0]).map(col => {
+            return {
+                key: col,
+                name: col,
+                fieldName: col,
+                minWidth: 100,
+                maxWidth: 200,
+                isResizable: true,
+                isSorted: false,
+                isSortedDescending: false,
+                onColumnClick: (ev: React.MouseEvent<HTMLElement>, column: IColumn) => {
+                    console.log(`clicked ${column.fieldName}`);
+                }
+            };
+        });
+    });
+
     if (!Array.isArray(result)) {
         return <div>{result}</div>;
     }
-
-    const columns = useConst(Object.keys(result[0]).map((col, index) => {
-        return {
-            key: col,
-            name: col,
-            fieldName: col,
-            minWidth: 100,
-            maxWidth: 200,
-            isResizable: true,
-            isSorted: false,
-            isSortedDescending: false,
-            onColumnClick: (ev: React.MouseEvent<HTMLElement>, column: IColumn) => {
-                console.log(`clicked ${column.fieldName}`);
-            }
-        };
-    }));
 
     return <DetailsList
         compact={true}

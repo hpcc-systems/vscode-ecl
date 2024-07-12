@@ -1,40 +1,16 @@
-import type { ohq } from "@hpcc-js/observablehq-compiler";
-
 import * as path from "path";
 import { NotebookSerializer, CancellationToken, NotebookData, NotebookCellData, NotebookCellKind, NotebookCell, Uri, NotebookCellOutput, NotebookCellOutputItem } from "vscode";
+import type { ohq } from "@hpcc-js/observablehq-compiler";
 import { v4 as uuidv4 } from "uuid";
 import { TextDecoder, TextEncoder } from "util";
+import { Meta, OJSCell, OJSOutput, WUOutput } from "./serializer-types";
 
 export const MIME = "application/hpcc.ojs+json";
-
-export interface WUOutput {
-    configuration: string;
-    wuid: string;
-    results: { [id: string]: object };
-}
-
-export interface OJSCell {
-    nodeId: string | number;
-    ojsSource: string;
-}
-
-export interface OJSOutput {
-    notebookId: string;
-    folder: string;
-    files: ohq.File[], // notebook: ohq.Notebook;
-    cell: OJSCell;
-    otherCells: OJSCell[];
-}
 
 function encode(str: string) {
     return str
         .split("`").join("\\`")
         ;
-}
-
-interface Meta {
-    notebook: { [id: string]: ohq.Notebook },
-    node: { [id: string | number]: ohq.Node }
 }
 
 export let serializer: Serializer;
@@ -89,10 +65,11 @@ export class Serializer implements NotebookSerializer {
                 return `htl.html\`${encode(cell.document.getText())}\``;
             case "tex":
                 return `tex.block\`${encode(cell.document.getText())}\``;
-            case "sql":
+            case "sql": {
                 const sourceName = this.node(cell)?.data?.source?.name ?? "db";
                 const name = this.node(cell)?.name;
                 return `${name ? `${name} = ` : ""}${sourceName}.sql\`${encode(cell.document.getText())}\`;`;
+            }
             case "javascript":
                 return `{${cell.document.getText()}}`;
             default:

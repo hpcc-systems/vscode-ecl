@@ -1,4 +1,4 @@
-import { Workunit, WUStateID, Result, WUInfo, WorkunitsService, SMCService } from "@hpcc-js/comms";
+import { Workunit, WUStateID, Result, WsWorkunits, WorkunitsService, SMCService } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
 import localize from "../util/localize";
@@ -6,7 +6,7 @@ import { Item, Tree } from "./tree";
 import { eclWatchPanelView } from "./eclWatchPanelView";
 import { SaveData } from "./saveData";
 
-const PrevWeeks: string[] = ["Last Week", "Two Weeks Ago", "Three Weeks Ago", "Four Weeks Ago", "Five Weeks Ago", "Six Weeks Ago", "Seven Weeks Ago"].map(localize);
+const PrevWeeks: string[] = [localize("Last Week"), localize("Two Weeks Ago"), localize("Three Weeks Ago"), localize("Four Weeks Ago"), localize("Five Weeks Ago"), localize("Six Weeks Ago"), localize("Seven Weeks Ago")];
 
 export let eclWatchTree: ECLWatchTree;
 
@@ -458,7 +458,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     openECL() {
-        this._wu.fetchQuery().then((inf: WUInfo.Query) => {
+        this._wu.fetchQuery().then((inf: WsWorkunits.Query) => {
             const ecl = inf.Text;
             vscode.workspace.openTextDocument({ content: ecl, language: "ecl" }).then(document => {
                 vscode.window.showTextDocument(document);
@@ -535,7 +535,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         const service = new WorkunitsService({ baseUrl: this._wu.BaseUrl });
         return service.WUUpdate({
             Wuid: this._wu.Wuid,
-            State: stateID as unknown as string
+            State: stateID
         }).then(() => this._tree.refresh());
     }
 

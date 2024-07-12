@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check 
+        if: ${{ github.repository_owner != 'hpcc-systems' }}
+        run: |
+          echo "Not hpcc-systems repository"
+          exit 1
+
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:

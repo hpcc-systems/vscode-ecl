@@ -1,5 +1,5 @@
 import type { ActivationFunction, RendererContext } from "vscode-notebook-renderer";
-import type { WUOutput } from "../controller/serializer";
+import type { WUOutput } from "../controller/serializer-types";
 
 import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
@@ -23,12 +23,15 @@ export const activate: ActivationFunction = context => {
 
 class WURenderer {
 
+    protected context: RendererContext<any>;
     _element: any;
     _data: WUOutput;
     _configuration: any;
 
-    constructor(protected context: RendererContext<any>) {
-        context.onDidReceiveMessage(msg => this.onDidReceiveMessage(msg));
+    constructor(context: RendererContext<any>) {
+        if (this.context.onDidReceiveMessage) {
+            this.context.onDidReceiveMessage(msg => this.onDidReceiveMessage(msg));
+        }
     }
 
     disposeOutputItem(id) {
@@ -50,7 +53,7 @@ class WURenderer {
         this._element = element;
         if (this._data.results) {
             render(<WUOutputTables {...this._data} />, this._element);
-        } else {
+        } else if (this.context.postMessage) {
             this.context.postMessage({ command: "fetchConfig", name: this._data.configuration });
         }
     }

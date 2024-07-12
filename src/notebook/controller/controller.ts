@@ -8,7 +8,8 @@ import { reporter } from "../../telemetry/index";
 import { sessionManager } from "../../hpccplatform/session";
 import { deleteFile, writeFile } from "../../util/fs";
 import { launchConfiguration, LaunchRequestArguments } from "../../hpccplatform/launchConfig";
-import { MIME, OJSOutput, serializer } from "./serializer";
+import { OJSOutput } from "./serializer-types";
+import { MIME, serializer } from "./serializer";
 
 function encodeID(id: string) {
     return id.split(" ").join("_");
@@ -140,7 +141,7 @@ export class Controller {
                     outputItem = vscode.NotebookCellOutputItem.json(ojsOutput, MIME);
                 } catch (e) { }
             }
-        } catch (e) {
+        } catch (e: any) {
             if (e.message.indexOf("0003:  Definition must contain EXPORT or SHARED value") >= 0) {
                 outputItem = vscode.NotebookCellOutputItem.text("...no action...");
             } else {

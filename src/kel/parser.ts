@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { Antlr4Error, ErrorListener } from "../util/errorListener";
-
 import antlr4 from "antlr4";
+
 import KELLexer from "../grammar/kel/KELLexer";
 import KELParser from "../grammar/kel/KELParser";
 import { KELVisitor } from "./visitor";
@@ -21,8 +21,10 @@ export function parse(doc: vscode.TextDocument): Parsed {
     const chars = new antlr4.InputStream(doc.getText());
     const lexer = new KELLexer(chars);
     const tokens = new antlr4.CommonTokenStream(lexer);
-    const parser = new KELParser(tokens) as unknown as antlr4.Parser;
+    const parser = new KELParser(tokens);
     parser.buildParseTrees = true;
+    const errorListener2 = parser.getErrorListener();
+    errorListener2.delegates[0] = errorListener;
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
     try {
@@ -30,7 +32,7 @@ export function parse(doc: vscode.TextDocument): Parsed {
         const visitor = new KELVisitor();
         visitor.visitProgram(tree);
         const kelConfig = vscode.workspace.getConfiguration("kel", doc.uri);
-        retVal.errors = kelConfig.get("syntaxCheckFromGrammar") ? errorListener.errors.filter(row => !visitor.eclBodyContains(row.start, row.stop)) : [];
+        retVal.errors = kelConfig.get("syntaxCheckFromGrammar") ? errorListener.errors : [];
     } catch (e) {
         console.log(e);
     }
