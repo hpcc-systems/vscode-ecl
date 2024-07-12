@@ -1,4 +1,4 @@
-import { Workunit, WUStateID, Result, WUInfo, WorkunitsService, SMCService } from "@hpcc-js/comms";
+import { Workunit, WUStateID, Result, WsWorkunits, WorkunitsService, SMCService } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
 import localize from "../util/localize";
@@ -458,7 +458,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     openECL() {
-        this._wu.fetchQuery().then((inf: WUInfo.Query) => {
+        this._wu.fetchQuery().then((inf: WsWorkunits.Query) => {
             const ecl = inf.Text;
             vscode.workspace.openTextDocument({ content: ecl, language: "ecl" }).then(document => {
                 vscode.window.showTextDocument(document);
@@ -535,7 +535,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         const service = new WorkunitsService({ baseUrl: this._wu.BaseUrl });
         return service.WUUpdate({
             Wuid: this._wu.Wuid,
-            State: stateID as unknown as string
+            State: stateID
         }).then(() => this._tree.refresh());
     }
 

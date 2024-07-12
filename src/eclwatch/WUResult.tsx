@@ -2,15 +2,15 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { publish } from "@hpcc-js/common";
 import { IOptions, Result, XSDXMLNode } from "@hpcc-js/comms";
-import { WUInfo } from "@hpcc-js/comms";
+import { WsWorkunits } from "@hpcc-js/comms";
 import { Common, Table } from "@hpcc-js/dgrid";
 import { hashSum } from "@hpcc-js/util";
 import { Stack, Checkbox, ContextualMenu, ContextualMenuItemType, DefaultButton, Dialog, DialogFooter, DialogType, IContextualMenuItem, PrimaryButton, ProgressIndicator, SpinButton } from "@fluentui/react";
-import * as copy from "copy-to-clipboard";
+import copy from "copy-to-clipboard";
 import { VisualizationComponent } from "./hpccVizAdapter";
 import { Store } from "./WUResultStore";
 
-import "../../src/eclwatch/WUResult.css";
+import "./WUResult.css";
 
 function typeTPL(type: string, isSet: boolean) {
     const prefix = isSet ? "SET OF " : "";
@@ -423,7 +423,7 @@ export const WUResult: React.FunctionComponent<WUResultProps> = ({
 };
 
 interface WUIssues {
-    exceptions: WUInfo.ECLException[];
+    exceptions: WsWorkunits.ECLException[];
 }
 
 export const WUIssues: React.FunctionComponent<WUIssues> = ({

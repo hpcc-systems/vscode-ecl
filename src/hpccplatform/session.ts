@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { WUQuery, Workunit, ClientTools } from "@hpcc-js/comms";
+import { WsWorkunits, Workunit, ClientTools } from "@hpcc-js/comms";
 import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration, IExecFile } from "./launchConfig";
 import { LaunchConfigState, LaunchMode } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
@@ -61,7 +61,7 @@ class Session {
         return wuResultUrl(this._launchConfig, wuid, sequence);
     }
 
-    wuQuery(request: WUQuery.Request): Promise<Workunit[]> {
+    wuQuery(request: Partial<WsWorkunits.WUQuery>): Promise<Workunit[]> {
         return this._launchConfig.wuQuery(request);
     }
 
@@ -296,7 +296,7 @@ class SessionManager {
         return this.session?.wuResultUrl(wuid, sequence);
     }
 
-    wuQuery(request: WUQuery.Request): Promise<Workunit[]> {
+    wuQuery(request: Partial<WsWorkunits.WUQuery>): Promise<Workunit[]> {
         if (this.session) {
             return this.session.wuQuery(request);
         }

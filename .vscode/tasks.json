@@ -6,7 +6,7 @@
         {
             "type": "npm",
             "label": "compile watch",
-            "script": "compile-es6-watch",
+            "script": "compile-esbuild-watch",
             "problemMatcher": [
                 "$tsc-watch"
             ],
@@ -16,8 +16,8 @@
         },
         {
             "type": "npm",
-            "label": "bundle-ext watch",
-            "script": "bundle-ext-watch",
+            "label": "bundle-esbuild-dev watch",
+            "script": "bundle-esbuild-dev-watch",
             "problemMatcher": [],
             "presentation": {
                 "group": "group-build"
@@ -27,7 +27,7 @@
             "label": "build",
             "dependsOn": [
                 "compile watch",
-                "bundle-ext watch"
+                "bundle-esbuild-dev watch"
             ],
             "group": {
                 "kind": "build",

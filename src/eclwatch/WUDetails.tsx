@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Pivot, PivotItem, IPivotStyles, Spinner, initializeIcons, MessageBar, MessageBarType, IStyleFunctionOrObject, IPivotStyleProps } from "@fluentui/react";
-import { Workunit, WUInfo, Result, IOptions } from "@hpcc-js/comms";
+import { Workunit, WsWorkunits, Result, IOptions } from "@hpcc-js/comms";
 import { WUIssues, WUResult } from "./WUResult";
 import { HolyGrail } from "./HolyGrail";
 
@@ -50,13 +50,13 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
 
     const [spinnerMessage, setSpinnerMessage] = React.useState("Loading...");
     const [complete, setComplete] = React.useState(false);
-    const [exceptions, setExceptions] = React.useState<WUInfo.ECLException[]>([]);
+    const [exceptions, setExceptions] = React.useState<WsWorkunits.ECLException[]>([]);
     const [results, setResults] = React.useState<Result[]>([]);
 
     React.useEffect(() => {
         let canceled = false;
 
-        function update(complete: boolean, exceptions: WUInfo.ECLException[], results: Result[]) {
+        function update(complete: boolean, exceptions: WsWorkunits.ECLException[], results: Result[]) {
             if (!canceled) {
                 setComplete(complete);
                 setExceptions([...exceptions]);

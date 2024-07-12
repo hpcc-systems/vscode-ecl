@@ -55,7 +55,7 @@
         },
         {
             "name": "Launch Web Extension",
-            "type": "pwa-extensionHost",
+            "type": "extensionHost",
             "debugWebWorkerHost": true,
             "request": "launch",
             "args": [
@@ -83,7 +83,7 @@
         },
         {
             "name": "webview-test",
-            "type": "pwa-msedge",
+            "type": "msedge",
             "request": "launch",
             "url": "file:///${workspaceRoot}/webview-test.html",
             "runtimeArgs": [
@@ -93,7 +93,7 @@
         },
         {
             "name": "index",
-            "type": "pwa-msedge",
+            "type": "msedge",
             "request": "launch",
             "url": "file:///${workspaceRoot}/index.html",
             "runtimeArgs": [
@@ -108,7 +108,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
+            "type": "node"
         },
         {
             "name": "NLS Merge",
@@ -117,7 +117,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
+            "type": "node"
         }
     ]
 }
