@@ -167,7 +167,7 @@ The following ECL specific commands are available.  Note:  These commands will *
 | Submit (No Archive) | ctrl/cmd+F5 | Submit raw ECL without creating an archive |
 | Verify ECL Signature | | Verify ECL Digital Signature |
 | Language Reference Lookup | shift+F1 | For the currently selected text, search the online ECL language reference |
-| Insert Record Definition | ctrl/cmd+I R | Fetches record definition for given logical file |
+| Insert Record Definition | ctrl/cmd+R | Fetches record definition for given logical file |
 
 #### Within the ECL Code Editor Tab Context Menu:
 

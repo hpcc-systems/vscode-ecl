@@ -75,7 +75,7 @@
     "@types/react": "17.0.80",
     "@types/react-dom": "17.0.25",
     "@types/tmp": "0.2.6",
-    "@types/vscode": "1.76.0",
+    "@types/vscode": "1.92.0",
     "@types/vscode-notebook-renderer": "1.72.3",
     "@typescript-eslint/eslint-plugin": "8.2.0",
     "@typescript-eslint/parser": "8.2.0",
@@ -116,7 +116,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.76.0"
+    "vscode": "^1.92.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
@@ -203,6 +203,25 @@
       {
         "language": "kel",
         "path": "./snippets/kel.json"
+      }
+    ],
+    "chatParticipants": [
+      {
+        "id": "chat.ecl",
+        "fullName": "ECL",
+        "name": "ecl",
+        "description": "HPCC-Platform Assistant to help with ECL development",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "create",
+            "description": "Create a new ECL file"
+          },
+          {
+            "name": "docs",
+            "description": "Information about the ECL language"
+          }
+        ]
       }
     ],
     "viewsWelcome": [],
