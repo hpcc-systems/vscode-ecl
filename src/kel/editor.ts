@@ -28,7 +28,7 @@ export class Editor {
             }
 
             const kelConfig = vscode.workspace.getConfiguration("kel", doc.uri);
-            if (!!kelConfig["syntaxCheckOnLoad"]) {
+            if (kelConfig["syntaxCheckOnLoad"]) {
                 this._commands.checkSyntax(doc);
             }
         });

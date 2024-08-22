@@ -28,6 +28,7 @@ export const HolyGrail: React.FunctionComponent<HolyGrailProps> = ({
     </div >;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface WithSizingProps {
 }
 

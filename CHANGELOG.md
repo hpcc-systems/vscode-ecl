@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.28.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.27.0...v2.28.0) (2024-07-17)
+
+
+### Features
+
+*  Switch to esbuild and bump versions ([406507d](https://github.com/hpcc-systems/vscode-ecl/commit/406507dc68bdf0ecd8eaf27c83216fd1887ad36e))
+
 ## [2.27.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.26.3...v2.27.0) (2024-04-23)
 
 

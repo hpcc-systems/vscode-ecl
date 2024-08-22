@@ -13,7 +13,7 @@ export async function switchClientTools(ct?: ClientTools) {
     const eclccPath = ct?.eclccPath;
     const eclConfig = workspace.getConfiguration("ecl");
     await eclConfig.update("eclccPath", eclccPath);
-    showEclStatus(label, !!eclccPath, !!eclccPath ? eclccPath : "");
+    showEclStatus(label, !!eclccPath, eclccPath ? eclccPath : "");
     _onDidClientToolsChange.fire();
 }
 

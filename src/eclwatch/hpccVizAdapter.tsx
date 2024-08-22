@@ -24,7 +24,7 @@ export const VisualizationComponent: React.FunctionComponent<VisualizationProps>
         return () => {
             widget.target(null);
         };
-    }, []);
+    }, [divID, widget]);
 
     if (widget.target()) {
         widget.resize({ width, height });

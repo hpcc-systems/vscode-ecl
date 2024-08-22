@@ -97,13 +97,14 @@ export class View {
     onWebView(msg: any) {
         switch (msg.command) {
             case "loaded":
-            case "changed":
+            case "changed": {
                 const ddl = JSON.stringify(msg.ddl, undefined, 4);
                 if (this._ddl !== ddl) {
                     this._ddl = ddl;
                     updateWorkspace(this._td, ddl);
                 }
                 break;
+            }
         }
     }
 
@@ -175,7 +176,7 @@ export class View {
     getLibraryHTML(): string {
         const config = vscode.workspace.getConfiguration("dashy", this._td.uri);
         switch (config.get("libraryLocation")) {
-            case "localPath":
+            case "localPath": {
                 const localPath = vscode.Uri.file(config.get("localPath", `${this._node_modulesUri}/@hpcc-js`));
                 const localPathUri = localPath.with({ scheme: "vscode-resource" });
                 return `<link rel="stylesheet" href="${localPathUri}/common/font-awesome/css/font-awesome.min.css">
@@ -184,6 +185,7 @@ export class View {
                         var hpccLoader = window["@hpcc-js/loader"];
                         var require = hpccLoader.dev();
                     </script>`;
+            }
             case "latest":
             default:
                 return `<link rel="stylesheet" href="https://unpkg.com/@hpcc-js/common/font-awesome/css/font-awesome.min.css">
