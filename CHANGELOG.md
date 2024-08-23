@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.28.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.27.0...v2.28.0) (2024-08-23)
+
+
+### Features
+
+*  Switch to esbuild and bump versions ([a12cc97](https://github.com/hpcc-systems/vscode-ecl/commit/a12cc97b7ad7c24f4ba8b1c965e42b2b7c47b52c))
+* Add chat agent with online help contextual hints ([1da7edc](https://github.com/hpcc-systems/vscode-ecl/commit/1da7edc3f0d94edc30aad6cd98441a25e27569f0))
+
 ## [2.28.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.27.0...v2.28.0) (2024-07-17)
 
 
