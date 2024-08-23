@@ -10,6 +10,7 @@ import { eclWatchPanelView } from "./eclWatchPanelView";
 import { ECLResultNode, ECLWUNode } from "./eclWatchTree";
 import localize from "../util/localize";
 import { createDirectory, exists, writeFile } from "../util/fs";
+import { ECLR_EN_US, matchTopics, SLR_EN_US } from "./docs";
 import { SaveData } from "./saveData";
 
 const IMPORT_MARKER = "//Import:";
@@ -89,45 +90,23 @@ export class ECLCommands {
         }
     }
 
-    private ECLR_EN_US = "https://hpccsystems.com/wp-content/uploads/_documents/ECLR_EN_US";
     showLanguageReference() {
-        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`${this.ECLR_EN_US}/index.html`));
+        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`${ECLR_EN_US}/index.html`));
     }
 
-    private SLR_EN_US = "https://hpccsystems.com/wp-content/uploads/_documents/SLR_EN_US";
     showStandardLibraryReference() {
-        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`${this.SLR_EN_US}/index.html`));
+        vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`${SLR_EN_US}/index.html`));
     }
 
-    async parseIndex(url: string): Promise<[string, string, string, string][]> {
-        return fetch(`${url}/index.html`)
-            .then(response => response.text())
-            .then(html => [...html.matchAll(/<a\s+href="([^"]+)">([^<]+)<\/a>/g)])
-            .then(matches => matches.map(row => {
-                const cleaned = row[2].split("\n").map(str => str.trim()).join(" ");
-                return [row[0], row[1], cleaned, url];
-            }));
-    }
-
-    protected _html: Promise<[string, string, string, string][]>;
-    searchTerm(editor: vscode.TextEditor) {
+    async searchTerm(editor: vscode.TextEditor) {
         if (vscode.window.activeTextEditor) {
             const range = vscode.window.activeTextEditor.document.getWordRangeAtPosition(editor.selection.active);
             const searchTerm = editor.document.getText(range);
-            if (!this._html) {
-                const langRef = this.parseIndex(this.ECLR_EN_US);
-                const stdLib = this.parseIndex(this.SLR_EN_US);
-                this._html = Promise.all([langRef, stdLib]).then(([langRef, stdLib]) => {
-                    return langRef.concat(stdLib);
-                });
+            const matches = await matchTopics(searchTerm);
+            const picked = await vscode.window.showQuickPick(matches, { canPickMany: false });
+            if (picked) {
+                vscode.commands.executeCommand("vscode.open", picked.uri);
             }
-            this._html.then(async (links: [string, string, string, string][]) => {
-                const matches = links.filter(row => row[2].toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0);
-                const picked = await vscode.window.showQuickPick(matches.map(row => ({ label: row[2], row })), { canPickMany: false });
-                if (picked) {
-                    vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(`${picked.row[3]}/${picked.row[1]}`));
-                }
-            });
         }
     }
 
