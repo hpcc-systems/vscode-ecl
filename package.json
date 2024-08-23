@@ -1178,8 +1178,8 @@
       },
       {
         "command": "ecl.insertRecordDef",
-        "key": "ctrl+i r",
-        "mac": "cmd+i r",
+        "key": "ctrl+r",
+        "mac": "cmd+r",
         "when": "editorTextFocus && editorLangId == ecl"
       },
       {
