@@ -11,6 +11,9 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.30.x
+* Added `ecl.preferredECLWatch` setting, allows user to nominate preferred version of ECL Watch when opening "external" pages.
+
 ### v2.24.x
 * Added context menu to ECL bundles and ECL Client Tools
 * Added `ecl.WUShowResults` setting, allows user to control how results are displayed after submitting a workunit.
@@ -265,6 +268,9 @@ The following Visual Studio Code settings are available for the ECL extension.  
 
   // Ping interval (secs, -1 to disable)
   "ecl.pingInterval": 5
+
+  // Preferred version of ECL Watch (default v9).
+  "ecl.preferredECLWatch": v9 | v5
 ```
 
 #### ECL Launch Settings

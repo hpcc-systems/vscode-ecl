@@ -30,18 +30,18 @@ const pivotStyles: IStyleFunctionOrObject<IPivotStyleProps, IPivotStyles> = {
 export interface WUDetailsProps {
     opts: IOptions;
     wuid: string;
-    sequence?: number;
+    name?: string;
 }
 
 export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
     opts,
     wuid,
-    sequence,
+    name,
 }) => {
 
     const pivotRef = React.useRef<HTMLDivElement>(null);
 
-    const [selectedKey, setSelectedKey] = React.useState(undefined);
+    const [selectedKey, setSelectedKey] = React.useState<string | undefined>(undefined);
     const [spinnerMessage, setSpinnerMessage] = React.useState("Loading...");
     const [complete, setComplete] = React.useState(false);
     const [exceptions, setExceptions] = React.useState<WsWorkunits.ECLException[]>([]);
@@ -98,11 +98,13 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
     }, [opts, wuid]);
 
     React.useEffect(() => {
-        setSelectedKey(sequence === undefined ? "" + 0 : "" + sequence);
-    }, [opts.baseUrl, sequence, wuid]);
+        if (name) {
+            setSelectedKey(name);
+        }
+    }, [opts.baseUrl, name, wuid]);
 
-    const handleLinkClick = React.useCallback((item: PivotItem) => {
-        setSelectedKey(item.props.itemKey!);
+    const handleLinkClick = React.useCallback((item?: PivotItem) => {
+        setSelectedKey(item?.props.itemKey);
     }, []);
 
     const hasIssues = exceptions.length > 0;
@@ -133,7 +135,7 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
                             <Pivot overflowBehavior="menu" styles={pivotStyles} selectedKey={selected} onLinkClick={handleLinkClick} headersOnly={true} >
                                 {[
                                     ...(exceptions.length ? [<PivotItem key={"issues"} itemKey={"issues"} headerText={"Issues"} />] : []),
-                                    ...results.map(r => <PivotItem key={`${r.Wuid}::${r.Sequence}::${r.Value}`} itemKey={"" + r.Sequence} headerText={`${r.Name}${r.Value.indexOf("undefined") < 0 ? `:  ${r.Value}` : ""}`} />)
+                                    ...results.map(r => <PivotItem key={`${r.Wuid}::${r.Sequence}::${r.Value}`} itemKey={r.Name} headerText={`${r.Name}${r.Value.indexOf("undefined") < 0 ? `:  ${r.Value}` : ""}`} />)
                                 ]}
                             </Pivot>
                             : undefined
@@ -143,7 +145,7 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
             main={selected === "issues" ?
                 <WUIssues exceptions={exceptions} />
                 : hasResults ?
-                    <WUResult opts={opts} wuid={wuid} sequence={parseInt(selectedKey)} />
+                    <WUResult opts={opts} wuid={wuid} name={selectedKey} />
                     : undefined
             }
         />;

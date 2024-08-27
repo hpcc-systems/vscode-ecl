@@ -147,7 +147,7 @@ const DownloadDialog: React.FunctionComponent<DownloadDialogProps> = ({
     };
 
     const [dedup, setDedup] = React.useState(true);
-    const onDedup = (ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
+    const onDedup = (ev?: React.FormEvent<HTMLElement>, isChecked?: boolean) => {
     };
 
     return <Dialog
@@ -210,7 +210,7 @@ export const DownloadProgress: React.FunctionComponent<DownloadProgressProps> = 
 };
 
 export class WUResultTable extends Common {
-    private _result: Result;
+    private _result: Result | null;
 
     constructor() {
         super();
@@ -232,15 +232,18 @@ export class WUResultTable extends Common {
         const abortController = new AbortController();
 
         return new Promise((resolve, reject) => {
+            if (!this._result) {
+                reject(new Error("No result available"));
+            }
             const element = document.createElement("div");
             ReactDOM.render(<DownloadProgress
-                totalRows={this._result.Total}
+                totalRows={this._result!.Total}
                 onCancel={() => {
                     abortController.abort();
                     reject(new Error("Download cancelled"));
                 }}
             />, element);
-            this._result.fetchRows(row, count, false, {}, abortController.signal).then((rows) => {
+            this._result!.fetchRows(row, count, false, {}, abortController.signal).then((rows) => {
                 ReactDOM.unmountComponentAtNode(element);
                 resolve(rows);
             });
@@ -248,11 +251,14 @@ export class WUResultTable extends Common {
     }
 
     confirmDownload(column: boolean = false): Promise<{ downloadTotal: number, dedup: boolean }> {
-        if (!column && this._result.Total <= 1000) return Promise.resolve({ downloadTotal: this._result.Total, dedup: false });
-        return new Promise(resolve => {
+        if (!column && this._result && this._result.Total <= 1000) return Promise.resolve({ downloadTotal: this._result.Total, dedup: false });
+        return new Promise((resolve, reject) => {
+            if (!this._result) {
+                reject(new Error("No result available"));
+            }
             const element = document.createElement("div");
             ReactDOM.render(<DownloadDialog
-                totalRows={this._result.Total}
+                totalRows={this._result!.Total}
                 column={column}
                 onClose={(downloadTotal, dedup) => resolve({ downloadTotal, dedup })}
             />, element);
@@ -260,31 +266,37 @@ export class WUResultTable extends Common {
     }
 
     copyRow(row) {
-        this.fetch(row, 1).then(rows => {
-            copy(copyRowsTPL(this._result.fields(), rows));
-        });
+        if (this._result) {
+            this.fetch(row, 1).then(rows => {
+                copy(copyRowsTPL(this._result!.fields(), rows));
+            });
+        }
     }
 
     async copyColumn(col) {
-        const idx = col.column.idx;
-        const { downloadTotal, dedup } = await this.confirmDownload(true);
-        if (downloadTotal > 0) {
-            this.fetch(0, downloadTotal).then(rows => {
-                copy(copyColumnTPL(idx, dedup, this._result.fields(), rows));
-            });
+        if (this._result) {
+            const idx = col.column.idx;
+            const { downloadTotal, dedup } = await this.confirmDownload(true);
+            if (downloadTotal > 0) {
+                this.fetch(0, downloadTotal).then(rows => {
+                    copy(copyColumnTPL(idx, dedup, this._result!.fields(), rows));
+                });
+            }
         }
     }
 
     async copyAll() {
-        const { downloadTotal } = await this.confirmDownload();
-        if (downloadTotal > 0) {
-            this.fetch(0, downloadTotal).then(rows => {
-                copy(copyRowsTPL(this._result.fields(), rows));
-            });
+        if (this._result) {
+            const { downloadTotal } = await this.confirmDownload();
+            if (downloadTotal > 0) {
+                this.fetch(0, downloadTotal).then(rows => {
+                    copy(copyRowsTPL(this._result!.fields(), rows));
+                });
+            }
         }
     }
 
-    protected _prevHash: string;
+    protected _prevHash?: string;
     private _prevGrid;
     update(domNode, element) {
         super.update(domNode, element);
@@ -301,7 +313,7 @@ export class WUResultTable extends Common {
             if (this._result) {
                 this._result.fetchXMLSchema()
                     .then(schema => {
-                        const store = new Store(this._result, schema, this.renderHtml());
+                        const store = new Store(this._result!, schema!, this.renderHtml());
                         this._dgrid?.set("columns", store.columns());
                         this._dgrid?.set("collection", store);
                     }).catch(e => {
@@ -407,13 +419,13 @@ WUResultTable.prototype.publish("logicalFile", null, "string", "Logical File");
 interface WUResultProps {
     opts: IOptions;
     wuid: string;
-    sequence: number;
+    name: string;
 }
 
 export const WUResult: React.FunctionComponent<WUResultProps> = ({
     opts,
     wuid,
-    sequence,
+    name,
 }) => {
 
     const table = useConst(() => new WUResultTable());
@@ -423,10 +435,10 @@ export const WUResult: React.FunctionComponent<WUResultProps> = ({
             table
                 .opts(opts)
                 .wuid(wuid)
-                .sequence(sequence)
+                .resultName(name)
                 ;
         }
-    }, [table, opts, wuid, sequence]);
+    }, [table, opts, wuid, name]);
 
     return <VisualizationComponent widget={table} debounce={false}>
     </VisualizationComponent>;

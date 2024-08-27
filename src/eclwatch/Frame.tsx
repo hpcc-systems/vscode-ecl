@@ -18,7 +18,7 @@ export const Frame: React.FunctionComponent<FrameProps> = () => {
     return <ThemeProvider style={{ height: "100%" }}>
         {
             state ?
-                <WUDetails opts={state} wuid={state.wuid} sequence={state.result}></WUDetails> :
+                <WUDetails opts={state} wuid={state.wuid} name={state.resultName}></WUDetails> :
                 <div>...loading...</div>
         }
     </ThemeProvider >;

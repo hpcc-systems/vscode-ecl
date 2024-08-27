@@ -5,6 +5,7 @@ import localize from "../util/localize";
 import { Item, Tree } from "./tree";
 import { eclWatchPanelView } from "./eclWatchPanelView";
 import { SaveData } from "./saveData";
+import { formatWorkunitURL, formatResultURL, formatResultsURL, formatMetricsURL } from "./util";
 
 const PrevWeeks: string[] = [localize("Last Week"), localize("Two Weeks Ago"), localize("Three Weeks Ago"), localize("Four Weeks Ago"), localize("Five Weeks Ago"), localize("Six Weeks Ago"), localize("Seven Weeks Ago")];
 
@@ -35,8 +36,7 @@ export class ECLWatchTree extends Tree {
                     case "disabled":
                         break;
                     case "external":
-                        // vscode.env.openExternal(vscode.Uri.parse(`${evt.workunit.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${evt.workunit.Wuid}`));
-                        vscode.env.openExternal(vscode.Uri.parse(`${evt.workunit.BaseUrl}/esp/files/index.html#/workunits/${evt.workunit.Wuid}`));
+                        vscode.env.openExternal(vscode.Uri.parse(formatWorkunitURL(evt.workunit.BaseUrl, evt.workunit.Wuid)));
                         break;
                     case "internal":
                     default:
@@ -326,7 +326,7 @@ export class ECLResultNode extends Item<ECLWatchTree> {
 
     constructor(wu: Workunit, tree: ECLWatchTree, private _result: Result) {
         super(tree);
-        this.url = `${this._result.BaseUrl}esp/files/index.html#/workunits/${this._result.Wuid}/outputs/${this._result.Name}`;
+        this.url = formatResultURL(this._result.BaseUrl, this._result.Wuid, this._result.Name);
         this.wu = wu;
     }
 
@@ -390,11 +390,15 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     private _wu: Workunit;
 
     readonly url: string;
+    readonly resultsUrl: string;
+    readonly metricsUrl: string;
 
     constructor(tree: ECLWatchTree, wu: Workunit) {
         super(tree);
         this._wu = wu;
-        this.url = `${wu.BaseUrl}esp/files/index.html#/workunits/${wu.Wuid}`;
+        this.url = formatWorkunitURL(wu.BaseUrl, wu.Wuid);
+        this.resultsUrl = formatResultsURL(wu.BaseUrl, wu.Wuid);
+        this.metricsUrl = formatMetricsURL(wu.BaseUrl, wu.Wuid);
         if (!this._wu.isComplete()) {
             this._wu.watchUntilComplete(changes => {
                 tree.refresh(this);
@@ -455,11 +459,11 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     }
 
     browseResults() {
-        vscode.env.openExternal(vscode.Uri.parse(this.url + "/outputs"));
+        vscode.env.openExternal(vscode.Uri.parse(this.resultsUrl));
     }
 
     browseMetrics() {
-        vscode.env.openExternal(vscode.Uri.parse(this.url + "/metrics"));
+        vscode.env.openExternal(vscode.Uri.parse(this.metricsUrl));
     }
 
     browseWUDetails() {

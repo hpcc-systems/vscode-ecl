@@ -8,6 +8,7 @@ import { showEclStatus } from "../ecl/clientTools";
 import localize from "../util/localize";
 import { readFile } from "../util/fs";
 import { reporter } from "../telemetry";
+import { formatWorkunitURL, formatResultURL } from "../ecl/util";
 
 const fs = vscode.workspace.fs;
 
@@ -110,15 +111,15 @@ function config<T extends keyof LaunchRequestArguments>(id: string, key: T, defa
 }
 
 export function espUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }) {
-    return join(`${launchRequestArgs.protocol}://${launchRequestArgs.serverAddress}:${launchRequestArgs.port}`, launchRequestArgs.path);
+    return join(`${launchRequestArgs.protocol}://${launchRequestArgs.serverAddress}:${launchRequestArgs.port}/`, launchRequestArgs.path);
 }
 
 export function wuDetailsUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }, wuid: string) {
-    return `${espUrl(launchRequestArgs)}/?Widget=WUDetailsWidget&Wuid=${wuid}`;
+    return formatWorkunitURL(espUrl(launchRequestArgs), wuid);
 }
 
-export function wuResultUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }, wuid: string, sequence: number) {
-    return `${espUrl(launchRequestArgs)}/?Widget=ResultWidget&Wuid=${wuid}&Sequence=${sequence}`;
+export function wuResultUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }, wuid: string, name: string) {
+    return formatResultURL(espUrl(launchRequestArgs), wuid, name);
 }
 
 function action(mode: LaunchMode) {
@@ -689,7 +690,7 @@ export class LaunchConfig implements LaunchRequestArguments {
                     return [wu, archive] as [Workunit, any];
                 });
             }).then(([wu, archive]) => {
-                 
+
                 progress.report({ increment: 10, message: `${localize("Updating Workunit")} ${wu.Wuid}` });
                 // eslint-disable-next-line no-async-promise-executor
                 return new Promise<Workunit>(async (resolve, reject) => {

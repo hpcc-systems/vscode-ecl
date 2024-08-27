@@ -112,8 +112,8 @@ export class ECLCommands {
         }
     }
 
-    showWUDetails(launchRequestArgs: LaunchRequestArguments, wuid: string, result?: number) {
-        eclWatchPanelView.navigateTo(launchRequestArgs, wuid, result);
+    showWUDetails(launchRequestArgs: LaunchRequestArguments, wuid: string, resultName?: string) {
+        eclWatchPanelView.navigateTo(launchRequestArgs, wuid, resultName);
     }
 
     openECLWatchExternal(source: ECLWUNode | ECLResultNode) {
@@ -126,7 +126,7 @@ export class ECLCommands {
     }
 
     openResult(source: ECLResultNode) {
-        eclWatchPanelView.navigateTo(sessionManager.session.launchRequestArgs, source.getWU().Wuid, source.getResult().Sequence);
+        eclWatchPanelView.navigateTo(sessionManager.session.launchRequestArgs, source.getWU().Wuid, source.getResult().Name);
     }
 
     browseResult(source: ECLResultNode) {
