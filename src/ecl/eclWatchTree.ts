@@ -35,7 +35,8 @@ export class ECLWatchTree extends Tree {
                     case "disabled":
                         break;
                     case "external":
-                        vscode.env.openExternal(vscode.Uri.parse(`${evt.workunit.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${evt.workunit.Wuid}`));
+                        // vscode.env.openExternal(vscode.Uri.parse(`${evt.workunit.BaseUrl}/esp/files/stub.htm?Widget=WUDetailsWidget&Wuid=${evt.workunit.Wuid}`));
+                        vscode.env.openExternal(vscode.Uri.parse(`${evt.workunit.BaseUrl}/esp/files/index.html#/workunits/${evt.workunit.Wuid}`));
                         break;
                     case "internal":
                     default:
@@ -69,12 +70,16 @@ export class ECLWatchTree extends Tree {
             wuNode.openResults();
         });
 
+        vscode.commands.registerCommand("hpccPlatform.browseResults", (wuNode: ECLWUNode) => {
+            wuNode.browseResults();
+        });
+
         vscode.commands.registerCommand("hpccPlatform.browseMetrics", (wuNode: ECLWUNode) => {
             wuNode.browseMetrics();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.browseECLWatch", (wuNode: ECLWUNode) => {
-            wuNode.browseECLWatch();
+        vscode.commands.registerCommand("hpccPlatform.browseWUDetails", (wuNode: ECLWUNode) => {
+            wuNode.browseWUDetails();
         });
 
         vscode.commands.registerCommand("hpccPlatform.openECL", (wuNode: ECLWUNode) => {
@@ -85,8 +90,8 @@ export class ECLWatchTree extends Tree {
             wuNode.copyWuid();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.saveWUAs", (wuNode: ECLWUNode) => {
-            wuNode.saveWUAs();
+        vscode.commands.registerCommand("hpccPlatform.saveWUResults", (wuNode: ECLWUNode) => {
+            wuNode.saveWUResults();
         });
 
         vscode.commands.registerCommand("hpccPlatform.abortWU", (wuNode: ECLWUNode) => {
@@ -321,7 +326,7 @@ export class ECLResultNode extends Item<ECLWatchTree> {
 
     constructor(wu: Workunit, tree: ECLWatchTree, private _result: Result) {
         super(tree);
-        this.url = `${this._result.BaseUrl}/?Widget=ResultWidget&Wuid=${this._result.Wuid}&Sequence=${this._result.Sequence}`;
+        this.url = `${this._result.BaseUrl}esp/files/index.html#/workunits/${this._result.Wuid}/outputs/${this._result.Name}`;
         this.wu = wu;
     }
 
@@ -389,7 +394,7 @@ export class ECLWUNode extends Item<ECLWatchTree> {
     constructor(tree: ECLWatchTree, wu: Workunit) {
         super(tree);
         this._wu = wu;
-        this.url = `${wu.BaseUrl}/?Widget=WUDetailsWidget&Wuid=${wu.Wuid}`;
+        this.url = `${wu.BaseUrl}esp/files/index.html#/workunits/${wu.Wuid}`;
         if (!this._wu.isComplete()) {
             this._wu.watchUntilComplete(changes => {
                 tree.refresh(this);
@@ -449,11 +454,15 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         eclWatchPanelView.navigateTo(sessionManager.session.launchRequestArgs, this._wu.Wuid);
     }
 
+    browseResults() {
+        vscode.env.openExternal(vscode.Uri.parse(this.url + "/outputs"));
+    }
+
     browseMetrics() {
         vscode.env.openExternal(vscode.Uri.parse(this.url + "/metrics"));
     }
 
-    browseECLWatch() {
+    browseWUDetails() {
         vscode.env.openExternal(vscode.Uri.parse(this.url));
     }
 
@@ -470,9 +479,9 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         vscode.env.clipboard.writeText(this._wu.Wuid);
     }
 
-    saveWUAs() {
+    saveWUResults() {
         const saveData = new SaveData(this._wu);
-        saveData.saveWUAs(this._wu);
+        saveData.saveWUResults(this._wu);
     }
 
     abort() {

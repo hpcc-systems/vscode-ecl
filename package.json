@@ -378,14 +378,24 @@
         "title": "%Copy WUID%"
       },
       {
-        "command": "hpccPlatform.browseECLWatch",
+        "command": "hpccPlatform.browseWUDetails",
         "category": "ECL",
-        "title": "%Browse ECL Watch%"
+        "title": "%Browse Details%"
       },
       {
         "command": "hpccPlatform.openResults",
         "category": "ECL",
         "title": "%Open Results%"
+      },
+      {
+        "command": "hpccPlatform.openResult",
+        "category": "ECL",
+        "title": "%Open Result%"
+      },
+      {
+        "command": "hpccPlatform.browseResults",
+        "category": "ECL",
+        "title": "%Browse Results%"
       },
       {
         "command": "hpccPlatform.browseMetrics",
@@ -398,14 +408,24 @@
         "title": "%Open ECL%"
       },
       {
-        "command": "hpccPlatform.saveWUAs",
+        "command": "hpccPlatform.saveWUResults",
         "category": "ECL",
-        "title": "%Save Data to File%"
+        "title": "%Save Results%"
+      },
+      {
+        "command": "ecl.openResult",
+        "category": "ECL",
+        "title": "%Open Result%"
+      },
+      {
+        "command": "ecl.browseResult",
+        "category": "ECL",
+        "title": "%Browse Result%"
       },
       {
         "command": "ecl.saveResultAs",
         "category": "ECL",
-        "title": "%Save Result to File%"
+        "title": "%Save Result%"
       },
       {
         "command": "hpccPlatform.abortWU",
@@ -1003,34 +1023,39 @@
           "group": "inline"
         },
         {
+          "command": "hpccPlatform.openECL",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "navigation@900"
+        },
+        {
           "command": "hpccPlatform.openResults",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
           "group": "navigation@910"
         },
         {
+          "command": "hpccPlatform.browseWUDetails",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "2browse@920"
+        },
+        {
+          "command": "hpccPlatform.browseResults",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "2browse@930"
+        },
+        {
           "command": "hpccPlatform.browseMetrics",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
-          "group": "navigation@920"
-        },
-        {
-          "command": "hpccPlatform.browseECLWatch",
-          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
-          "group": "navigation@930"
-        },
-        {
-          "command": "hpccPlatform.openECL",
-          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
-          "group": "navigation@940"
-        },
-        {
-          "command": "hpccPlatform.saveWUAs",
-          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
-          "group": "navigation@950"
+          "group": "2browse@935"
         },
         {
           "command": "hpccPlatform.copyWUID",
           "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
-          "group": "2copy"
+          "group": "2copy@910"
+        },
+        {
+          "command": "hpccPlatform.saveWUResults",
+          "when": "view == hpccPlatform && viewItem =~ /^ECLWUNode/",
+          "group": "2copy@920"
         },
         {
           "command": "hpccPlatform.abortWU",
@@ -1103,14 +1128,19 @@
           "group": "inline"
         },
         {
-          "command": "ecl.saveResultAs",
+          "command": "ecl.openResult",
           "when": "view == hpccPlatform && viewItem == ECLResultNode",
-          "group": "navigatation@910"
+          "group": "navigation@910"
         },
         {
-          "command": "ecl.openECLWatchExternal",
+          "command": "ecl.browseResult",
           "when": "view == hpccPlatform && viewItem == ECLResultNode",
-          "group": "navigatation@920"
+          "group": "navigation@920"
+        },
+        {
+          "command": "ecl.saveResultAs",
+          "when": "view == hpccPlatform && viewItem == ECLResultNode",
+          "group": "navigation@930"
         },
         {
           "command": "ecl.openECLWatchExternal",

@@ -38,6 +38,8 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.saveResultAs", this.saveResultAs, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openResult", this.openResult, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.browseResult", this.browseResult, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify, this));
@@ -115,16 +117,20 @@ export class ECLCommands {
     }
 
     openECLWatchExternal(source: ECLWUNode | ECLResultNode) {
-        if (source instanceof ECLWUNode) {
-            vscode.env.openExternal(vscode.Uri.parse(source.url));
-        } else if (source instanceof ECLResultNode) {
-            vscode.env.openExternal(vscode.Uri.parse(source.url));
-        }
+        vscode.env.openExternal(vscode.Uri.parse(source.url));
     }
 
     saveResultAs(source: ECLResultNode) {
         const saveData = new SaveData(source.getWU());
         saveData.saveResultAs(source.getResult());
+    }
+
+    openResult(source: ECLResultNode) {
+        eclWatchPanelView.navigateTo(sessionManager.session.launchRequestArgs, source.getWU().Wuid, source.getResult().Sequence);
+    }
+
+    browseResult(source: ECLResultNode) {
+        vscode.env.openExternal(vscode.Uri.parse(source.url));
     }
 
     async insertRecordDef() {
