@@ -54,7 +54,7 @@ export class SaveData {
         });
     }
 
-    async saveWUAs(wu: Workunit) {
+    async saveWUResults(wu: Workunit) {
         this._saveType = SaveType.WORKUNIT;
         this._wu = wu;
         await this.askFileSave();
