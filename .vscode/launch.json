@@ -76,6 +76,29 @@
             ],
         },
         {
+            "name": "index-docs",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/dist-util/index-docs.mjs",
+            "args": [
+                "--dry-run",
+                "../HPCC-Platform/docs"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist-util/**/*.js"
+            ]
+        },
+        {
+            "name": "retrieve-docs",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/dist-util/retrieve-docs.mjs",
+            "args": [],
+            "outFiles": [
+                "${workspaceFolder}/dist-util/**/*.js"
+            ]
+        },
+        {
             "name": "Launch Server Adapter",
             "type": "node",
             "request": "launch",

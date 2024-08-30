@@ -3,6 +3,7 @@ import { commands, getRandomGreeting } from "./constants";
 import localize from "../../util/localize";
 import { handleDocsCommand } from "./prompts/docs";
 import { handleIssueManagement } from "./prompts/issues";
+import { checkModelExists } from "./utils/model";
 
 const ECL_PARTICIPANT_ID = "chat.ecl";
 
@@ -28,8 +29,12 @@ function handleError(logger: vscode.TelemetryLogger, err: any, stream: vscode.Ch
 let eclChat: ECLChat;
 
 export class ECLChat {
+    modelPath: Promise<vscode.Uri>;
+
     protected constructor(ctx: vscode.ExtensionContext) {
-        const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, ctx: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<IECLChatResult> => {
+        this.modelPath = checkModelExists(ctx);
+
+        const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, chatCtx: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<IECLChatResult> => {
             let cmdResult: any;
             stream.progress(localize(getRandomGreeting()));
             try {
@@ -37,7 +42,7 @@ export class ECLChat {
                     cmdResult = await handleIssueManagement(request, stream, token);
                     logger.logUsage("request", { kind: commands.ISSUES });
                 } else {
-                    cmdResult = await handleDocsCommand(request, stream, token);
+                    cmdResult = await handleDocsCommand(request, stream, token, this.modelPath, vscode.Uri.joinPath(ctx.extensionUri, "dist", "docs.vecdb"));
                 }
             } catch (err) {
                 handleError(logger, err, stream);
