@@ -1,9 +1,11 @@
 import * as vscode from "vscode";
+import { loadStore } from "./SimilarityModel";
 import { convert } from "html-to-text";
 
-export const ECLR_EN_US = "https://hpccsystems.com/wp-content/uploads/_documents/ECLR_EN_US";
-export const SLR_EN_US = "https://hpccsystems.com/wp-content/uploads/_documents/SLR_EN_US";
-export const ProgrammersGuide_EN_US = "https://hpccsystems.com/wp-content/uploads/_documents/ProgrammersGuide_EN_US";
+export const BASE_URL = "https://hpccsystems.com/wp-content/uploads/_documents";
+export const ECLR_EN_US = `${BASE_URL}/ECLR_EN_US`;
+export const SLR_EN_US = `${BASE_URL}/SLR_EN_US`;
+export const ProgrammersGuide_EN_US = `${BASE_URL}/ProgrammersGuide_EN_US`;
 
 interface HelpMeta {
     orig: string;
@@ -62,46 +64,21 @@ export async function matchTopics(_word: string): Promise<MatchUri[]> {
     });
 }
 
-const commonFillWords = [
-    "the", "and", "for", "with", "from", "that", "this", "which", "what", "how",
-    "why", "when", "where", "who", "whom", "whose", "will", "would", "should", "could",
-    "can", "may", "might", "shall", "must", "have", "has", "had", "do", "does", "did",
-    "is", "are", "was", "were", "be", "been", "being", "it", "its", "they", "them",
-    "their", "our", "we", "us", "you", "your", "my", "mine", "his", "her",
-    "he", "she", "it", "its", "him", "her", "his", "hers", "they", "them", "their",
-    "theirs", "we", "us", "our", "ours", "you", "your", "yours", "my", "mine",
-    "our", "ours", "your", "yours", "my", "mine", "his", "her", "he", "she", "about", "know"
-];
-
-function simpleNormalize(text: string): string[] {
-    const s = text.toLocaleLowerCase().replace(/[^a-z0-9]/g, " ");
-
-    const words = s.split(" ")
-        .filter((word) => word.length > 2)
-        .filter((word) => !commonFillWords.includes(word))
-        .map((e) => e.trim())
-        .filter((e) => !!e);
-
-    return words;
-}
-
 export interface Hit {
     label: string;
     url: string;
-    exact: number;
     content: string;
     error?: string;
 }
 const _labelContentCache: { [id: string]: Promise<Hit> } = {};
 
-function fetchContent(url: string, label: string, exact: number): Promise<Hit> {
+function fetchContent(url: string, label: string): Promise<Hit> {
     if (!_labelContentCache[url]) {
         _labelContentCache[url] = fetch(url)
             .then(async response => {
                 return {
                     label,
                     url,
-                    exact,
                     content: convert(await response.text(), { wordwrap: false })
                 };
             }).catch(e => {
@@ -109,7 +86,6 @@ function fetchContent(url: string, label: string, exact: number): Promise<Hit> {
                     label,
                     url,
                     content: "",
-                    exact: 0,
                     error: e.message()
                 };
             });
@@ -119,30 +95,22 @@ function fetchContent(url: string, label: string, exact: number): Promise<Hit> {
 
 export async function fetchIndexes(): Promise<Hit[]> {
     return Promise.all([ECLR_EN_US, SLR_EN_US, ProgrammersGuide_EN_US].map(url => {
-        return fetchContent(url, url, 0);
+        return fetchContent(url, url);
     }));
 }
 
-export async function fetchContext(query: string): Promise<Hit[]> {
+export async function fetchContext(query: string, modelPath: Promise<vscode.Uri>, docsPath: vscode.Uri): Promise<Hit[]> {
+    const docsVStore = await loadStore(modelPath, docsPath);
+    const similarPages = await docsVStore.similaritySearch(query, 5);
 
-    const terms = simpleNormalize(query);
-    const retVal: Promise<Hit>[] = [];
-    await Promise.all(terms.map(term => {
-        let exact = 0;
-        return matchTopics(term)
-            .then(async matches => {
-                matches.forEach((match) => {
-                    if (match.exact) {
-                        exact++;
-                    }
-
-                    const url = match.uri.toString();
-                    retVal.push(fetchContent(url, match.label, match.exact ? 1 : 0));
-                });
-            });
-    }));
-
-    return Promise.all(retVal).then(hits => {
-        return hits.sort((a, b) => b.exact - a.exact);
+    return similarPages.map(similarPage => {
+        const parts = similarPage.metadata.url.split("/");
+        const label = parts[parts.length - 1].split(".")[0];
+        const url = `${BASE_URL}/${similarPage.metadata.url}`;
+        return {
+            label,
+            url,
+            content: similarPage.pageContent
+        };
     });
 }

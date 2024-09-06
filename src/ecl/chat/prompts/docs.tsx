@@ -32,10 +32,10 @@ export class DocsPrompt extends PromptElement<DocsPromptProps, any> {
     }
 }
 
-export async function handleDocsCommand(request: vscode.ChatRequest, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<{ metadata: { command: string, hits: Hit[] } }> {
+export async function handleDocsCommand(request: vscode.ChatRequest, stream: vscode.ChatResponseStream, token: vscode.CancellationToken, modelPath: Promise<vscode.Uri>, docsPath: vscode.Uri): Promise<{ metadata: { command: string, hits: Hit[] } }> {
     const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR);
     if (model) {
-        const hits = await fetchContext(request.prompt);
+        const hits = await fetchContext(request.prompt, modelPath, docsPath);
         let promptProps: DocsPromptProps;
         if (!hits.length) {
             promptProps = {
