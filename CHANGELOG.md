@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.29.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.28.2...v2.29.0) (2024-09-06)
+
+
+### Features
+
+* Rename and reorganise menus ([94a9dee](https://github.com/hpcc-systems/vscode-ecl/commit/94a9dee059acf6872c61a53e12d68c3c859ab0a2))
+* Switch to proper RAG for [@ecl](https://github.com/ecl) chat agent ([37cb8d7](https://github.com/hpcc-systems/vscode-ecl/commit/37cb8d7650723656abcddefa3b6bbcc7055c7976))
+
 ### [2.28.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.28.1...v2.28.2) (2024-08-23)
 
 
