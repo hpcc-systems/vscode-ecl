@@ -57,8 +57,8 @@ class Session {
         return wuDetailsUrl(this._launchConfig, wuid);
     }
 
-    wuResultUrl(wuid: string, sequence: number) {
-        return wuResultUrl(this._launchConfig, wuid, sequence);
+    wuResultUrl(wuid: string, name: string) {
+        return wuResultUrl(this._launchConfig, wuid, name);
     }
 
     wuQuery(request: Partial<WsWorkunits.WUQuery>): Promise<Workunit[]> {
@@ -292,8 +292,8 @@ class SessionManager {
         return this.session.wuDetailsUrl(wuid);
     }
 
-    wuResultUrl(wuid: string, sequence: number) {
-        return this.session?.wuResultUrl(wuid, sequence);
+    wuResultUrl(wuid: string, name: string) {
+        return this.session?.wuResultUrl(wuid, name);
     }
 
     wuQuery(request: Partial<WsWorkunits.WUQuery>): Promise<Workunit[]> {

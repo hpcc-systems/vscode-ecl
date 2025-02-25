@@ -2,7 +2,7 @@ import type { IOptions } from "@hpcc-js/comms";
 
 export interface State extends IOptions {
     wuid: string;
-    result?: number;
+    resultName?: string;
 }
 
 export interface VSCodeAPI {

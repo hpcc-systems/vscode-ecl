@@ -95,7 +95,7 @@ export class ECLDocumentSymbolProvider implements vscode.DocumentSymbolProvider 
             metaWorkspace = attachWorkspace(wsFolder.uri.fsPath);
         } else if (vscode.workspace.workspaceFolders) {
             for (const wuf of vscode.workspace.workspaceFolders) {
-                if (wuf.uri !== wsFolder.uri) {
+                if (wuf.uri !== wsFolder?.uri) {
                     metaWorkspace = attachWorkspace(wuf.uri.fsPath);
                     break;
                 }
