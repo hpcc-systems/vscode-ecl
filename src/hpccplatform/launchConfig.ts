@@ -485,7 +485,8 @@ export class LaunchConfig implements LaunchRequestArguments {
                 throw new Error();
             } else {
                 logger.debug(`syntaxCheck-promise:  ${fileUri.fsPath}`);
-                return clientTools.syntaxCheck(fileUri.fsPath, ["-syntax", ...this.eclccSyntaxArgs]).then((errors) => {
+                const args = [...this.eclccSyntaxArgs];
+                return clientTools.syntaxCheck(fileUri.fsPath, args).then((errors) => {
                     if (errors.hasUnknown()) {
                         logger.warning(`syntaxCheck-warning:  ${fileUri.fsPath} ${errors.unknown().toString()}`);
                     }
@@ -493,9 +494,9 @@ export class LaunchConfig implements LaunchRequestArguments {
                     reporter.sendTelemetryEvent("launchConfig.checkSyntax.success", {}, { "errorCount": errors.all().length });
                     return { errors: errors.all(), checked: errors.checked() };
                 }).catch(e => {
-                    logger.debug(`syntaxCheck-reject:  ${fileUri.fsPath} ${e.msg}`);
-                    reporter.sendTelemetryErrorEvent("launchConfig.checkSyntax.fail", { "message": e?.msg });
-                    vscode.window.showInformationMessage(`${localize("Syntax check exception")}:  ${fileUri.fsPath} ${e.msg}`);
+                    logger.debug(`checkSyntax-exception:  ${fileUri.fsPath} ${e.message}`);
+                    reporter.sendTelemetryErrorEvent("launchConfig.checkSyntax.fail", { "message": e?.message });
+                    vscode.window.showErrorMessage(`${localize("Syntax check exception")}: ${e.message} (eclcc -syntax ${args.join(" ")} ${fileUri.fsPath})`);
                     return Promise.resolve({ errors: [], checked: [] });
                 });
             }
