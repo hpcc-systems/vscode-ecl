@@ -349,7 +349,7 @@ export class ECLResultNode extends Item<ECLWatchTree> {
     command(): vscode.Command | undefined {
         return {
             command: "ecl.showWUDetails",
-            arguments: [sessionManager.session.launchRequestArgs, this._result.Wuid, this._result.Sequence],
+            arguments: [sessionManager.session.launchRequestArgs, this._result.Wuid, this._result.ResultName],
             title: localize("Open ECL Workunit Details")
         };
     }

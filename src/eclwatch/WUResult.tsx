@@ -304,6 +304,7 @@ export class WUResultTable extends Common {
             opts: hashSum(this.opts()),
             wuid: this.wuid(),
             resultName: this.resultName(),
+            resultValue: this.resultValue(),
             sequence: this.sequence(),
             logicalFile: this.logicalFile()
         });
@@ -402,6 +403,8 @@ export interface WUResultTable {
     wuid(_: string): this;
     resultName(): string;
     resultName(_: string): this;
+    resultValue(): string;
+    resultValue(_: string): this;
     sequence(): number;
     sequence(_: number): this;
     cluster(): string;
@@ -412,6 +415,7 @@ export interface WUResultTable {
 WUResultTable.prototype.publish("opts", null, "object", "Options");
 WUResultTable.prototype.publish("wuid", null, "string", "Workunit ID");
 WUResultTable.prototype.publish("resultName", null, "string", "Result Name");
+WUResultTable.prototype.publish("resultValue", null, "string", "Result Value");
 WUResultTable.prototype.publish("sequence", null, "number", "Sequence");
 WUResultTable.prototype.publish("cluster", null, "string", "Cluster");
 WUResultTable.prototype.publish("logicalFile", null, "string", "Logical File");
@@ -420,12 +424,14 @@ interface WUResultProps {
     opts: IOptions;
     wuid: string;
     name: string;
+    value: string;
 }
 
 export const WUResult: React.FunctionComponent<WUResultProps> = ({
     opts,
     wuid,
     name,
+    value
 }) => {
 
     const table = useConst(() => new WUResultTable());
@@ -436,11 +442,12 @@ export const WUResult: React.FunctionComponent<WUResultProps> = ({
                 .opts(opts)
                 .wuid(wuid)
                 .resultName(name)
+                .resultValue(value)
                 ;
         }
-    }, [table, opts, wuid, name]);
+    }, [table, opts, wuid, name, value]);
 
-    return <VisualizationComponent widget={table} debounce={false}>
+    return <VisualizationComponent widget={table} debounce={true}>
     </VisualizationComponent>;
 };
 

@@ -27,7 +27,7 @@ export const VisualizationComponent: React.FunctionComponent<VisualizationProps>
     }, [divID, widget]);
 
     if (widget.target()) {
-        widget.resize({ width, height });
+        widget.resize({ width: width ?? 1, height: height ?? 1 });
         if (debounce) {
             widget.lazyRender();
         } else {
