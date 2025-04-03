@@ -136,7 +136,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                         rejectUnauthorized: this._currParams.rejectUnauthorized,
                         timeoutSecs: this._currParams.timeoutSecs,
                         wuid: this._currParams.wuid,
-                        result: this._currParams.resultName
+                        resultName: this._currParams.resultName
                     }
                 } as Messages);
                 if (show) {
