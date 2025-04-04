@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.30.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.30.1...v2.30.2) (2025-04-04)
+
+
+### Bug Fixes
+
+* Result sync erratic ([1d84e59](https://github.com/hpcc-systems/vscode-ecl/commit/1d84e59abae73f2ffb230aa39c89c746473d2f30)), closes [#443](https://github.com/hpcc-systems/vscode-ecl/issues/443)
+
 ### [2.30.1](https://github.com/hpcc-systems/vscode-ecl/compare/v2.30.0...v2.30.1) (2025-03-10)
 
 ## [2.30.0](https://github.com/hpcc-systems/vscode-ecl/compare/v2.29.0...v2.30.0) (2025-02-25)
