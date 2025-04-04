@@ -494,9 +494,9 @@ export class LaunchConfig implements LaunchRequestArguments {
                     reporter.sendTelemetryEvent("launchConfig.checkSyntax.success", {}, { "errorCount": errors.all().length });
                     return { errors: errors.all(), checked: errors.checked() };
                 }).catch(e => {
-                    logger.debug(`checkSyntax-exception:  ${fileUri.fsPath} ${e.message}`);
+                    logger.debug(`checkSyntax-exception:  ${fileUri.fsPath} ${e?.message}`);
                     reporter.sendTelemetryErrorEvent("launchConfig.checkSyntax.fail", { "message": e?.message });
-                    vscode.window.showErrorMessage(`${localize("Syntax check exception")}: ${e.message} (eclcc -syntax ${args.join(" ")} ${fileUri.fsPath})`);
+                    vscode.window.showErrorMessage(`${localize("Syntax check exception")}: ${e?.message} (eclcc -syntax ${args.join(" ")} ${fileUri.fsPath})`);
                     return Promise.resolve({ errors: [], checked: [] });
                 });
             }
@@ -734,7 +734,7 @@ export class LaunchConfig implements LaunchRequestArguments {
                 return wu;
             }).catch(e => {
                 reporter.sendTelemetryErrorEvent("launchConfig.submit.catch", { "message": e?.message });
-                logger.info(`Launch failed - ${e.message}.${os.EOL}`);
+                logger.info(`Launch failed - ${e?.message}.${os.EOL}`);
                 logger.debug("launchConfig.submit");
                 if (failedWU) {
                     failedWU.setToFailed();
