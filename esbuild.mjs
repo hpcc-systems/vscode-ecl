@@ -21,7 +21,7 @@ async function main(tsconfigRaw, entryPoint, platform, format, plugins = []) {
         sourcemap: !production ? "linked" : false,
         platform,
         target: platform === "node" ? "node20" : "es2022",
-        external: ["vscode", "fs", "path", "os"],
+        external: ["child_process", "crypto", "fs", "https", "node:*", "os", "vscode"],
         logLevel: production ? "silent" : "info",
         plugins: [
             ...plugins,

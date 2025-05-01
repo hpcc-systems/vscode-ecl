@@ -1,4 +1,4 @@
-import { Result, XSDSchema, XSDXMLNode } from "@hpcc-js/comms";
+import { Result, XSDSchema, XSDXMLNode } from "@hpcc-js/comms/dist/browser/index.js";
 import { ColumnType, Deferred, domConstruct, QueryResults, RowFormatter } from "@hpcc-js/dgrid";
 
 function entitiesEncode(str) {
