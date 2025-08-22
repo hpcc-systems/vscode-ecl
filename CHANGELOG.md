@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.30.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.30.2...v2.30.3) (2025-08-22)
+
+
+### Bug Fixes
+
+* [@ecl](https://github.com/ecl) agent failing ([190a21e](https://github.com/hpcc-systems/vscode-ecl/commit/190a21e8b392ab0536fa208fc2475bbbe46d3f52)), closes [#453](https://github.com/hpcc-systems/vscode-ecl/issues/453)
+
 ### [2.30.2](https://github.com/hpcc-systems/vscode-ecl/compare/v2.30.1...v2.30.2) (2025-04-04)
 
 
