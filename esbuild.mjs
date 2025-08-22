@@ -21,7 +21,7 @@ async function main(tsconfigRaw, entryPoint, platform, format, plugins = []) {
         sourcemap: !production ? "linked" : false,
         platform,
         target: platform === "node" ? "node20" : "es2022",
-        external: ["child_process", "crypto", "fs", "https", "node:*", "os", "vscode"],
+        external: ["child_process", "crypto", "fs", "https", "node:*", "os", "http", "vscode"],
         logLevel: production ? "silent" : "info",
         plugins: [
             ...plugins,
@@ -50,7 +50,7 @@ Promise.all([
     main(tsconfigBrowser, "./src/notebook/renderers/ojsRenderer.ts", "browser", "esm"),
     main(tsconfigBrowser, "./src/eclwatch.tsx", "browser", "iife", [removeStrict()]),
     main(tsconfigBrowser, "./src/web-extension.ts", "browser", "iife"),
-    nodeTpl("./util/index-docs.ts", "./dist-util/index-docs", "esm")
+    nodeTpl("./util/index-docs.ts", "./dist-util/index-docs")
 ]).catch((e) => {
     console.error(e);
     process.exit(1);
