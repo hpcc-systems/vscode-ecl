@@ -1,7 +1,11 @@
 import * as vscode from "vscode";
-import TelemetryReporter from "@vscode/extension-telemetry";
+import { TelemetryReporter } from "@vscode/extension-telemetry";
 
 class MyTelemetryReporter extends TelemetryReporter {
+
+    constructor(guid: string) {
+        super(guid);
+    }
 
     dispose(): Promise<any> {
         reporter.sendTelemetryEvent("MyTelemetryReporter.dispose");

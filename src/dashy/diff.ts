@@ -1,7 +1,10 @@
 //  Ported from https://github.com/Microsoft/vscode-go/blob/trunk/src/diffUtils.ts
 
-import * as jsDiff from "diff";
+import { structuredPatch, type StructuredPatchHunk } from "diff";
 import { Position, Range, TextDocument, TextEdit, TextEditorEdit, Uri, workspace, WorkspaceEdit } from "vscode";
+
+// Local type alias for the object returned by structuredPatch (diff library does not export ParsedDiff)
+type UnifiedPatch = ReturnType<typeof structuredPatch>;
 
 enum EditTypes { EDIT_DELETE, EDIT_INSERT, EDIT_REPLACE }
 
@@ -63,14 +66,14 @@ class Edit {
     }
 }
 
-function parseUniDiffs(diffOutput: jsDiff.ParsedDiff[]): Edit[] {
+function parseUniDiffs(diffOutput: UnifiedPatch[]): Edit[] {
     const edits: Edit[] = [];
-    diffOutput.forEach((uniDiff: jsDiff.ParsedDiff) => {
+    diffOutput.forEach((uniDiff: UnifiedPatch) => {
         let edit: Edit;
-        uniDiff.hunks.forEach((hunk: jsDiff.Hunk) => {
+        uniDiff.hunks.forEach((hunk: StructuredPatchHunk) => {
             let startLine = hunk.oldStart;
             hunk.lines.forEach((line) => {
-                switch (line.substr(0, 1)) {
+                switch (line[0]) {
                     case "-":
                         edit = new Edit(EditTypes.EDIT_DELETE, new Position(startLine - 1, 0));
                         edit.end = new Position(startLine, 0);
@@ -79,7 +82,7 @@ function parseUniDiffs(diffOutput: jsDiff.ParsedDiff[]): Edit[] {
                         break;
                     case "+":
                         edit = new Edit(EditTypes.EDIT_INSERT, new Position(startLine - 1, 0));
-                        edit.text += line.substr(1) + "\n";
+                        edit.text += line.slice(1) + "\n";
                         edits.push(edit);
                         break;
                     case " ":
@@ -97,7 +100,7 @@ function compare(oldStr: string, newStr: string): Edit[] {
         oldStr = oldStr.split("\r\n").join("\n");
         newStr = newStr.split("\r\n").join("\n");
     }
-    const unifiedDiffs: jsDiff.ParsedDiff = jsDiff.structuredPatch("", "", oldStr, newStr, "", "");
+    const unifiedDiffs: UnifiedPatch = structuredPatch("", "", oldStr, newStr, "", "");
     return parseUniDiffs([unifiedDiffs]);
 }
 

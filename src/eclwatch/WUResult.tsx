@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { useConst } from "@fluentui/react-hooks";
-import { IOptions, Result, XSDXMLNode } from "@hpcc-js/comms/dist/browser/index.js";
-import { WsWorkunits } from "@hpcc-js/comms/dist/browser/index.js";
+import { Result } from "@hpcc-js/comms";
+import type { XSDXMLNode, IOptions, WsWorkunits } from "@hpcc-js/comms";
 import { Common, Table } from "@hpcc-js/dgrid";
 import { hashSum } from "@hpcc-js/util";
 import { Stack, Checkbox, ContextualMenu, ContextualMenuItemType, DefaultButton, Dialog, DialogFooter, DialogType, IContextualMenuItem, PrimaryButton, ProgressIndicator, SpinButton } from "@fluentui/react";
@@ -210,7 +210,7 @@ export const DownloadProgress: React.FunctionComponent<DownloadProgressProps> = 
 };
 
 export class WUResultTable extends Common {
-    private _result: Result | null;
+    private _result: Result | undefined;
 
     constructor() {
         super();

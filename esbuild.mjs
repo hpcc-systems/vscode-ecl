@@ -38,10 +38,11 @@ async function main(tsconfigRaw, entryPoint, platform, format, plugins = []) {
 
 Promise.all([
     main(tsconfigNode, "./src/extension.ts", "node", "cjs", [
+        // copyStaticFiles({
+        //     src: "./node_modules/@hpcc-js/ddl-shim/schema/v2.json",
+        //     dest: path.join(outputDirectory, "v2.json"),
+        // }),
         copyStaticFiles({
-            src: "./node_modules/@hpcc-js/ddl-shim/schema/v2.json",
-            dest: path.join(outputDirectory, "v2.json"),
-        }), copyStaticFiles({
             src: "./util/docs.vecdb",
             dest: path.join(outputDirectory, "docs.vecdb"),
         })
