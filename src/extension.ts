@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext): void {
         return Promise.all([
             import("./ecl/main.js").then(({ activate }) => activate(context)),
             import("./kel/main.js").then(({ activate }) => activate(context)),
-            import("./dashy/main.js").then(({ activate }) => activate(context))
+            // import("./dashy/main.js").then(({ activate }) => activate(context))
         ]);
     }).then(() => {
         reporter.sendTelemetryEvent("initialized");
