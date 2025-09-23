@@ -35,7 +35,7 @@ export class ECLEditor {
             const formatPromise: PromiseLike<void> = Promise.resolve();
             if (eclConfig["syntaxCheckOnLoad"]) {
                 formatPromise.then(() => {
-                    checkTextDocument(document, eclConfig);
+                    checkTextDocument(this._ctx, document, eclConfig);
                 });
             }
         }, null, this._ctx.subscriptions);
@@ -55,7 +55,7 @@ export class ECLEditor {
                 }
                 if (eclConfig["syntaxCheckOnSave"]) {
                     formatPromise.then(() => {
-                        checkTextDocument(document, eclConfig);
+                        checkTextDocument(this._ctx, document, eclConfig);
                     });
                 }
             }

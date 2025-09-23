@@ -27,32 +27,35 @@ export const WUOutputSummary: React.FunctionComponent<WUOutput> = (output: WUOut
 };
 
 interface WUOutputTableProps {
-    result: object;
+    result: object[] | object;
 }
 
 export const WUOutputTable: React.FunctionComponent<WUOutputTableProps> = ({
     result
 }) => {
     const columns = useConst(() => {
-        return Object.keys(result[0]).map(col => {
-            return {
-                key: col,
-                name: col,
-                fieldName: col,
-                minWidth: 100,
-                maxWidth: 200,
-                isResizable: true,
-                isSorted: false,
-                isSortedDescending: false,
-                onColumnClick: (ev: React.MouseEvent<HTMLElement>, column: IColumn) => {
-                    console.log(`clicked ${column.fieldName}`);
-                }
-            };
-        });
+        if (Array.isArray(result) && result.length > 0 && typeof result[0] === "object" && result[0] !== null) {
+            return Object.keys(result[0] as object).map(col => {
+                return {
+                    key: col,
+                    name: col,
+                    fieldName: col,
+                    minWidth: 100,
+                    maxWidth: 200,
+                    isResizable: true,
+                    isSorted: false,
+                    isSortedDescending: false,
+                    onColumnClick: (ev: React.MouseEvent<HTMLElement>, column: IColumn) => {
+                        console.log(`clicked ${column.fieldName}`);
+                    }
+                };
+            });
+        }
+        return [];
     });
 
     if (!Array.isArray(result)) {
-        return <div>{result}</div>;
+        return <div>{JSON.stringify(result, null, 2)}</div>;
     }
 
     return <DetailsList

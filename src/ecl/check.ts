@@ -59,12 +59,12 @@ function checkUri(uri: vscode.Uri, resolveUri?: vscode.Uri): Promise<void> {
     });
 }
 
-export async function checkTextDocument(document: vscode.TextDocument, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
+export async function checkTextDocument(context: vscode.ExtensionContext, document: vscode.TextDocument, eclConfig: vscode.WorkspaceConfiguration): Promise<void> {
     if (document.languageId !== "ecl") return Promise.resolve();
     if (eclConfig.get("saveOnSyntaxCheck", false)) {
         await document.save();
     }
-    const tmpFile = await eclTempFile(document);
+    const tmpFile = await eclTempFile(context, document);
     try {
         await checkUri(tmpFile.uri, document.uri);
     } finally {

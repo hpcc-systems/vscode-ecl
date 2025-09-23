@@ -1,6 +1,6 @@
 import * as os from "os";
 import * as path from "path";
-import { Disposable, FileType, TextDocument, Uri, workspace } from "vscode";
+import { Disposable, ExtensionContext, FileType, TextDocument, Uri, workspace } from "vscode";
 import { random } from "./math";
 
 const fs = workspace.fs;
@@ -77,14 +77,47 @@ export interface DisposableFile extends Disposable {
     uri: Uri;
 }
 
-export async function writeTempFile({
-    folder = os.tmpdir(),
-    prefix = "file",
-    ext = "tmp",
-    content = "",
-}): Promise<DisposableFile> {
+function getEphemeralDir(context: ExtensionContext): Uri {
+    if (context.storageUri) {
+        return Uri.joinPath(context.storageUri, "tmp");
+    }
+    if (typeof process !== "undefined") {
+        const base = Uri.file(path.join(os.tmpdir(), "vscode-ecl"));
+        return base;
+    }
+    throw new Error("No ephemeral storage available");
+}
+
+export async function withTempEclFile(context: ExtensionContext, content: string, callback: (file: Uri) => Promise<void>) {
+    const root = getEphemeralDir(context);
+    await fs.createDirectory(root);
+    const file = Uri.joinPath(root, `syntax-${Date.now()}.ecl`);
+    await fs.writeFile(file, Buffer.from(content, "utf8"));
+    try {
+        await callback(file);
+    } finally {
+        try {
+            await fs.delete(file);
+        } catch (e) { /* ignore */ }
+    }
+}
+
+export interface WriteTempFileOptions {
+    folder?: Uri | string;
+    prefix: string;
+    ext: string;
+}
+
+export async function writeTempFile(context: ExtensionContext, content: string, { folder = getEphemeralDir(context), prefix = "file", ext = "tmp" }: WriteTempFileOptions): Promise<DisposableFile> {
+    let folderUri: Uri;
+    if (typeof folder === "string") {
+        folderUri = Uri.file(folder);
+    } else if (folder) {
+        folderUri = folder;
+    }
+
     while (true) {
-        const tmpPath = path.join(folder, `${prefix}-${random(100000, 999999)}.${ext}`);
+        const tmpPath = path.join(folderUri.fsPath, `${prefix}-${random(100000, 999999)}.${ext}`);
         if (!await exists(tmpPath)) {
             await writeFile(tmpPath, content);
             return {
@@ -95,15 +128,15 @@ export async function writeTempFile({
     }
 }
 
-export async function eclTempFile(document: TextDocument): Promise<DisposableFile> {
+export async function eclTempFile(context: ExtensionContext, document: TextDocument): Promise<DisposableFile> {
     let tmpFile: DisposableFile = {
         uri: document.uri,
         dispose: () => { }
     };
     if (document.isUntitled) {
-        tmpFile = await writeTempFile({ prefix: leafname(document.fileName), content: document.getText(), folder: workspace.workspaceFolders[0]?.uri?.fsPath, ext: "ecl" });
+        tmpFile = await writeTempFile(context, document.getText(), { folder: workspace.workspaceFolders[0]?.uri, prefix: leafname(document.fileName), ext: "ecl" });
     } else if (document.isDirty) {
-        tmpFile = await writeTempFile({ prefix: leafname(document.fileName), content: document.getText(), folder: dirname(document.fileName), ext: "ecl" });
+        tmpFile = await writeTempFile(context, document.getText(), { folder: dirname(document.fileName), prefix: leafname(document.fileName), ext: "ecl" });
     }
     return tmpFile;
 }

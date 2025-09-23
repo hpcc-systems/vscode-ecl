@@ -10,7 +10,8 @@ import { initLogger, Level } from "./util";
 import { ECLWatchTree } from "./eclWatchTree";
 import { ECLWatchPanelView } from "./eclWatchPanelView";
 import { HPCCResources } from "./hpccResources";
-import { ECLChat } from "./chat";
+import { ECLChat } from "./lm/chat";
+import { ECLLMTools } from "./lm/tools";
 
 const eclConfig = vscode.workspace.getConfiguration("ecl");
 initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
@@ -38,4 +39,6 @@ export function activate(ctx: vscode.ExtensionContext): void {
     HPCCResources.attach(ctx);
     logger.debug("Activating Chat");
     ECLChat.attach(ctx);
+    logger.debug("Activating LM Tools");
+    ECLLMTools.attach(ctx);
 }

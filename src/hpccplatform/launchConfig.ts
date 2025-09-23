@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService, DFUService, WsDfu } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
@@ -585,6 +585,18 @@ export class LaunchConfig implements LaunchRequestArguments {
     private createWorkunit() {
         return this.checkCredentials().then(credentials => {
             return Workunit.create(this.opts(credentials));
+        });
+    }
+
+    findLogicalFiles(pattern: string): Promise<WsDfu.DFULogicalFile[]> {
+        return this.checkCredentials().then(credentials => {
+            const service = new DFUService(this.opts(credentials));
+            return service.DFUQuery({ LogicalName: pattern }).then(response => {
+                return response.DFULogicalFiles.DFULogicalFile;
+            }).catch(e => {
+                logger.warning(e);
+                return [];
+            });
         });
     }
 

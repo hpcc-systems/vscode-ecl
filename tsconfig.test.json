@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "CommonJS",
+        "rootDir": "./test/integration",
+        "outDir": "./dist-test/integration",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "types": [
+            "node",
+            "vscode",
+            "mocha"
+        ],
+        "noEmitOnError": true
+    },
+    "include": [
+        "test/integration/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "out"
+    ]
+}

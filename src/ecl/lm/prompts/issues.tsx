@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import { BasePromptElementProps, PromptElement, PromptSizing, UserMessage, } from "@vscode/prompt-tsx";
 import localize from "../../../util/localize";
-import { commands } from "../constants";
-import { Comment, fetchAllIssues, fetchIssueDetailsByNumber, fetchLatestIssueDetails, getGitHubClient, Issue } from "../utils/github";
-import { FETCH_ISSUE_DETAIL_CMD } from "../constants";
-import { getChatResponse } from "../utils/index";
+import { commands } from "../../lm/constants";
+import { Comment, fetchAllIssues, fetchIssueDetailsByNumber, fetchLatestIssueDetails, getGitHubClient, Issue } from "../../lm/utils/github";
+import { FETCH_ISSUE_DETAIL_CMD } from "../../lm/constants";
+import { getChatResponse } from "../../lm/utils/index";
 
 export const SYSTEM_MESSAGE = `You are a software product owner and you help your developers providing additional information 
 for working on current software development task from github issue details.`;

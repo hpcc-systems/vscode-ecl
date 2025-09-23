@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { AssistantMessage, BasePromptElementProps, PromptElement, PromptSizing, TextChunk, UserMessage, } from "@vscode/prompt-tsx";
-import { commands, MODEL_SELECTOR } from "../constants";
-import { getChatResponse } from "../utils/index";
+import { commands, MODEL_SELECTOR } from "../../lm/constants";
+import { getChatResponse } from "../../lm/utils/index";
 import { fetchContext, fetchIndexes, Hit, matchTopics } from "../../docs";
 import * as prompts from "./templates/default";
 
