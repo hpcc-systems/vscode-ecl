@@ -1,8 +1,7 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { useConst } from "@fluentui/react-hooks";
-import { Result } from "@hpcc-js/comms";
-import type { XSDXMLNode, IOptions, WsWorkunits } from "@hpcc-js/comms";
+import { Result, type XSDXMLNode, type IOptions, type WsWorkunits } from "@hpcc-js/comms/dist/browser/index.js";
 import { Common, Table } from "@hpcc-js/dgrid";
 import { hashSum } from "@hpcc-js/util";
 import { Stack, Checkbox, ContextualMenu, ContextualMenuItemType, DefaultButton, Dialog, DialogFooter, DialogType, IContextualMenuItem, PrimaryButton, ProgressIndicator, SpinButton } from "@fluentui/react";
@@ -32,31 +31,36 @@ function typeTPL(type: string, isSet: boolean) {
     }
 }
 
-function valueTPL(value: string | number | boolean) {
+function valueTPL(value: string | number | boolean): string | number | undefined {
     switch (typeof value) {
         case "string":
-            return `'${value.split("'").join("\\'").trimRight()}'`;
+            // trimRight deprecated -> use trimEnd
+            return `'${value.split("'").join("\\'").trimEnd()}'`;
         case "number":
             return value;
         case "boolean":
             return value === true ? "TRUE" : "FALSE";
+        default:
+            return undefined;
     }
 }
 
-function rowTPL(row: object) {
-    return `{${Object.values(row).map(field => {
-        if (field.Item) {
+type GenericRow = Record<string, any>;
+
+function rowTPL(row: GenericRow) {
+    return `{${Object.values(row).map((field: any) => {
+        if (field && Array.isArray(field.Item)) {
             return `[${field.Item.map(valueTPL).join(", ")}]`;
         }
         return valueTPL(field);
     }).join(", ")}}`;
 }
 
-function rowsTPL(row: object[], prefix = "    ") {
-    return row.map(row => `${prefix}${rowTPL(row)}`).join(",\n");
+function rowsTPL(row: GenericRow[], prefix = "    ") {
+    return row.map(r => `${prefix}${rowTPL(r)}`).join(",\n");
 }
 
-function copyRowsTPL(fields: XSDXMLNode[], row: object[]) {
+function copyRowsTPL(fields: XSDXMLNode[], row: GenericRow[]) {
     return `
 r := RECORD
 ${fields.map(f => `    ${typeTPL(f.type, f.isSet)} ${f.name};`).join("\n")}
@@ -68,12 +72,12 @@ ${rowsTPL(row)}
 `;
 }
 
-function copyColumnTPL(col: number, dedup: boolean, fields: XSDXMLNode[], row: object[]) {
+function copyColumnTPL(col: number, dedup: boolean, fields: XSDXMLNode[], row: GenericRow[]) {
     const name = fields[col].name;
-    let set;
+    let set: (string | number | undefined)[];
     if (dedup) {
-        const dedupMap = {};
-        row.map(r => valueTPL(r[name])).forEach(n => dedupMap[n] = true);
+        const dedupMap: Record<string, true> = {};
+        row.map(r => valueTPL(r[name])).forEach(n => { if (n !== undefined) dedupMap[String(n)] = true; });
         set = Object.keys(dedupMap);
     } else {
         set = row.map(r => valueTPL(r[name]));
@@ -228,7 +232,7 @@ export class WUResultTable extends Common {
         return null;
     }
 
-    fetch(row, count): Promise<object[]> {
+    fetch(row: number, count: number): Promise<GenericRow[]> {
         const abortController = new AbortController();
 
         return new Promise((resolve, reject) => {
@@ -236,15 +240,16 @@ export class WUResultTable extends Common {
                 reject(new Error("No result available"));
             }
             const element = document.createElement("div");
-            ReactDOM.render(<DownloadProgress
+            const root = createRoot(element);
+            root.render(<DownloadProgress
                 totalRows={this._result!.Total}
                 onCancel={() => {
                     abortController.abort();
                     reject(new Error("Download cancelled"));
                 }}
-            />, element);
-            this._result!.fetchRows(row, count, false, {}, abortController.signal).then((rows) => {
-                ReactDOM.unmountComponentAtNode(element);
+            />);
+            this._result!.fetchRows(row, count, false, {}, abortController.signal).then((rows: GenericRow[]) => {
+                root.unmount();
                 resolve(rows);
             });
         });
@@ -257,15 +262,19 @@ export class WUResultTable extends Common {
                 reject(new Error("No result available"));
             }
             const element = document.createElement("div");
-            ReactDOM.render(<DownloadDialog
+            const root = createRoot(element);
+            root.render(<DownloadDialog
                 totalRows={this._result!.Total}
                 column={column}
-                onClose={(downloadTotal, dedup) => resolve({ downloadTotal, dedup })}
-            />, element);
+                onClose={(downloadTotal, dedup) => {
+                    resolve({ downloadTotal, dedup });
+                    root.unmount();
+                }}
+            />);
         });
     }
 
-    copyRow(row) {
+    copyRow(row: any) {
         if (this._result) {
             this.fetch(row, 1).then(rows => {
                 copy(copyRowsTPL(this._result!.fields(), rows));
@@ -273,7 +282,7 @@ export class WUResultTable extends Common {
         }
     }
 
-    async copyColumn(col) {
+    async copyColumn(col: any) {
         if (this._result) {
             const idx = col.column.idx;
             const { downloadTotal, dedup } = await this.confirmDownload(true);
@@ -297,8 +306,8 @@ export class WUResultTable extends Common {
     }
 
     protected _prevHash?: string;
-    private _prevGrid;
-    update(domNode, element) {
+    private _prevGrid: any;
+    update(domNode: HTMLElement, element: any) {
         super.update(domNode, element);
         const hash = hashSum({
             opts: hashSum(this.opts()),
@@ -313,11 +322,11 @@ export class WUResultTable extends Common {
             this._result = this.calcResult();
             if (this._result) {
                 this._result.fetchXMLSchema()
-                    .then(schema => {
+                    .then((schema: any) => {
                         const store = new Store(this._result!, schema!, this.renderHtml());
                         this._dgrid?.set("columns", store.columns());
                         this._dgrid?.set("collection", store);
-                    }).catch(e => {
+                    }).catch((e: unknown) => {
                         this._prevHash = undefined;
                     })
                     ;
@@ -331,7 +340,8 @@ export class WUResultTable extends Common {
                 const cell = this._dgrid.cell(e);
                 const pDiv = document.createElement("div");
                 (e.target as HTMLElement).appendChild(pDiv);
-                ReactDOM.render(
+                const root = createRoot(pDiv);
+                root.render(
                     <ContextMenu target={e} menuItems={
                         cell.column.isSet ? [
                             {
@@ -356,8 +366,7 @@ export class WUResultTable extends Common {
                                 text: "Copy All as ECL",
                                 onClick: () => this.copyAll()
                             }
-                        ]} />,
-                    pDiv
+                        ]} />
                 );
             });
 
@@ -367,7 +376,8 @@ export class WUResultTable extends Common {
                 const row = this._dgrid.row(e);
                 const pDiv = document.createElement("div");
                 (e.target as HTMLElement).appendChild(pDiv);
-                ReactDOM.render(
+                const root = createRoot(pDiv);
+                root.render(
                     <ContextMenu target={e} menuItems={[
                         {
                             key: "copyRowAsECL",
@@ -383,15 +393,14 @@ export class WUResultTable extends Common {
                             text: "Copy All as ECL",
                             onClick: () => this.copyAll()
                         }
-                    ]} />,
-                    pDiv
+                    ]} />
                 );
             });
 
         }
     }
 
-    click(row, col, sel) {
+    click(row: any, col: any, sel: any) {
     }
 }
 WUResultTable.prototype._class += " eclwatch_WUResultTable";
