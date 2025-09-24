@@ -3,7 +3,6 @@ import { WsWorkunits, Workunit, ClientTools } from "@hpcc-js/comms";
 import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration, IExecFile } from "./launchConfig";
 import { LaunchConfigState, LaunchMode } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
-import { ECL_MODE } from "../mode";
 import { eclTempFile } from "../util/fs";
 
 const isMultiRoot = () => vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 1;
@@ -79,6 +78,10 @@ class Session {
 
     submit(uri: vscode.Uri, mode: LaunchMode = "submit") {
         return this._launchConfig.submit(uri, this.targetCluster, mode);
+    }
+
+    findLogicalFiles(pattern: string) {
+        return this._launchConfig.findLogicalFiles(pattern);
     }
 
     fetchRecordDef(lf: string) {
@@ -333,13 +336,13 @@ class SessionManager {
         }
     }
 
-    async submit(doc: vscode.TextDocument, mode: LaunchMode = "submit") {
+    async submit(context: vscode.ExtensionContext, doc: vscode.TextDocument, mode: LaunchMode = "submit") {
         if (this.session) {
             const eclConfig = vscode.workspace.getConfiguration("ecl");
             if (eclConfig.get("saveOnSubmit", false)) {
                 await doc.save();
             }
-            const tmpFile = await eclTempFile(doc);
+            const tmpFile = await eclTempFile(context, doc);
             try {
                 await this.submitURI(tmpFile.uri, mode);
             } finally {
@@ -507,3 +510,7 @@ class SessionManager {
     }
 }
 export const sessionManager: SessionManager = new SessionManager();
+
+export function isPlatformConnected(): boolean {
+    return !!sessionManager.session;
+}

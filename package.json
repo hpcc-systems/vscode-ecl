@@ -29,6 +29,7 @@
     "gen-webview-types": "tsc --project tsconfig.webview.json --emitDeclarationOnly",
     "gen-webview-watch": "npm run gen-webview-types -- -w",
     "gen-types": "run-p gen-node-types gen-webview-types",
+    "compile-test": "tsc -p tsconfig.test.json",
     "build-ts": "node esbuild.mjs --production",
     "build-ts-dev": "node esbuild.mjs --development",
     "build-ts-watch": "node esbuild.mjs --watch --development",
@@ -36,7 +37,12 @@
     "watch": "run-p gen-types-watch build-ts-watch",
     "lint": "eslint ./src",
     "lint-fix": "npm run lint -- --fix",
-    "test": "run-s lint package",
+    "test-vitest": "vitest",
+    "test-run": "vitest run",
+    "test-ui": "vitest --ui",
+    "test-integration": "node ./dist-test/integration/runTest.js",
+    "test-coverage": "vitest run --coverage",
+    "test": "run-s lint package compile-test test-run test-integration",
     "vscode:prepublish": "run-s clean build",
     "publish": "vsce publish",
     "package": "vsce package -o ./ecl.vsix",
@@ -50,69 +56,74 @@
     "html-to-text": "9.0.5"
   },
   "devDependencies": {
-    "@eslint/js": "9.34.0",
-    "@fluentui/react": "8.123.5",
-    "@hpcc-js/api": "3.3.10",
-    "@hpcc-js/common": "3.4.0",
-    "@hpcc-js/comms": "3.8.0",
+    "@eslint/js": "9.36.0",
+    "@fluentui/react": "8.123.6",
+    "@fluentui/react-hooks": "8.8.19",
+    "@hpcc-js/api": "3.3.11",
+    "@hpcc-js/common": "3.4.1",
+    "@hpcc-js/comms": "3.8.1",
+    "@hpcc-js/dgrid": "3.3.1",
     "@hpcc-js/dgrid-shim": "3.2.0",
-    "@hpcc-js/dgrid": "3.3.0",
-    "@hpcc-js/esbuild-plugins": "1.5.0",
+    "@hpcc-js/esbuild-plugins": "1.5.1",
     "@hpcc-js/observable-shim": "3.1.0",
-    "@hpcc-js/observablehq-compiler": "3.4.0",
-    "@hpcc-js/util": "3.3.10",
-    "@hpcc-js/wasm-expat": "1.6.0",
+    "@hpcc-js/observablehq-compiler": "3.5.2",
+    "@hpcc-js/util": "3.3.11",
+    "@hpcc-js/wasm-expat": "1.6.1",
     "@hpcc-js/wasm-llama": "1.0.0",
-    "@hpcc-js/wasm-zstd": "1.5.0",
-    "@langchain/community": "0.3.53",
-    "@langchain/core": "0.3.72",
-    "@langchain/ollama": "0.2.3",
+    "@hpcc-js/wasm-zstd": "1.5.1",
+    "@langchain/community": "0.3.56",
+    "@langchain/core": "0.3.77",
+    "@langchain/ollama": "0.2.4",
     "@observablehq/inspector": "5.0.1",
     "@observablehq/parser": "6.1.0",
     "@observablehq/runtime": "6.0.0",
     "@observablehq/stdlib": "5.8.8",
     "@octokit/rest": "22.0.0",
     "@types/mocha": "10.0.10",
-    "@types/node": "24.3.0",
-    "@types/react": "17.0.88",
-    "@types/react-dom": "17.0.26",
+    "@types/node": "24.5.2",
+    "@types/react": "18.3.24",
+    "@types/react-dom": "18.3.7",
     "@types/tmp": "0.2.6",
-    "@types/vscode": "1.101.0",
+    "@types/vscode": "1.104.0",
     "@types/vscode-notebook-renderer": "1.72.4",
-    "@typescript-eslint/parser": "8.41.0",
+    "@vscode/test-cli": "^0.0.8",
+    "@vscode/test-electron": "^2.3.9",
+    "@typescript-eslint/parser": "8.44.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
     "@vscode/debugadapter": "1.68.0",
     "@vscode/debugprotocol": "1.68.0",
     "@vscode/extension-telemetry": "1.0.0",
-    "@vscode/vsce": "3.6.0",
+    "@vscode/vsce": "3.6.1",
     "adm-zip": "0.5.16",
     "antlr4": "4.13.2",
     "assert": "2.1.0",
     "copy-to-clipboard": "3.3.3",
     "copyfiles": "2.4.1",
     "csv-writer": "1.6.0",
-    "diff": "8.0.2",
     "d3-format": "^1",
     "d3-time-format": "^2",
-    "esbuild": "0.25.9",
+    "diff": "8.0.2",
+    "esbuild": "0.25.10",
     "esbuild-copy-static-files": "0.1.0",
     "esbuild-plugin-text-replace": "1.3.0",
     "esbuild-plugin-umd-wrapper": "3.0.0",
-    "eslint": "9.34.0",
+    "eslint": "9.36.0",
     "eslint-plugin-react-hooks": "5.2.0",
-    "langchain": "0.3.31",
-    "mocha": "11.7.1",
+    "jsdom": "^25.0.1",
+    "langchain": "0.3.34",
     "npm-run-all": "4.1.5",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "rimraf": "6.0.1",
     "run-script-os": "^1.1.6",
     "tslib": "2.8.1",
     "typescript": "5.9.2",
-    "typescript-eslint": "8.41.0",
+    "typescript-eslint": "8.44.1",
     "use-resize-observer": "9.1.0",
-    "uuid": "11.1.0",
-    "yargs": "18.0.0",
-    "vitest": "3.2.4"
+    "uuid": "13.0.0",
+    "vitest": "3.2.4",
+    "yargs": "18.0.0"
   },
   "author": {
     "name": "HPCC Systems®"
@@ -122,7 +133,7 @@
     "url": "https://github.com/hpcc-systems/vscode-ecl.git"
   },
   "engines": {
-    "vscode": "^1.101.0"
+    "vscode": "^1.104.0"
   },
   "galleryBanner": {
     "color": "#CFB69A",
@@ -141,6 +152,55 @@
     "workspaceContains:*.dashy"
   ],
   "contributes": {
+    "languageModelTools": [
+      {
+        "name": "ecl-extension_syntaxCheck",
+        "tags": [
+          "editors",
+          "syntax check",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "syntaxCheck",
+        "displayName": "Syntax Check",
+        "modelDescription": "Check the syntax of ECL code",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(files)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ecl": {
+              "type": "string",
+              "description": "The ECL code to check.",
+              "default": ""
+            }
+          }
+        }
+      },
+      {
+        "name": "ecl-extension_findLogicalFiles",
+        "tags": [
+          "logical files",
+          "search",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "findLogicalFiles",
+        "displayName": "Find Logical Files",
+        "modelDescription": "Search for logical files that match the wildcard pattern on the active HPCC Platform session",
+        "canBeReferencedInPrompt": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "pattern": {
+              "type": "string",
+              "description": "Search for logical files that match this wildcard pattern"
+            }
+          },
+          "required": [
+            "pattern"
+          ]
+        }
+      }
+    ],
     "languages": [
       {
         "id": "ecl",
@@ -218,16 +278,7 @@
         "name": "ecl",
         "description": "HPCC-Platform Assistant to help with ECL development",
         "isSticky": true,
-        "commands": [
-          {
-            "name": "create",
-            "description": "Create a new ECL file"
-          },
-          {
-            "name": "docs",
-            "description": "Information about the ECL language"
-          }
-        ]
+        "commands": []
       }
     ],
     "viewsWelcome": [],
@@ -1247,11 +1298,13 @@
       "hpccResources": [
         {
           "id": "hpccResources.bundles",
-          "name": "%Bundles%"
+          "name": "%Bundles%",
+          "icon": "resources/hpcc-icon-bw.svg"
         },
         {
           "id": "hpccResources.clientTools",
-          "name": "%Client Tools%"
+          "name": "%Client Tools%",
+          "icon": "resources/hpcc-icon-bw.svg"
         }
       ],
       "explorer": [
@@ -1268,7 +1321,8 @@
           "type": "webview",
           "id": "ecl.watch.lite",
           "name": "",
-          "when": "hpccPlatformActive"
+          "when": "hpccPlatformActive",
+          "icon": "resources/hpcc-icon-bw.svg"
         }
       ]
     },

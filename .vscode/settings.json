@@ -7,13 +7,14 @@
 	"search.exclude": {
 		"**/node_modules": true,
 		"**/bower_components": true,
-		"out/": true
+		"dist-test/": true
 	},
 	"editor.insertSpaces": true,
 	"ecl.debugLogging": true,
-	"ecl.launchConfiguration": "localhost",
+	"ecl.launchConfiguration": "not found",
 	"ecl.targetCluster": {
-		"localhost": "thor"
+		"localhost": "thor",
+		"not found": "thor"
 	},
 	"svg.preview.background": "dark-transparent"
 }

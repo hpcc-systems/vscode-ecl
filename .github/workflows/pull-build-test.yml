@@ -1,23 +1,49 @@
 name: Pull Build Test
 
+# Ensure only one run per workflow + ref; cancel older in-progress runs on new commits
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
-      - trunk
+      - main
   pull_request:
     branches:
-      - trunk
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
       - uses: actions/setup-node@v4
         with:
           node-version: "24.x"
-      - run: git submodule update --init --recursive
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run package
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          npm ci
+
+      - name: Run tests (Ubuntu)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          xvfb-run -a npm test
+
+      - name: Run tests (Windows/macOS)
+        if: runner.os != 'Linux'
+        shell: bash
+        run: |
+          npm test

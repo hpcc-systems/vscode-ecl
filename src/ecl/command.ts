@@ -57,7 +57,7 @@ export class ECLCommands {
     checkSyntax() {
         if (vscode.window.activeTextEditor) {
             vscode.commands.executeCommand("workbench.panel.markers.view.focus");
-            checkTextDocument(vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
+            checkTextDocument(this._ctx, vscode.window.activeTextEditor.document, vscode.workspace.getConfiguration("ecl", vscode.window.activeTextEditor.document.uri));
         }
     }
 
@@ -76,19 +76,19 @@ export class ECLCommands {
 
     submit() {
         if (vscode.window.activeTextEditor) {
-            sessionManager.submit(vscode.window.activeTextEditor.document, "submit");
+            sessionManager.submit(this._ctx, vscode.window.activeTextEditor.document, "submit");
         }
     }
 
     submitNoArchive() {
         if (vscode.window.activeTextEditor) {
-            sessionManager.submit(vscode.window.activeTextEditor.document, "submitNoArchive");
+            sessionManager.submit(this._ctx, vscode.window.activeTextEditor.document, "submitNoArchive");
         }
     }
 
     compile() {
         if (vscode.window.activeTextEditor) {
-            sessionManager.submit(vscode.window.activeTextEditor.document, "compile");
+            sessionManager.submit(this._ctx, vscode.window.activeTextEditor.document, "compile");
         }
     }
 
