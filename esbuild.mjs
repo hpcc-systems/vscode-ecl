@@ -10,7 +10,9 @@ const outputDirectory = "dist";
 const watch = process.argv.includes("--watch");
 const production = !watch && process.argv.includes("--production");
 
-async function main(tsconfigRaw, entryPoint, platform, format, plugins = []) {
+console.log(`Build:  watch: ${watch}, production: ${production}`);
+
+async function bundle(tsconfigRaw, entryPoint, platform, format, plugins = []) {
     const ctx = await esbuild.context({
         tsconfigRaw,
         entryPoints: [entryPoint],
@@ -36,23 +38,38 @@ async function main(tsconfigRaw, entryPoint, platform, format, plugins = []) {
     }
 }
 
-Promise.all([
-    main(tsconfigNode, "./src/extension.ts", "node", "cjs", [
-        // copyStaticFiles({
-        //     src: "./node_modules/@hpcc-js/ddl-shim/schema/v2.json",
-        //     dest: path.join(outputDirectory, "v2.json"),
-        // }),
-        copyStaticFiles({
-            src: "./util/docs.vecdb",
-            dest: path.join(outputDirectory, "docs.vecdb"),
-        })
-    ]),
-    main(tsconfigBrowser, "./src/notebook/renderers/wuRenderer.tsx", "browser", "esm"),
-    main(tsconfigBrowser, "./src/notebook/renderers/ojsRenderer.ts", "browser", "esm"),
-    main(tsconfigBrowser, "./src/eclwatch.tsx", "browser", "iife", [removeStrict()]),
-    main(tsconfigBrowser, "./src/web-extension.ts", "browser", "iife"),
-    nodeTpl("./util/index-docs.ts", "./dist-util/index-docs")
-]).catch((e) => {
-    console.error(e);
-    process.exit(1);
+async function main() {
+
+    await Promise.all([
+        bundle(tsconfigNode, "./src/extension.ts", "node", "cjs", [
+            // copyStaticFiles({
+            //     src: "./node_modules/@hpcc-js/ddl-shim/schema/v2.json",
+            //     dest: path.join(outputDirectory, "v2.json"),
+            // }),
+            copyStaticFiles({
+                src: "./util/docs.vecdb",
+                dest: path.join(outputDirectory, "docs.vecdb"),
+            }),
+            copyStaticFiles({
+                src: "./node_modules/@hpcc-js/dgrid-shim/dist/index.min.js",
+                dest: path.join(outputDirectory, "dgrid-shim.min.js"),
+            })
+        ]),
+        bundle(tsconfigBrowser, "./src/notebook/renderers/wuRenderer.tsx", "browser", "esm"),
+        bundle(tsconfigBrowser, "./src/notebook/renderers/ojsRenderer.ts", "browser", "esm"),
+        bundle(tsconfigBrowser, "./src/eclwatch.tsx", "browser", "iife", [removeStrict()]),
+        bundle(tsconfigBrowser, "./src/web-extension.ts", "browser", "iife"),
+        nodeTpl("./util/index-docs.ts", "./dist-util/index-docs")
+    ]).catch((e) => {
+        console.error(e);
+        process.exit(1);
+    });
+}
+
+main().then(() => {
+    if (watch) {
+        console.log("Watching for changes...");
+    } else {
+        console.log("Build complete");
+    }
 });
