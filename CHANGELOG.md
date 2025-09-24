@@ -9,6 +9,15 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.31.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.30.3...ecl-v2.31.0) (2025-09-24)
+
+
+### Features
+
+* add release please support ([e416947](https://github.com/hpcc-systems/vscode-ecl/commit/e41694743b414fda9db1f3c3d98756cb4a270345))
+* update dependencies and add new language model tools ([cc22ee5](https://github.com/hpcc-systems/vscode-ecl/commit/cc22ee5fa2301507d87af3724cef1d7295e58f7b))
+* update dependencies and add new language model tools ([7a1ca43](https://github.com/hpcc-systems/vscode-ecl/commit/7a1ca43c5228b75d0b670e620ce7d92b673f388d))
+
 ### [2.30.3](https://github.com/hpcc-systems/vscode-ecl/compare/v2.30.2...v2.30.3) (2025-08-22)
 
 ### Bug Fixes
