@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Pivot, PivotItem, IPivotStyles, Spinner, MessageBar, MessageBarType, IStyleFunctionOrObject, IPivotStyleProps, Stack } from "@fluentui/react";
-import { Workunit, WsWorkunits, Result, IOptions } from "@hpcc-js/comms/dist/browser/index.js";
+import { Workunit, type WsWorkunits, type Result, type IOptions } from "@hpcc-js/comms/dist/browser/index.js";
 import { WUIssues, WUResult } from "./WUResult";
 import { HolyGrail } from "./HolyGrail";
 
@@ -127,7 +127,7 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
         header={
             <div ref={pivotRef}>
                 {
-                    exceptions.length > 0 || results.length > 0 ?
+                    (exceptions.length > 0 || results.length > 0) ?
                         <Pivot overflowBehavior="menu" styles={pivotStyles} selectedKey={selected} onLinkClick={handleLinkClick} headersOnly={true} >
                             {pivots}
                         </Pivot>

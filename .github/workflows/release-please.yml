@@ -10,7 +10,6 @@ permissions:
 
 name: release-please
 
-# Ensure only one release pipeline per ref; cancel previous if a new commit arrives
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -22,6 +21,7 @@ jobs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
       version: ${{ steps.release.outputs.version }}
+
     steps:
       - id: release
         uses: googleapis/release-please-action@v4
@@ -40,6 +40,7 @@ jobs:
       release_name: ${{ steps.event_details.outputs.release_name }}
       tag_name: ${{ steps.event_details.outputs.tag_name }}
       version: ${{ steps.event_details.outputs.version }}
+
     steps:
       - name: Check event details
         id: event_details
@@ -51,18 +52,21 @@ jobs:
           echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
           echo "version=${TAG_NAME##*-v}" >> $GITHUB_OUTPUT
           echo "package_name=${RELEASE_NAME%:*}" >> $GITHUB_OUTPUT
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ steps.event_details.outputs.tag_name }}
+          submodules: "recursive"
+
       - name: Add files and publish release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          VSCE_PAT: ${{ secrets.PAT_VSCE }}
+          VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
           TAG_NAME: ${{ steps.event_details.outputs.tag_name }}
         run: |
           npm ci
           npm run package
-          mv wit-idl.vsix ${TAG_NAME}.vsix
+          mv ecl.vsix ${TAG_NAME}.vsix
           gh release upload ${TAG_NAME} ${TAG_NAME}.vsix
           npx vsce publish --packagePath ${TAG_NAME}.vsix
 
@@ -74,8 +78,12 @@ jobs:
       issues: write
       pull-requests: write
       repository-projects: read
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
       - name: Add label to PR
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -90,6 +98,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+
     steps:
       - uses: apexskier/github-release-commenter@v1
         with:
