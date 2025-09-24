@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "ecl",
-  "version": "2.30.3",
+  "version": "1.0.0",
   "publisher": "hpcc-systems",
   "displayName": "ECL Language",
   "description": "ECL (Enterprise Control Language) support for Visual Studio Code",
