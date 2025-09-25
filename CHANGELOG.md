@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.32.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.32.0...ecl-v2.32.1) (2025-09-25)
+
+
+### Bug Fixes
+
+* release please failed publish tag ([9261098](https://github.com/hpcc-systems/vscode-ecl/commit/926109845a7910ce1cf7bc31003e016109aad963))
+
 ## [2.32.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.31.2...ecl-v2.32.0) (2025-09-25)
 
 
