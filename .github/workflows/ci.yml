@@ -1,4 +1,4 @@
-name: Pull Build Test
+name: ci
 
 # Ensure only one run per workflow + ref; cancel older in-progress runs on new commits
 concurrency:
@@ -7,11 +7,9 @@ concurrency:
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -21,6 +19,10 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
