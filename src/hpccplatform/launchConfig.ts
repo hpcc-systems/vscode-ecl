@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService, DFUService, WsDfu } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService, DFUService, WsDfu, WsCodesign } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
@@ -610,7 +610,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     digitalKeys() {
         return this.checkCredentials().then(credentials => {
             const csService = new CodesignService(this.opts(credentials));
-            return csService.ListUserIDs({});
+            return csService.ListUserIDs({}).then(response => response?.UserIDs?.Item ?? []);
         });
     }
 
@@ -618,7 +618,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         return this.checkCredentials().then(credentials => {
             const csService = new CodesignService(this.opts(credentials));
             return csService.Sign({
-                SigningMethod: "gpg",
+                SigningMethod: WsCodesign.SigningMethodType.gpg,
                 UserID: key,
                 KeyPass: passphrase,
                 Text: ecl
