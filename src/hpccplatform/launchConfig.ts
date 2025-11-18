@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService, DFUService, WsDfu } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService, DFUService, WsDfu, WsCodesign } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
@@ -97,11 +97,11 @@ function config<T extends keyof LaunchRequestArguments>(id: string, key: T, defa
     const config = launchConfiguration(id);
     let retVal = config[key];
     if (retVal === undefined) {
-        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        const eclConfig = vscode.workspace.getConfiguration("ecl", null);
         retVal = eclConfig.get(key);
     } else if (typeof retVal === "string" && retVal.indexOf(configPrefix) === 0) {
         const configKey = retVal.substring(configPrefix.length, retVal.length - 1);
-        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        const eclConfig = vscode.workspace.getConfiguration("ecl", null);
         retVal = eclConfig.get(configKey);
     }
     if (retVal === undefined) {
@@ -260,9 +260,9 @@ export class LaunchConfig implements LaunchRequestArguments {
 
     private async checkProxy(opts: IOptions) {
         if (opts.baseUrl.indexOf("https:") === 0) {
-            const config = vscode.workspace.getConfiguration();
+            const config = vscode.workspace.getConfiguration(undefined, null);
             if (config.get("http.proxySupport") === "override") {
-                const eclConfig = vscode.workspace.getConfiguration("ecl");
+                const eclConfig = vscode.workspace.getConfiguration("ecl", null);
                 const response = eclConfig.get("forceProxySupport") ? SET_FALLBACK : await vscode.window.showWarningMessage(PROXY_WARNING, { modal: true }, SET_FALLBACK);
                 switch (response) {
                     case SET_FALLBACK:
@@ -610,7 +610,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     digitalKeys() {
         return this.checkCredentials().then(credentials => {
             const csService = new CodesignService(this.opts(credentials));
-            return csService.ListUserIDs({});
+            return csService.ListUserIDs({}).then(response => response?.UserIDs?.Item ?? []);
         });
     }
 
@@ -618,7 +618,7 @@ export class LaunchConfig implements LaunchRequestArguments {
         return this.checkCredentials().then(credentials => {
             const csService = new CodesignService(this.opts(credentials));
             return csService.Sign({
-                SigningMethod: "gpg",
+                SigningMethod: WsCodesign.SigningMethodType.gpg,
                 UserID: key,
                 KeyPass: passphrase,
                 Text: ecl
