@@ -134,6 +134,13 @@
   "engines": {
     "vscode": "^1.105.0"
   },
+  "releaseNotes": [
+    {
+      "previousVersion": "2.32.0",
+      "message": "Credential storage has been upgraded to use VS Code's secure storage. Your existing credentials have been automatically migrated.",
+      "learnMoreUrl": "README.md#secure-credential-storage"
+    }
+  ],
   "galleryBanner": {
     "color": "#CFB69A",
     "theme": "light"
@@ -147,8 +154,7 @@
     "workspaceContains:*.ecllib",
     "workspaceContains:*.mod",
     "workspaceContains:*.eclnb",
-    "workspaceContains:*.kel",
-    "workspaceContains:*.dashy"
+    "workspaceContains:*.kel"
   ],
   "contributes": {
     "languageModelTools": [
@@ -429,6 +435,12 @@
         "description": "%Copy path as Qualified ECL ID%"
       },
       {
+        "command": "ecl.clearStoredPasswords",
+        "category": "ECL",
+        "title": "%Clear All Passwords%",
+        "description": "%Clear all stored HPCC Platform passwords from secure storage%"
+      },
+      {
         "command": "hpccPlatform.copyWUID",
         "category": "ECL",
         "title": "%Copy WUID%"
@@ -624,6 +636,20 @@
           "light": "resources/light/server-process.svg",
           "dark": "resources/dark/server-process.svg"
         }
+      },
+      {
+        "command": "hpccPlatform.login",
+        "category": "ECL",
+        "title": "%Login%",
+        "description": "%Login to HPCC Platform%",
+        "icon": "$(sign-in)"
+      },
+      {
+        "command": "hpccPlatform.logout",
+        "category": "ECL",
+        "title": "%Logout and Clear Credentials%",
+        "description": "%Logout from HPCC Platform and remove stored credentials%",
+        "icon": "$(sign-out)"
       },
       {
         "command": "hpccPlatform.switchTargetCluster",
@@ -1045,6 +1071,16 @@
           "command": "hpccPlatform.switch",
           "when": "view == hpccPlatform",
           "group": "navigation@60"
+        },
+        {
+          "command": "hpccPlatform.login",
+          "when": "view == hpccPlatform && !ecl.connected",
+          "group": "navigation@65"
+        },
+        {
+          "command": "hpccPlatform.logout",
+          "when": "view == hpccPlatform && ecl.connected",
+          "group": "navigation@65"
         },
         {
           "command": "hpccResources.bundles.homepage",
@@ -1478,12 +1514,6 @@
           "default": false,
           "description": "%Force global 'proxySupport' to 'fallback'%"
         },
-        "ecl.pingInterval": {
-          "type": "number",
-          "scope": "resource",
-          "default": 5,
-          "description": "%Ping interval (secs, -1 to disable)%"
-        },
         "dashy.libraryLocation": {
           "type": "string",
           "scope": "resource",
@@ -1671,11 +1701,6 @@
                 "type": "string",
                 "description": "%User ID%",
                 "default": ""
-              },
-              "password": {
-                "type": "string",
-                "description": "%User password%",
-                "default": ""
               }
             }
           }
@@ -1694,8 +1719,7 @@
             "rejectUnauthorized": true,
             "resultLimit": 100,
             "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
+            "user": "vscode_user"
           }
         ],
         "configurationSnippets": [
@@ -1715,8 +1739,7 @@
               "rejectUnauthorized": true,
               "resultLimit": 100,
               "timeoutSecs": 60,
-              "user": "vscode_user",
-              "password": ""
+              "user": "vscode_user"
             }
           },
           {
@@ -1735,8 +1758,7 @@
               "rejectUnauthorized": false,
               "resultLimit": 100,
               "timeoutSecs": 60,
-              "user": "vscode_user",
-              "password": ""
+              "user": "vscode_user"
             }
           }
         ]

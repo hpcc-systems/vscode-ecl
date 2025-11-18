@@ -1,9 +1,13 @@
 import * as vscode from "vscode";
 import { WsWorkunits, Workunit, ClientTools } from "@hpcc-js/comms";
+import { scopedLogger } from "@hpcc-js/util";
 import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration, IExecFile } from "./launchConfig";
-import { LaunchConfigState, LaunchMode } from "../debugger/launchRequestArguments";
+import { LaunchConfigState, credentialManager, Credentials } from "../util/credentialManager";
+import { LaunchMode } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
 import { eclTempFile } from "../util/fs";
+
+const logger = scopedLogger("hpccplatform/session.ts");
 
 const isMultiRoot = () => vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 1;
 
@@ -30,10 +34,6 @@ class Session {
 
     get userID() {
         return this._launchConfig.user;
-    }
-
-    get password() {
-        return this._launchConfig.password;
     }
 
     get targetCluster() {
@@ -96,8 +96,8 @@ class Session {
         return this._launchConfig.sign(key, passphrase, ecl);
     }
 
-    ping(force = false) {
-        return this._launchConfig.pingServer();
+    pingXXX(force = false) {
+        return this._launchConfig.pingServerXXX();
     }
 
     verify(ecl: string) {
@@ -114,6 +114,18 @@ class Session {
 
     bundleUninstall(name: string): Promise<IExecFile> {
         return this._launchConfig.bundleUninstall(name);
+    }
+
+    async getStoredCredentials(): Promise<Credentials | undefined> {
+        return this._launchConfig.getStoredCredentials();
+    }
+
+    async checkCredentials(): Promise<Credentials | undefined> {
+        return this._launchConfig.checkCredentials();
+    }
+
+    async deleteCredentials(): Promise<void> {
+        this._launchConfig.deleteCredentials();
     }
 }
 
@@ -133,9 +145,6 @@ class SessionManager {
     private _onDidCreateWorkunit: vscode.EventEmitter<ICreateWorkunit> = new vscode.EventEmitter<ICreateWorkunit>();
     readonly onDidCreateWorkunit: vscode.Event<ICreateWorkunit> = this._onDidCreateWorkunit.event;
 
-    private _onDidPing: vscode.EventEmitter<LaunchConfigState> = new vscode.EventEmitter<LaunchConfigState>();
-    readonly onDidPing: vscode.Event<LaunchConfigState> = this._onDidPing.event;
-
     private _statusBarLaunch: vscode.StatusBarItem;
     private _statusBarTargetCluster: vscode.StatusBarItem;
     private _statusBarPin: vscode.StatusBarItem;
@@ -143,6 +152,12 @@ class SessionManager {
     constructor() {
         this._statusBarLaunch = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, Number.MIN_VALUE + 2);
         this._statusBarLaunch.command = "hpccPlatform.switch";
+    }
+
+    initialize() {
+        credentialManager.migrateExistingCredentials().catch(error => {
+            logger.warning("Failed to migrate existing credentials: " + error);
+        });
 
         this._statusBarTargetCluster = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, Number.MIN_VALUE + 1);
         this._statusBarTargetCluster.command = "hpccPlatform.switchTargetCluster";
@@ -178,6 +193,14 @@ class SessionManager {
 
         vscode.commands.registerCommand("hpccPlatform.eclwatch", async () => {
             vscode.env.openExternal(vscode.Uri.parse(`${this.session.baseUrl()}/esp/files/stub.htm`));
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.login", async () => {
+            await this.login();
+        });
+
+        vscode.commands.registerCommand("hpccPlatform.logout", async () => {
+            await this.logout();
         });
 
         vscode.window.onDidChangeActiveTextEditor(() => {
@@ -225,10 +248,6 @@ class SessionManager {
                 const targetCluster = eclConfig.get<object>("targetCluster")[launchConfig];
                 this.switchTo(launchConfig, targetCluster);
             }
-
-            if (e.affectsConfiguration("ecl.pingInterval")) {
-                this.monitorConnection();
-            }
         });
 
         const eclConfig = vscode.workspace.getConfiguration("ecl", null);
@@ -238,8 +257,8 @@ class SessionManager {
         //  Don't load HPCC Platform tree until session is fully initialized
         vscode.commands.executeCommand("setContext", "hpccPlatformActive", true);
 
-        this.onDidPing(state => {
-            this.refreshStatusBar(state);
+        this.onDidChangeSession(() => {
+            this.refreshStatusBar();
         });
     }
 
@@ -351,31 +370,8 @@ class SessionManager {
         }
     }
 
-    async updateConnection() {
-        const state = (await this.session?.ping(true)) || LaunchConfigState.Unknown;
-        vscode.commands.executeCommand("setContext", "ecl.connected", state === LaunchConfigState.Ok);
-        this._onDidPing.fire(state);
-    }
-
-    protected _monitor = {};
-    monitorConnection() {
-        const eclConfig = vscode.workspace.getConfiguration("ecl", null);
-        const pingInterval = eclConfig.get("pingInterval", 5);
-        for (const key in this._monitor) {
-            clearInterval(this._monitor[key]);
-        }
-        this.updateConnection();
-        if (!isNaN(pingInterval) && pingInterval > 0) {
-            this._monitor[this.session.id] = setInterval(() => {
-                this.updateConnection();
-            }, pingInterval * 1000);
-        }
-    }
-
     switchTo(id?: string, targetCluster?: string) {
         if (!this.session || this.session.id !== id) {
-            vscode.commands.executeCommand("setContext", "ecl.connected", false);
-            this._onDidPing.fire(LaunchConfigState.Unknown);
             const configs = launchConfigurations().map(lc => lc.name);
             const launchID = configs.indexOf(id) >= 0 ? id : configs[0];
             if (launchID) {
@@ -388,7 +384,6 @@ class SessionManager {
         }
         this.updateSettings();
         this.refreshStatusBar();
-        this.monitorConnection();
     }
 
     updateSettings() {
@@ -451,6 +446,36 @@ class SessionManager {
         }
     }
 
+    async login() {
+        if (!this.session) {
+            vscode.window.showWarningMessage(localize("No HPCC Platform connection available"));
+            return;
+        }
+
+        try {
+            await this.session.checkCredentials();
+            vscode.window.showInformationMessage(localize("Successfully logged in to HPCC Platform"));
+        } catch (error) {
+            vscode.window.showErrorMessage(localize("Login failed") + `: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    }
+
+    async logout() {
+        if (!this.session) {
+            vscode.window.showWarningMessage(localize("No HPCC Platform connection available"));
+            return;
+        }
+
+        try {
+            await this.session.deleteCredentials();
+            this.switchTo();
+
+            vscode.window.showInformationMessage(localize("Successfully logged out from HPCC Platform"));
+        } catch (error) {
+            vscode.window.showErrorMessage(localize("Logout failed") + `: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    }
+
     refreshPinStatusBar() {
         let isPinned = false;
         const activeUri: string = vscode.window.activeTextEditor?.document?.uri.toString(true) || "";
@@ -471,7 +496,7 @@ class SessionManager {
 
     stateIcon(state: LaunchConfigState): string {
         switch (state) {
-            case LaunchConfigState.Credentials:
+            case LaunchConfigState.CredentialsRequired:
                 return "$(key)";
             case LaunchConfigState.Ok:
                 return "$(pass-filled)";
@@ -503,7 +528,11 @@ class SessionManager {
         }
     }
 
-    refreshStatusBar(state: LaunchConfigState = LaunchConfigState.Unknown) {
+    async refreshStatusBar(state: LaunchConfigState = LaunchConfigState.Unknown) {
+        if (state === LaunchConfigState.Unknown) {
+            const creds = await this.session?.getStoredCredentials();
+            state = creds?.verified ? LaunchConfigState.Ok : LaunchConfigState.CredentialsRequired;
+        }
         this.refreshLaunchStatusBar(state);
         this.refreshTCStatusBar();
         this.refreshPinStatusBar();

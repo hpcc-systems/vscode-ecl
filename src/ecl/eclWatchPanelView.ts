@@ -5,6 +5,7 @@ import { LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { wuDetailsUrl, wuResultUrl } from "../hpccplatform/launchConfig";
 import { sessionManager } from "../hpccplatform/session";
 import type { Messages } from "../eclwatch/messages";
+import { credentialManager } from "../util/credentialManager";
 
 interface NavigateParams extends LaunchRequestArguments {
     wuid: string;
@@ -74,7 +75,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
         };
 
         const abortControllers: { [id: number]: AbortController } = {};
-        this._webviewView.webview.onDidReceiveMessage((message: Messages) => {
+        this._webviewView.webview.onDidReceiveMessage(async (message: Messages) => {
             switch (message.command) {
                 case "loaded":
                     if (this._initialParams) {
@@ -90,6 +91,9 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                         abortControllers[message.id] = new AbortController();
                         message.params.request.abortSignal_ = abortControllers[message.id].signal;
                     }
+                    const cred = await credentialManager.getCredentials(message.params.opts.baseUrl, message.params.opts.userID);
+                    message.params.opts.password = cred?.password;
+
                     send(message.params.opts, message.params.action, message.params.request, message.params.responseType, message.params.header).then(response => {
                         this._webviewView.webview.postMessage({
                             command: "proxyResponse",

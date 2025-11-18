@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
     test: {
         // Match test files using common patterns
-        include: ['test/manifest.test.ts'],
+        include: ['test/manifest.test.ts', 'test/credentialManager.test.ts', 'test/launchConfigUserUpdate.test.ts', 'test/nls.test.ts'],
         exclude: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/dist-test/**', 'test/integration/**'],
 
         // Use jsdom environment for browser-like testing

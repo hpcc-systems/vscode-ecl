@@ -3,14 +3,17 @@ import * as os from "os";
 import * as path from "path";
 import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService, DFUService, WsDfu, WsCodesign } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
-import { LaunchConfigState, LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
+import { LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
 import localize from "../util/localize";
 import { readFile } from "../util/fs";
 import { reporter } from "../telemetry";
 import { formatWorkunitURL, formatResultURL } from "../ecl/util";
+import { LaunchConfigState, credentialManager, Credentials } from "../util/credentialManager";
 
-const fs = vscode.workspace.fs;
+const NO_SELECTION = "no selection";
+const NOT_FOUND = "not found";
+const MAX_LOGIN_ATTEMPTS = 3;
 
 export interface IExecFile {
     code: number;
@@ -54,7 +57,17 @@ function gatherServers(wuf?: vscode.WorkspaceFolder, wufCount: number = 0) {
 
 export function launchConfigurations(refresh = false): LaunchRequestArguments[] {
     if (!g_launchConfigurations || refresh === true) {
-        g_launchConfigurations = {};
+        g_launchConfigurations = {
+            [NO_SELECTION]: {
+                name: NO_SELECTION,
+                type: "ecl",
+                protocol: "http",
+                serverAddress: "",
+                port: 0,
+                targetCluster: "",
+                path: ""
+            }
+        };
 
         if (vscode.workspace.workspaceFolders) {
             for (const wuf of vscode.workspace.workspaceFolders) {
@@ -70,7 +83,7 @@ export function launchConfigurations(refresh = false): LaunchRequestArguments[] 
             vscode.commands.executeCommand("workbench.action.debug.configure");
         });
         const notFound: LaunchRequestArguments = {
-            name: "not found",
+            name: NOT_FOUND,
             type: "ecl",
 
             //  Required
@@ -80,7 +93,7 @@ export function launchConfigurations(refresh = false): LaunchRequestArguments[] 
             path: "",
             targetCluster: "unknown"
         };
-        g_launchConfigurations["not found"] = notFound;
+        g_launchConfigurations[NOT_FOUND] = notFound;
         retVal.push(notFound);
     }
     return retVal;
@@ -136,14 +149,6 @@ function action(mode: LaunchMode) {
     }
 }
 
-export interface Credentials {
-    user: string;
-    password: string;
-    verified: boolean;
-}
-
-const credentials: { [serverAddress: string]: Credentials } = {};
-
 const configPrefix = "${config:ecl.";
 
 export interface CheckResponse {
@@ -154,6 +159,8 @@ export interface CheckResponse {
 export class LaunchConfig implements LaunchRequestArguments {
 
     private readonly _lcID: string;
+    private _user: string;
+    private _credentials: Credentials;
 
     get id(): string {
         return this._lcID;
@@ -222,23 +229,18 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     get user() {
-        const creds = credentials[this.serverAddress];
-        if (creds?.verified) {
-            return creds.user;
+        if (!this._user) {
+            this._user = config(this._lcID, "user", "vscode_user");
         }
-        return config(this._lcID, "user", "vscode_user");
+        return this._user;
     }
 
-    get password() {
-        const creds = credentials[this.serverAddress];
-        if (creds?.verified) {
-            return creds.password;
-        }
-        return config(this._lcID, "password", "");
+    get baseUrl() {
+        return `${this.protocol}://${this.serverAddress}:${this.port}`;
     }
 
     get espUrl() {
-        return join(`${this.protocol}://${this.serverAddress}:${this.port}`, this.path);
+        return join(this.baseUrl, this.path);
     }
 
     constructor(lcID: string) {
@@ -246,16 +248,47 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     //  Credentials  ---
-    private credentials(): Credentials {
-        let retVal = credentials[this.serverAddress];
-        if (!retVal) {
-            retVal = credentials[this.serverAddress] = {
-                user: this.user,
-                password: this.password,
-                verified: false
-            };
+    async deleteCredentials() {
+        this._credentials = undefined;
+        const credentials = await this.getStoredCredentials();
+        if (credentials) {
+            await credentials.delete();
         }
-        return retVal;
+    }
+
+    async getStoredCredentials(user?: string): Promise<Credentials | undefined> {
+        return await credentialManager.getCredentials(this.baseUrl, user ?? this.user);
+    }
+
+    private async updateCredentials(user: string, password: string, verified: boolean): Promise<Credentials> {
+        this._user = user;
+        this._credentials = await credentialManager.getCredentials(this.baseUrl, user);
+        this._credentials.password = password;
+        this._credentials.verified = verified;
+        return this._credentials;
+    }
+
+    private async updateLaunchConfigUser(newUser: string): Promise<void> {
+        try {
+            const launchConfig = vscode.workspace.getConfiguration("launch");
+            const configurations = launchConfig.get<any[]>("configurations") || [];
+
+            const configIndex = configurations.findIndex(config =>
+                config.type === "ecl" && config.name === this.name.replace(/ \(.*\)$/, "")
+            );
+
+            if (configIndex !== -1) {
+                configurations[configIndex].user = newUser;
+                await launchConfig.update("configurations", configurations, vscode.ConfigurationTarget.Workspace);
+
+                if (g_launchConfigurations[this._lcID]) {
+                    g_launchConfigurations[this._lcID].user = newUser;
+                }
+            }
+            this._user = newUser;
+        } catch (error) {
+            logger.debug("Failed to update launch configuration user: " + (error instanceof Error ? error.message : String(error)));
+        }
     }
 
     private async checkProxy(opts: IOptions) {
@@ -273,18 +306,19 @@ export class LaunchConfig implements LaunchRequestArguments {
         }
     }
 
-    private async verifyUser(): Promise<LaunchConfigState> {
-        const credentials = this.credentials();
+    private async verifyUser(credentials: { user: string, password: string, verified: boolean }): Promise<LaunchConfigState> {
         if (credentials.verified) {
-            return Promise.resolve(LaunchConfigState.Ok);
+            return LaunchConfigState.Ok;
         }
+
         const opts = this.opts(credentials);
         await this.checkProxy(opts);
+
         const acService = new AccountService(opts);
         return acService.VerifyUser({
             application: "vscode-ecl",
             version: "2"
-        }).then(response => {
+        }).then(() => {
             credentials.verified = true;
             return LaunchConfigState.Ok;
         }).catch(e => {
@@ -294,12 +328,13 @@ export class LaunchConfig implements LaunchRequestArguments {
                 credentials.verified = true;
                 return LaunchConfigState.Ok;
             }
-            return e?.message.indexOf("ECONNREFUSED") >= 0 ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
+            credentials.verified = false;
+            return e?.message.indexOf("ECONNREFUSED") >= 0 ? LaunchConfigState.Unreachable : LaunchConfigState.CredentialsRequired;
         });
     }
 
-    async pingServer(timeout: number = 5000): Promise<LaunchConfigState> {
-        const credentials = this.credentials();
+    async pingServerXXX(timeout: number = 5000): Promise<LaunchConfigState> {
+        const credentials = await this.checkCredentials();
         const timeoutPrommise = new Promise<string>((resolve, reject) => {
             setTimeout(() => {
                 resolve("timeout");
@@ -320,80 +355,86 @@ export class LaunchConfig implements LaunchRequestArguments {
                 }
             }).catch(e => {
                 logger.debug("ping exception:  " + e?.message || e);
-                return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
+                return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.CredentialsRequired;
             });
     }
 
-    private ping(timeout: number = 5000): Promise<LaunchConfigState> {
-        const timeoutPrommise = new Promise<string>((resolve, reject) => {
-            setTimeout(() => {
-                resolve("timeout");
-            }, timeout);
-        });
-        const queryPromise = this.verifyUser();
-        return Promise.race([timeoutPrommise, queryPromise])
-            .then((verified: string | LaunchConfigState) => {
-                if (typeof verified === "string") {
-                    logger.debug("ping verified:  " + verified);
-                    return LaunchConfigState.Unreachable;
-                } else {
-                    logger.debug("ping verified:  " + verified);
-                    return verified;
-                }
-            }).catch(e => {
-                logger.debug("ping exception:  " + e?.message || e);
-                return e === "timeout" ? LaunchConfigState.Unreachable : LaunchConfigState.Credentials;
-            });
-    }
-
-    private async promptUserID() {
-        const credentials = this.credentials();
+    private async promptUserID(attempt: number, attemptOf: number, currentUser?: string): Promise<string> {
         const user = await vscode.window.showInputBox({
-            prompt: `${localize("User ID")} (${this.id})`,
+            prompt: localize("User ID"),
+            title: `Login to ${this.name} (attempt ${attempt} of ${attemptOf})`,
             password: false,
-            value: credentials.user
+            value: currentUser ?? ""
         }) || "";
-        if (user) {
-            credentials.user = user;
-        }
         return user;
     }
 
-    private async promptPassword(): Promise<boolean> {
-        const credentials = this.credentials();
-        credentials.password = await vscode.window.showInputBox({
-            prompt: `${localize("Password")} (${this.id})`,
+    private async promptPassword(attempt: number, attemptOf: number, currentPassword?: string): Promise<string> {
+        const password = await vscode.window.showInputBox({
+            prompt: localize("Password"),
+            title: `Login to ${this.name} (attempt ${attempt} of ${attemptOf})`,
             password: true,
-            value: credentials.password
+            value: currentPassword ?? ""
         }) || "";
-        return false;
+        return password;
     }
 
-    async _checkCredentials(): Promise<Credentials> {
-        if (this.name === "not found") {
+    protected async _checkCredentials(): Promise<Credentials> {
+        if (this.name === NOT_FOUND) {
+            vscode.commands.executeCommand("setContext", "ecl.connected", false);
             throw new Error(localize("No ECL Launch configurations."));
         }
-        const pingResult = await this.ping();
-        switch (pingResult) {
+        if (this.name === NO_SELECTION) {
+            vscode.commands.executeCommand("setContext", "ecl.connected", false);
+            throw new Error(localize("No Selected ECL Launch configuration."));
+        }
+
+        const storedCreds = await this.getStoredCredentials();
+        const launchConfigState: LaunchConfigState = storedCreds ? await this.verifyUser(storedCreds) : LaunchConfigState.Unknown;
+        switch (launchConfigState) {
             case LaunchConfigState.Ok:
-                return this.credentials();
-            case LaunchConfigState.Credentials:
-                for (let i = 0; i < 3; ++i) {
-                    if (await this.promptUserID()) {
-                        await this.promptPassword();
-                    }
-                    const credentials = this.credentials();
-                    if (!credentials.user && !credentials.password) {
+                vscode.commands.executeCommand("setContext", "ecl.connected", true);
+                return storedCreds;
+            case LaunchConfigState.CredentialsRequired:
+                for (let i = 0; i < MAX_LOGIN_ATTEMPTS; ++i) {
+                    const configUser = this.user;
+                    const user = await this.promptUserID(i + 1, MAX_LOGIN_ATTEMPTS, storedCreds?.user);
+                    if (user) {
+                        const storedCreds = await this.getStoredCredentials(user);
+                        const password = await this.promptPassword(i + 1, MAX_LOGIN_ATTEMPTS, storedCreds?.password);
+                        if (password) {
+                            const credentials = { user, password, verified: false };
+                            if (await this.verifyUser(credentials) === LaunchConfigState.Ok) {
+                                const credentials = await this.updateCredentials(user, password, true);
+                                if (user !== configUser) {
+                                    const updateConfig = await vscode.window.showInformationMessage(
+                                        localize("You signed in as '{0}' but the launch configuration has '{1}' as the default user. Would you like to update the launch configuration to remember '{0}' as the default user?").replaceAll("{0}", user).replaceAll("{1}", configUser),
+                                        { modal: true },
+                                        localize("Yes, update default"),
+                                        localize("No, keep current")
+                                    );
+
+                                    if (updateConfig === localize("Yes, update default")) {
+                                        await this.updateLaunchConfigUser(user);
+                                    }
+                                }
+                                credentials.verified = true;
+                                vscode.commands.executeCommand("setContext", "ecl.connected", true);
+                                return credentials;
+                            }
+                        } else {
+                            break;
+                        }
+                    } else {
                         break;
                     }
-                    if (await this.verifyUser()) {
-                        return this.credentials();
-                    }
                 }
+                vscode.commands.executeCommand("setContext", "ecl.connected", false);
                 throw new Error(localize("Invalid Credentials."));
             case LaunchConfigState.Unknown:
             case LaunchConfigState.Unreachable:
             default:
+                vscode.commands.executeCommand("setContext", "ecl.connected", false);
                 throw new Error(`${localize("Connection failed")}.`);
         }
     }
@@ -507,7 +548,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     //  Misc  ---
-    opts(credentials: Credentials): IOptions {
+    opts(credentials: { user: string, password: string }): IOptions {
         return {
             baseUrl: this.espUrl,
             userID: credentials.user,
@@ -707,10 +748,10 @@ export class LaunchConfig implements LaunchRequestArguments {
                 progress.report({ increment: 10, message: `${localize("Updating Workunit")} ${wu.Wuid}` });
                 // eslint-disable-next-line no-async-promise-executor
                 return new Promise<Workunit>(async (resolve, reject) => {
-                    const attempts = 3;
+                    const attempts = MAX_LOGIN_ATTEMPTS;
                     let lastError;
                     for (let retry = 1; retry <= attempts; ++retry) {
-                        progress.report({ increment: 3, message: `${localize("Updating Workunit")} ${wu.Wuid} (${retry} of ${attempts})` });
+                        progress.report({ increment: MAX_LOGIN_ATTEMPTS, message: `${localize("Updating Workunit")} ${wu.Wuid} (${retry} of ${attempts})` });
                         logger.info(`Updating workunit (${retry} of ${attempts}).${os.EOL}`);
                         reporter.sendTelemetryEvent("launchConfig.submit.update", {}, { "attempt": retry });
                         await wu.update({
