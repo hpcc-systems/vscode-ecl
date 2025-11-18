@@ -67,7 +67,7 @@ class KELClientTools extends ClientTools {
 
     genFolder(uri: Uri): string {
         const filePath = uri.fsPath;
-        const kelConfig = workspace.getConfiguration("kel");
+        const kelConfig = workspace.getConfiguration("kel", null);
         if (kelConfig.get<string>("generateLocation") === "Child Folder") {
             const ext = path.extname(filePath);
             const folder = path.basename(filePath, ext);
@@ -125,7 +125,7 @@ class KELClientTools extends ClientTools {
     }
 
     private spawnJava(cwd: string, args: string[]): Promise<KelResponse> {
-        const kelConfig = workspace.getConfiguration("kel");
+        const kelConfig = workspace.getConfiguration("kel", null);
         const javaArgs = kelConfig.get<string[]>("javaArgs");
         return this.spawnProc("java", cwd, this.args([
             ...javaArgs,
@@ -231,7 +231,7 @@ function showKelStatus(version: string, overriden: boolean, tooltip: string) {
 }
 
 export function locateClientTools(): Promise<KELClientTools | undefined> {
-    const kelConfig = workspace.getConfiguration("kel");
+    const kelConfig = workspace.getConfiguration("kel", null);
     const kelPath = kelConfig.get<string>("kelPath");
     if (kelPath) {
         return Promise.resolve(new KELClientTools(kelPath));
@@ -274,7 +274,7 @@ export function selectCTVersion() {
         input.onDidChangeSelection(items => {
             const item = items[0];
             if (item) {
-                const eclConfig = workspace.getConfiguration("kel");
+                const eclConfig = workspace.getConfiguration("kel", null);
                 eclConfig.update("kelPath", item.kelPath);
                 showKelStatus(item.label, !!item.kelPath, item.kelPath ? item.kelPath : "");
             }

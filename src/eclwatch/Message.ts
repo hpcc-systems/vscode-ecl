@@ -1,7 +1,7 @@
 import React from "react";
 import { useOnEvent, useEventCallback } from "@fluentui/react-hooks";
 import { LoadedMessage, ProxyCancelMessage, ProxySendMessage, State, vscode } from "./messages";
-import { hookSend } from "@hpcc-js/comms/dist/browser/index.js";
+import { hookSend } from "@hpcc-js/comms";
 
 interface executor<T> {
     resolve: (value: T | PromiseLike<T>) => void;

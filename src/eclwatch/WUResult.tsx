@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { useConst } from "@fluentui/react-hooks";
-import { Result, type XSDXMLNode, type IOptions, type WsWorkunits } from "@hpcc-js/comms/dist/browser/index.js";
+import { Result, type XSDXMLNode, type IOptions, type WsWorkunits } from "@hpcc-js/comms";
 import { Common, Table } from "@hpcc-js/dgrid";
 import { hashSum } from "@hpcc-js/util";
 import { Stack, Checkbox, ContextualMenu, ContextualMenuItemType, DefaultButton, Dialog, DialogFooter, DialogType, IContextualMenuItem, PrimaryButton, ProgressIndicator, SpinButton } from "@fluentui/react";
@@ -468,14 +468,15 @@ export const WUIssues: React.FunctionComponent<WUIssues> = ({
     exceptions
 }) => {
 
-    const table = React.useRef(
-        new Table()
-    ).current;
+    const table = useConst(() => new Table());
 
-    table
-        .columns(["Severity", "Source", "Code", "Message", "Col", "Line", "File Name"])
-        .data(exceptions.map(e => [e.Severity, e.Source, e.Code, e.Message, e.Column, e.LineNo, e.FileName]))
-        ;
+    React.useEffect(() => {
+
+        table
+            .columns(["Severity", "Source", "Code", "Message", "Col", "Line", "File Name"])
+            .data(exceptions.map(e => [e.Severity, e.Source, e.Code, e.Message, e.Column, e.LineNo, e.FileName]))
+            ;
+    }, [exceptions, table]);
 
     return <VisualizationComponent widget={table} debounce={false} >
     </VisualizationComponent>;

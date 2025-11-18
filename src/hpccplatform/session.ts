@@ -151,7 +151,7 @@ class SessionManager {
         this._statusBarPin.command = "hpccPlatform.pin";
 
         vscode.commands.registerCommand("hpccPlatform.pin", async () => {
-            const eclConfig = vscode.workspace.getConfiguration("ecl");
+            const eclConfig = vscode.workspace.getConfiguration("ecl", null);
             const activeUri: string = vscode.window.activeTextEditor?.document?.uri.toString(true) || "";
             if (activeUri) {
                 const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
@@ -184,7 +184,7 @@ class SessionManager {
             const prevBaseUrl = this.session.baseUrl();
             this._pinnedSession = undefined;
             if (this.isActiveECL) {
-                const eclConfig = vscode.workspace.getConfiguration("ecl");
+                const eclConfig = vscode.workspace.getConfiguration("ecl", null);
                 const pinnedLaunchConfiguration = eclConfig.get<object>("pinnedLaunchConfigurations")[this.activePath];
                 const launchConfigName = pinnedLaunchConfiguration?.launchConfiguration;
                 if (launchConfigName) {
@@ -231,7 +231,7 @@ class SessionManager {
             }
         });
 
-        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        const eclConfig = vscode.workspace.getConfiguration("ecl", null);
         const launchConfig = eclConfig.get<string>("launchConfiguration");
         const targetCluster = eclConfig.get<object>("targetCluster")[launchConfig];
         this.switchTo(launchConfig, targetCluster);
@@ -266,7 +266,7 @@ class SessionManager {
     private get pinnedSession() {
         const activeUri = this.activePath;
         if (activeUri) {
-            const eclConfig = vscode.workspace.getConfiguration("ecl");
+            const eclConfig = vscode.workspace.getConfiguration("ecl", null);
             const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
             return pinnedLaunchConfigurations[activeUri];
         }
@@ -338,7 +338,7 @@ class SessionManager {
 
     async submit(context: vscode.ExtensionContext, doc: vscode.TextDocument, mode: LaunchMode = "submit") {
         if (this.session) {
-            const eclConfig = vscode.workspace.getConfiguration("ecl");
+            const eclConfig = vscode.workspace.getConfiguration("ecl", null);
             if (eclConfig.get("saveOnSubmit", false)) {
                 await doc.save();
             }
@@ -359,7 +359,7 @@ class SessionManager {
 
     protected _monitor = {};
     monitorConnection() {
-        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        const eclConfig = vscode.workspace.getConfiguration("ecl", null);
         const pingInterval = eclConfig.get("pingInterval", 5);
         for (const key in this._monitor) {
             clearInterval(this._monitor[key]);
@@ -392,7 +392,7 @@ class SessionManager {
     }
 
     updateSettings() {
-        const eclConfig = vscode.workspace.getConfiguration("ecl");
+        const eclConfig = vscode.workspace.getConfiguration("ecl", null);
         if (this._pinnedSession) {
             const activeUri = this.activePath;
             if (activeUri) {
@@ -455,7 +455,7 @@ class SessionManager {
         let isPinned = false;
         const activeUri: string = vscode.window.activeTextEditor?.document?.uri.toString(true) || "";
         if (activeUri) {
-            const eclConfig = vscode.workspace.getConfiguration("ecl");
+            const eclConfig = vscode.workspace.getConfiguration("ecl", null);
             isPinned = false;
             const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
             isPinned = !!pinnedLaunchConfigurations[activeUri];

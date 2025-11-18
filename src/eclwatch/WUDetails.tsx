@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Pivot, PivotItem, IPivotStyles, Spinner, MessageBar, MessageBarType, IStyleFunctionOrObject, IPivotStyleProps, Stack } from "@fluentui/react";
-import { Workunit, type WsWorkunits, type Result, type IOptions } from "@hpcc-js/comms/dist/browser/index.js";
+import { Workunit, type WsWorkunits, type Result, type IOptions } from "@hpcc-js/comms";
 import { WUIssues, WUResult } from "./WUResult";
 import { HolyGrail } from "./HolyGrail";
 
