@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.33.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.32.1...ecl-v2.33.0) (2025-11-20)
+
+
+### Features
+
+* reworked credential management ([#473](https://github.com/hpcc-systems/vscode-ecl/issues/473)) ([17db48e](https://github.com/hpcc-systems/vscode-ecl/commit/17db48e4f0c66d064b0250b26ca5444c924a905e))
+
 ## [2.32.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.32.0...ecl-v2.32.1) (2025-09-25)
 
 
