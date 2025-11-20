@@ -204,6 +204,280 @@
             "pattern"
           ]
         }
+      },
+      {
+        "name": "ecl-extension_getLogicalFileInfo",
+        "tags": [
+          "logical files",
+          "metadata",
+          "information",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getLogicalFileInfo",
+        "displayName": "Get Logical File Info",
+        "modelDescription": "Get detailed metadata about a specific logical file including size, record count, record structure/ECL definition, cluster info, modification date, file parts, and more.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(file-code)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "logicalFileName": {
+              "type": "string",
+              "description": "The name of the logical file to retrieve information for"
+            }
+          },
+          "required": [
+            "logicalFileName"
+          ]
+        }
+      },
+      {
+        "name": "ecl-extension_findWorkunits",
+        "tags": [
+          "workunits",
+          "wus",
+          "search",
+          "query",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "findWorkunits",
+        "displayName": "Find Workunits (wus)",
+        "modelDescription": "Search for workunits on the active HPCC Platform session. Can filter by cluster, owner, state, WUID pattern, limit the number of results, and choose the sort column and order.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(search)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "number",
+              "description": "Maximum number of workunits to return (default: 20)"
+            },
+            "cluster": {
+              "type": "string",
+              "description": "Filter by cluster name"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Filter by owner/username"
+            },
+            "state": {
+              "type": "string",
+              "description": "Filter by workunit state (e.g., completed, failed, running, blocked, etc.)"
+            },
+            "wuidPattern": {
+              "type": "string",
+              "description": "Search pattern for workunit ID (WUID)"
+            },
+            "sortOrder": {
+              "type": "string",
+              "description": "Sort results by a specific field (wuid, owner, cluster, state, jobname)"
+            },
+            "descending": {
+              "type": "boolean",
+              "description": "Convenience flag to request descending order (overrides sortOrder when true)."
+            }
+          }
+        }
+      },
+      {
+        "name": "ecl-extension_getWorkunitDetails",
+        "tags": [
+          "workunit",
+          "details",
+          "info",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getWorkunitDetails",
+        "displayName": "Get Workunit Details",
+        "modelDescription": "Fetch detailed information about a specific workunit including its state, results, exceptions, cluster time, and other metadata. Requires a WUID (Workunit ID).",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(info)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wuid": {
+              "type": "string",
+              "description": "The Workunit ID (WUID) to fetch details for"
+            }
+          },
+          "required": [
+            "wuid"
+          ]
+        }
+      },
+      {
+        "name": "ecl-extension_getWorkunitResults",
+        "tags": [
+          "workunit",
+          "results",
+          "data",
+          "rows",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getWorkunitResults",
+        "displayName": "Get Workunit Results",
+        "modelDescription": "Fetch actual result data (rows) from a specific workunit result. Returns the data rows with column information. Can specify start row and count to paginate through large result sets.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(table)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wuid": {
+              "type": "string",
+              "description": "The Workunit ID (WUID)"
+            },
+            "resultName": {
+              "type": "string",
+              "description": "The result name or sequence number to fetch data from"
+            },
+            "start": {
+              "type": "number",
+              "description": "Starting row number (0-based, default: 0)"
+            },
+            "count": {
+              "type": "number",
+              "description": "Number of rows to fetch (default: 100, max: 1000)"
+            }
+          },
+          "required": [
+            "wuid",
+            "resultName"
+          ]
+        }
+      },
+      {
+        "name": "ecl-extension_getTargetClusters",
+        "tags": [
+          "clusters",
+          "targets",
+          "topology",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getTargetClusters",
+        "displayName": "Get Target Clusters",
+        "modelDescription": "List all available target clusters (hthor, thor, roxie) on the active HPCC Platform session. Shows cluster names, types, and queue information.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(server-process)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "ecl-extension_submitECL",
+        "tags": [
+          "submit",
+          "execute",
+          "run",
+          "workunit",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "submitECL",
+        "displayName": "Submit ECL",
+        "modelDescription": "Submit ECL code for execution on the HPCC Platform. Creates a workunit, submits it to the specified cluster, and waits for completion. Returns workunit details, state, any exceptions, and result metadata.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(play)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ecl": {
+              "type": "string",
+              "description": "The ECL code to submit for execution"
+            },
+            "targetCluster": {
+              "type": "string",
+              "description": "Optional target cluster name (defaults to configured cluster if not specified)"
+            },
+            "jobName": {
+              "type": "string",
+              "description": "Optional job name for the workunit"
+            }
+          },
+          "required": [
+            "ecl"
+          ]
+        }
+      },
+      {
+        "name": "ecl-extension_getWorkunitDiagnostics",
+        "tags": [
+          "workunit",
+          "diagnostics",
+          "errors",
+          "costs",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getWorkunitDiagnostics",
+        "displayName": "Get Workunit Diagnostics",
+        "modelDescription": "Retrieve error and warning counts plus compile/execute/file access cost estimates for a specific workunit.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(warning)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wuid": {
+              "type": "string",
+              "description": "The Workunit ID (WUID) to inspect"
+            }
+          },
+          "required": [
+            "wuid"
+          ]
+        }
+      },
+      {
+        "name": "ecl-extension_getWorkunitECL",
+        "tags": [
+          "workunit",
+          "ecl",
+          "source",
+          "code",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getWorkunitECL",
+        "displayName": "Get Workunit ECL",
+        "modelDescription": "Retrieve the ECL source code from a specific workunit. Returns the workunit ID, job name, and the full ECL text that was submitted.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(code)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wuid": {
+              "type": "string",
+              "description": "The Workunit ID (WUID) to fetch ECL source code from"
+            }
+          },
+          "required": [
+            "wuid"
+          ]
+        }
+      },
+      {
+        "name": "ecl-extension_getWorkunitTimings",
+        "tags": [
+          "workunit",
+          "timings",
+          "performance",
+          "metrics",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getWorkunitTimings",
+        "displayName": "Get Workunit Timings",
+        "modelDescription": "Retrieve performance and timing metrics from a workunit. Returns total cluster time, Thor time, scheduling info, and execution duration details.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(dashboard)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wuid": {
+              "type": "string",
+              "description": "The Workunit ID (WUID) to fetch timing metrics from"
+            }
+          },
+          "required": [
+            "wuid"
+          ]
+        }
       }
     ],
     "languages": [
