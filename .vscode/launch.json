@@ -17,6 +17,8 @@
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--disable-extensions",
+                "--enable-extension",
+                "GordonSmith.observable-js",
                 "--extensionDevelopmentPath=${workspaceRoot}",
                 "${workspaceRoot}/ecl-sample"
             ],

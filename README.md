@@ -159,7 +159,28 @@ _Version 2.x introduces a new streamlined submission process. The "old" Run/Debu
 
 ## ECL
 
-\n+## AI / Chat Integration
+## Secure Credential Storage
+
+**Important:** As of version 2.33.0, the extension now uses VS Code's secure storage for HPCC Platform credentials instead of storing passwords in plaintext in your launch configuration files.
+
+### What This Means for You
+
+- **Your passwords are now encrypted** using your operating system's native credential manager (Windows Credential Manager, macOS Keychain, or Linux Secret Service)
+- **No more plaintext passwords** in workspace files that could accidentally be committed to version control
+- **Automatic migration**: Existing passwords are automatically moved to secure storage on first use
+- **Stay logged in** across VS Code sessions without re-entering credentials
+
+### What You Need to Do
+
+**Nothing!** The migration happens automatically. When you connect to an HPCC Platform:
+
+1. If a password exists in your launch configuration, it will be securely stored and removed from the file
+2. For new connections, you'll be prompted for credentials which will be securely saved
+3. Your credentials persist across VS Code restarts
+
+You can safely remove any `"password"` fields from your `launch.json` files if you prefer.
+
+## AI / Chat Integration
 
 The extension contributes experimental Language Model (AI) tools and a chat participant:
 
@@ -342,9 +363,6 @@ The following Visual Studio Code settings are available for the ECL extension. T
 
   // Save file prior to submission
   "ecl.saveOnSubmit": false
-
-  // Ping interval (secs, -1 to disable)
-  "ecl.pingInterval": 5
 
   // Preferred version of ECL Watch (default v9).
   "ecl.preferredECLWatch": v9 | v5

@@ -33,7 +33,7 @@ export interface ProxySendMessage extends Message {
     id: number;
     canAbort: boolean;
     params: {
-        opts: any;
+        opts: IOptions;
         action: any;
         request: any;
         responseType: any;

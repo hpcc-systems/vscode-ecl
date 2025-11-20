@@ -4,13 +4,6 @@ import { locateAllClientTools as commsLocateAllClientTools } from "@hpcc-js/comm
 export type LaunchProtocol = "http" | "https";
 export type LaunchMode = "submit" | "submitNoArchive" | "compile" | "publish" | "debug";
 
-export enum LaunchConfigState {
-    Unknown,
-    Unreachable,
-    Credentials,
-    Ok
-}
-
 // This interface should always match the schema found in `package.json`.
 export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
     //  Implicit

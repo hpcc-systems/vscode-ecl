@@ -86,7 +86,7 @@ export class Controller {
         return {
             baseUrl: `${config.protocol}://${config.serverAddress}:${config.port}`,
             userID: config.user,
-            password: config.password,
+            password: "", // Password now managed by secure storage
             rejectUnauthorized: config.rejectUnauthorized,
             timeoutSecs: config.timeoutSecs
         };

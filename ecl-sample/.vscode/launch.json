@@ -15,8 +15,20 @@
             "rejectUnauthorized": true,
             "resultLimit": 100,
             "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
+            "user": "gordon"
+        },
+        {
+            "name": "localhost2",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "http",
+            "serverAddress": "localhost",
+            "port": 8010,
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "gordon2"
         },
         {
             "name": "play",
@@ -29,8 +41,7 @@
             "rejectUnauthorized": false,
             "resultLimit": 100,
             "timeoutSecs": 60,
-            "user": "vscode_user",
-            "password": ""
+            "user": "vscode_user"
         },
         {
             "name": "localhost (https)",

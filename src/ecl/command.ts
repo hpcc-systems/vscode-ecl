@@ -12,6 +12,7 @@ import localize from "../util/localize";
 import { createDirectory, exists, writeFile } from "../util/fs";
 import { ECLR_EN_US, matchTopics, SLR_EN_US } from "./docs";
 import { SaveData } from "./saveData";
+import { credentialManager } from "../util/credentialManager";
 
 const IMPORT_MARKER = "//Import:";
 const SKIP = localize("Skip");
@@ -45,6 +46,7 @@ export class ECLCommands {
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.importModFile", this.importModFile, this));
         ctx.subscriptions.push(vscode.commands.registerCommand("ecl.copyAsEclID", this.copyAsEclID, this));
+        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.clearStoredPasswords", this.clearStoredPasswords, this));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {
@@ -329,6 +331,24 @@ export class ECLCommands {
         });
         if (ids.length) {
             vscode.env.clipboard.writeText(ids.join(os.EOL));
+        }
+    }
+
+    async clearStoredPasswords() {
+        const confirm = await vscode.window.showWarningMessage(
+            localize("This will clear all stored HPCC Platform passwords. You will need to re-enter your credentials on the next connection. Are you sure?"),
+            { modal: true },
+            localize("Clear All Passwords"),
+            localize("Cancel")
+        );
+
+        if (confirm === localize("Clear All Passwords")) {
+            try {
+                await credentialManager.deleteAllCredentials();
+                vscode.window.showInformationMessage(localize("All stored passwords have been cleared."));
+            } catch (error: any) {
+                vscode.window.showErrorMessage(localize("Failed to clear stored passwords: ") + error.message);
+            }
         }
     }
 }

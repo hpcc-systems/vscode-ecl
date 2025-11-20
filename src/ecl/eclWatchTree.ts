@@ -278,6 +278,8 @@ export class ECLWatchTree extends Tree {
         }).catch(e => {
             this._treeView.title = sessionManager.session.id;
             return [new ECLErrorNode(this, e)];
+        }).finally(() => {
+            sessionManager.refreshStatusBar();
         });
     }
 }
