@@ -1,21 +1,23 @@
 import * as vscode from "vscode";
-import { FindLogicalFilesTool } from "./findLogicalFiles";
-import { FindWorkunitsTool } from "./findWorkunits";
-import { GetLogicalFileInfoTool } from "./getLogicalFileInfo";
-import { GetTargetClustersTool } from "./getTargetClusters";
-import { GetWorkunitDetailsTool } from "./getWorkunitDetails";
-import { GetWorkunitDiagnosticsTool } from "./getWorkunitDiagnostics";
-import { GetWorkunitECLTool } from "./getWorkunitECL";
-import { GetWorkunitResultsTool } from "./getWorkunitResults";
-import { GetWorkunitTimingsTool } from "./getWorkunitTimings";
-import { SubmitECLTool } from "./submitECL";
-import { SyntaxCheckTool } from "./syntaxCheck";
+import { ECLDocsTool } from "./tools/eclDocs";
+import { FindLogicalFilesTool } from "./tools/findLogicalFiles";
+import { FindWorkunitsTool } from "./tools/findWorkunits";
+import { GetLogicalFileInfoTool } from "./tools/getLogicalFileInfo";
+import { GetTargetClustersTool } from "./tools/getTargetClusters";
+import { GetWorkunitDetailsTool } from "./tools/getWorkunitDetails";
+import { GetWorkunitDiagnosticsTool } from "./tools/getWorkunitDiagnostics";
+import { GetWorkunitECLTool } from "./tools/getWorkunitECL";
+import { GetWorkunitResultsTool } from "./tools/getWorkunitResults";
+import { GetWorkunitTimingsTool } from "./tools/getWorkunitTimings";
+import { SubmitECLTool } from "./tools/submitECL";
+import { SyntaxCheckTool } from "./tools/syntaxCheck";
 
 let eclLMTools: ECLLMTools;
 
 export class ECLLMTools {
 
     protected constructor(ctx: vscode.ExtensionContext) {
+        ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension_eclDocs", new ECLDocsTool(ctx)));
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension_findWorkunits", new FindWorkunitsTool()));
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension_getWorkunitDetails", new GetWorkunitDetailsTool()));
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension_syntaxCheck", new SyntaxCheckTool()));

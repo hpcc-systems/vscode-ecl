@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { WsWorkunits, Workunit, ClientTools } from "@hpcc-js/comms";
+import { WsWorkunits, Workunit, ClientTools, type IOptions } from "@hpcc-js/comms";
 import { scopedLogger } from "@hpcc-js/util";
 import { launchConfigurations, LaunchConfig, LaunchRequestArguments, espUrl, wuDetailsUrl, wuResultUrl, CheckResponse, launchConfiguration, IExecFile } from "./launchConfig";
 import { LaunchConfigState, credentialManager, Credentials } from "../util/credentialManager";
@@ -114,6 +114,18 @@ class Session {
 
     bundleUninstall(name: string): Promise<IExecFile> {
         return this._launchConfig.bundleUninstall(name);
+    }
+
+    async options(): Promise<IOptions> {
+        const credentials = await this.getStoredCredentials();
+
+        return {
+            baseUrl: credentials.baseUrl,
+            userID: credentials.user,
+            password: credentials.password,
+            rejectUnauthorized: this.launchRequestArgs?.rejectUnauthorized ?? true,
+            timeoutSecs: this.launchRequestArgs?.timeoutSecs ?? 60
+        };
     }
 
     async getStoredCredentials(): Promise<Credentials | undefined> {

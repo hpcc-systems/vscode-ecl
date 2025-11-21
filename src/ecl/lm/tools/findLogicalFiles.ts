@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { isPlatformConnected } from "../../hpccplatform/session";
-import { reporter } from "../../telemetry";
-import localize from "../../util/localize";
-import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "./utils";
+import { isPlatformConnected } from "../../../hpccplatform/session";
+import { reporter } from "../../../telemetry";
+import localize from "../../../util/localize";
+import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "../utils";
 
 export interface IFindLogicalFilesParameters {
     pattern: string;

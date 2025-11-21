@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { LogicalFile } from "@hpcc-js/comms";
-import { isPlatformConnected } from "../../hpccplatform/session";
-import { reporter } from "../../telemetry";
-import localize from "../../util/localize";
-import { createServiceOptions, logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "./utils";
+import { isPlatformConnected } from "../../../hpccplatform/session";
+import { reporter } from "../../../telemetry";
+import localize from "../../../util/localize";
+import { createServiceOptions, logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "../utils";
 
 export interface IGetLogicalFileInfoParameters {
     /**
@@ -25,7 +25,7 @@ export class GetLogicalFileInfoTool implements vscode.LanguageModelTool<IGetLogi
         logToolEvent("getLogicalFileInfo", "invoke start", { logicalFileName });
 
         const session = requireConnectedSession();
-        const opts = createServiceOptions(session);
+        const opts = await createServiceOptions(session);
         const number = new Intl.NumberFormat();
 
         try {

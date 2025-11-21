@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { WsTopology } from "@hpcc-js/comms";
-import { isPlatformConnected } from "../../hpccplatform/session";
-import { reporter } from "../../telemetry";
-import localize from "../../util/localize";
-import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "./utils";
+import { isPlatformConnected } from "../../../hpccplatform/session";
+import { reporter } from "../../../telemetry";
+import localize from "../../../util/localize";
+import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "../utils";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IGetTargetClustersParameters {

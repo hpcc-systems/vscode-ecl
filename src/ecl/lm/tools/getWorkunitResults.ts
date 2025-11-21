@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { Result, Workunit, type XSDXMLNode } from "@hpcc-js/comms";
-import { isPlatformConnected } from "../../hpccplatform/session";
-import { reporter } from "../../telemetry";
-import localize from "../../util/localize";
-import { createServiceOptions, logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "./utils";
+import { isPlatformConnected } from "../../../hpccplatform/session";
+import { reporter } from "../../../telemetry";
+import localize from "../../../util/localize";
+import { createServiceOptions, logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "../utils";
 
 export interface IGetWorkunitResultsParameters {
     /**
@@ -41,7 +41,7 @@ export class GetWorkunitResultsTool implements vscode.LanguageModelTool<IGetWork
         });
 
         const session = requireConnectedSession();
-        const opts = createServiceOptions(session);
+        const opts = await createServiceOptions(session);
 
         try {
             // Attach to the result

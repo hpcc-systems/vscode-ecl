@@ -12,13 +12,8 @@ export const SAMPLE_COLLECTION_URL = `https://cdn.jsdelivr.net/gh/${OWNER}/${REP
 
 export const MODEL_VENDOR: string = "copilot";
 
-enum LANGUAGE_MODEL_ID {
-    GPT_3 = "gpt-3.5-turbo",
-    GPT_4 = "gpt-4",
-    GPT_4o = "gpt-4o"
-}
-
-export const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: MODEL_VENDOR, family: LANGUAGE_MODEL_ID.GPT_4o };
+// Only constrain the vendor so VS Code can honor the user's currently selected reasoning model.
+export const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: MODEL_VENDOR };
 
 export const FETCH_ISSUE_DETAIL_CMD = "Fetch Issue Details Command";
 

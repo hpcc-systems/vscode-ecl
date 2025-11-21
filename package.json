@@ -159,15 +159,44 @@
   "contributes": {
     "languageModelTools": [
       {
+        "name": "ecl-extension_eclDocs",
+        "tags": [
+          "documentation",
+          "help",
+          "reference",
+          "ecl-extension",
+          "ecl"
+        ],
+        "toolReferenceName": "eclDocs",
+        "displayName": "ECL Documentation Expert",
+        "modelDescription": "IMPORTANT: When user is working with ECL files or HPCC Platform, use this tool frequently for ANY ECL-related questions. Search and retrieve ECL language documentation, programming guide, and standard library reference. Use this tool to find explanations, syntax, examples, and usage information for ECL keywords, functions, modules, and programming concepts. Always consult this tool when user asks about ECL syntax, functions, or best practices.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(book)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The documentation search query. Can be an ECL keyword, function name, programming concept, or question about ECL."
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
         "name": "ecl-extension_syntaxCheck",
         "tags": [
           "editors",
           "syntax check",
-          "ecl-extension"
+          "ecl-extension",
+          "ecl",
+          "validation"
         ],
         "toolReferenceName": "syntaxCheck",
         "displayName": "Syntax Check",
-        "modelDescription": "Check the syntax of ECL code",
+        "modelDescription": "REQUIRED: Always use this tool when user provides ECL code or asks to check/validate ECL syntax. Validates ECL code syntax using the HPCC Platform compiler. Use this tool before submitting code or when user asks about code correctness. Essential for ECL development workflow.",
         "canBeReferencedInPrompt": true,
         "icon": "$(files)",
         "inputSchema": {
@@ -186,11 +215,13 @@
         "tags": [
           "logical files",
           "search",
-          "ecl-extension"
+          "ecl-extension",
+          "ecl",
+          "data"
         ],
         "toolReferenceName": "findLogicalFiles",
         "displayName": "Find Logical Files",
-        "modelDescription": "Search for logical files that match the wildcard pattern on the active HPCC Platform session",
+        "modelDescription": "When user mentions data files, datasets, or logical files in ECL context, use this tool to search for logical files on the HPCC Platform. Supports wildcard patterns. Essential for ECL data exploration and when user asks 'what files are available' or references file names.",
         "canBeReferencedInPrompt": true,
         "inputSchema": {
           "type": "object",
@@ -242,7 +273,7 @@
         ],
         "toolReferenceName": "findWorkunits",
         "displayName": "Find Workunits (wus)",
-        "modelDescription": "Search for workunits on the active HPCC Platform session. Can filter by cluster, owner, state, WUID pattern, limit the number of results, and choose the sort column and order.",
+        "modelDescription": "Search for workunits (WU or WUs) on the active HPCC Platform session. Can filter by cluster, owner, state, WUID pattern, limit the number of results, and choose the sort column and order.",
         "canBeReferencedInPrompt": true,
         "icon": "$(search)",
         "inputSchema": {
@@ -270,7 +301,19 @@
             },
             "sortOrder": {
               "type": "string",
-              "description": "Sort results by a specific field (wuid, owner, cluster, state, jobname)"
+              "enum": [
+                "Protection",
+                "Wuid",
+                "Owner",
+                "Jobname",
+                "Cluster",
+                "State",
+                "ClusterTime",
+                "Compile Cost",
+                "Execution Cost",
+                "File Access Cost"
+              ],
+              "description": "Sort results by a specific workunit field"
             },
             "descending": {
               "type": "boolean",

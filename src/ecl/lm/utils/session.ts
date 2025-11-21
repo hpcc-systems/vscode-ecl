@@ -15,17 +15,9 @@ export function requireConnectedSession(): NonNullable<typeof sessionManager.ses
     return session;
 }
 
-export function createServiceOptions(session?: NonNullable<typeof sessionManager.session>) {
+export async function createServiceOptions(session?: NonNullable<typeof sessionManager.session>) {
     const activeSession = session ?? requireConnectedSession();
-    const credentials = activeSession.launchRequestArgs;
-
-    return {
-        baseUrl: activeSession.baseUrl(),
-        userID: activeSession.userID,
-        password: activeSession.password,
-        rejectUnauthorized: credentials.rejectUnauthorized ?? true,
-        timeoutSecs: credentials.timeoutSecs ?? 60
-    };
+    return activeSession.options();
 }
 
 export function throwIfCancellationRequested(token: vscode.CancellationToken): void {

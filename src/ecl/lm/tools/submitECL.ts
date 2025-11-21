@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
 import { Workunit } from "@hpcc-js/comms";
-import { isPlatformConnected, sessionManager } from "../../hpccplatform/session";
-import { reporter } from "../../telemetry";
-import localize from "../../util/localize";
+import { isPlatformConnected, sessionManager } from "../../../hpccplatform/session";
+import { reporter } from "../../../telemetry";
+import localize from "../../../util/localize";
 import * as os from "os";
-import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "./utils";
+import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "../utils";
+import { isECLContext } from "../utils/eclContext";
 
 export interface ISubmitECLParameters {
     /**
@@ -15,6 +16,10 @@ export interface ISubmitECLParameters {
      * Optional job name for the workunit
      */
     jobName?: string;
+    /**
+     * Optional target cluster name
+     */
+    targetCluster?: string;
 }
 
 export class SubmitECLTool implements vscode.LanguageModelTool<ISubmitECLParameters> {

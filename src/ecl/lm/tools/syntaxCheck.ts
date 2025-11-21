@@ -1,9 +1,10 @@
 import * as vscode from "vscode";
 import * as os from "os";
-import { isPlatformConnected } from "../../hpccplatform/session";
-import { reporter } from "../../telemetry";
-import localize from "../../util/localize";
-import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "./utils";
+import { isPlatformConnected } from "../../../hpccplatform/session";
+import { reporter } from "../../../telemetry";
+import localize from "../../../util/localize";
+import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "../utils";
+import { isECLContext } from "../utils/eclContext";
 
 export interface ISyntaxCheckParameters {
     ecl: string;

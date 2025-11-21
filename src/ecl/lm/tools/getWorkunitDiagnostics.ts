@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { Workunit } from "@hpcc-js/comms";
-import { isPlatformConnected } from "../../hpccplatform/session";
-import { reporter } from "../../telemetry";
-import localize from "../../util/localize";
-import { createServiceOptions, logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "./utils";
+import { isPlatformConnected } from "../../../hpccplatform/session";
+import { reporter } from "../../../telemetry";
+import localize from "../../../util/localize";
+import { createServiceOptions, logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "../utils";
 
 export interface IGetWorkunitDiagnosticsParameters {
     /**
@@ -27,7 +27,7 @@ export class GetWorkunitDiagnosticsTool implements vscode.LanguageModelTool<IGet
         });
 
         const session = requireConnectedSession();
-        const opts = createServiceOptions(session);
+        const opts = await createServiceOptions(session);
         const number = new Intl.NumberFormat();
 
         try {

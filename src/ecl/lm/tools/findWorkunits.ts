@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { WsWorkunits } from "@hpcc-js/comms";
-import { isPlatformConnected } from "../../hpccplatform/session";
-import { reporter } from "../../telemetry";
-import localize from "../../util/localize";
-import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "./utils";
+import { isPlatformConnected } from "../../../hpccplatform/session";
+import { reporter } from "../../../telemetry";
+import localize from "../../../util/localize";
+import { logToolEvent, requireConnectedSession, throwIfCancellationRequested } from "../utils";
 
 enum SortBy {
     protection = "Protection",
@@ -65,6 +65,15 @@ export class FindWorkunitsTool implements vscode.LanguageModelTool<IFindWorkunit
             status: { field: "State", labelKey: "state" },
             jobname: { field: "Jobname", labelKey: "job name" },
             job: { field: "Jobname", labelKey: "job name" },
+            protection: { field: "Protection", labelKey: "protection status" },
+            clustertime: { field: "ClusterTime", labelKey: "cluster time" },
+            "cluster time": { field: "ClusterTime", labelKey: "cluster time" },
+            compilecost: { field: "Compile Cost", labelKey: "compile cost" },
+            "compile cost": { field: "Compile Cost", labelKey: "compile cost" },
+            executioncost: { field: "Execution Cost", labelKey: "execution cost" },
+            "execution cost": { field: "Execution Cost", labelKey: "execution cost" },
+            fileaccesscost: { field: "File Access Cost", labelKey: "file access cost" },
+            "file access cost": { field: "File Access Cost", labelKey: "file access cost" },
         };
 
         const sortByRaw = typeof params.sortOrder === "string" ? params.sortOrder.trim().toLowerCase() : undefined;
@@ -229,6 +238,15 @@ export class FindWorkunitsTool implements vscode.LanguageModelTool<IFindWorkunit
             status: "state",
             jobname: "job name",
             job: "job name",
+            protection: "protection status",
+            clustertime: "cluster time",
+            "cluster time": "cluster time",
+            compilecost: "compile cost",
+            "compile cost": "compile cost",
+            executioncost: "execution cost",
+            "execution cost": "execution cost",
+            fileaccesscost: "file access cost",
+            "file access cost": "file access cost",
         };
 
         const sortByRaw = typeof params.sortOrder === "string" ? params.sortOrder.trim().toLowerCase() : undefined;
