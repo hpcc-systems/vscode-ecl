@@ -16,3 +16,4 @@ test-results.xml
 *.log
 *.interp
 *.tokens
+ecl-sample/.vscode/launch-secure.json
