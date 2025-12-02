@@ -22,9 +22,6 @@ interface FormattedException {
 }
 
 export interface IGetWorkunitErrorsParameters {
-    /**
-     * Workunit ID (WUID) to fetch errors and warnings for
-     */
     wuid: string;
 }
 
@@ -86,7 +83,6 @@ export class GetWorkunitErrorsTool implements vscode.LanguageModelTool<IGetWorku
         const opts = await createServiceOptions(session);
 
         try {
-            // Attach to the workunit and fetch its details
             const wu = Workunit.attach(opts, wuid);
             await wu.refresh();
 
@@ -94,7 +90,6 @@ export class GetWorkunitErrorsTool implements vscode.LanguageModelTool<IGetWorku
 
             const parts: vscode.LanguageModelTextPart[] = [];
 
-            // Add workunit basic state information
             const detailsUrl = session.wuDetailsUrl(wu.Wuid);
             parts.push(new vscode.LanguageModelTextPart(localize("Errors/Warnings for Workunit {0}:", wuid)));
 
@@ -106,7 +101,6 @@ export class GetWorkunitErrorsTool implements vscode.LanguageModelTool<IGetWorku
             );
             parts.push(new vscode.LanguageModelTextPart(summary));
 
-            // Fetch and add exceptions (errors and warnings)
             const exceptions = await wu.fetchECLExceptions().catch(() => []);
             throwIfCancellationRequested(token);
 

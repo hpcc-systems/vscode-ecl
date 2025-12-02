@@ -272,6 +272,34 @@
         }
       },
       {
+        "name": "ecl-extension-getWorkunitECL",
+        "tags": [
+          "workunit",
+          "ecl",
+          "archive",
+          "source",
+          "code",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getWorkunitECL",
+        "displayName": "Get Workunit ECL / ECL Archive",
+        "modelDescription": "Retrieve the ECL archive (XML) for a specific workunit. Returns the original ECL code that was submitted to create the workunit. Requires a WUID (Workunit ID).",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(code)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wuid": {
+              "type": "string",
+              "description": "The Workunit ID (WUID) to fetch ECL source for"
+            }
+          },
+          "required": [
+            "wuid"
+          ]
+        }
+      },
+      {
         "name": "ecl-extension-syntaxCheck",
         "tags": [
           "editors",
