@@ -142,10 +142,21 @@ export class CredentialManager {
         }
 
         const storageKey = getStorageKey(`${config.protocol}://${config.serverAddress}:${config.port}`, config.user);
-        await this.storeCredentials(storageKey, config.user, config.password);
-        logger.debug(`Migrated credentials for ${config.user}@${storageKey} to secure storage`);
-        delete config.password;
-        await launchConfig.update("configurations", configurations, vscode.ConfigurationTarget.WorkspaceFolder);
+
+        try {
+            await this.storeCredentials(storageKey, config.user, config.password);
+            const storedPassword = await this.context.secrets.get(storageKey);
+            if (storedPassword !== config.password) {
+                throw new Error("Failed to verify stored password");
+            }
+
+            logger.debug(`Migrated credentials for ${config.user}@${storageKey} to secure storage`);
+            delete config.password;
+            await launchConfig.update("configurations", configurations, vscode.ConfigurationTarget.WorkspaceFolder);
+        } catch (error) {
+            logger.error(`Failed to migrate credentials for ${config.user}@${storageKey}: ${error}`);
+            throw error;
+        }
     }
 
     async migrateExistingCredentials(): Promise<void> {
