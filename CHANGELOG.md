@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.33.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.33.0...ecl-v2.33.1) (2025-12-03)
+
+
+### Bug Fixes
+
+* add error logging to pw migration ([5e1ad87](https://github.com/hpcc-systems/vscode-ecl/commit/5e1ad872a0b9e9ad81bbcfc45f73d7f566e7a680))
+
 ## [2.33.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.32.1...ecl-v2.33.0) (2025-11-20)
 
 
