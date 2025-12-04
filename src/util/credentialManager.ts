@@ -44,15 +44,14 @@ export class Credentials {
 
     static async attach(context: vscode.ExtensionContext, baseUrl: string, user: string): Promise<Credentials> {
         const storageKey = getStorageKey(baseUrl, user);
-        const cached = credentialManagerCache.get(storageKey);
-        if (cached) {
-            return cached;
+        let credentials = credentialManagerCache.get(storageKey);
+        if (!credentials) {
+            credentials = new Credentials(context, baseUrl, user);
+            credentialManagerCache.set(storageKey, credentials);
         }
-        const credentials = new Credentials(context, baseUrl, user);
-        credentialManagerCache.set(storageKey, credentials);
         try {
             const password = await context.secrets.get(storageKey);
-            credentials._password = password;
+            credentials._password = password ?? "";
         } catch (e) {
             logger.error(`Failed to get password for ${user}@${baseUrl}: ${e}`);
         }
@@ -125,67 +124,60 @@ export class CredentialManager {
         await Promise.all(allKeys.map(key => this.context.secrets.delete(key)));
     }
 
-    private async hasStoredCredentials(baseUrl: string, user: string): Promise<boolean> {
-        const storageKey = getStorageKey(baseUrl, user);
-        const password = await this.context.secrets.get(storageKey);
-        return !!password;
-    }
-
-    private async storeCredentials(baseUrl: string, user: string, password: string): Promise<void> {
-        const storageKey = getStorageKey(baseUrl, user);
-        await this.context.secrets.store(storageKey, password);
-    }
-
-    private async migrateConfigIfNeeded(config: LaunchRequestArguments, launchConfig: vscode.WorkspaceConfiguration, configurations: LaunchRequestArguments[]): Promise<void> {
+    async migrateLaunchConfigIfNeeded(config: LaunchRequestArguments): Promise<void> {
         if (!isEclConfigWithCredentials(config)) {
             return;
         }
 
-        const storageKey = getStorageKey(`${config.protocol}://${config.serverAddress}:${config.port}`, config.user);
+        const baseUrl = `${config.protocol}://${config.serverAddress}:${config.port}`;
+        const storageKey = getStorageKey(baseUrl, config.user);
 
         try {
-            await this.storeCredentials(storageKey, config.user, config.password);
+            await this.context.secrets.store(storageKey, config.password);
             const storedPassword = await this.context.secrets.get(storageKey);
             if (storedPassword !== config.password) {
                 throw new Error("Failed to verify stored password");
             }
+            logger.debug(`Migrated credentials for ${config.user}@${baseUrl} to secure storage`);
 
-            logger.debug(`Migrated credentials for ${config.user}@${storageKey} to secure storage`);
-            delete config.password;
-            await launchConfig.update("configurations", configurations, vscode.ConfigurationTarget.WorkspaceFolder);
+            credentialManagerCache.delete(storageKey);
+            const credentials = await this.getCredentials(baseUrl, config.user);
+            credentials.verified = true;
+            await this.removePasswordFromLaunchConfig(config);
         } catch (error) {
-            logger.error(`Failed to migrate credentials for ${config.user}@${storageKey}: ${error}`);
+            logger.error(`Failed to migrate credentials for ${config.user}@${baseUrl}: ${error}`);
             throw error;
         }
     }
 
-    async migrateExistingCredentials(): Promise<void> {
+    private async removePasswordFromLaunchConfig(config: LaunchRequestArguments): Promise<void> {
         const workspacefolders = vscode.workspace.workspaceFolders || [];
 
         for (const folder of workspacefolders) {
-            try {
-                const launchConfig = vscode.workspace.getConfiguration("launch", folder.uri);
-                const configurations = launchConfig.get<LaunchRequestArguments[]>("configurations") || [];
+            const launchConfig = vscode.workspace.getConfiguration("launch", folder.uri);
+            const configurations = launchConfig.get<LaunchRequestArguments[]>("configurations") || [];
 
-                await Promise.all(configurations.map(config => this.migrateConfigIfNeeded(config, launchConfig, configurations)));
-            } catch (error: unknown) {
-                logger.warning(`Failed to migrate credentials from workspace folder ${folder.name}: ${error}`);
+            const configIndex = configurations.findIndex(c =>
+                c.name === config.name && c.type === "ecl" && c.password
+            );
+
+            if (configIndex !== -1) {
+                delete configurations[configIndex].password;
+                await launchConfig.update("configurations", configurations, vscode.ConfigurationTarget.WorkspaceFolder);
+                return;
             }
         }
 
-        try {
-            const globalLaunchConfig = vscode.workspace.getConfiguration("launch", null);
-            const globalConfigurations = globalLaunchConfig.inspect("configurations");
+        const globalLaunchConfig = vscode.workspace.getConfiguration("launch", null);
+        const globalConfigurations = globalLaunchConfig.get<LaunchRequestArguments[]>("configurations") || [];
 
-            const allConfigs = [
-                ...((globalConfigurations?.globalValue as LaunchRequestArguments[]) || []),
-                ...((globalConfigurations?.workspaceValue as LaunchRequestArguments[]) || []),
-                ...((globalConfigurations?.workspaceFolderValue as LaunchRequestArguments[]) || [])
-            ];
+        const configIndex = globalConfigurations.findIndex(c =>
+            c.name === config.name && c.type === "ecl" && c.password
+        );
 
-            await Promise.all(allConfigs.map(config => this.migrateConfigIfNeeded(config, globalLaunchConfig, allConfigs)));
-        } catch (error: unknown) {
-            logger.warning(`Failed to migrate global credentials: ${error}`);
+        if (configIndex !== -1) {
+            delete globalConfigurations[configIndex].password;
+            await globalLaunchConfig.update("configurations", globalConfigurations, vscode.ConfigurationTarget.Global);
         }
     }
 }

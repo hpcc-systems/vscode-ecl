@@ -155,10 +155,6 @@ class SessionManager {
     }
 
     initialize() {
-        credentialManager.migrateExistingCredentials().catch(error => {
-            logger.warning("Failed to migrate existing credentials: " + error);
-        });
-
         this._statusBarTargetCluster = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, Number.MIN_VALUE + 1);
         this._statusBarTargetCluster.command = "hpccPlatform.switchTargetCluster";
 
@@ -244,21 +240,28 @@ class SessionManager {
         vscode.workspace.onDidChangeConfiguration(e => {
             if (e.affectsConfiguration("launch")) {
                 launchConfigurations(true);
-                const launchConfig = eclConfig.get<string>("launchConfiguration");
-                const targetCluster = eclConfig.get<object>("targetCluster")[launchConfig];
-                this.switchTo(launchConfig, targetCluster);
+                const currentConfig = launchConfiguration(this.session?.id);
+                if (currentConfig && this.session) {
+                    void this.switchTo(this.session.id, this.session.overriddenTargetCluster);
+                }
+            }
+            if (e.affectsConfiguration("ecl.launchConfiguration") || e.affectsConfiguration("ecl.targetCluster")) {
+                const currentEclConfig = vscode.workspace.getConfiguration("ecl", null);
+                const launchConfig = currentEclConfig.get<string>("launchConfiguration");
+                const targetCluster = currentEclConfig.get<object>("targetCluster")[launchConfig];
+                void this.switchTo(launchConfig, targetCluster);
             }
         });
 
         const eclConfig = vscode.workspace.getConfiguration("ecl", null);
         const launchConfig = eclConfig.get<string>("launchConfiguration");
         const targetCluster = eclConfig.get<object>("targetCluster")[launchConfig];
-        this.switchTo(launchConfig, targetCluster);
-        //  Don't load HPCC Platform tree until session is fully initialized
-        vscode.commands.executeCommand("setContext", "hpccPlatformActive", true);
-
-        this.onDidChangeSession(() => {
-            this.refreshStatusBar();
+        this.switchTo(launchConfig, targetCluster).then(() => {
+            vscode.commands.executeCommand("setContext", "hpccPlatformActive", true);
+        }).finally(() => {
+            this.onDidChangeSession(() => {
+                this.refreshStatusBar();
+            });
         });
     }
 
@@ -370,7 +373,16 @@ class SessionManager {
         }
     }
 
-    switchTo(id?: string, targetCluster?: string) {
+    async switchTo(id?: string, targetCluster?: string) {
+        const rawConfig = launchConfiguration(id);
+        if (rawConfig) {
+            try {
+                await credentialManager.migrateLaunchConfigIfNeeded(rawConfig);
+            } catch (error) {
+                logger.error(`Failed to migrate credentials during switchTo: ${error}`);
+            }
+        }
+
         if (!this.session || this.session.id !== id) {
             const configs = launchConfigurations().map(lc => lc.name);
             const launchID = configs.indexOf(id) >= 0 ? id : configs[0];
@@ -382,8 +394,19 @@ class SessionManager {
         if (this.session.overriddenTargetCluster !== targetCluster) {
             this.session = new Session(this.session.id, targetCluster);
         }
+
         this.updateSettings();
-        this.refreshStatusBar();
+
+        if (this.session) {
+            const storedCreds = await this.session.getStoredCredentials();
+            if (storedCreds?.password) {
+                await this.refreshStatusBar(LaunchConfigState.Ok);
+            } else {
+                await this.refreshStatusBar(LaunchConfigState.CredentialsRequired);
+            }
+        } else {
+            await this.refreshStatusBar(LaunchConfigState.Unknown);
+        }
     }
 
     updateSettings() {
@@ -392,14 +415,25 @@ class SessionManager {
             const activeUri = this.activePath;
             if (activeUri) {
                 const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
-                pinnedLaunchConfigurations[activeUri] = { launchConfiguration: this.session.id, targetCluster: this.session.overriddenTargetCluster };
-                eclConfig.update("pinnedLaunchConfigurations", pinnedLaunchConfigurations);
+                const currentPinned = pinnedLaunchConfigurations[activeUri];
+                if (currentPinned?.launchConfiguration !== this.session.id ||
+                    currentPinned?.targetCluster !== this.session.overriddenTargetCluster) {
+                    pinnedLaunchConfigurations[activeUri] = { launchConfiguration: this.session.id, targetCluster: this.session.overriddenTargetCluster };
+                    eclConfig.update("pinnedLaunchConfigurations", pinnedLaunchConfigurations);
+                }
             }
         } else {
-            eclConfig.update("launchConfiguration", this.session.id);
+            const currentLaunchConfig = eclConfig.get<string>("launchConfiguration");
             const targetClusters = eclConfig.get<object>("targetCluster");
-            targetClusters[this.session.id] = this.session.overriddenTargetCluster;
-            eclConfig.update("targetCluster", targetClusters);
+            const currentTargetCluster = targetClusters[this.session.id];
+
+            if (currentLaunchConfig !== this.session.id) {
+                eclConfig.update("launchConfiguration", this.session.id);
+            }
+            if (currentTargetCluster !== this.session.overriddenTargetCluster) {
+                targetClusters[this.session.id] = this.session.overriddenTargetCluster;
+                eclConfig.update("targetCluster", targetClusters);
+            }
         }
     }
 
@@ -417,7 +451,7 @@ class SessionManager {
         input.onDidChangeSelection(async items => {
             const item = items[0];
             if (item) {
-                this.switchTo(item.id);
+                await this.switchTo(item.id);
             }
             input.hide();
         });
@@ -437,7 +471,7 @@ class SessionManager {
                 input.onDidChangeSelection(async items => {
                     const item = items[0];
                     if (item) {
-                        this.switchTo(this.session.id, item.label === localize("Auto Detect") ? undefined : item.label);
+                        await this.switchTo(this.session.id, item.label === localize("Auto Detect") ? undefined : item.label);
                     }
                     input.hide();
                 });
@@ -455,8 +489,11 @@ class SessionManager {
         try {
             await this.session.checkCredentials();
             vscode.window.showInformationMessage(localize("Successfully logged in to HPCC Platform"));
+            vscode.commands.executeCommand("hpccPlatform.userRefresh");
+            await this.refreshStatusBar(LaunchConfigState.Ok);
         } catch (error) {
             vscode.window.showErrorMessage(localize("Login failed") + `: ${error instanceof Error ? error.message : String(error)}`);
+            await this.refreshStatusBar(LaunchConfigState.CredentialsRequired);
         }
     }
 
@@ -468,7 +505,7 @@ class SessionManager {
 
         try {
             await this.session.deleteCredentials();
-            this.switchTo();
+            await this.switchTo();
 
             vscode.window.showInformationMessage(localize("Successfully logged out from HPCC Platform"));
         } catch (error) {
