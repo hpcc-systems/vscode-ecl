@@ -7,7 +7,7 @@ export interface PromptProps extends BasePromptElementProps {
 }
 
 export async function getChatResponse<T extends PromptElementCtor<P, any>, P extends PromptProps>(prompt: T, promptProps: P, token: vscode.CancellationToken): Promise<Thenable<vscode.LanguageModelChatResponse>> {
-    const models = await vscode.lm.selectChatModels({ family: MODEL_SELECTOR.family, vendor: MODEL_SELECTOR.vendor });
+    const models = await vscode.lm.selectChatModels({ vendor: MODEL_SELECTOR.vendor });
     if (models.length) {
         const { messages } = await renderPrompt(prompt, promptProps, { modelMaxPromptTokens: models[0].maxInputTokens }, models[0] as any);
         return await models[0].sendRequest(messages, {}, token);

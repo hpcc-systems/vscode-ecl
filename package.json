@@ -159,7 +159,7 @@
   "contributes": {
     "languageModelTools": [
       {
-        "name": "ecl-extension_syntaxCheck",
+        "name": "ecl-extension-syntaxCheck",
         "tags": [
           "editors",
           "syntax check",
@@ -182,7 +182,7 @@
         }
       },
       {
-        "name": "ecl-extension_findLogicalFiles",
+        "name": "ecl-extension-findLogicalFiles",
         "tags": [
           "logical files",
           "search",
