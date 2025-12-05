@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { FindLogicalFilesTool } from "./findLogicalFiles";
-import { SyntaxCheckTool } from "./syntaxCheck";
+import { FindLogicalFilesTool } from "./tools/findLogicalFiles";
+import { SyntaxCheckTool } from "./tools/syntaxCheck";
 
 let eclLMTools: ECLLMTools;
 
