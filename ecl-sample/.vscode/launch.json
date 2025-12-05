@@ -15,7 +15,8 @@
             "rejectUnauthorized": true,
             "resultLimit": 100,
             "timeoutSecs": 60,
-            "user": "gordon"
+            "user": "gordon",
+            "utf8-test-pw": "Pąsswörd123!🔒"
         },
         {
             "name": "localhost2",
@@ -28,7 +29,22 @@
             "rejectUnauthorized": true,
             "resultLimit": 100,
             "timeoutSecs": 60,
-            "user": "gordon2"
+            "user": "gordon2",
+            "test-pw": "p@w*"
+        },
+        {
+            "name": "localhost3",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "http",
+            "serverAddress": "localhost",
+            "port": 8010,
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "gordon3",
+            "test-pw": "invalid"
         },
         {
             "name": "play",
