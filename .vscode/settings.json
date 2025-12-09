@@ -11,10 +11,11 @@
 	},
 	"editor.insertSpaces": true,
 	"ecl.debugLogging": true,
-	"ecl.launchConfiguration": "not found",
+	"ecl.launchConfiguration": "no selection",
 	"ecl.targetCluster": {
 		"localhost": "thor",
-		"not found": "thor"
+		"not found": "thor",
+		"no selection": "thor"
 	},
 	"svg.preview.background": "dark-transparent"
 }
