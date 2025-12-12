@@ -82,7 +82,7 @@
     "Homepage": "主页",
     "HPCC Platform": "高性能计算平台",
     "HPCC Platform Launch Configuration": "HPCC平台的启动配置",
-    "HPCC Platform TargetCluster": "HPCC平台的目标群",
+    "HPCC Platform Target Cluster": "HPCC平台的目标群",
     "Import '.mod' file": "导入 '.mod'文件",
     "Import ECL '.mod' file": "导入ECL '.mod'文件",
     "Insert logical file record definition": "插入logical file record定义",
