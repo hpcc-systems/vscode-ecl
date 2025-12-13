@@ -11,8 +11,7 @@ import { reporter } from "../telemetry";
 import { formatWorkunitURL, formatResultURL } from "../ecl/util";
 import { LaunchConfigState, credentialManager, Credentials } from "../util/credentialManager";
 
-const NO_SELECTION = "no selection";
-const NOT_FOUND = "not found";
+export const NO_SELECTION = "no selection";
 const MAX_LOGIN_ATTEMPTS = 3;
 
 export interface IExecFile {
@@ -77,26 +76,7 @@ export function launchConfigurations(refresh = false): LaunchRequestArguments[] 
             gatherServers();
         }
     }
-    const retVal = Object.values(g_launchConfigurations);
-    if (retVal.length === 0) {
-        vscode.window.showErrorMessage(localize("No ECL Launch configurations."), localize("Create ECL Launch")).then(response => {
-            vscode.commands.executeCommand("workbench.action.debug.configure");
-        });
-        const notFound: LaunchRequestArguments = {
-            name: NOT_FOUND,
-            type: "ecl",
-
-            //  Required
-            protocol: "http",
-            serverAddress: "localhost",
-            port: 8010,
-            path: "",
-            targetCluster: "unknown"
-        };
-        g_launchConfigurations[NOT_FOUND] = notFound;
-        retVal.push(notFound);
-    }
-    return retVal;
+    return Object.values(g_launchConfigurations);
 }
 
 export function launchConfiguration(name: string): LaunchRequestArguments | undefined {
@@ -380,11 +360,7 @@ export class LaunchConfig implements LaunchRequestArguments {
     }
 
     protected async _checkCredentials(): Promise<Credentials> {
-        if (this.name === NOT_FOUND) {
-            vscode.commands.executeCommand("setContext", "ecl.connected", false);
-            throw new Error(localize("No ECL Launch configurations."));
-        }
-        if (this.name === NO_SELECTION) {
+        if (!this.name || this.name === NO_SELECTION) {
             vscode.commands.executeCommand("setContext", "ecl.connected", false);
             throw new Error(localize("No Selected ECL Launch configuration."));
         }

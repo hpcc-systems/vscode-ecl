@@ -463,6 +463,15 @@ class SessionManager {
             };
         });
 
+        // Set current launch config as active item
+        const currentId = this.session?.id;
+        if (currentId) {
+            const currentItem = input.items.find(item => item.id === currentId);
+            if (currentItem) {
+                input.activeItems = [currentItem];
+            }
+        }
+
         input.onDidChangeSelection(async items => {
             const item = items[0];
             if (item) {
@@ -482,6 +491,18 @@ class SessionManager {
                         label: tc.Name
                     };
                 })];
+
+                // Set current target cluster as active item
+                const currentCluster = this.session.overriddenTargetCluster || this.session.targetCluster;
+                if (currentCluster) {
+                    const currentItem = input.items.find(item => item.label === currentCluster);
+                    if (currentItem) {
+                        input.activeItems = [currentItem];
+                    }
+                } else {
+                    // If no override, select Auto Detect
+                    input.activeItems = [input.items[0]];
+                }
 
                 input.onDidChangeSelection(async items => {
                     const item = items[0];
@@ -572,7 +593,7 @@ class SessionManager {
 
     refreshTCStatusBar() {
         this._statusBarTargetCluster.text = this.session.targetCluster;
-        this._statusBarTargetCluster.tooltip = localize("HPCC Platform TargetCluster");
+        this._statusBarTargetCluster.tooltip = localize("HPCC Platform Target Cluster");
         if (this.isActiveECL) {
             this._statusBarTargetCluster.show();
         } else {

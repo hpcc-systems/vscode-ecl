@@ -632,6 +632,7 @@
         "category": "ECL",
         "title": "%Switch HPCC Platform%",
         "description": "%Switch to different HPCC Platform instance%",
+        "tooltip": "%Switch HPCC Platform (shows current)%",
         "icon": {
           "light": "resources/light/server-process.svg",
           "dark": "resources/dark/server-process.svg"
@@ -656,6 +657,8 @@
         "category": "ECL",
         "title": "%Switch Target Cluster%",
         "description": "%Switch Target Cluster%",
+        "tooltip": "%Switch Target Cluster (shows current)%",
+        "icon": "$(server-environment)",
         "enablement": "ecl.connected"
       },
       {
@@ -964,27 +967,27 @@
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.submit",
-          "group": "navigation@900"
+          "group": "ecl@1"
         },
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.submitNoArchive",
-          "group": "navigation@900"
+          "group": "ecl@2"
         },
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.compile",
-          "group": "navigation@910"
+          "group": "ecl@3"
         },
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.checkSyntax",
-          "group": "navigation@920"
+          "group": "ecl@4"
         },
         {
           "when": "resourceLangId == ecl && resourceExtname == .ecl",
           "command": "ecl.insertRecordDef",
-          "group": "navigation@930"
+          "group": "ecl@5"
         },
         {
           "when": "resourceLangId == kel && resourceExtname == .kel",
@@ -1020,18 +1023,28 @@
         },
         {
           "when": "resourceLangId == ecl",
-          "command": "ecl.checkSyntax",
+          "command": "ecl.submit",
           "group": "navigation@900"
         },
         {
           "when": "resourceLangId == ecl",
-          "command": "ecl.submit",
+          "command": "ecl.compile",
           "group": "navigation@910"
         },
         {
           "when": "resourceLangId == ecl",
-          "command": "ecl.compile",
+          "command": "ecl.checkSyntax",
           "group": "navigation@920"
+        },
+        {
+          "when": "resourceLangId == ecl",
+          "command": "hpccPlatform.switch",
+          "group": "navigation@930"
+        },
+        {
+          "when": "resourceLangId == ecl && ecl.connected",
+          "command": "hpccPlatform.switchTargetCluster",
+          "group": "navigation@940"
         }
       ],
       "editor/title/context": [
