@@ -159,24 +159,61 @@
   "contributes": {
     "languageModelTools": [
       {
-        "name": "ecl-extension-syntaxCheck",
+        "name": "ecl-extension-findWorkunits",
         "tags": [
-          "editors",
-          "syntax check",
+          "workunits",
+          "wus",
+          "search",
+          "query",
           "ecl-extension"
         ],
-        "toolReferenceName": "syntaxCheck",
-        "displayName": "Syntax Check",
-        "modelDescription": "Check the syntax of ECL code",
+        "toolReferenceName": "findWorkunits",
+        "displayName": "Find Workunits (wus)",
+        "modelDescription": "Search for workunits (WU or WUs) on the active HPCC Platform session. Can filter by cluster, owner, state, WUID pattern, limit the number of results, and choose the sort column and order.",
         "canBeReferencedInPrompt": true,
-        "icon": "$(files)",
+        "icon": "$(search)",
         "inputSchema": {
           "type": "object",
           "properties": {
-            "ecl": {
+            "count": {
+              "type": "number",
+              "description": "Maximum number of workunits to return (default: 20, upper bound: 2000)"
+            },
+            "cluster": {
               "type": "string",
-              "description": "The ECL code to check.",
-              "default": ""
+              "description": "Filter by cluster name"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Filter by owner/username"
+            },
+            "state": {
+              "type": "string",
+              "description": "Filter by workunit state (e.g., completed, failed, running, blocked, etc.)"
+            },
+            "wuidPattern": {
+              "type": "string",
+              "description": "Search pattern for workunit ID (WUID)"
+            },
+            "sortOrder": {
+              "type": "string",
+              "enum": [
+                "Protection",
+                "Wuid",
+                "Owner",
+                "Jobname",
+                "Cluster",
+                "State",
+                "ClusterTime",
+                "Compile Cost",
+                "Execution Cost",
+                "File Access Cost"
+              ],
+              "description": "Sort results by a specific workunit field"
+            },
+            "descending": {
+              "type": "boolean",
+              "description": "Convenience flag to request descending order (overrides sortOrder when true)."
             }
           }
         }
@@ -186,11 +223,13 @@
         "tags": [
           "logical files",
           "search",
-          "ecl-extension"
+          "ecl-extension",
+          "ecl",
+          "data"
         ],
         "toolReferenceName": "findLogicalFiles",
         "displayName": "Find Logical Files",
-        "modelDescription": "Search for logical files that match the wildcard pattern on the active HPCC Platform session",
+        "modelDescription": "When user mentions data files, datasets, or logical files in ECL context, use this tool to search for logical files on the HPCC Platform. Supports wildcard patterns. Essential for ECL data exploration and when user asks 'what files are available' or references file names.",
         "canBeReferencedInPrompt": true,
         "inputSchema": {
           "type": "object",
@@ -203,6 +242,31 @@
           "required": [
             "pattern"
           ]
+        }
+      },
+      {
+        "name": "ecl-extension-syntaxCheck",
+        "tags": [
+          "editors",
+          "syntax check",
+          "ecl-extension",
+          "ecl",
+          "validation"
+        ],
+        "toolReferenceName": "syntaxCheck",
+        "displayName": "Syntax Check",
+        "modelDescription": "Validates ECL code syntax using the HPCC Platform compiler. Use this tool before submitting code or when user asks about code correctness. Essential for ECL development workflow.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(files)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ecl": {
+              "type": "string",
+              "description": "The ECL code to check.",
+              "default": ""
+            }
+          }
         }
       }
     ],
