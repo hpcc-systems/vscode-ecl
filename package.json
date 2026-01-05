@@ -73,7 +73,7 @@
     "@hpcc-js/wasm-llama": "1.0.0",
     "@hpcc-js/wasm-zstd": "1.8.0",
     "@langchain/community": "0.3.58",
-    "@langchain/core": "0.3.79",
+    "@langchain/core": "0.3.80",
     "@langchain/ollama": "0.2.4",
     "@observablehq/inspector": "5.0.1",
     "@observablehq/parser": "6.1.0",
