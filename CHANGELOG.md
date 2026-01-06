@@ -9,6 +9,20 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.34.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.33.2...ecl-v2.34.0) (2026-01-06)
+
+
+### Features
+
+* add AI tool to fetch ECL Archive ([#488](https://github.com/hpcc-systems/vscode-ecl/issues/488)) ([9e54966](https://github.com/hpcc-systems/vscode-ecl/commit/9e549669df3a8d094f75ce28d78ea880ed8c92c1))
+* add WU Error/Warning AI tool ([#487](https://github.com/hpcc-systems/vscode-ecl/issues/487)) ([cbacf13](https://github.com/hpcc-systems/vscode-ecl/commit/cbacf13954e8695cf4582fa686c6d2064fc3f3cf))
+* add WUQuery AI tool ([#483](https://github.com/hpcc-systems/vscode-ecl/issues/483)) ([f822bdb](https://github.com/hpcc-systems/vscode-ecl/commit/f822bdb03cccdb4206d9062ebefe5d0e1696a367))
+
+
+### Bug Fixes
+
+* update tooltip and group names for HPCC platform commands and improve session management ([#481](https://github.com/hpcc-systems/vscode-ecl/issues/481)) ([0673025](https://github.com/hpcc-systems/vscode-ecl/commit/0673025665bf83acc8b272e312fa8642272ad0d1))
+
 ## [2.33.2](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.33.1...ecl-v2.33.2) (2025-12-05)
 
 
