@@ -300,6 +300,32 @@
         }
       },
       {
+        "name": "ecl-extension-getWorkunitMetrics",
+        "tags": [
+          "workunit",
+          "metrics",
+          "performance",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getWorkunitMetrics",
+        "displayName": "Get Workunit Metrics",
+        "modelDescription": "Fetch normalized performance metrics for a specific workunit including execution details, timing information, and resource usage. Requires a WUID (Workunit ID).",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(info)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wuid": {
+              "type": "string",
+              "description": "The Workunit ID (WUID) to fetch details for"
+            }
+          },
+          "required": [
+            "wuid"
+          ]
+        }
+      },
+      {
         "name": "ecl-extension-syntaxCheck",
         "tags": [
           "editors",
