@@ -245,6 +245,33 @@
         }
       },
       {
+        "name": "ecl-extension-getWorkunitErrors",
+        "tags": [
+          "workunit",
+          "errors",
+          "warnings",
+          "exceptions",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "getWorkunitErrors",
+        "displayName": "Get Workunit Errors/Warnings",
+        "modelDescription": "Fetch errors, warnings, and exceptions from a specific workunit. Returns detailed information about compilation errors, runtime exceptions, and warning messages. Requires a WUID (Workunit ID).",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(warning)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wuid": {
+              "type": "string",
+              "description": "The Workunit ID (WUID) to fetch errors and warnings for"
+            }
+          },
+          "required": [
+            "wuid"
+          ]
+        }
+      },
+      {
         "name": "ecl-extension-syntaxCheck",
         "tags": [
           "editors",
