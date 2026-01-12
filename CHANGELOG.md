@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.35.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.34.0...ecl-v2.35.0) (2026-01-12)
+
+
+### Features
+
+* add Get Workunit Metrics tool for performance metrics retrieval ([#489](https://github.com/hpcc-systems/vscode-ecl/issues/489)) ([e5a8b65](https://github.com/hpcc-systems/vscode-ecl/commit/e5a8b659c67cb7f2deef1d3f081701f704d265db))
+
 ## [2.34.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.33.2...ecl-v2.34.0) (2026-01-06)
 
 
