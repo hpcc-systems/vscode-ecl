@@ -303,6 +303,9 @@ export class LaunchConfig implements LaunchRequestArguments {
             return LaunchConfigState.Ok;
         }).catch(e => {
             logger.debug("verifyUser catch:  -->" + e?.message + "<--");
+            if (e?.cause?.message) {
+                logger.debug(e.cause.message);
+            }
             //  old client version warning  ---
             if (e.isESPExceptions && e.Exception.some((exception) => exception.Code === 20043)) {
                 credentials.verified = true;
