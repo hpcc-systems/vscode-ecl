@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.35.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.35.0...ecl-v2.35.1) (2026-01-26)
+
+
+### Bug Fixes
+
+* rejectUnauthorised failing in some circumstances ([#492](https://github.com/hpcc-systems/vscode-ecl/issues/492)) ([34fca8f](https://github.com/hpcc-systems/vscode-ecl/commit/34fca8fb6f74d85a8df51ad6c12305f9446d7cb6))
+
 ## [2.35.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.34.0...ecl-v2.35.0) (2026-01-12)
 
 
