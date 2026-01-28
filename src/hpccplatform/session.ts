@@ -149,8 +149,11 @@ export interface ICreateWorkunit {
     workunit: Workunit
 }
 
-class SessionManager {
+export let sessionManager: SessionManager;
 
+export class SessionManager {
+
+    private _ctx: vscode.ExtensionContext;
     private _globalSession?: Session;
     private _pinnedSession?: Session;
 
@@ -164,12 +167,10 @@ class SessionManager {
     private _statusBarTargetCluster: vscode.StatusBarItem;
     private _statusBarPin: vscode.StatusBarItem;
 
-    constructor() {
+    private constructor(ctx: vscode.ExtensionContext) {
+        this._ctx = ctx;
         this._statusBarLaunch = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, Number.MIN_VALUE + 2);
         this._statusBarLaunch.command = "hpccPlatform.switch";
-    }
-
-    initialize() {
         this._statusBarTargetCluster = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, Number.MIN_VALUE + 1);
         this._statusBarTargetCluster.command = "hpccPlatform.switchTargetCluster";
 
@@ -260,17 +261,14 @@ class SessionManager {
                     void this.switchTo(this.session.id, this.session.overriddenTargetCluster);
                 }
             }
-            if (e.affectsConfiguration("ecl.launchConfiguration") || e.affectsConfiguration("ecl.targetCluster")) {
-                const currentEclConfig = vscode.workspace.getConfiguration("ecl", null);
-                const launchConfig = currentEclConfig.get<string>("launchConfiguration");
-                const targetCluster = currentEclConfig.get<object>("targetCluster")[launchConfig];
-                void this.switchTo(launchConfig, targetCluster);
-            }
         });
 
         const eclConfig = vscode.workspace.getConfiguration("ecl", null);
-        const launchConfig = eclConfig.get<string>("launchConfiguration");
-        const targetCluster = eclConfig.get<object>("targetCluster")[launchConfig];
+        const settingsLaunchConfig = eclConfig.get<string>("launchConfiguration");
+        const launchConfig = this._ctx.workspaceState.get<string>("ecl.launchConfiguration") || settingsLaunchConfig;
+        const targetClusters = this._ctx.workspaceState.get<Record<string, string>>("ecl.targetCluster") || eclConfig.get<object>("targetCluster");
+        const targetCluster = targetClusters[launchConfig];
+
         this.switchTo(launchConfig, targetCluster).then(() => {
             vscode.commands.executeCommand("setContext", "hpccPlatformActive", true);
         }).finally(() => {
@@ -278,6 +276,13 @@ class SessionManager {
                 this.refreshStatusBar();
             });
         });
+    }
+
+    static attach(ctx: vscode.ExtensionContext): SessionManager {
+        if (!sessionManager) {
+            sessionManager = new SessionManager(ctx);
+        }
+        return sessionManager;
     }
 
     private get activeDocument() {
@@ -438,16 +443,16 @@ class SessionManager {
                 }
             }
         } else {
-            const currentLaunchConfig = eclConfig.get<string>("launchConfiguration");
-            const targetClusters = eclConfig.get<object>("targetCluster");
+            const currentLaunchConfig = this._ctx.workspaceState.get<string>("ecl.launchConfiguration");
+            const targetClusters = this._ctx.workspaceState.get<Record<string, string>>("ecl.targetCluster") || {};
             const currentTargetCluster = targetClusters[this.session.id];
 
             if (currentLaunchConfig !== this.session.id) {
-                eclConfig.update("launchConfiguration", this.session.id);
+                void this._ctx.workspaceState.update("ecl.launchConfiguration", this.session.id);
             }
             if (currentTargetCluster !== this.session.overriddenTargetCluster) {
                 targetClusters[this.session.id] = this.session.overriddenTargetCluster;
-                eclConfig.update("targetCluster", targetClusters);
+                void this._ctx.workspaceState.update("ecl.targetCluster", targetClusters);
             }
         }
     }
@@ -611,7 +616,6 @@ class SessionManager {
         this.refreshPinStatusBar();
     }
 }
-export const sessionManager: SessionManager = new SessionManager();
 
 export function isPlatformConnected(): boolean {
     return !!sessionManager.session;

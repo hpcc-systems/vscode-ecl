@@ -12,7 +12,7 @@ import { ECLWatchPanelView } from "./eclWatchPanelView";
 import { HPCCResources } from "./hpccResources";
 import { ECLChat } from "./lm/chat";
 import { ECLLMTools } from "./lm/tools";
-import { sessionManager } from "../hpccplatform/session";
+import { SessionManager } from "../hpccplatform/session";
 
 const eclConfig = vscode.workspace.getConfiguration("ecl");
 initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
@@ -21,7 +21,7 @@ const logger = scopedLogger("ecl/main.ts");
 
 export function activate(ctx: vscode.ExtensionContext): void {
     logger.debug("Activating SessionManager");
-    sessionManager.initialize();
+    SessionManager.attach(ctx);
     logger.debug("Activating ECLDiagnostic");
     ECLDiagnostic.attach(ctx);
     logger.debug("Activating ECLCommands");
