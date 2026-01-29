@@ -1625,13 +1625,15 @@
           "type": "string",
           "scope": "resource",
           "default": "",
-          "description": "%Default launch configuration%"
+          "description": "%Default launch configuration%",
+          "deprecationMessage": "%This setting is deprecated. Launch configuration state is now stored in workspace state.%"
         },
         "ecl.targetCluster": {
           "type": "object",
           "scope": "resource",
           "default": {},
-          "description": "%Target cluster (per launch configuration)%"
+          "description": "%Target cluster (per launch configuration)%",
+          "deprecationMessage": "%This setting is deprecated. Target cluster state is now stored in workspace state.%"
         },
         "ecl.pinnedLaunchConfigurations": {
           "type": "object",

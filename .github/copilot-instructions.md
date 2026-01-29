@@ -128,7 +128,7 @@ How to apply:
 - Before adding a new contribution, confirm an existing pattern in `package.json` (e.g. replicate a command object, adjust `enablement`).
 - For a new Tree View / data provider, follow existing HPCC platform tree patterns under `src/hpccplatform/` and reference TreeDataProvider docs.
 - For new notebook renderer: add entry in `esbuild.mjs` (browser target) + `notebookRenderer` contribution + MIME type contract.
-- For status bar interactions replicate existing approach (search for usages setting `ecl.launchConfiguration` & `ecl.targetCluster`).
+- For status bar interactions replicate existing approach (launch configuration and target cluster state is stored in workspace state, not settings).
 
 When unsure of an API surface (e.g. `WorkspaceEdit`, `TextDocumentContentProvider`, etc.) prefer stable APIs listed in the vscode-api reference; avoid proposed APIs unless already adopted in this repo.
 

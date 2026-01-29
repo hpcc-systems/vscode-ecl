@@ -144,6 +144,19 @@
                 "<node_internals>/**"
             ],
             "type": "node"
+        },
+        {
+            "name": "localhost",
+            "type": "ecl",
+            "request": "launch",
+            "protocol": "http",
+            "serverAddress": "localhost",
+            "port": 8010,
+            "targetCluster": "thor",
+            "rejectUnauthorized": true,
+            "resultLimit": 100,
+            "timeoutSecs": 60,
+            "user": "vscode_user"
         }
     ]
 }

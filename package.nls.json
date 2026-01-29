@@ -52,6 +52,8 @@
     "Database Name": "Database Name",
     "Debug level logging (requires restart)": "Debug level logging (requires restart)",
     "Default launch configuration": "Default launch configuration",
+    "This setting is deprecated. Launch configuration state is now stored in workspace state.": "This setting is deprecated. Launch configuration state is now stored in workspace state.",
+    "This setting is deprecated. Target cluster state is now stored in workspace state.": "This setting is deprecated. Target cluster state is now stored in workspace state.",
     "Dismiss": "Dismiss",
     "Default timeout (secs)": "Default timeout (secs)",
     "Delete Workunit": "Delete Workunit",
