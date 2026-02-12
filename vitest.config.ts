@@ -1,9 +1,16 @@
 import { defineConfig } from 'vitest/config'
+import path from 'path'
 
 export default defineConfig({
+    resolve: {
+        alias: {
+            // Mock vscode module for testing
+            'vscode': path.resolve(__dirname, 'test/__mocks__/vscode.ts')
+        }
+    },
     test: {
         // Match test files using common patterns
-        include: ['test/manifest.test.ts', 'test/credentialManager.test.ts', 'test/launchConfigUserUpdate.test.ts', 'test/nls.test.ts'],
+        include: ['test/**/*.test.ts'],
         exclude: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/dist-test/**', 'test/integration/**'],
 
         // Use jsdom environment for browser-like testing
@@ -12,8 +19,8 @@ export default defineConfig({
         // Global test timeout
         testTimeout: 10000,
 
-        // Setup files (if needed later)
-        // setupFiles: ['./test/setup.ts'],
+        // Setup files
+        setupFiles: ['./test/vitest-setup.ts'],
 
         // Enable globals like describe, it, expect
         globals: true,
