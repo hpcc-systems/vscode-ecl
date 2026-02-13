@@ -3,6 +3,8 @@
 //
 IMPORT Std;
 
+#option('generateLogicalGraph', true);
+
 //This code generates a nested child dataset containing 
 // 1,000,000 Person (parent) records and all their associated Accounts (children)
 // by starting with 1000 first names and 1000 last names

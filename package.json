@@ -350,6 +350,34 @@
             }
           }
         }
+      },
+      {
+        "name": "ecl-extension-eclDocsLookup",
+        "tags": [
+          "documentation",
+          "help",
+          "reference",
+          "ecl",
+          "language",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "eclDocsLookup",
+        "displayName": "ECL Documentation Lookup",
+        "modelDescription": "Search ECL documentation using AI-powered retrieval (RAG). Use this tool when user asks about ECL language features, functions, syntax, standard libraries, or needs help understanding ECL concepts. Returns relevant documentation pages from the ECL Language Reference, Standard Library Reference, and Programmer's Guide.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(book)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The documentation search query. Can be a keyword, function name, concept, or question about ECL."
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
       }
     ],
     "languages": [
