@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.37.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.36.0...ecl-v2.37.0) (2026-02-13)
+
+
+### Features
+
+* add RAG documentaion tool ([#498](https://github.com/hpcc-systems/vscode-ecl/issues/498)) ([d984c8e](https://github.com/hpcc-systems/vscode-ecl/commit/d984c8eceb2805cbcfc56e3cbc6bf484a64c4648))
+
 ## [2.36.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.35.1...ecl-v2.36.0) (2026-01-29)
 
 
