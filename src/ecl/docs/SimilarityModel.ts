@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { Llama } from "@hpcc-js/wasm-llama";
 import { Zstd } from "@hpcc-js/wasm-zstd";
 import { Embeddings } from "@langchain/core/embeddings";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
 
 class LlamaEmbeddings extends Embeddings {
 

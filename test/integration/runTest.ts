@@ -1,5 +1,7 @@
 import * as path from 'path';
 import { runTests, downloadAndUnzipVSCode } from '@vscode/test-electron';
+import * as cp from 'child_process';
+import * as os from 'os';
 
 async function main() {
     try {
@@ -11,7 +13,32 @@ async function main() {
         const extensionTestsPath = path.resolve(__dirname, './suite/index');
 
         // Ensure VS Code is downloaded (cache will be reused)
-        await downloadAndUnzipVSCode('stable');
+        const vscodeExecutablePath = await downloadAndUnzipVSCode('stable');
+
+        // Install the required extension dependency before running tests
+        // Determine the CLI path based on the platform
+        const platform = os.platform();
+        let cliPath: string;
+
+        if (platform === 'darwin') {
+            cliPath = path.join(vscodeExecutablePath, 'Contents', 'Resources', 'app', 'bin', 'code');
+        } else if (platform === 'win32') {
+            cliPath = path.join(path.dirname(vscodeExecutablePath), 'bin', 'code.cmd');
+        } else {
+            cliPath = path.join(path.dirname(vscodeExecutablePath), 'bin', 'code');
+        }
+
+        console.log('Installing GordonSmith.observable-js extension...');
+        try {
+            cp.spawnSync(cliPath, ['--install-extension', 'GordonSmith.observable-js', '--force'], {
+                encoding: 'utf-8',
+                stdio: 'inherit'
+            });
+            console.log('Extension installation completed.');
+        } catch (installErr) {
+            console.warn('Warning: Failed to install GordonSmith.observable-js extension:', installErr);
+            console.warn('Tests requiring this extension will be skipped.');
+        }
 
         await runTests({
             extensionDevelopmentPath,

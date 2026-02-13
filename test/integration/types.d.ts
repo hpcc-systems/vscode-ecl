@@ -5,5 +5,5 @@ declare module '@vscode/test-electron' {
         launchArgs?: string[];
     }
     export function runTests(options: RunTestsOptions): Promise<void>;
-    export function downloadAndUnzipVSCode(version?: string): Promise<void>;
+    export function downloadAndUnzipVSCode(version?: string): Promise<string>;
 }
