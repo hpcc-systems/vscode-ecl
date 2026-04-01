@@ -52,37 +52,37 @@
     "update": "npx npm-check-updates -u -t minor"
   },
   "dependencies": {
-    "@vscode/prompt-tsx": "0.4.0-alpha.7",
+    "@vscode/prompt-tsx": "0.4.0-alpha.8",
     "exceljs": "4.4.0",
     "html-to-text": "9.0.5"
   },
   "devDependencies": {
-    "@eslint/js": "9.39.2",
-    "@fluentui/react": "8.125.4",
+    "@eslint/js": "9.39.4",
+    "@fluentui/react": "8.125.5",
     "@fluentui/react-hooks": "8.10.2",
-    "@hpcc-js/api": "3.4.9",
-    "@hpcc-js/common": "3.6.5",
-    "@hpcc-js/comms": "3.14.4",
-    "@hpcc-js/dgrid": "3.5.9",
-    "@hpcc-js/dgrid-shim": "3.3.3",
-    "@hpcc-js/esbuild-plugins": "1.8.3",
+    "@hpcc-js/api": "3.4.13",
+    "@hpcc-js/common": "3.7.3",
+    "@hpcc-js/comms": "3.15.2",
+    "@hpcc-js/dgrid": "3.7.3",
+    "@hpcc-js/dgrid-shim": "3.4.3",
+    "@hpcc-js/esbuild-plugins": "1.8.5",
     "@hpcc-js/observable-shim": "3.1.0",
-    "@hpcc-js/observablehq-compiler": "3.7.4",
-    "@hpcc-js/util": "3.4.8",
-    "@hpcc-js/wasm-expat": "1.13.0",
+    "@hpcc-js/observablehq-compiler": "3.7.6",
+    "@hpcc-js/util": "3.5.2",
+    "@hpcc-js/wasm-expat": "1.13.2",
     "@hpcc-js/wasm-llama": "1.0.0",
-    "@hpcc-js/wasm-zstd": "1.12.0",
-    "@langchain/community": "1.1.15",
-    "@langchain/core": "1.1.24",
-    "@langchain/classic": "1.0.17",
-    "@langchain/ollama": "1.2.2",
+    "@hpcc-js/wasm-zstd": "1.12.2",
+    "@langchain/community": "1.1.27",
+    "@langchain/core": "1.1.38",
+    "@langchain/classic": "1.0.27",
+    "@langchain/ollama": "1.2.6",
     "@observablehq/inspector": "5.0.1",
     "@observablehq/parser": "6.1.0",
     "@observablehq/runtime": "6.0.0",
     "@observablehq/stdlib": "5.8.8",
     "@octokit/rest": "22.0.1",
     "@types/mocha": "10.0.10",
-    "@types/node": "24.10.13",
+    "@types/node": "24.12.0",
     "@types/react": "18.3.28",
     "@types/react-dom": "18.3.7",
     "@types/tmp": "0.2.6",
@@ -90,12 +90,11 @@
     "@types/vscode-notebook-renderer": "1.72.4",
     "@vscode/test-cli": "0.0.12",
     "@vscode/test-electron": "2.5.2",
-    "@typescript-eslint/parser": "8.55.0",
-    "@vitest/coverage-v8": "4.0.18",
-    "@vitest/ui": "4.0.18",
+    "@vitest/coverage-v8": "4.1.2",
+    "@vitest/ui": "4.1.2",
     "@vscode/debugadapter": "1.68.0",
     "@vscode/debugprotocol": "1.68.0",
-    "@vscode/extension-telemetry": "1.5.0",
+    "@vscode/extension-telemetry": "1.5.1",
     "@vscode/vsce": "3.7.1",
     "adm-zip": "0.5.16",
     "antlr4": "4.13.2",
@@ -103,26 +102,26 @@
     "copy-to-clipboard": "3.3.3",
     "copyfiles": "2.4.1",
     "csv-writer": "1.6.0",
-    "diff": "8.0.3",
-    "esbuild": "0.27.3",
+    "diff": "8.0.4",
+    "esbuild": "0.27.4",
     "esbuild-copy-static-files": "0.1.0",
     "esbuild-plugin-text-replace": "1.3.0",
     "esbuild-plugin-umd-wrapper": "3.0.0",
-    "eslint": "9.39.2",
+    "eslint": "9.39.4",
     "eslint-plugin-react-hooks": "7.0.1",
-    "jsdom": "28.0.0",
-    "langchain": "1.2.23",
+    "jsdom": "29.0.1",
+    "langchain": "1.2.39",
     "npm-run-all": "4.1.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "rimraf": "6.1.2",
+    "rimraf": "6.1.3",
     "run-script-os": "1.1.6",
     "tslib": "2.8.1",
-    "typescript": "5.9.3",
-    "typescript-eslint": "8.55.0",
+    "typescript": "6.0.2",
+    "typescript-eslint": "8.58.0",
     "use-resize-observer": "9.1.0",
     "uuid": "13.0.0",
-    "vitest": "4.0.18",
+    "vitest": "4.1.2",
     "yargs": "18.0.0"
   },
   "author": {
@@ -170,7 +169,7 @@
         ],
         "toolReferenceName": "findWorkunits",
         "displayName": "Find Workunits (wus)",
-        "modelDescription": "Search for workunits (WU or WUs) on the active HPCC Platform session. Can filter by cluster, owner, state, WUID pattern, limit the number of results, and choose the sort column and order.",
+        "modelDescription": "Use this tool when the user asks about existing HPCC workunits or jobs: listing recent/running/failed workunits, finding a WUID, or filtering workunits by cluster, owner, state, or WUID pattern. This is the discovery tool for workunits. Use it before the other workunit tools when the user does not already have a WUID. Do not use it for general ECL language questions, documentation lookup, or syntax-only questions.",
         "canBeReferencedInPrompt": true,
         "icon": "$(search)",
         "inputSchema": {
@@ -178,23 +177,23 @@
           "properties": {
             "count": {
               "type": "number",
-              "description": "Maximum number of workunits to return (default: 20, upper bound: 2000)"
+              "description": "Maximum number of workunits to return. Use a small number unless the user explicitly asks for more. Default: 20. Maximum: 2000."
             },
             "cluster": {
               "type": "string",
-              "description": "Filter by cluster name"
+              "description": "Filter workunits by HPCC cluster name."
             },
             "owner": {
               "type": "string",
-              "description": "Filter by owner/username"
+              "description": "Filter workunits by owner or username."
             },
             "state": {
               "type": "string",
-              "description": "Filter by workunit state (e.g., completed, failed, running, blocked, etc.)"
+              "description": "Filter by workunit state, such as completed, failed, running, blocked, or submitted."
             },
             "wuidPattern": {
               "type": "string",
-              "description": "Search pattern for workunit ID (WUID)"
+              "description": "Match workunits by WUID or partial WUID pattern."
             },
             "sortOrder": {
               "type": "string",
@@ -210,11 +209,11 @@
                 "Execution Cost",
                 "File Access Cost"
               ],
-              "description": "Sort results by a specific workunit field"
+              "description": "Which field to sort by. This selects the sort field only; use `descending` to control the direction."
             },
             "descending": {
               "type": "boolean",
-              "description": "Convenience flag to request descending order (overrides sortOrder when true)."
+              "description": "Set to true for descending order or false for ascending order."
             }
           }
         }
@@ -230,14 +229,14 @@
         ],
         "toolReferenceName": "findLogicalFiles",
         "displayName": "Find Logical Files",
-        "modelDescription": "When user mentions data files, datasets, or logical files in ECL context, use this tool to search for logical files on the HPCC Platform. Supports wildcard patterns. Essential for ECL data exploration and when user asks 'what files are available' or references file names.",
+        "modelDescription": "Use this tool when the user asks about HPCC logical files or datasets on the platform: finding dataset names, checking what files are available, or matching a logical filename pattern. This searches HPCC logical files, not local workspace files or source files. Prefer this when the request is about platform data rather than ECL language syntax.",
         "canBeReferencedInPrompt": true,
         "inputSchema": {
           "type": "object",
           "properties": {
             "pattern": {
               "type": "string",
-              "description": "Search for logical files that match this wildcard pattern"
+              "description": "Wildcard pattern for HPCC logical file names, for example `thor::sales::*` or `~mydataset*`."
             }
           },
           "required": [
@@ -256,7 +255,7 @@
         ],
         "toolReferenceName": "getWorkunitErrors",
         "displayName": "Get Workunit Errors/Warnings",
-        "modelDescription": "Fetch errors, warnings, and exceptions from a specific workunit. Returns detailed information about compilation errors, runtime exceptions, and warning messages. Requires a WUID (Workunit ID).",
+        "modelDescription": "Use this tool only when the user is asking about a specific existing workunit and wants compile errors, warnings, exceptions, or failure diagnosis. It requires a WUID. If the user does not know the WUID yet, use `findWorkunits` first.",
         "canBeReferencedInPrompt": true,
         "icon": "$(warning)",
         "inputSchema": {
@@ -264,7 +263,7 @@
           "properties": {
             "wuid": {
               "type": "string",
-              "description": "The Workunit ID (WUID) to fetch errors and warnings for"
+              "description": "The specific Workunit ID (WUID) whose errors, warnings, and exceptions should be retrieved."
             }
           },
           "required": [
@@ -284,7 +283,7 @@
         ],
         "toolReferenceName": "getWorkunitECL",
         "displayName": "Get Workunit ECL / ECL Archive",
-        "modelDescription": "Retrieve the ECL archive (XML) for a specific workunit. Returns the original ECL code that was submitted to create the workunit. Requires a WUID (Workunit ID).",
+        "modelDescription": "Use this tool only when the user wants the submitted source for a specific existing workunit. It returns the ECL archive XML stored with that workunit, not a local workspace file. Requires a WUID. If the user does not know the WUID yet, use `findWorkunits` first.",
         "canBeReferencedInPrompt": true,
         "icon": "$(code)",
         "inputSchema": {
@@ -292,7 +291,7 @@
           "properties": {
             "wuid": {
               "type": "string",
-              "description": "The Workunit ID (WUID) to fetch ECL source for"
+              "description": "The specific Workunit ID (WUID) whose ECL archive XML should be fetched."
             }
           },
           "required": [
@@ -310,7 +309,7 @@
         ],
         "toolReferenceName": "getWorkunitMetrics",
         "displayName": "Get Workunit Metrics",
-        "modelDescription": "Fetch normalized performance metrics for a specific workunit including execution details, timing information, and resource usage. Requires a WUID (Workunit ID).",
+        "modelDescription": "Use this tool only when the user wants runtime or performance details for a specific existing workunit, such as timing, resource usage, scope statistics, or why a workunit was slow. Requires a WUID. If the user does not know the WUID yet, use `findWorkunits` first.",
         "canBeReferencedInPrompt": true,
         "icon": "$(info)",
         "inputSchema": {
@@ -318,7 +317,7 @@
           "properties": {
             "wuid": {
               "type": "string",
-              "description": "The Workunit ID (WUID) to fetch details for"
+              "description": "The specific Workunit ID (WUID) whose runtime and performance metrics should be retrieved."
             }
           },
           "required": [
@@ -337,7 +336,7 @@
         ],
         "toolReferenceName": "syntaxCheck",
         "displayName": "Syntax Check",
-        "modelDescription": "Validates ECL code syntax using the HPCC Platform compiler. Use this tool before submitting code or when user asks about code correctness. Essential for ECL development workflow.",
+        "modelDescription": "Use this tool when the user provides concrete ECL code and wants syntax or compile-style validation, error diagnosis, or a sanity check before submission. This checks the supplied ECL text with the HPCC Platform compiler. Do not use it for general language-reference questions, documentation lookup, or requests that do not include actual ECL code.",
         "canBeReferencedInPrompt": true,
         "icon": "$(files)",
         "inputSchema": {
@@ -345,10 +344,13 @@
           "properties": {
             "ecl": {
               "type": "string",
-              "description": "The ECL code to check.",
+              "description": "The exact ECL source text to validate. Pass the user's code, not a summary or paraphrase.",
               "default": ""
             }
-          }
+          },
+          "required": [
+            "ecl"
+          ]
         }
       },
       {
@@ -363,7 +365,7 @@
         ],
         "toolReferenceName": "eclDocsLookup",
         "displayName": "ECL Documentation Lookup",
-        "modelDescription": "Search ECL documentation using AI-powered retrieval (RAG). Use this tool when user asks about ECL language features, functions, syntax, standard libraries, or needs help understanding ECL concepts. Returns relevant documentation pages from the ECL Language Reference, Standard Library Reference, and Programmer's Guide.",
+        "modelDescription": "This is the default tool for ECL language and reference questions. Use it for ECL syntax, keywords, functions, modules, standard library APIs, attributes, records, transforms, joins, types, preprocessor features, and general 'how do I do X in ECL?' questions. Prefer this tool for conceptual explanations and examples. Do not use it for HPCC platform state, logical file searches, or workunit-specific diagnostics.",
         "canBeReferencedInPrompt": true,
         "icon": "$(book)",
         "inputSchema": {
@@ -371,7 +373,7 @@
           "properties": {
             "query": {
               "type": "string",
-              "description": "The documentation search query. Can be a keyword, function name, concept, or question about ECL."
+              "description": "The documentation search query. Use the user's actual function name, keyword, concept, or ECL question."
             }
           },
           "required": [

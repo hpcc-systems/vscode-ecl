@@ -71,7 +71,7 @@ export class ECLDocsLookupTool implements vscode.LanguageModelTool<IECLDocsLooku
                 const urlList = hits.map((hit, idx) => `${idx + 1}. ${hit.label}: ${hit.url}`).join("\n");
 
                 parts.push(new vscode.LanguageModelTextPart(
-                    `IMPORTANT: Always include these documentation URLs in your response to the user:\n\n${urlList}\n\n`
+                    `Authoritative documentation sources for this answer. Cite only URLs from this list when referencing the docs, and do not invent or guess additional links:\n\n${urlList}\n\n`
                 ));
 
                 // Format each documentation hit with its content
