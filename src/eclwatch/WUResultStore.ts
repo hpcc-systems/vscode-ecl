@@ -48,6 +48,7 @@ export class Store {
                 idx,
                 label: label + (keyed ? " (i)" : ""),
                 className: "resultGridCell",
+                hidden: false,
                 sortable: false,
                 width: keyed ? 16 : 0,
                 isSet: node.isSet

@@ -88,7 +88,6 @@
     "@types/tmp": "0.2.6",
     "@types/vscode": "1.105.0",
     "@types/vscode-notebook-renderer": "1.72.4",
-    "@vscode/test-cli": "0.0.12",
     "@vscode/test-electron": "2.5.2",
     "@vitest/coverage-v8": "4.1.2",
     "@vitest/ui": "4.1.2",
@@ -123,6 +122,9 @@
     "uuid": "13.0.0",
     "vitest": "4.1.2",
     "yargs": "18.0.0"
+  },
+  "overrides": {
+    "@xmldom/xmldom": "0.9.9"
   },
   "author": {
     "name": "HPCC Systems®"

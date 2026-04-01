@@ -27,6 +27,7 @@
         }
     },
     "include": [
-        "src/extension.ts"
+        "src/extension.ts",
+        "src/types/css.d.ts"
     ]
 }
