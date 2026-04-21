@@ -13,6 +13,7 @@ import { createDirectory, exists, writeFile } from "../util/fs";
 import { ECLR_EN_US, matchTopics, SLR_EN_US } from "./docs";
 import { SaveData } from "./saveData";
 import { credentialManager } from "../util/credentialManager";
+import { registerCommand, registerTextEditorCommand } from "../telemetry";
 
 const IMPORT_MARKER = "//Import:";
 const SKIP = localize("Skip");
@@ -26,27 +27,27 @@ export class ECLCommands {
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntax", this.checkSyntax, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxAll", this.checkSyntaxAll, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.checkSyntaxClear", this.checkSyntaxClear, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submit", this.submit, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.submitNoArchive", this.submitNoArchive, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.compile", this.compile, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showLanguageReference", this.showLanguageReference, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showStandardLibraryReference", this.showStandardLibraryReference, this));
-        ctx.subscriptions.push(vscode.commands.registerTextEditorCommand("ecl.searchTerm", this.searchTerm, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.showWUDetails", this.showWUDetails, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.selectCTVersion", selectCTVersion));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openECLWatchExternal", this.openECLWatchExternal, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.saveResultAs", this.saveResultAs, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.openResult", this.openResult, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.browseResult", this.browseResult, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.insertRecordDef", this.insertRecordDef, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.sign", this.sign, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.verify", this.verify, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.importModFile", this.importModFile, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.copyAsEclID", this.copyAsEclID, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.clearStoredPasswords", this.clearStoredPasswords, this));
+        registerCommand(ctx, "ecl.checkSyntax", this.checkSyntax, this);
+        registerCommand(ctx, "ecl.checkSyntaxAll", this.checkSyntaxAll, this);
+        registerCommand(ctx, "ecl.checkSyntaxClear", this.checkSyntaxClear, this);
+        registerCommand(ctx, "ecl.submit", this.submit, this);
+        registerCommand(ctx, "ecl.submitNoArchive", this.submitNoArchive, this);
+        registerCommand(ctx, "ecl.compile", this.compile, this);
+        registerCommand(ctx, "ecl.showLanguageReference", this.showLanguageReference, this);
+        registerCommand(ctx, "ecl.showStandardLibraryReference", this.showStandardLibraryReference, this);
+        registerTextEditorCommand(ctx, "ecl.searchTerm", this.searchTerm, this);
+        registerCommand(ctx, "ecl.showWUDetails", this.showWUDetails, this);
+        registerCommand(ctx, "ecl.selectCTVersion", selectCTVersion);
+        registerCommand(ctx, "ecl.openECLWatchExternal", this.openECLWatchExternal, this);
+        registerCommand(ctx, "ecl.saveResultAs", this.saveResultAs, this);
+        registerCommand(ctx, "ecl.openResult", this.openResult, this);
+        registerCommand(ctx, "ecl.browseResult", this.browseResult, this);
+        registerCommand(ctx, "ecl.insertRecordDef", this.insertRecordDef, this);
+        registerCommand(ctx, "ecl.sign", this.sign, this);
+        registerCommand(ctx, "ecl.verify", this.verify, this);
+        registerCommand(ctx, "ecl.importModFile", this.importModFile, this);
+        registerCommand(ctx, "ecl.copyAsEclID", this.copyAsEclID, this);
+        registerCommand(ctx, "ecl.clearStoredPasswords", this.clearStoredPasswords, this);
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLCommands {

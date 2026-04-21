@@ -7,6 +7,7 @@ import { onDidClientToolsChange, switchClientTools } from "./clientTools";
 import { Circle } from "./eclWatchTree";
 import { eclTerminal } from "./terminal";
 import { Tree, Item } from "./tree";
+import { registerCommand } from "../telemetry";
 
 let hpccResources: HPCCResources;
 
@@ -29,7 +30,7 @@ class Bundles extends Tree {
     protected constructor(ctx: vscode.ExtensionContext) {
         super(ctx, "hpccResources.bundles", false);
 
-        vscode.commands.registerCommand("hpccResources.bundles.homepage", (item: Item) => {
+        registerCommand(ctx, "hpccResources.bundles.homepage", (item: Item) => {
             if (item instanceof BundlesItem) {
                 vscode.env.openExternal(vscode.Uri.parse(item.url()));
             } else {
@@ -37,11 +38,11 @@ class Bundles extends Tree {
             }
         });
 
-        vscode.commands.registerCommand("hpccResources.bundles.refresh", () => {
+        registerCommand(ctx, "hpccResources.bundles.refresh", () => {
             this.refresh();
         });
 
-        vscode.commands.registerCommand("hpccResources.bundles.install", (item: Item) => {
+        registerCommand(ctx, "hpccResources.bundles.install", (item: Item) => {
             if (item instanceof BundlesItem) {
                 this._treeView.title = `${localize("Installing")}...`;
                 item.install().then(response => {
@@ -54,7 +55,7 @@ class Bundles extends Tree {
             }
         });
 
-        vscode.commands.registerCommand("hpccResources.bundles.uninstall", (item: Item) => {
+        registerCommand(ctx, "hpccResources.bundles.uninstall", (item: Item) => {
             if (item instanceof BundlesItem) {
                 this._treeView.title = `${localize("Uninstalling")}...`;
                 item.uninstall().then(response => {
@@ -134,28 +135,28 @@ class ClientToolsTree extends Tree {
             this.refresh();
         });
 
-        vscode.commands.registerCommand("hpccResources.clientTools.homepage", () => {
+        registerCommand(ctx, "hpccResources.clientTools.homepage", () => {
             vscode.env.openExternal(vscode.Uri.parse("https://hpccsystems.com/download"));
         });
 
-        vscode.commands.registerCommand("hpccResources.clientTools.refresh", () => {
+        registerCommand(ctx, "hpccResources.clientTools.refresh", () => {
             clearAllClientToolsCache();
             this.refresh();
         });
 
-        vscode.commands.registerCommand("hpccResources.clientTools.activate", (item: Item) => {
+        registerCommand(ctx, "hpccResources.clientTools.activate", (item: Item) => {
             if (item instanceof ClientToolsItem) {
                 switchClientTools(item.clientTools);
             }
         });
 
-        vscode.commands.registerCommand("hpccResources.clientTools.deactivate", (item: Item) => {
+        registerCommand(ctx, "hpccResources.clientTools.deactivate", (item: Item) => {
             if (item instanceof ClientToolsItem) {
                 switchClientTools();
             }
         });
 
-        vscode.commands.registerCommand("hpccResources.clientTools.terminal", (item: Item) => {
+        registerCommand(ctx, "hpccResources.clientTools.terminal", (item: Item) => {
             if (item instanceof ClientToolsItem) {
                 eclTerminal(item.clientTools);
             }

@@ -6,6 +6,7 @@ import { wuDetailsUrl, wuResultUrl } from "../hpccplatform/launchConfig";
 import { sessionManager } from "../hpccplatform/session";
 import type { Messages } from "../eclwatch/messages";
 import { credentialManager } from "../util/credentialManager";
+import { registerCommand } from "../telemetry";
 
 interface NavigateParams extends LaunchRequestArguments {
     wuid: string;
@@ -37,7 +38,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
             this.navigateTo(launchRequestArgs, undefined, undefined, false);
         });
 
-        vscode.commands.registerCommand("ecl.watch.lite.openECLWatchExternal", async () => {
+        registerCommand(ctx, "ecl.watch.lite.openECLWatchExternal", async () => {
             if (this._currParams) {
                 if (this._currParams.resultName === undefined) {
                     vscode.env.openExternal(vscode.Uri.parse(wuDetailsUrl(this._currParams, this._currParams.wuid)));

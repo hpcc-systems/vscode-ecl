@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { scopedLogger } from "@hpcc-js/util";
 import { LaunchRequestArguments } from "../debugger/launchRequestArguments";
+import { logEvent, logError } from "../telemetry";
 
 const logger = scopedLogger("ecl:credentials");
 
@@ -122,6 +123,7 @@ export class CredentialManager {
 
         const allKeys = await this.listStoredCredentials();
         await Promise.all(allKeys.map(key => this.context.secrets.delete(key)));
+        logEvent("credentials.deleteAll", {}, { count: allKeys.length });
     }
 
     async migrateLaunchConfigIfNeeded(config: LaunchRequestArguments): Promise<void> {
@@ -139,6 +141,7 @@ export class CredentialManager {
                 throw new Error("Failed to verify stored password");
             }
             logger.debug(`Migrated credentials for ${config.user}@${baseUrl} to secure storage`);
+            logEvent("credentials.migrated");
 
             credentialManagerCache.delete(storageKey);
             const credentials = await this.getCredentials(baseUrl, config.user);
@@ -146,6 +149,7 @@ export class CredentialManager {
             await this.removePasswordFromLaunchConfig(config);
         } catch (error) {
             logger.error(`Failed to migrate credentials for ${config.user}@${baseUrl}: ${error}`);
+            logError("credentials.migrate.error", error);
             throw error;
         }
     }

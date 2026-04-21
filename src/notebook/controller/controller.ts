@@ -4,7 +4,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { parseModule } from "@hpcc-js/observable-shim";
 import { hashSum } from "@hpcc-js/util";
-import { reporter } from "../../telemetry/index";
+import { logEvent, logError } from "../../telemetry/index";
 import { sessionManager } from "../../hpccplatform/session";
 import { deleteFile, writeFile } from "../../util/fs";
 import { launchConfiguration, LaunchRequestArguments } from "../../hpccplatform/launchConfig";
@@ -142,9 +142,10 @@ export class Controller {
                 } catch (e) { }
             }
         } catch (e: any) {
-            if (e.message.indexOf("0003:  Definition must contain EXPORT or SHARED value") >= 0) {
+            if (e.message?.indexOf("0003:  Definition must contain EXPORT or SHARED value") >= 0) {
                 outputItem = vscode.NotebookCellOutputItem.text("...no action...");
             } else {
+                logError("notebook.executeECL.error", e);
                 outputItem = vscode.NotebookCellOutputItem.error(e);
             }
         } finally {
@@ -160,6 +161,7 @@ export class Controller {
             parseModule(serializer.ojsSource(cell));
         } catch (e: any) {
             const msg = e?.message ?? "Unknown Error";
+            logError("notebook.executeOJS.error", e, { language: cell.document.languageId });
             return Promise.resolve(vscode.NotebookCellOutputItem.stderr(msg));
         }
         const ojsOutput = serializer.ojsOutput(cell, notebook.uri, otherCells);
@@ -187,16 +189,23 @@ export class Controller {
     private async executeCell(cell: vscode.NotebookCell, outputItem: vscode.NotebookCellOutputItem, notebook: vscode.NotebookDocument, otherCells: vscode.NotebookCell[]) {
         const execution = this._controller.createNotebookCellExecution(cell);
         execution.executionOrder = ++this._executionOrder;
-        execution.start(Date.now());
+        const start = Date.now();
+        execution.start(start);
         // serializer.node(cell).output = outputItem;
         await execution.replaceOutput([new vscode.NotebookCellOutput([outputItem])]);
-        execution.end([outputItem].every(op => op.mime.indexOf(".stderr") < 0), Date.now());
+        const success = [outputItem].every(op => op.mime.indexOf(".stderr") < 0);
+        execution.end(success, Date.now());
+        logEvent("notebook.cell.executed", {
+            language: cell.document.languageId,
+            success: String(success)
+        }, { duration: Date.now() - start });
     }
 
     private async execute(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument): Promise<void> {
+        logEvent("notebook.execute", {}, { cellCount: cells.length });
         const outputItems = await Promise.all(cells.map(c => this.createOutputItem(c, notebook, [])));
         for (let i = 0; i < cells.length; ++i) {
-            reporter.sendTelemetryEvent("controller.execute.cell");
+            logEvent("controller.execute.cell", { language: cells[i].document.languageId });
             this.executeCell(cells[i], outputItems[i], notebook, cells.filter(c => c !== cells[i]));
         }
     }

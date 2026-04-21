@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import localize from "./localize";
+import { logEvent } from "../telemetry";
 
 const LAST_VERSION_KEY = "ecl.lastVersion";
 
@@ -14,6 +15,10 @@ export async function checkForUpgrade(context: vscode.ExtensionContext): Promise
     const lastVersion = context.globalState.get<string>(LAST_VERSION_KEY);
 
     if (lastVersion !== currentVersion) {
+        logEvent("versionNotification.upgradeDetected", {
+            currentVersion,
+            previousVersion: lastVersion ?? "none"
+        });
         await showWhatsNewNotification(context, currentVersion, lastVersion);
     }
 
@@ -48,8 +53,13 @@ async function showWhatsNewNotification(
         ...buttons
     );
 
+    logEvent("versionNotification.shown", { currentVersion });
+
     if (action === learnMore && note.learnMoreUrl) {
+        logEvent("versionNotification.learnMore", { currentVersion });
         await openLearnMoreUrl(context, note.learnMoreUrl);
+    } else if (action === dismiss) {
+        logEvent("versionNotification.dismissed", { currentVersion });
     }
 }
 

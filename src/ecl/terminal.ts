@@ -2,6 +2,7 @@ import { ClientTools } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import * as os from "os";
 import { sessionManager } from "../hpccplatform/session";
+import { registerCommand } from "../telemetry";
 
 const PATH_SEP = os.platform() === "win32" ? ";" : ":";
 
@@ -22,13 +23,13 @@ export class ECLTerminal {
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
-        ctx.subscriptions.push(vscode.commands.registerCommand("ecl.createTerminal", () => {
+        registerCommand(ctx, "ecl.createTerminal", () => {
             sessionManager.bestClientTools().then(clientTools => {
                 return clientTools.version().then(() => clientTools);
             }).then((clientTools) => {
                 eclTerminal(clientTools);
             });
-        }));
+        });
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLTerminal {

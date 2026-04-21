@@ -13,6 +13,7 @@ import { HPCCResources } from "./hpccResources";
 import { ECLChat } from "./lm/chat";
 import { ECLLMTools } from "./lm/tools";
 import { SessionManager } from "../hpccplatform/session";
+import { logActivation, logEvent } from "../telemetry";
 
 const eclConfig = vscode.workspace.getConfiguration("ecl");
 initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
@@ -21,27 +22,28 @@ const logger = scopedLogger("ecl/main.ts");
 
 export function activate(ctx: vscode.ExtensionContext): void {
     logger.debug("Activating SessionManager");
-    SessionManager.attach(ctx);
+    logActivation("ecl.SessionManager", () => SessionManager.attach(ctx));
     logger.debug("Activating ECLDiagnostic");
-    ECLDiagnostic.attach(ctx);
+    logActivation("ecl.ECLDiagnostic", () => ECLDiagnostic.attach(ctx));
     logger.debug("Activating ECLCommands");
-    ECLCommands.attach(ctx);
+    logActivation("ecl.ECLCommands", () => ECLCommands.attach(ctx));
     logger.debug("Activating ECLEditor");
-    ECLEditor.attach(ctx);
+    logActivation("ecl.ECLEditor", () => ECLEditor.attach(ctx));
     logger.debug("Activating ECLStatusBar");
-    ECLStatusBar.attach(ctx);
+    logActivation("ecl.ECLStatusBar", () => ECLStatusBar.attach(ctx));
     logger.debug("Activating ECLDocumentSymbolProvider");
-    ECLDocumentSymbolProvider.attach(ctx);
+    logActivation("ecl.ECLDocumentSymbolProvider", () => ECLDocumentSymbolProvider.attach(ctx));
     logger.debug("Activating ECLWatchTree");
-    ECLWatchTree.attach(ctx);
+    logActivation("ecl.ECLWatchTree", () => ECLWatchTree.attach(ctx));
     logger.debug("Activating ECLWatchPanelView");
-    ECLWatchPanelView.attach(ctx);
+    logActivation("ecl.ECLWatchPanelView", () => ECLWatchPanelView.attach(ctx));
     logger.debug("Activating ECLTerminal");
-    ECLTerminal.attach(ctx);
+    logActivation("ecl.ECLTerminal", () => ECLTerminal.attach(ctx));
     logger.debug("Activating HPCCResources");
-    HPCCResources.attach(ctx);
+    logActivation("ecl.HPCCResources", () => HPCCResources.attach(ctx));
     logger.debug("Activating Chat");
-    ECLChat.attach(ctx);
+    logActivation("ecl.Chat", () => ECLChat.attach(ctx));
     logger.debug("Activating LM Tools");
-    ECLLMTools.attach(ctx);
+    logActivation("ecl.LMTools", () => ECLLMTools.attach(ctx));
+    logEvent("ecl.activated");
 }

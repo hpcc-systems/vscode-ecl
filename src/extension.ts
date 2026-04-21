@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { initialize } from "./util/localize";
-import { activate as telemetryActivate, deactivate as telemetryDeactivate, reporter } from "./telemetry";
+import { activate as telemetryActivate, deactivate as telemetryDeactivate, logEvent, logError, time } from "./telemetry";
 import { activate as notebookActivate } from "./notebook";
 import { CredentialManager } from "./util/credentialManager";
 import { checkForUpgrade } from "./util/versionNotification";
@@ -8,6 +8,7 @@ import { checkForUpgrade } from "./util/versionNotification";
 export function activate(context: vscode.ExtensionContext): void {
     performance.mark("extension-start");
     telemetryActivate(context);
+    const endActivation = time("extension.activate");
     CredentialManager.attach(context);
     notebookActivate(context);
     initialize().then(() => {
@@ -18,7 +19,11 @@ export function activate(context: vscode.ExtensionContext): void {
             // import("./dashy/main.js").then(({ activate }) => activate(context))
         ]);
     }).then(() => {
-        reporter.sendTelemetryEvent("initialized");
+        endActivation();
+        logEvent("initialized");
+    }, err => {
+        endActivation();
+        logError("initialize.error", err);
     });
 }
 
