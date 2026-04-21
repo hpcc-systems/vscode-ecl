@@ -14,16 +14,11 @@ interface FrameProps {
 export const Frame: React.FunctionComponent<FrameProps> = () => {
 
     const state = useMessageReceiver();
-    const [name, setName] = React.useState<string>(state?.resultName ?? "");
-
-    React.useEffect(() => {
-        setName(state?.resultName ?? "");
-    }, [state?.wuid, state?.resultName]);
 
     return <ThemeProvider style={{ height: "100%" }}>
         {
             state ?
-                <WUDetails opts={state} wuid={state.wuid} name={name} setName={setName}></WUDetails> :
+                <WUDetails key={`${state.wuid}-${state.resultName}`} opts={state} wuid={state.wuid} initialName={state.resultName ?? ""}></WUDetails> :
                 <div>...loading...</div>
         }
     </ThemeProvider >;

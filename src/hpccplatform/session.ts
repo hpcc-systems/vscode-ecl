@@ -559,7 +559,6 @@ export class SessionManager {
         const activeUri: string = vscode.window.activeTextEditor?.document?.uri.toString(true) || "";
         if (activeUri) {
             const eclConfig = vscode.workspace.getConfiguration("ecl", null);
-            isPinned = false;
             const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
             isPinned = !!pinnedLaunchConfigurations[activeUri];
         }

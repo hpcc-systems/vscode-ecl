@@ -108,8 +108,6 @@ export class SaveData {
         const numPieces = Math.floor(totalRows / pieceSize);
         const pieces = numPieces == 0 ? 1 : numPieces;
         let i = 0;
-        let number = 0;
-        let displayNum = 0;
 
         if (this._type == SaveFileType.CSV) {
             this._createCsvWriter = createArrayCsvWriter;
@@ -120,8 +118,8 @@ export class SaveData {
         }
 
         for (let s = 0; i < pieces; s += pieceSize, i++) {
-            number = totalRows < pieceSize ? totalRows : pieceSize;
-            displayNum = s + pieceSize > totalRows ? totalRows : s + pieceSize;
+            const number = totalRows < pieceSize ? totalRows : pieceSize;
+            const displayNum = s + pieceSize > totalRows ? totalRows : s + pieceSize;
             eclStatusBar.showClientTools(`${result.Name} (${displayNum} of ${totalRows})...`, `${localize("Saving data to")} ${this._filePath}`);
             await this.fetchRows(result, s, number);
         }
@@ -202,13 +200,10 @@ export class SaveData {
             if (result.Total > maxRowsFound)
                 maxRowsFound = result.Total;
         }
-        let userLimit = -1;
         if (maxRowsFound > this._maxRows) {
-            userLimit = await this.promptUserMaxRows(maxRowsFound);
-        } else {
-            userLimit = this._maxRows;
+            return this.promptUserMaxRows(maxRowsFound);
         }
-        return userLimit;
+        return this._maxRows;
     }
 
     async promptUserMaxRows(rowCount: number): Promise<number> {

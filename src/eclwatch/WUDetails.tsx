@@ -24,19 +24,18 @@ const pivotStyles: IStyleFunctionOrObject<IPivotStyleProps, IPivotStyles> = {
 export interface WUDetailsProps {
     opts: IOptions;
     wuid: string;
-    name: string;
-    setName: React.Dispatch<React.SetStateAction<string>>;
+    initialName: string;
 }
 
 export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
     opts,
     wuid,
-    name,
-    setName
+    initialName
 }) => {
 
     const pivotRef = React.useRef<HTMLDivElement>(null);
 
+    const [name, setName] = React.useState(initialName);
     const [selectedValue, setSelectedValue] = React.useState<string | undefined>();
     const [spinnerMessage, setSpinnerMessage] = React.useState("Loading...");
     const [complete, setComplete] = React.useState(false);
@@ -67,8 +66,6 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
         }
 
         if (wuid) {
-            setSpinnerMessage("Loading...");
-            update(false, [], []);
             const wu = Workunit.attach(opts, wuid);
             wu.refresh().then(() => {
                 if (wu.isComplete()) {
@@ -82,20 +79,17 @@ export const WUDetails: React.FunctionComponent<WUDetailsProps> = ({
                 setSpinnerMessage(e.message);
                 update(true, [], []);
             });
-        } else {
-            setSpinnerMessage("");
-            update(true, [], []);
         }
 
         return () => {
             canceled = true;
         };
-    }, [name, opts, setName, wuid]);
+    }, [name, opts, wuid]);
 
     const handleLinkClick = React.useCallback((item?: PivotItem) => {
         setName(item?.props.itemKey ?? "");
         setSelectedValue(item?.props["data-result"]?.Value);
-    }, [setName]);
+    }, []);
 
     const hasIssues = exceptions.length > 0;
     const hasResults = results.length > 0;

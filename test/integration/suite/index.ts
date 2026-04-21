@@ -1,31 +1,25 @@
 import * as path from 'path';
-import Mocha from 'mocha';
 import { globSync } from 'glob';
 
-export function run(): Promise<void> {
-    const mocha = new Mocha({
-        ui: 'tdd',
-        color: true,
-        timeout: 20000
-    });
-
+export async function run(): Promise<void> {
     const testsRoot = path.resolve(__dirname);
+    const files = globSync('**/*.test.js', { cwd: testsRoot });
 
-    return new Promise((resolve, reject) => {
-        try {
-            const files = globSync('**/*.test.js', { cwd: testsRoot });
-            for (const f of files) {
-                mocha.addFile(path.resolve(testsRoot, f));
+    let failures = 0;
+
+    for (const f of files) {
+        const mod = require(path.resolve(testsRoot, f));
+        if (typeof mod.run === 'function') {
+            try {
+                await mod.run();
+            } catch (e) {
+                failures++;
+                console.error(`FAIL: ${f}`, e);
             }
-            mocha.run((failures: number) => {
-                if (failures > 0) {
-                    reject(new Error(`${failures} tests failed.`));
-                } else {
-                    resolve();
-                }
-            });
-        } catch (e) {
-            reject(e);
         }
-    });
+    }
+
+    if (failures > 0) {
+        throw new Error(`${failures} test files failed.`);
+    }
 }

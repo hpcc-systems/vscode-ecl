@@ -9,8 +9,7 @@
         "skipLibCheck": true,
         "types": [
             "node",
-            "vscode",
-            "mocha"
+            "vscode"
         ],
         "noEmitOnError": true
     },
