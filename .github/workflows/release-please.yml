@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - id: release
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: .github/release-please-config.json
@@ -53,7 +53,7 @@ jobs:
           echo "version=${TAG_NAME##*-v}" >> $GITHUB_OUTPUT
           echo "package_name=${RELEASE_NAME%:*}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ steps.event_details.outputs.tag_name }}
           submodules: "recursive"
@@ -80,7 +80,7 @@ jobs:
       repository-projects: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: "recursive"
 
