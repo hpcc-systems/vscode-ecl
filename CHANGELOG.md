@@ -9,6 +9,16 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.37.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.37.0...ecl-v2.37.1) (2026-06-17)
+
+
+### Bug Fixes
+
+* update dependencies and improve ECL assistant instructions ([18ddf6e](https://github.com/hpcc-systems/vscode-ecl/commit/18ddf6e7962d5d06ef83fbf78969cae9fd8f908d))
+* update dependencies to latest versions ([ee39d4f](https://github.com/hpcc-systems/vscode-ecl/commit/ee39d4f736d7fec5286dc709b1cd11ba3837f324))
+* update dependencies to latest versions ([f58145a](https://github.com/hpcc-systems/vscode-ecl/commit/f58145a3b5aad396ee1cf788dea32f65dc1ade41))
+* update package.json and add css type declarations ([dea465d](https://github.com/hpcc-systems/vscode-ecl/commit/dea465dce64fc631ac6211300b518cd265c74dde))
+
 ## [2.37.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.36.0...ecl-v2.37.0) (2026-02-13)
 
 
