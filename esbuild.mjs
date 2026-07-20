@@ -50,7 +50,7 @@ async function bundle(tsconfigRaw, entryPoint, platform, format, plugins = []) {
                 dest: path.join(outputDirectory, "docs.vecdb"),
             }),
             copyStaticFiles({
-                src: "./node_modules/@hpcc-js/dgrid-shim/dist/index.min.js",
+                src: "./node_modules/@hpcc-js/dgrid-shim/dist/index.js",
                 dest: path.join(outputDirectory, "dgrid-shim.min.js"),
             })
         ]),

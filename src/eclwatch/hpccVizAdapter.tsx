@@ -1,5 +1,5 @@
 import * as React from "react";
-import useResizeObserver from "use-resize-observer/polyfilled";
+import { useResizeObserver } from "use-resize-observer";
 import { Widget } from "@hpcc-js/common";
 
 export interface VisualizationProps {

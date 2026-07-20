@@ -1,5 +1,5 @@
 import * as React from "react";
-import useResizeObserver from "use-resize-observer/polyfilled";
+import { useResizeObserver } from "use-resize-observer";
 
 export interface HolyGrailProps {
     header?: any;

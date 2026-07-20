@@ -2,7 +2,7 @@ import type { ActivationFunction, RendererContext } from "vscode-notebook-render
 import type { WUOutput } from "../controller/serializer-types";
 
 import * as React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
+import { createRoot, type Root } from "react-dom/client";
 import { IOptions, Workunit } from "@hpcc-js/comms";
 import { WUOutputTables } from "./WUOutputTable";
 
@@ -24,20 +24,33 @@ export const activate: ActivationFunction = context => {
 class WURenderer {
 
     protected context: RendererContext<any>;
-    _element: any;
-    _data: WUOutput;
+    _element: HTMLElement | undefined;
+    _root: Root | undefined;
+    _data: WUOutput | undefined;
     _configuration: any;
 
     constructor(context: RendererContext<any>) {
+        this.context = context;
         if (this.context.onDidReceiveMessage) {
             this.context.onDidReceiveMessage(msg => this.onDidReceiveMessage(msg));
         }
     }
 
-    disposeOutputItem(id) {
-        if (this._element) {
-            unmountComponentAtNode(this._element);
+    disposeOutputItem(id?: string) {
+        if (this._root) {
+            this._root.unmount();
+            this._root = undefined;
         }
+    }
+
+    renderComponent(component: React.ReactNode) {
+        if (!this._element) {
+            return;
+        }
+        if (!this._root) {
+            this._root = createRoot(this._element);
+        }
+        this._root.render(component);
     }
 
     onDidReceiveMessage(msg: any) {
@@ -48,34 +61,45 @@ class WURenderer {
         }
     }
 
-    renderOutputItem(data, element) {
+    renderOutputItem(data: { json(): WUOutput }, element: HTMLElement) {
         this._data = data.json();
         this._element = element;
-        if (this._data.results) {
-            render(<WUOutputTables {...this._data} />, this._element);
+
+        if (!this._data) {
+            return;
+        }
+
+        const outputData = this._data;
+        if (outputData.results) {
+            this.renderComponent(<WUOutputTables {...outputData} />);
         } else if (this.context.postMessage) {
-            this.context.postMessage({ command: "fetchConfig", name: this._data.configuration });
+            this.context.postMessage({ command: "fetchConfig", name: outputData.configuration });
         }
     }
 
     render(config: IOptions) {
-        const wu = Workunit.attach(config, this._data.wuid);
+        if (!this._data) {
+            return;
+        }
 
-        wu.watchUntilComplete((changes) => {
-            render(<div>{this._data.wuid}:  {wu.State}</div>, this._element);
+        const outputData = this._data;
+        const wu = Workunit.attach(config, outputData.wuid);
+
+        wu.watchUntilComplete(() => {
+            this.renderComponent(<div>{outputData.wuid}:  {wu.State}</div>);
         });
         wu.watchUntilComplete().then(wu => {
             wu.fetchResults().then(results => {
-                render(<>
-                    <div>{this._data.wuid}:  {wu.State}</div>
+                this.renderComponent(<>
+                    <div>{outputData.wuid}:  {wu.State}</div>
                     <div>Results:  {results.map(r => `${r.Name.split(" ").join("_")} (${r.Value})`).join(", ")}</div>
-                </>, this._element);
+                </>);
             }).catch(e => {
-                render(<>
+                this.renderComponent(<>
                     <div>{JSON.stringify(e)}</div>
-                    <div>{JSON.stringify(this._data)}</div>
+                    <div>{JSON.stringify(outputData)}</div>
                     <div>{JSON.stringify(config)}</div>
-                </>, this._element);
+                </>);
             });
         });
     }
