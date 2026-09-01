@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import localize from "../../util/localize";
 import { serializer } from "./serializer";
+import { registerCommand } from "../../telemetry";
 
 export let commands: Commands;
 export class Commands {
@@ -9,10 +10,10 @@ export class Commands {
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
 
-        ctx.subscriptions.push(vscode.commands.registerCommand("notebook.cell.public", this.public, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("notebook.cell.private", this.private, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("notebook.cell.name", this.cellName, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("notebook.cell.db", this.dbName, this));
+        registerCommand(ctx, "notebook.cell.public", this.public, this);
+        registerCommand(ctx, "notebook.cell.private", this.private, this);
+        registerCommand(ctx, "notebook.cell.name", this.cellName, this);
+        registerCommand(ctx, "notebook.cell.db", this.dbName, this);
 
         // cell toolbar meta  ---
         ctx.subscriptions.push(vscode.window.onDidChangeNotebookEditorSelection(e => {

@@ -5,12 +5,14 @@ import { DocumentSymbolProvider } from "./documentSymbolProvider";
 import { Editor } from "./editor";
 import { StatusBar } from "./status";
 import { locateClientTools } from "./clientTools";
+import { logActivation, logEvent } from "../telemetry";
 
 export function activate(ctx: vscode.ExtensionContext): void {
-    Diagnostic.attach(ctx);
-    Commands.attach(ctx);
-    Editor.attach(ctx);
-    StatusBar.attach(ctx);
-    DocumentSymbolProvider.attach(ctx);
+    logActivation("kel.Diagnostic", () => Diagnostic.attach(ctx));
+    logActivation("kel.Commands", () => Commands.attach(ctx));
+    logActivation("kel.Editor", () => Editor.attach(ctx));
+    logActivation("kel.StatusBar", () => StatusBar.attach(ctx));
+    logActivation("kel.DocumentSymbolProvider", () => DocumentSymbolProvider.attach(ctx));
     locateClientTools();
+    logEvent("kel.activated");
 }

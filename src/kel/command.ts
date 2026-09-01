@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import localize from "../util/localize";
 import { locateClientTools, selectCTVersion } from "./clientTools";
 import { Diagnostic } from "./diagnostic";
+import { registerCommand, logEvent, logError } from "../telemetry";
 
 const logger = scopedLogger("kel/command.ts");
 
@@ -26,10 +27,10 @@ export class Commands {
         this._ctx = ctx;
         this._diagnostic = Diagnostic.attach(ctx);
 
-        ctx.subscriptions.push(vscode.commands.registerCommand("kel.checkSyntax", this.activeCheckSyntax, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("kel.generate", this.activeGenerate, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("kel.reveal", this.activeReveal, this));
-        ctx.subscriptions.push(vscode.commands.registerCommand("kel.selectCTVersion", selectCTVersion));
+        registerCommand(ctx, "kel.checkSyntax", this.activeCheckSyntax, this);
+        registerCommand(ctx, "kel.generate", this.activeGenerate, this);
+        registerCommand(ctx, "kel.reveal", this.activeReveal, this);
+        registerCommand(ctx, "kel.selectCTVersion", selectCTVersion);
     }
 
     static attach(ctx: vscode.ExtensionContext): Commands {
@@ -47,10 +48,12 @@ export class Commands {
         if (doc) {
             doc.save();
             logger.debug("checkSyntax-start");
+            logEvent("kel.checkSyntax.start");
             this._diagnostic.set(doc.uri, [checking]);
             locateClientTools().then(clientTools => {
                 if (!clientTools) {
                     logger.debug("checkSyntax-noClientTools");
+                    logEvent("kel.checkSyntax.noClientTools");
                     this._diagnostic.set(doc.uri, [noClientTools]);
                 } else {
                     logger.debug("checkSyntax-check-start");
@@ -75,6 +78,9 @@ export class Commands {
                             this._diagnostic.set(uri, mappedErrors[fp]);
                         }
                         logger.debug("checkSyntax-check-response-end");
+                        logEvent("kel.checkSyntax.success", {}, { errorCount: response.errors.all().length });
+                    }).catch(e => {
+                        logError("kel.checkSyntax.error", e);
                     });
                 }
             });
@@ -88,9 +94,16 @@ export class Commands {
     generate(doc?: vscode.TextDocument) {
         if (doc) {
             doc.save();
+            logEvent("kel.generate.start");
             locateClientTools().then(clientTools => {
                 if (clientTools) {
-                    clientTools.generate(doc.uri);
+                    return clientTools.generate(doc.uri).then(() => {
+                        logEvent("kel.generate.success");
+                    }, e => {
+                        logError("kel.generate.error", e);
+                    });
+                } else {
+                    logEvent("kel.generate.noClientTools");
                 }
             });
         }

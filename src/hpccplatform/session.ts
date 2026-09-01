@@ -6,6 +6,7 @@ import { LaunchConfigState, credentialManager, Credentials } from "../util/crede
 import { LaunchMode } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
 import { eclTempFile } from "../util/fs";
+import { registerCommand, logEvent, logError } from "../telemetry";
 
 const logger = scopedLogger("hpccplatform/session.ts");
 
@@ -177,41 +178,45 @@ export class SessionManager {
         this._statusBarPin = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, Number.MIN_VALUE);
         this._statusBarPin.command = "hpccPlatform.pin";
 
-        vscode.commands.registerCommand("hpccPlatform.pin", async () => {
+        registerCommand(this._ctx, "hpccPlatform.pin", async () => {
             const eclConfig = vscode.workspace.getConfiguration("ecl", null);
             const activeUri: string = vscode.window.activeTextEditor?.document?.uri.toString(true) || "";
             if (activeUri) {
                 const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
+                let pinned: boolean;
                 if (pinnedLaunchConfigurations[activeUri]) {
                     pinnedLaunchConfigurations[activeUri] = undefined;
                     this._pinnedSession = undefined;
+                    pinned = false;
                 } else {
                     this._pinnedSession = new Session(this.session.id, this.session.overriddenTargetCluster);
                     pinnedLaunchConfigurations[activeUri] = { launchConfiguration: this.session.id, targetCluster: this.session.overriddenTargetCluster };
+                    pinned = true;
                 }
                 await eclConfig.update("pinnedLaunchConfigurations", pinnedLaunchConfigurations);
                 this.updateSettings();
                 this.refreshStatusBar();
+                logEvent("hpccPlatform.pin.toggle", { pinned: String(pinned) });
             }
         });
 
-        vscode.commands.registerCommand("hpccPlatform.switch", async () => {
+        registerCommand(this._ctx, "hpccPlatform.switch", async () => {
             this.switch();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.switchTargetCluster", async () => {
+        registerCommand(this._ctx, "hpccPlatform.switchTargetCluster", async () => {
             this.switchTargetCluster();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.eclwatch", async () => {
+        registerCommand(this._ctx, "hpccPlatform.eclwatch", async () => {
             vscode.env.openExternal(vscode.Uri.parse(`${this.session.baseUrl()}/esp/files/stub.htm`));
         });
 
-        vscode.commands.registerCommand("hpccPlatform.login", async () => {
+        registerCommand(this._ctx, "hpccPlatform.login", async () => {
             await this.login();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.logout", async () => {
+        registerCommand(this._ctx, "hpccPlatform.logout", async () => {
             await this.logout();
         });
 
@@ -240,6 +245,7 @@ export class SessionManager {
             const { targetCluster } = event.body;
             switch (event.event) {
                 case "LaunchRequest":
+                    logEvent("debug.launchRequest");
                     if (this.session.id !== id) {
                         this.switchTo(id, targetCluster);
                     }
@@ -253,8 +259,21 @@ export class SessionManager {
             }
         });
 
+        vscode.debug.onDidStartDebugSession(s => {
+            if (s.type === "ecl") {
+                logEvent("debug.session.start", { type: s.type });
+            }
+        });
+
+        vscode.debug.onDidTerminateDebugSession(s => {
+            if (s.type === "ecl") {
+                logEvent("debug.session.terminate", { type: s.type });
+            }
+        });
+
         vscode.workspace.onDidChangeConfiguration(e => {
             if (e.affectsConfiguration("launch")) {
+                logEvent("hpccPlatform.launchConfig.changed");
                 launchConfigurations(true);
                 const currentConfig = launchConfiguration(this.session?.id);
                 if (currentConfig && this.session) {
@@ -361,6 +380,7 @@ export class SessionManager {
     nbSubmitURI(uri: vscode.Uri, mode: LaunchMode = "submit"): Promise<Workunit> | undefined {
         if (this.session) {
             return this.session.submit(uri, mode).then(wu => {
+                logEvent("workunit.created", { source: "notebook", mode });
                 this._onDidCreateWorkunit.fire({ source: "notebook", workunit: wu });
                 return wu;
             });
@@ -370,9 +390,11 @@ export class SessionManager {
     submitURI(uri: vscode.Uri, mode: LaunchMode = "submit") {
         if (this.session) {
             return this.session.submit(uri, mode).then(wu => {
+                logEvent("workunit.created", { source: "editor", mode });
                 this._onDidCreateWorkunit.fire({ source: "editor", workunit: wu });
                 return wu;
             }).catch(e => {
+                logError("workunit.create.error", e, { source: "editor", mode });
                 vscode.window.showErrorMessage(e.message);
             });
         }
@@ -400,9 +422,11 @@ export class SessionManager {
                 await credentialManager.migrateLaunchConfigIfNeeded(rawConfig);
             } catch (error) {
                 logger.error(`Failed to migrate credentials during switchTo: ${error}`);
+                logError("hpccPlatform.switchTo.migrateError", error);
             }
         }
 
+        const previousId = this.session?.id;
         if (!this.session || this.session.id !== id) {
             const configs = launchConfigurations().map(lc => lc.name);
             const launchID = configs.indexOf(id) >= 0 ? id : configs[0];
@@ -416,6 +440,10 @@ export class SessionManager {
         }
 
         this.updateSettings();
+
+        if (previousId !== this.session?.id) {
+            logEvent("hpccPlatform.switchTo", { hasTargetCluster: String(!!targetCluster) });
+        }
 
         if (this.session) {
             const storedCreds = await this.session.getStoredCredentials();
@@ -524,6 +552,7 @@ export class SessionManager {
     async login() {
         if (!this.session) {
             vscode.window.showWarningMessage(localize("No HPCC Platform connection available"));
+            logEvent("hpccPlatform.login.noSession");
             return;
         }
 
@@ -532,15 +561,18 @@ export class SessionManager {
             vscode.window.showInformationMessage(localize("Successfully logged in to HPCC Platform"));
             vscode.commands.executeCommand("hpccPlatform.userRefresh");
             await this.refreshStatusBar(LaunchConfigState.Ok);
+            logEvent("hpccPlatform.login.success");
         } catch (error) {
             vscode.window.showErrorMessage(localize("Login failed") + `: ${error instanceof Error ? error.message : String(error)}`);
             await this.refreshStatusBar(LaunchConfigState.CredentialsRequired);
+            logError("hpccPlatform.login.error", error);
         }
     }
 
     async logout() {
         if (!this.session) {
             vscode.window.showWarningMessage(localize("No HPCC Platform connection available"));
+            logEvent("hpccPlatform.logout.noSession");
             return;
         }
 
@@ -549,8 +581,10 @@ export class SessionManager {
             await this.switchTo();
 
             vscode.window.showInformationMessage(localize("Successfully logged out from HPCC Platform"));
+            logEvent("hpccPlatform.logout.success");
         } catch (error) {
             vscode.window.showErrorMessage(localize("Logout failed") + `: ${error instanceof Error ? error.message : String(error)}`);
+            logError("hpccPlatform.logout.error", error);
         }
     }
 

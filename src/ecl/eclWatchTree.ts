@@ -6,6 +6,7 @@ import { Item, Tree } from "./tree";
 import { eclWatchPanelView } from "./eclWatchPanelView";
 import { SaveData } from "./saveData";
 import { formatWorkunitURL, formatResultURL, formatResultsURL, formatMetricsURL } from "./util";
+import { registerCommand } from "../telemetry";
 
 const PrevWeeks: string[] = [localize("Last Week"), localize("Two Weeks Ago"), localize("Three Weeks Ago"), localize("Four Weeks Ago"), localize("Five Weeks Ago"), localize("Six Weeks Ago"), localize("Seven Weeks Ago")];
 
@@ -48,132 +49,132 @@ export class ECLWatchTree extends Tree {
             }
         });
 
-        vscode.commands.registerCommand("hpccPlatform.myWorkunits", async () => {
+        registerCommand(ctx, "hpccPlatform.myWorkunits", async () => {
             this._myWorkunits = false;
             this.refresh();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.allWorkunits", async () => {
+        registerCommand(ctx, "hpccPlatform.allWorkunits", async () => {
             this._myWorkunits = true;
             this.refresh();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.userRefresh", () => {
+        registerCommand(ctx, "hpccPlatform.userRefresh", () => {
             this.refresh();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.refresh", (element?: Item) => {
+        registerCommand(ctx, "hpccPlatform.refresh", (element?: Item) => {
             this.refresh(element);
         });
 
-        vscode.commands.registerCommand("hpccPlatform.openResults", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.openResults", (wuNode: ECLWUNode) => {
             wuNode.openResults();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.browseResults", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.browseResults", (wuNode: ECLWUNode) => {
             wuNode.browseResults();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.browseMetrics", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.browseMetrics", (wuNode: ECLWUNode) => {
             wuNode.browseMetrics();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.browseWUDetails", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.browseWUDetails", (wuNode: ECLWUNode) => {
             wuNode.browseWUDetails();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.openECL", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.openECL", (wuNode: ECLWUNode) => {
             wuNode.openECL();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.copyWUID", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.copyWUID", (wuNode: ECLWUNode) => {
             wuNode.copyWuid();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.saveWUResults", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.saveWUResults", (wuNode: ECLWUNode) => {
             wuNode.saveWUResults();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.abortWU", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.abortWU", (wuNode: ECLWUNode) => {
             wuNode.abort();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.resubmitWU", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.resubmitWU", (wuNode: ECLWUNode) => {
             wuNode.resubmit();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.deleteWU", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.deleteWU", (wuNode: ECLWUNode) => {
             wuNode.delete();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.protectWU", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.protectWU", (wuNode: ECLWUNode) => {
             wuNode.protect();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.unprotectWU", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.unprotectWU", (wuNode: ECLWUNode) => {
             wuNode.unprotect();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.moveJobUp", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.moveJobUp", (wuNode: ECLWUNode) => {
             wuNode.moveJobUp();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.moveJobDown", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.moveJobDown", (wuNode: ECLWUNode) => {
             wuNode.moveJobDown();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.moveJobBack", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.moveJobBack", (wuNode: ECLWUNode) => {
             wuNode.moveJobBack();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.moveJobFront", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.moveJobFront", (wuNode: ECLWUNode) => {
             wuNode.moveJobFront();
         });
-        vscode.commands.registerCommand("hpccPlatform.setStateCompiled", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateCompiled", (wuNode: ECLWUNode) => {
             wuNode.setStateCompiled();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateRunning", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateRunning", (wuNode: ECLWUNode) => {
             wuNode.setStateRunning();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateCompleted", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateCompleted", (wuNode: ECLWUNode) => {
             wuNode.setStateCompleted();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateFailed", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateFailed", (wuNode: ECLWUNode) => {
             wuNode.setStateFailed();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateArchived", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateArchived", (wuNode: ECLWUNode) => {
             wuNode.setStateArchived();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateAborting", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateAborting", (wuNode: ECLWUNode) => {
             wuNode.setStateAborting();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateAborted", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateAborted", (wuNode: ECLWUNode) => {
             wuNode.setStateAborted();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateBlocked", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateBlocked", (wuNode: ECLWUNode) => {
             wuNode.setStateBlocked();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateSubmitted", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateSubmitted", (wuNode: ECLWUNode) => {
             wuNode.setStateSubmitted();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateScheduled", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateScheduled", (wuNode: ECLWUNode) => {
             wuNode.setStateScheduled();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateCompiling", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateCompiling", (wuNode: ECLWUNode) => {
             wuNode.setStateCompiling();
         });
 
-        vscode.commands.registerCommand("hpccPlatform.setStateWait", (wuNode: ECLWUNode) => {
+        registerCommand(ctx, "hpccPlatform.setStateWait", (wuNode: ECLWUNode) => {
             wuNode.setStateWait();
         });
 
