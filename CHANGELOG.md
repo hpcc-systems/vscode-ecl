@@ -9,6 +9,14 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.37.2](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.37.1...ecl-v2.37.2) (2026-09-04)
+
+
+### Bug Fixes
+
+* bump TypeScript to version 7.0.2 ([cce2c2d](https://github.com/hpcc-systems/vscode-ecl/commit/cce2c2d41e1711f66c90d82cca9057d50093aacb))
+* bump versions (security) ([e23df0f](https://github.com/hpcc-systems/vscode-ecl/commit/e23df0fd27adff0c00ed792b8c48cac0395b7c50))
+
 ## [2.37.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.37.0...ecl-v2.37.1) (2026-06-17)
 
 
