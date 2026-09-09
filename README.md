@@ -12,6 +12,12 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### v2.38.x
+
+- Improved KEL client-tool discovery, including installations found in HPCC Systems locations and the local Maven repository.
+- Added the `kel.kelPath` setting to select a preferred KEL installation instead of using automatic detection.
+- Added clearer progress, completion, failure, and diagnostic feedback for KEL syntax checking and ECL generation.
+
 ### v2.30.x
 
 - Added `ecl.preferredECLWatch` setting, allows user to nominate preferred version of ECL Watch when opening "external" pages.
@@ -239,9 +245,6 @@ The following ECL specific commands are available. Note: These commands will **n
 
 | Command | Shortcut | Description |
 | ------- | :------: | ----------- |
-
-\n+## Testing
-\n+Two layers of automated tests are provided:\n+\n+1. Unit (Vitest): Fast logic tests under `test/` (e.g. `manifest.test.ts`). Run with:\n+ `bash\n+   npm run test-run\n+   `\n+2. Integration (VS Code host + Mocha): Live extension environment tests under `test/integration/`. Run with:\n+ `bash\n+   npm run test:integration\n+   `\n+\n+Run both sequentially:\n+`bash\n+npm run test:all\n+`\n+\n+Integration tests use `@vscode/test-electron` to launch an isolated VS Code. Some activation scenarios are skipped if optional dependency extensions (e.g. `GordonSmith.observable-js`) are not installed in the harness; such tests are marked pending instead of failing. Add new integration suites in `test/integration/suite/*.test.ts` and keep them focused (assert command registration, language features, etc.).\n+
 | Copy as ECL ID | | Copy path as Qualified ECL ID |
 
 #### Within the Workunit Tree Title Bar:
@@ -299,17 +302,29 @@ Run in watch mode:
 npm run test-vitest
 ```
 
-One-off with coverage:
+Run once:
+
+```
+npm run test-run
+```
+
+Run with coverage:
 
 ```
 npm run test-coverage
+```
+
+Run the VS Code integration tests:
+
+```
+npm run test-integration
 ```
 
 Configuration lives in `vitest.config.ts` (jsdom environment). Avoid importing heavy VS Code APIs directly—wrap them so they can be mocked for unit tests.
 
 ### Manifest Assertions
 
-`test/manifest.test.ts` validates that required activation events and core commands are present in `package.json` without launching VS Code. If full extension‑host integration tests are needed later, a harness (e.g. `@vscode/test-electron`) can be reintroduced in a future change.
+`test/manifest.test.ts` validates that required activation events and core commands are present in `package.json` without launching VS Code.
 
 ### Full Pipeline
 
@@ -404,6 +419,7 @@ The following KEL specific commands are available. Note: These commands will **n
 
 - Syntax Check **[F7]** - _Save + check syntax of current file._
 - Generate ECL **[F5]** - _Save + generate ECL files._
+- Reveal Generated ECL - _Open the generated ECL folder in the file explorer._
 
 #### Within the Status Bar
 
@@ -415,11 +431,13 @@ _Click on KEL Client Tools Version_
 
 The following Visual Studio Code settings are available for the KEL extension. These can be set in user preferences (`ctrl/cmd+,`) or directly in your current workspace (`.vscode/settings.json`):
 
+KEL is auto-detected from supported HPCC Systems installations and the local Maven repository. Set `kel.kelPath` to use a specific `KEL.jar`; selecting a client-tools version also stores that preferred path.
+
 ```javascript
   // Java runtime arguments (e.g. -Xmx12G).
   "kel.javaArgs": []
 
-  // Override KEL auto detection
+  // Override KEL auto detection with a preferred KEL.jar path.
   "kel.kelPath": ""
 
   // Check syntax on save.
