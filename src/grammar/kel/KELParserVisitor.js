@@ -378,8 +378,32 @@ export default class KELParserVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by KELParser#eclExpression.
+	visitEclExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#javaFunction.
+	visitJavaFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by KELParser#queryDeclaration.
 	visitQueryDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#expressionList.
+	visitExpressionList(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by KELParser#extension.
+	visitExtension(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -720,6 +744,12 @@ export default class KELParserVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by KELParser#nullConstant.
+	visitNullConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by KELParser#typedConstant.
 	visitTypedConstant(ctx) {
 	  return this.visitChildren(ctx);
@@ -788,12 +818,6 @@ export default class KELParserVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by KELParser#badRealConst.
 	visitBadRealConst(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by KELParser#eclExpression.
-	visitEclExpression(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

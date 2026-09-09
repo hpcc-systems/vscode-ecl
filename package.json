@@ -19,6 +19,7 @@
     "install-playright-with-deps": "npx playwright install --with-deps",
     "clean": "rimraf --glob out lib* dist* types *.vsix coverage",
     "gen-grammar": "run-script-os",
+    "gen-grammar:darwin": "./scripts/grammar-generate.sh",
     "gen-grammar:linux": "./scripts/grammar-generate.sh",
     "gen-grammar:win32": "wsl -e ./scripts/grammar-generate.sh",
     "gen-docs-vecdb": "run-script-os",
@@ -61,15 +62,15 @@
     "@eslint/js": "10.0.1",
     "@fluentui/react": "8.125.7",
     "@fluentui/react-hooks": "8.10.2",
-    "@hpcc-js/api": "3.6.0",
-    "@hpcc-js/common": "3.10.0",
-    "@hpcc-js/comms": "3.19.0",
-    "@hpcc-js/dgrid": "3.10.1",
-    "@hpcc-js/dgrid-shim": "3.5.6",
-    "@hpcc-js/esbuild-plugins": "1.12.0",
+    "@hpcc-js/api": "3.7.0",
+    "@hpcc-js/common": "3.11.0",
+    "@hpcc-js/comms": "3.20.0",
+    "@hpcc-js/dgrid": "3.11.2",
+    "@hpcc-js/dgrid-shim": "3.5.8",
+    "@hpcc-js/esbuild-plugins": "1.12.1",
     "@hpcc-js/observable-shim": "3.1.0",
-    "@hpcc-js/observablehq-compiler": "3.11.0",
-    "@hpcc-js/util": "3.7.0",
+    "@hpcc-js/observablehq-compiler": "3.11.1",
+    "@hpcc-js/util": "3.7.1",
     "@hpcc-js/wasm-expat": "1.16.0",
     "@hpcc-js/wasm-llama": "1.6.0",
     "@hpcc-js/wasm-zstd": "1.16.0",
@@ -82,7 +83,7 @@
     "@observablehq/runtime": "6.0.0",
     "@observablehq/stdlib": "5.8.8",
     "@octokit/rest": "22.0.1",
-    "@types/node": "26.4.1",
+    "@types/node": "26.5.0",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.7",
     "@types/tmp": "0.2.6",
@@ -119,7 +120,7 @@
     "run-script-os": "1.1.6",
     "tslib": "2.8.1",
     "typescript": "npm:@typescript/typescript6@6.0.2",
-    "typescript-eslint": "8.69.0",
+    "typescript-eslint": "8.70.0",
     "use-resize-observer": "10.0.0",
     "vitest": "5.0.0",
     "yargs": "18.1.0",
@@ -937,6 +938,16 @@
         }
       },
       {
+        "command": "hpccResources.kel.refresh",
+        "category": "ECL",
+        "title": "%Refresh%",
+        "description": "%Refresh Tree%",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
         "command": "hpccResources.clientTools.activate",
         "category": "ECL",
         "title": "%Activate%",
@@ -964,6 +975,26 @@
         "icon": {
           "light": "resources/light/terminal.svg",
           "dark": "resources/dark/terminal.svg"
+        }
+      },
+      {
+        "command": "hpccResources.kel.activate",
+        "category": "ECL",
+        "title": "%Activate%",
+        "description": "%Activate KEL%",
+        "icon": {
+          "light": "resources/light/pass.svg",
+          "dark": "resources/dark/pass.svg"
+        }
+      },
+      {
+        "command": "hpccResources.kel.deactivate",
+        "category": "ECL",
+        "title": "%Auto Detect%",
+        "description": "%Auto Detect KEL%",
+        "icon": {
+          "light": "resources/light/close.svg",
+          "dark": "resources/dark/close.svg"
         }
       },
       {
@@ -1298,6 +1329,11 @@
           "group": "navigation@20"
         },
         {
+          "command": "hpccResources.kel.refresh",
+          "when": "view == hpccResources.kel",
+          "group": "navigation@20"
+        },
+        {
           "command": "ecl.watch.lite.openECLWatchExternal",
           "when": "view == ecl.watch.lite && ecl.watch.lite.hasWuid",
           "group": "navigation@100"
@@ -1412,6 +1448,16 @@
         {
           "command": "hpccResources.clientTools.terminal",
           "when": "view == hpccResources.clientTools && viewItem =~ /^ClientToolsItem/",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.kel.activate",
+          "when": "view == hpccResources.kel && viewItem == KELItemDeactive",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.kel.deactivate",
+          "when": "view == hpccResources.kel && viewItem == KELItemActive",
           "group": "inline"
         },
         {
@@ -1534,6 +1580,11 @@
         {
           "id": "hpccResources.clientTools",
           "name": "%Client Tools%",
+          "icon": "resources/hpcc-icon-bw.svg"
+        },
+        {
+          "id": "hpccResources.kel",
+          "name": "%KEL%",
           "icon": "resources/hpcc-icon-bw.svg"
         }
       ],

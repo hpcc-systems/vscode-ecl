@@ -2,6 +2,7 @@ import { ClientTools, IBundle, clearAllClientToolsCache } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { locateAllClientTools } from "../debugger/launchRequestArguments";
 import { sessionManager } from "../hpccplatform/session";
+import { clearAllClientToolsCache as clearAllKelClientToolsCache, KELClientTools, locateAllClientTools as locateAllKelClientTools, onDidClientToolsChange as onDidKelClientToolsChange, switchClientTools as switchKelClientTools } from "../kel/clientTools";
 import localize from "../util/localize";
 import { onDidClientToolsChange, switchClientTools } from "./clientTools";
 import { Circle } from "./eclWatchTree";
@@ -14,6 +15,7 @@ export class HPCCResources {
     protected constructor(ctx: vscode.ExtensionContext) {
         Bundles.attach(ctx);
         ClientToolsTree.attach(ctx);
+        KELTree.attach(ctx);
     }
 
     static attach(ctx: vscode.ExtensionContext): HPCCResources {
@@ -219,5 +221,78 @@ class ClientToolsItem extends Item<ClientToolsTree> {
             return "ClientToolsItem" + (this.forced ? "Active" : "Deactive");
         }
         return "BadClientToolsItem" + (this.forced ? "Active" : "Deactive");
+    }
+}
+
+let kelTools: KELTree;
+class KELTree extends Tree {
+
+    protected constructor(ctx: vscode.ExtensionContext) {
+        super(ctx, "hpccResources.kel", false);
+
+        onDidKelClientToolsChange(() => {
+            this.refresh();
+        });
+
+        vscode.commands.registerCommand("hpccResources.kel.refresh", () => {
+            clearAllKelClientToolsCache();
+            this.refresh();
+        });
+
+        vscode.commands.registerCommand("hpccResources.kel.activate", (item: Item) => {
+            if (item instanceof KELItem) {
+                switchKelClientTools(item.clientTools);
+            }
+        });
+
+        vscode.commands.registerCommand("hpccResources.kel.deactivate", (item: Item) => {
+            if (item instanceof KELItem) {
+                switchKelClientTools();
+            }
+        });
+    }
+
+    static attach(ctx: vscode.ExtensionContext): KELTree {
+        if (!kelTools) {
+            kelTools = new KELTree(ctx);
+        }
+        return kelTools;
+    }
+
+    getRootChildren() {
+        this._treeView.title = `${localize("Loading")}...`;
+        const kelConfig = vscode.workspace.getConfiguration("kel");
+        const kelPath = kelConfig.get("kelPath");
+        return locateAllKelClientTools().then(clientTools => {
+            this._treeView.title = localize("KEL");
+            return clientTools.map((clientTool, idx) => new KELItem(this, clientTool, clientTool.kelPath === kelPath, !kelPath && idx === 0));
+        });
+    }
+}
+
+class KELItem extends Item<KELTree> {
+
+    constructor(tree: KELTree, readonly clientTools: KELClientTools, readonly forced: boolean, readonly autoDetected: boolean) {
+        super(tree);
+    }
+
+    getLabel() {
+        return this.clientTools.versionSync().toString();
+    }
+
+    getDescription() {
+        return this.clientTools.kelPath;
+    }
+
+    iconPath() {
+        if (this.forced) {
+            return Circle.pass;
+        } else if (this.autoDetected) {
+            return Circle.play;
+        }
+    }
+
+    contextValue(): string {
+        return "KELItem" + (this.forced ? "Active" : "Deactive");
     }
 }

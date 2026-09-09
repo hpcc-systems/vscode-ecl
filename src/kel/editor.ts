@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
+import { scopedLogger } from "@hpcc-js/util";
 import { Commands } from "./command";
+
+const logger = scopedLogger("kel/editor.ts");
 
 let kelEditor: Editor;
 export class Editor {
@@ -28,6 +31,7 @@ export class Editor {
             }
 
             const kelConfig = vscode.workspace.getConfiguration("kel", doc.uri);
+            logger.debug(`document-open: ${doc.uri.fsPath}, syntaxCheckOnLoad=${kelConfig.get<boolean>("syntaxCheckOnLoad")}`);
             if (kelConfig["syntaxCheckOnLoad"]) {
                 this._commands.checkSyntax(doc);
             }
@@ -40,18 +44,26 @@ export class Editor {
             if (doc.languageId !== "kel" || this._ignoreNextSave.has(doc)) {
                 return;
             }
+            logger.debug(`document-save: ${doc.uri.fsPath}`);
             if (vscode.window.activeTextEditor) {
                 const kelConfig = vscode.workspace.getConfiguration("kel", doc.uri);
+                logger.debug(`document-save-config: generateOnSave=${kelConfig.get<boolean>("generateOnSave")}, syntaxCheckOnSave=${kelConfig.get<boolean>("syntaxCheckOnSave")}`);
                 const formatPromise: PromiseLike<void> = Promise.resolve();
                 if (kelConfig.get<boolean>("generateOnSave")) {
+                    logger.debug("document-save-action: generate");
                     formatPromise.then(() => {
                         this._commands.generate(doc);
                     });
                 } else if (kelConfig.get<boolean>("syntaxCheckOnSave")) {
+                    logger.debug("document-save-action: checkSyntax");
                     formatPromise.then(() => {
                         this._commands.checkSyntax(doc);
                     });
+                } else {
+                    logger.debug("document-save-action: none");
                 }
+            } else {
+                logger.debug("document-save-action: skipped-no-active-editor");
             }
         }, null, this._ctx.subscriptions);
     }

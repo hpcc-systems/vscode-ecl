@@ -2,6 +2,7 @@
 /coverage
 /dist*
 /ecl-sample/.vscode/settings.json
+/ecl-sample/public_records
 /grammar
 /images
 /lib*
