@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.38.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.37.2...ecl-v2.38.0) (2026-09-09)
+
+
+### Features
+
+* improve kel locate heuristics ([1b08ff5](https://github.com/hpcc-systems/vscode-ecl/commit/1b08ff59f43b82c71bfc1cf7a864c0cceaa4711b))
+
 ## [2.37.2](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.37.1...ecl-v2.37.2) (2026-09-04)
 
 
