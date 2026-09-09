@@ -19,6 +19,7 @@
     "install-playright-with-deps": "npx playwright install --with-deps",
     "clean": "rimraf --glob out lib* dist* types *.vsix coverage",
     "gen-grammar": "run-script-os",
+    "gen-grammar:darwin": "./scripts/grammar-generate.sh",
     "gen-grammar:linux": "./scripts/grammar-generate.sh",
     "gen-grammar:win32": "wsl -e ./scripts/grammar-generate.sh",
     "gen-docs-vecdb": "run-script-os",
@@ -937,6 +938,16 @@
         }
       },
       {
+        "command": "hpccResources.kel.refresh",
+        "category": "ECL",
+        "title": "%Refresh%",
+        "description": "%Refresh Tree%",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
         "command": "hpccResources.clientTools.activate",
         "category": "ECL",
         "title": "%Activate%",
@@ -964,6 +975,26 @@
         "icon": {
           "light": "resources/light/terminal.svg",
           "dark": "resources/dark/terminal.svg"
+        }
+      },
+      {
+        "command": "hpccResources.kel.activate",
+        "category": "ECL",
+        "title": "%Activate%",
+        "description": "%Activate KEL%",
+        "icon": {
+          "light": "resources/light/pass.svg",
+          "dark": "resources/dark/pass.svg"
+        }
+      },
+      {
+        "command": "hpccResources.kel.deactivate",
+        "category": "ECL",
+        "title": "%Auto Detect%",
+        "description": "%Auto Detect KEL%",
+        "icon": {
+          "light": "resources/light/close.svg",
+          "dark": "resources/dark/close.svg"
         }
       },
       {
@@ -1298,6 +1329,11 @@
           "group": "navigation@20"
         },
         {
+          "command": "hpccResources.kel.refresh",
+          "when": "view == hpccResources.kel",
+          "group": "navigation@20"
+        },
+        {
           "command": "ecl.watch.lite.openECLWatchExternal",
           "when": "view == ecl.watch.lite && ecl.watch.lite.hasWuid",
           "group": "navigation@100"
@@ -1412,6 +1448,16 @@
         {
           "command": "hpccResources.clientTools.terminal",
           "when": "view == hpccResources.clientTools && viewItem =~ /^ClientToolsItem/",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.kel.activate",
+          "when": "view == hpccResources.kel && viewItem == KELItemDeactive",
+          "group": "inline"
+        },
+        {
+          "command": "hpccResources.kel.deactivate",
+          "when": "view == hpccResources.kel && viewItem == KELItemActive",
           "group": "inline"
         },
         {
@@ -1534,6 +1580,11 @@
         {
           "id": "hpccResources.clientTools",
           "name": "%Client Tools%",
+          "icon": "resources/hpcc-icon-bw.svg"
+        },
+        {
+          "id": "hpccResources.kel",
+          "name": "%KEL%",
           "icon": "resources/hpcc-icon-bw.svg"
         }
       ],

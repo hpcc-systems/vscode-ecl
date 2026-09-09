@@ -19,11 +19,11 @@
             "utf8-test-pw": "Pąsswörd123!🔒"
         },
         {
-            "name": "192.168.64.3",
+            "name": "192.168.64.2",
             "type": "ecl",
             "request": "launch",
             "protocol": "http",
-            "serverAddress": "192.168.64.3",
+            "serverAddress": "192.168.64.2",
             "port": 8010,
             "targetCluster": "thor",
             "rejectUnauthorized": true,

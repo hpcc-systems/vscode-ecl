@@ -1,13 +1,13 @@
 import { ClientTools, Errors, Version } from "@hpcc-js/comms";
 import { scopedLogger } from "@hpcc-js/util";
-import { QuickPickItem, Uri, window, workspace } from "vscode";
+import { Event, EventEmitter, QuickPickItem, Uri, window, workspace } from "vscode";
 import { kelStatusBar } from "./status";
 import * as cp from "child_process";
 import * as path from "path";
 import * as os from "os";
 import AdmZip from "adm-zip";
 import localize from "../util/localize";
-import { exists, isDirectory, readDirectory } from "../util/fs";
+import { exists, isDirectory, isTypeDirectory, readDirectory } from "../util/fs";
 
 const logger = scopedLogger("kel/clientTools.ts");
 
@@ -26,6 +26,16 @@ class KelccErrors extends Errors {
                     const col: number = +_col;
                     const msg = code + ":  " + _msg;
                     this.errWarn.push({ filePath, line, col, msg, severity });
+                    continue;
+                }
+                // Generic form, e.g. "<none>:0,0:error K50001 - Unable to find version ..."
+                match = /^(.+?):(\d+),(\d+):(error|warning|info)\s+([A-Z]\d+)\s*-\s*(.*)$/i.exec(errLine);
+                if (match) {
+                    const [, filePath, row, _col, severity, code, _msg] = match;
+                    const line: number = +row;
+                    const col: number = +_col;
+                    const msg = code + ":  " + _msg;
+                    this.errWarn.push({ filePath: filePath === "<none>" ? "" : filePath, line, col, msg, severity });
                     continue;
                 }
                 match = /(error|warning|info): (.*)/i.exec(errLine);
@@ -51,7 +61,7 @@ interface KelResponse {
     errors: KelccErrors;
 }
 
-class KELClientTools extends ClientTools {
+export class KELClientTools extends ClientTools {
 
     readonly kelPath: string;
 
@@ -80,10 +90,17 @@ class KELClientTools extends ClientTools {
         return workspace.getWorkspaceFolder(uri).uri.fsPath;
     }
 
-    extractLibs(uri: Uri) {
-        const zip = new AdmZip(path.join(this.binPath, "KEL.zip"));
+    async extractLibs(uri: Uri): Promise<void> {
+        const zipPath = path.join(this.binPath, "KEL.zip");
         const workspaceFolder = this.workspaceFolder(uri);
+        logger.debug(`extract-libs: ${zipPath} -> ${workspaceFolder}`);
+        if (!await exists(zipPath)) {
+            logger.warning(`extract-libs-skipped: archive-not-found=${zipPath}, tool=${this.kelPath}`);
+            return;
+        }
+        const zip = new AdmZip(zipPath);
         zip.extractAllTo(workspaceFolder);
+        logger.debug("extract-libs-complete");
     }
 
     _fullVersion: Version;
@@ -91,8 +108,10 @@ class KELClientTools extends ClientTools {
         if (this._fullVersion) {
             return Promise.resolve(this._fullVersion);
         }
+        logger.debug(`version-request: ${this.kelPath}`);
         return this.spawnJava("", ["--version"]).then(response => {
             this._fullVersion = new Version(response.stdout);
+            logger.debug(`version-response: ${this._fullVersion.toString()}`);
             return this._fullVersion;
         });
     }
@@ -104,16 +123,19 @@ class KELClientTools extends ClientTools {
     checkSyntax(filePath: string, args?: string[]): Promise<KelResponse> {
         const uri = Uri.file(filePath);
         const kelFolder = path.dirname(filePath);
+        logger.debug(`check-syntax: file=${filePath}, cwd=${kelFolder}`);
         return this.spawnKel(kelFolder, workspace.getWorkspaceFolder(uri).uri.fsPath, uri.fsPath, this.args([
             "--syntaxcheck"
         ]));
     }
 
-    generate(uri: Uri): Promise<KelResponse> {
-        this.extractLibs(uri);
+    async generate(uri: Uri): Promise<KelResponse> {
+        logger.debug(`generate: file=${uri.fsPath}, tool=${this.kelPath}, bin=${this.binPath}`);
+        await this.extractLibs(uri);
         const filePath = uri.fsPath;
         const fileFolder = path.dirname(filePath);
         const outFolder = this.genFolder(uri);
+        logger.debug(`generate-paths: cwd=${fileFolder}, output=${outFolder}`);
         return this.spawnKel(fileFolder, workspace.getWorkspaceFolder(uri).uri.fsPath, uri.fsPath, this.args([
             "--pack", "dir",
             "-o", outFolder
@@ -129,11 +151,14 @@ class KELClientTools extends ClientTools {
         const javaArgs = kelConfig.get<string[]>("javaArgs");
         return this.spawnProc("java", cwd, this.args([
             ...javaArgs,
-            "-jar", path.join(this.binPath, "KEL.jar"),
+            "-jar", this.kelPath,
             ...args
         ]), "kel", `Cannot find ${this.kelPath}`).then(response => {
             const checked: string[] = [];
-            logger.info(response.stdout);
+            logger.info(`process-complete: tool=${this.kelPath}, stdout=${response.stdout.length} chars, stderr=${response.stderr.length} chars`);
+            if (response.stderr) {
+                logger.warning(`process-stderr: ${response.stderr}`);
+            }
             return {
                 stdout: response.stdout,
                 errors: new KelccErrors(response.stderr, checked)
@@ -155,9 +180,11 @@ class KELClientTools extends ClientTools {
                 stdErr += data.toString();
             });
             child.on("error", e => {
+                logger.error(`process-error: ${cmd} ${e.message}`);
                 window.showErrorMessage(e.message);
             });
-            child.on("close", (_code, _signal) => {
+            child.on("close", (code, signal) => {
+                logger.debug(`process-close: code=${code}, signal=${signal || "none"}`);
                 resolve({
                     stdout: stdOut.trim(),
                     stderr: stdErr.trim()
@@ -191,8 +218,35 @@ async function locateClientToolsInFolder(rootFolder: string, clientTools: KELCli
     }
 }
 
+async function locateMavenClientTools(clientTools: KELClientTools[]) {
+    const kelRepository = path.join(os.homedir(), ".m2", "repository", "com", "relx", "rba", "tardis", "kel");
+    if (!await exists(kelRepository) || !await isDirectory(kelRepository)) {
+        return;
+    }
+    for (const [versionFolder, type] of await readDirectory(kelRepository)) {
+        if (!isTypeDirectory(type)) {
+            continue;
+        }
+        const artifactFolder = path.join(kelRepository, versionFolder);
+        const kelCliPath = path.join(artifactFolder, `kel-${versionFolder}-jar-with-dependencies.jar`);
+        if (await exists(kelCliPath)) {
+            const version = new Version(versionFolder);
+            if (version.exists()) {
+                const siblingKelPath = path.join(artifactFolder, "KEL.jar");
+                const kelPath = await exists(siblingKelPath) ? siblingKelPath : kelCliPath;
+                logger.debug(`locate-maven-tool: cli=${kelCliPath}, tool=${kelPath}`);
+                clientTools.push(new KELClientTools(kelPath, undefined, undefined, undefined, undefined, version));
+            }
+        }
+    }
+}
+
 let allClientToolsCache: Promise<KELClientTools[]>;
-async function locateAllClientTools(): Promise<KELClientTools[]> {
+export function clearAllClientToolsCache() {
+    allClientToolsCache = undefined;
+}
+
+export async function locateAllClientTools(): Promise<KELClientTools[]> {
     if (allClientToolsCache) return allClientToolsCache;
     const clientTools: KELClientTools[] = [];
     switch (os.type()) {
@@ -208,10 +262,12 @@ async function locateAllClientTools(): Promise<KELClientTools[]> {
             if (!rootFolder86 && !rootFolder) {
                 await locateClientToolsInFolder("c:\\Program Files (x86)", clientTools);
             }
+            await locateMavenClientTools(clientTools);
             break;
         case "Linux":
         case "Darwin":
             await locateClientToolsInFolder("/opt", clientTools);
+            await locateMavenClientTools(clientTools);
             break;
         default:
             break;
@@ -230,11 +286,11 @@ function showKelStatus(version: string, overriden: boolean, tooltip: string) {
     kelStatusBar.showKelStatus(`${overriden ? "*" : ""}${version}`, tooltip);
 }
 
-export function locateClientTools(): Promise<KELClientTools | undefined> {
+export async function locateClientTools(): Promise<KELClientTools | undefined> {
     const kelConfig = workspace.getConfiguration("kel", null);
     const kelPath = kelConfig.get<string>("kelPath");
-    if (kelPath) {
-        return Promise.resolve(new KELClientTools(kelPath));
+    if (kelPath && await exists(kelPath)) {
+        return new KELClientTools(kelPath);
     } else {
         return locateAllClientTools().then(clientToolsArr => {
             if (clientToolsArr.length > 0) {
@@ -257,26 +313,37 @@ export function locateClientTools(): Promise<KELClientTools | undefined> {
 }
 
 interface SelectQP extends QuickPickItem {
-    kelPath?: string;
+    ct?: KELClientTools;
+}
+
+const _onDidClientToolsChange: EventEmitter<void> = new EventEmitter<void>();
+export const onDidClientToolsChange: Event<void> = _onDidClientToolsChange.event;
+
+export async function switchClientTools(ct?: KELClientTools) {
+    const kelPath = ct?.kelPath;
+    const version = ct ? ct.versionSync() : undefined;
+    const label = version ? `KEL_${version.major}.${version.minor}.${version.patch}${version.postfix ? "-" + version.postfix : ""}` : localize("Auto Detect");
+    const kelConfig = workspace.getConfiguration("kel", null);
+    await kelConfig.update("kelPath", kelPath);
+    showKelStatus(label, !!kelPath, kelPath ? kelPath : "");
+    _onDidClientToolsChange.fire();
 }
 
 export function selectCTVersion() {
     const input = window.createQuickPick<SelectQP>();
     input.placeholder = localize("Select KEL version");
     locateAllClientTools().then(clientTools => {
-        input.items = [{ label: localize("Auto Detect"), kelPath: undefined }, ...clientTools.map(ct => {
+        input.items = [{ label: localize("Auto Detect"), ct: undefined }, ...clientTools.map(ct => {
             const version = ct.versionSync();
             return {
                 label: `KEL_${version.major}.${version.minor}.${version.patch}${version.postfix ? "-" + version.postfix : ""}`,
-                kelPath: ct.kelPath
+                ct
             };
         })];
         input.onDidChangeSelection(items => {
             const item = items[0];
             if (item) {
-                const eclConfig = workspace.getConfiguration("kel", null);
-                eclConfig.update("kelPath", item.kelPath);
-                showKelStatus(item.label, !!item.kelPath, item.kelPath ? item.kelPath : "");
+                switchClientTools(item.ct);
             }
             input.hide();
         });

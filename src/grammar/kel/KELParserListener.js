@@ -563,12 +563,48 @@ export default class KELParserListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by KELParser#eclExpression.
+	enterEclExpression(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#eclExpression.
+	exitEclExpression(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#javaFunction.
+	enterJavaFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#javaFunction.
+	exitJavaFunction(ctx) {
+	}
+
+
 	// Enter a parse tree produced by KELParser#queryDeclaration.
 	enterQueryDeclaration(ctx) {
 	}
 
 	// Exit a parse tree produced by KELParser#queryDeclaration.
 	exitQueryDeclaration(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#expressionList.
+	enterExpressionList(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#expressionList.
+	exitExpressionList(ctx) {
+	}
+
+
+	// Enter a parse tree produced by KELParser#extension.
+	enterExtension(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#extension.
+	exitExtension(ctx) {
 	}
 
 
@@ -1076,6 +1112,15 @@ export default class KELParserListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by KELParser#nullConstant.
+	enterNullConstant(ctx) {
+	}
+
+	// Exit a parse tree produced by KELParser#nullConstant.
+	exitNullConstant(ctx) {
+	}
+
+
 	// Enter a parse tree produced by KELParser#typedConstant.
 	enterTypedConstant(ctx) {
 	}
@@ -1181,15 +1226,6 @@ export default class KELParserListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by KELParser#badRealConst.
 	exitBadRealConst(ctx) {
-	}
-
-
-	// Enter a parse tree produced by KELParser#eclExpression.
-	enterEclExpression(ctx) {
-	}
-
-	// Exit a parse tree produced by KELParser#eclExpression.
-	exitEclExpression(ctx) {
 	}
 
 

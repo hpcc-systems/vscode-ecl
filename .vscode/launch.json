@@ -34,7 +34,7 @@
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--extensionDevelopmentPath=${workspaceRoot}",
-                "${workspaceRoot}/ecl-sample"
+                "${workspaceRoot}/ecl-sample/public_records"
             ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"

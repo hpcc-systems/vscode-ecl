@@ -23,7 +23,7 @@ async function bundle(tsconfigRaw, entryPoint, platform, format, plugins = []) {
         sourcemap: !production ? "linked" : false,
         platform,
         target: platform === "node" ? "node20" : "es2022",
-        external: ["child_process", "crypto", "fs", "https", "node:*", "os", "http", "vscode"],
+        external: ["child_process", "crypto", "fs", "https", "node:*", "os", "http", "vscode", "zlib"],
         logLevel: production ? "silent" : "info",
         plugins: [
             ...plugins,

@@ -15,6 +15,7 @@ function mapSeverityToVSCodeSeverity(sev: string) {
 }
 
 const checking = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("checking")}...`, vscode.DiagnosticSeverity.Information);
+const generating = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("generating")}...`, vscode.DiagnosticSeverity.Information);
 const noClientTools = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("unable to locate KEL client tools")}...`, vscode.DiagnosticSeverity.Information);
 
 export let commands: Commands;
@@ -45,6 +46,7 @@ export class Commands {
 
     checkSyntax(doc?: vscode.TextDocument) {
         if (doc) {
+            logger.debug(`checkSyntax-request: ${doc.uri.fsPath}`);
             doc.save();
             logger.debug("checkSyntax-start");
             this._diagnostic.set(doc.uri, [checking]);
@@ -55,11 +57,11 @@ export class Commands {
                 } else {
                     logger.debug("checkSyntax-check-start");
                     clientTools.checkSyntax(doc.uri.fsPath).then(response => {
-                        logger.debug("checkSyntax-check-response");
+                        logger.debug(`checkSyntax-check-response: stdout=${response.stdout.length} chars, errors=${response.errors.all().length}`);
                         const mappedErrors: { [fp: string]: vscode.Diagnostic[] } = {};
                         mappedErrors[doc.uri.fsPath] = [];
                         response.errors.all().forEach(error => {
-                            const errorFilePath = error.filePath;
+                            const errorFilePath = error.filePath || doc.uri.fsPath;
                             const line = +error.line > 0 ? +error.line - 1 : 0;
                             const col = +error.col >= 0 ? +error.col : 0;
                             const range = new vscode.Range(line, col, line, col);
@@ -75,8 +77,12 @@ export class Commands {
                             this._diagnostic.set(uri, mappedErrors[fp]);
                         }
                         logger.debug("checkSyntax-check-response-end");
+                    }).catch(error => {
+                        logger.error(`checkSyntax-failed: ${error?.message || error}`);
                     });
                 }
+            }).catch(error => {
+                logger.error(`checkSyntax-tool-lookup-failed: ${error?.message || error}`);
             });
         }
     }
@@ -85,14 +91,38 @@ export class Commands {
         return this.generate(vscode.window.activeTextEditor?.document);
     }
 
-    generate(doc?: vscode.TextDocument) {
+    async generate(doc?: vscode.TextDocument): Promise<void> {
         if (doc) {
-            doc.save();
-            locateClientTools().then(clientTools => {
+            logger.debug(`generate-request: ${doc.uri.fsPath}`);
+            this._diagnostic.set(doc.uri, [generating]);
+            const generatingStatus = vscode.window.setStatusBarMessage(`$(sync~spin) ${localize("KEL")}: ${localize("Generate")}...`);
+            let stage = "save";
+            let toolPath = "unknown";
+            try {
+                await doc.save();
+                stage = "tool-lookup";
+                const clientTools = await locateClientTools();
                 if (clientTools) {
-                    clientTools.generate(doc.uri);
+                    stage = "generate";
+                    toolPath = clientTools.kelPath;
+                    logger.debug(`generate-tool: ${clientTools.kelPath}`);
+                    const response = await clientTools.generate(doc.uri);
+                    logger.debug(`generate-complete: stdout=${response.stdout.length} chars, errors=${response.errors.all().length}`);
+                    this._diagnostic.set(doc.uri, []);
+                    vscode.window.setStatusBarMessage(`$(check) ${localize("KEL")}: ${localize("Completed")}`, 5000);
+                } else {
+                    logger.debug("generate-noClientTools");
+                    this._diagnostic.set(doc.uri, [noClientTools]);
+                    vscode.window.setStatusBarMessage(`$(error) ${localize("KEL")}: ${localize("Failed")}`, 5000);
                 }
-            });
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.stack || error.message : String(error);
+                logger.error(`generate-failed: stage=${stage}, file=${doc.uri.fsPath}, tool=${toolPath}, error=${errorMessage}`);
+                this._diagnostic.set(doc.uri, []);
+                vscode.window.setStatusBarMessage(`$(error) ${localize("KEL")}: ${localize("Failed")}`, 5000);
+            } finally {
+                generatingStatus.dispose();
+            }
         }
     }
 
