@@ -15,11 +15,10 @@ import { ECLLMTools } from "./lm/tools";
 import { SessionManager } from "../hpccplatform/session";
 
 const eclConfig = vscode.workspace.getConfiguration("ecl");
-initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
-
 const logger = scopedLogger("ecl/main.ts");
 
 export function activate(ctx: vscode.ExtensionContext): void {
+    initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
     logger.debug("Activating SessionManager");
     SessionManager.attach(ctx);
     logger.debug("Activating ECLDiagnostic");

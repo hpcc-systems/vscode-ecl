@@ -181,11 +181,11 @@ export class SessionManager {
             const eclConfig = vscode.workspace.getConfiguration("ecl", null);
             const activeUri: string = vscode.window.activeTextEditor?.document?.uri.toString(true) || "";
             if (activeUri) {
-                const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
+                const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations") ?? {};
                 if (pinnedLaunchConfigurations[activeUri]) {
                     pinnedLaunchConfigurations[activeUri] = undefined;
                     this._pinnedSession = undefined;
-                } else {
+                } else if (this.session) {
                     this._pinnedSession = new Session(this.session.id, this.session.overriddenTargetCluster);
                     pinnedLaunchConfigurations[activeUri] = { launchConfiguration: this.session.id, targetCluster: this.session.overriddenTargetCluster };
                 }
@@ -204,7 +204,9 @@ export class SessionManager {
         });
 
         vscode.commands.registerCommand("hpccPlatform.eclwatch", async () => {
-            vscode.env.openExternal(vscode.Uri.parse(`${this.session.baseUrl()}/esp/files/stub.htm`));
+            if (this.session) {
+                vscode.env.openExternal(vscode.Uri.parse(`${this.session.baseUrl()}/esp/files/stub.htm`));
+            }
         });
 
         vscode.commands.registerCommand("hpccPlatform.login", async () => {
@@ -216,37 +218,44 @@ export class SessionManager {
         });
 
         vscode.window.onDidChangeActiveTextEditor(() => {
-            const prevBaseUrl = this.session.baseUrl();
-            this._pinnedSession = undefined;
-            if (this.isActiveECL) {
-                const eclConfig = vscode.workspace.getConfiguration("ecl", null);
-                const pinnedLaunchConfiguration = eclConfig.get<object>("pinnedLaunchConfigurations")[this.activePath];
-                const launchConfigName = pinnedLaunchConfiguration?.launchConfiguration;
-                if (launchConfigName) {
-                    const pinnedConfig = launchConfiguration(launchConfigName);
-                    if (pinnedConfig) {
-                        this._pinnedSession = new Session(pinnedConfig.name, pinnedLaunchConfiguration?.targetCluster);
+            try {
+                const prevBaseUrl = this.session?.baseUrl();
+                this._pinnedSession = undefined;
+                if (this.isActiveECL) {
+                    const eclConfig = vscode.workspace.getConfiguration("ecl", null);
+                    const pinnedLaunchConfiguration = eclConfig.get<object>("pinnedLaunchConfigurations")?.[this.activePath];
+                    const launchConfigName = pinnedLaunchConfiguration?.launchConfiguration;
+                    if (launchConfigName) {
+                        const pinnedConfig = launchConfiguration(launchConfigName);
+                        if (pinnedConfig) {
+                            this._pinnedSession = new Session(pinnedConfig.name, pinnedLaunchConfiguration?.targetCluster);
+                        }
                     }
                 }
+                if (prevBaseUrl !== this.session?.baseUrl()) {
+                    this._onDidChangeSession.fire(this.session?.launchRequestArgs);
+                }
+                this.refreshStatusBar();
+            } catch (e: any) {
+                logger.error(`onDidChangeActiveTextEditor failed:  ${e?.message ?? e}`);
             }
-            if (prevBaseUrl !== this.session.baseUrl()) {
-                this._onDidChangeSession.fire(this.session.launchRequestArgs);
-            }
-            this.refreshStatusBar();
         });
 
         vscode.debug.onDidReceiveDebugSessionCustomEvent(async event => {
-            const id = `${event.session.name} (${event.session.workspaceFolder.name})`;
-            const { targetCluster } = event.body;
+            if (event.session?.type !== "ecl") return;
+            const id = event.session.workspaceFolder ? `${event.session.name} (${event.session.workspaceFolder.name})` : event.session.name;
+            const targetCluster = event.body?.targetCluster;
             switch (event.event) {
                 case "LaunchRequest":
-                    if (this.session.id !== id) {
-                        this.switchTo(id, targetCluster);
+                    if (this.session?.id !== id) {
+                        await this.switchTo(id, targetCluster).catch(e => logger.error(`switchTo failed:  ${e?.message ?? e}`));
                     }
                     if (this.session && this.isActiveECL) {
                         vscode.window.showWarningMessage(`${localize("Submitting ECL via the Run/Debug page is being deprecated.  Please use the new Submit + Compile buttons at the top of the ECL Editor")}.`);
                         this.session.submit(this.activeUri).then(wu => {
                             this._onDidCreateWorkunit.fire({ source: "debugger", workunit: wu });
+                        }).catch(e => {
+                            vscode.window.showErrorMessage(e?.message ?? e);
                         });
                     }
                     break;
@@ -258,7 +267,7 @@ export class SessionManager {
                 launchConfigurations(true);
                 const currentConfig = launchConfiguration(this.session?.id);
                 if (currentConfig && this.session) {
-                    void this.switchTo(this.session.id, this.session.overriddenTargetCluster);
+                    this.switchTo(this.session.id, this.session.overriddenTargetCluster).catch(err => logger.error(`switchTo failed:  ${err?.message ?? err}`));
                 }
             }
         });
@@ -266,11 +275,13 @@ export class SessionManager {
         const eclConfig = vscode.workspace.getConfiguration("ecl", null);
         const settingsLaunchConfig = eclConfig.get<string>("launchConfiguration");
         const launchConfig = this._ctx.workspaceState.get<string>("ecl.launchConfiguration") || settingsLaunchConfig;
-        const targetClusters = this._ctx.workspaceState.get<Record<string, string>>("ecl.targetCluster") || eclConfig.get<object>("targetCluster");
+        const targetClusters = this._ctx.workspaceState.get<Record<string, string>>("ecl.targetCluster") || eclConfig.get<object>("targetCluster") || {};
         const targetCluster = targetClusters[launchConfig];
 
         this.switchTo(launchConfig, targetCluster).then(() => {
             vscode.commands.executeCommand("setContext", "hpccPlatformActive", true);
+        }).catch(e => {
+            logger.error(`Initial switchTo failed:  ${e?.message ?? e}`);
         }).finally(() => {
             this.onDidChangeSession(() => {
                 this.refreshStatusBar();
@@ -309,7 +320,7 @@ export class SessionManager {
         const activeUri = this.activePath;
         if (activeUri) {
             const eclConfig = vscode.workspace.getConfiguration("ecl", null);
-            const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
+            const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations") ?? {};
             return pinnedLaunchConfigurations[activeUri];
         }
     }
@@ -334,7 +345,7 @@ export class SessionManager {
     }
 
     wuDetailsUrl(wuid: string) {
-        return this.session.wuDetailsUrl(wuid);
+        return this.session?.wuDetailsUrl(wuid);
     }
 
     wuResultUrl(wuid: string, name: string) {
@@ -411,7 +422,7 @@ export class SessionManager {
                 this._onDidChangeSession.fire(this.session.launchRequestArgs);
             }
         }
-        if (this.session.overriddenTargetCluster !== targetCluster) {
+        if (this.session && this.session.overriddenTargetCluster !== targetCluster) {
             this.session = new Session(this.session.id, targetCluster);
         }
 
@@ -430,11 +441,12 @@ export class SessionManager {
     }
 
     updateSettings() {
+        if (!this.session) return;
         const eclConfig = vscode.workspace.getConfiguration("ecl", null);
         if (this._pinnedSession) {
             const activeUri = this.activePath;
             if (activeUri) {
-                const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
+                const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations") ?? {};
                 const currentPinned = pinnedLaunchConfigurations[activeUri];
                 if (currentPinned?.launchConfiguration !== this.session.id ||
                     currentPinned?.targetCluster !== this.session.overriddenTargetCluster) {
@@ -512,11 +524,13 @@ export class SessionManager {
                 input.onDidChangeSelection(async items => {
                     const item = items[0];
                     if (item) {
-                        await this.switchTo(this.session.id, item.label === localize("Auto Detect") ? undefined : item.label);
+                        await this.switchTo(this.session?.id, item.label === localize("Auto Detect") ? undefined : item.label);
                     }
                     input.hide();
                 });
                 input.show();
+            }).catch(e => {
+                vscode.window.showErrorMessage(e?.message ?? e);
             });
         }
     }
@@ -559,7 +573,7 @@ export class SessionManager {
         const activeUri: string = vscode.window.activeTextEditor?.document?.uri.toString(true) || "";
         if (activeUri) {
             const eclConfig = vscode.workspace.getConfiguration("ecl", null);
-            const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations");
+            const pinnedLaunchConfigurations = eclConfig.get<object>("pinnedLaunchConfigurations") ?? {};
             isPinned = !!pinnedLaunchConfigurations[activeUri];
         }
         this._statusBarPin.text = isPinned ? "$(pinned)" : "$(pin)";
@@ -596,7 +610,7 @@ export class SessionManager {
     }
 
     refreshTCStatusBar() {
-        this._statusBarTargetCluster.text = this.session.targetCluster;
+        this._statusBarTargetCluster.text = this.session?.targetCluster ?? "";
         this._statusBarTargetCluster.tooltip = localize("HPCC Platform Target Cluster");
         if (this.isActiveECL) {
             this._statusBarTargetCluster.show();
@@ -606,13 +620,17 @@ export class SessionManager {
     }
 
     async refreshStatusBar(state: LaunchConfigState = LaunchConfigState.Unknown) {
-        if (state === LaunchConfigState.Unknown) {
-            const creds = await this.session?.getStoredCredentials();
-            state = creds?.verified ? LaunchConfigState.Ok : LaunchConfigState.CredentialsRequired;
+        try {
+            if (state === LaunchConfigState.Unknown) {
+                const creds = await this.session?.getStoredCredentials();
+                state = creds?.verified ? LaunchConfigState.Ok : LaunchConfigState.CredentialsRequired;
+            }
+            this.refreshLaunchStatusBar(state);
+            this.refreshTCStatusBar();
+            this.refreshPinStatusBar();
+        } catch (e: any) {
+            logger.error(`refreshStatusBar failed:  ${e?.message ?? e}`);
         }
-        this.refreshLaunchStatusBar(state);
-        this.refreshTCStatusBar();
-        this.refreshPinStatusBar();
     }
 }
 

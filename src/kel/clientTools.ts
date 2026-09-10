@@ -61,6 +61,8 @@ interface KelResponse {
     errors: KelccErrors;
 }
 
+export type KelProcessOutputHandler = (stream: "stdout" | "stderr", text: string) => void;
+
 export class KELClientTools extends ClientTools {
 
     readonly kelPath: string;
@@ -120,16 +122,16 @@ export class KELClientTools extends ClientTools {
         return this._fullVersion;
     }
 
-    checkSyntax(filePath: string, args?: string[]): Promise<KelResponse> {
+    checkSyntax(filePath: string, args?: string[], onOutput?: KelProcessOutputHandler): Promise<KelResponse> {
         const uri = Uri.file(filePath);
         const kelFolder = path.dirname(filePath);
         logger.debug(`check-syntax: file=${filePath}, cwd=${kelFolder}`);
         return this.spawnKel(kelFolder, workspace.getWorkspaceFolder(uri).uri.fsPath, uri.fsPath, this.args([
             "--syntaxcheck"
-        ]));
+        ]), onOutput);
     }
 
-    async generate(uri: Uri): Promise<KelResponse> {
+    async generate(uri: Uri, onOutput?: KelProcessOutputHandler): Promise<KelResponse> {
         logger.debug(`generate: file=${uri.fsPath}, tool=${this.kelPath}, bin=${this.binPath}`);
         await this.extractLibs(uri);
         const filePath = uri.fsPath;
@@ -139,26 +141,23 @@ export class KELClientTools extends ClientTools {
         return this.spawnKel(fileFolder, workspace.getWorkspaceFolder(uri).uri.fsPath, uri.fsPath, this.args([
             "--pack", "dir",
             "-o", outFolder
-        ]));
+        ]), onOutput);
     }
 
-    private spawnKel(cwd: string, inFolder: string, inFile: string, args: string[]): Promise<KelResponse> {
-        return this.spawnJava(cwd, ["-i", inFolder, inFile, ...args]);
+    private spawnKel(cwd: string, inFolder: string, inFile: string, args: string[], onOutput?: KelProcessOutputHandler): Promise<KelResponse> {
+        return this.spawnJava(cwd, ["-i", inFolder, inFile, ...args], onOutput);
     }
 
-    private spawnJava(cwd: string, args: string[]): Promise<KelResponse> {
+    private spawnJava(cwd: string, args: string[], onOutput?: KelProcessOutputHandler): Promise<KelResponse> {
         const kelConfig = workspace.getConfiguration("kel", null);
         const javaArgs = kelConfig.get<string[]>("javaArgs");
         return this.spawnProc("java", cwd, this.args([
             ...javaArgs,
             "-jar", this.kelPath,
             ...args
-        ]), "kel", `Cannot find ${this.kelPath}`).then(response => {
+        ]), "kel", `Cannot find ${this.kelPath}`, onOutput).then(response => {
             const checked: string[] = [];
             logger.info(`process-complete: tool=${this.kelPath}, stdout=${response.stdout.length} chars, stderr=${response.stderr.length} chars`);
-            if (response.stderr) {
-                logger.warning(`process-stderr: ${response.stderr}`);
-            }
             return {
                 stdout: response.stdout,
                 errors: new KelccErrors(response.stderr, checked)
@@ -166,18 +165,30 @@ export class KELClientTools extends ClientTools {
         });
     }
 
-    private spawnProc(cmd: string, cwd: string, args: string[], _toolName: string, _notFoundError?: string): Promise<{ stdout: string, stderr: string }> {
+    private spawnProc(cmd: string, cwd: string, args: string[], _toolName: string, _notFoundError?: string, onOutput?: KelProcessOutputHandler): Promise<{ stdout: string, stderr: string }> {
         logger.debug(`cd "${cwd}"`);
-        logger.debug(`${cmd} ${args.map(arg => `"${arg}"`).join(" ")}`);
+        logger.info(`process-command: ${cmd} ${args.map(arg => `"${arg}"`).join(" ")}`);
         return new Promise<{ stdout: string, stderr: string }>((resolve, _reject) => {
             const child = cp.spawn(cmd, args, { cwd });
             let stdOut = "";
             let stdErr = "";
             child.stdout.on("data", (data) => {
-                stdOut += data.toString();
+                const text = data.toString();
+                stdOut += text;
+                const trimmedText = text.trim();
+                if (trimmedText) {
+                    logger.info(`process-stdout: ${trimmedText}`);
+                    onOutput?.("stdout", trimmedText);
+                }
             });
             child.stderr.on("data", (data) => {
-                stdErr += data.toString();
+                const text = data.toString();
+                stdErr += text;
+                const trimmedText = text.trim();
+                if (trimmedText) {
+                    logger.warning(`process-stderr: ${trimmedText}`);
+                    onOutput?.("stderr", trimmedText);
+                }
             });
             child.on("error", e => {
                 logger.error(`process-error: ${cmd} ${e.message}`);
@@ -194,25 +205,54 @@ export class KELClientTools extends ClientTools {
     }
 }
 
+async function addClientTools(kelPath: string, clientTools: KELClientTools[], version?: Version) {
+    if (await exists(kelPath) && !clientTools.some(ct => ct.kelPath === kelPath)) {
+        clientTools.push(new KELClientTools(kelPath, undefined, undefined, undefined, undefined, version));
+    }
+}
+
 async function locateClientToolsInFolder(rootFolder: string, clientTools: KELClientTools[]) {
     if (rootFolder) {
         const hpccSystemsFolder = path.join(rootFolder, "HPCCSystems");
         if (await exists(hpccSystemsFolder) && await isDirectory(hpccSystemsFolder)) {
-            if (os.type() !== "Windows_NT") {
-                const kelPath = path.join(hpccSystemsFolder, "KEL", "KEL.jar");
-                if (await exists(kelPath)) {
-                    clientTools.push(new KELClientTools(kelPath));
-                }
-            }
+            await addClientTools(path.join(hpccSystemsFolder, "KEL", "KEL.jar"), clientTools);
             for (const [versionFolder] of await readDirectory(hpccSystemsFolder)) {
                 const kelPath = path.join(hpccSystemsFolder, versionFolder, "KEL", "KEL.jar");
                 if (await exists(kelPath)) {
                     const name = path.basename(versionFolder);
                     const version = new Version(name);
                     if (version.exists()) {
-                        clientTools.push(new KELClientTools(kelPath, undefined, undefined, undefined, undefined, version));
+                        await addClientTools(kelPath, clientTools, version);
                     }
                 }
+            }
+        }
+    }
+}
+
+export async function locateDevelopmentLauncherClientTools(clientTools: KELClientTools[]) {
+    const kelTopFolders = new Set<string>();
+    for (const folder of workspace.workspaceFolders || []) {
+        const workspacePath = folder.uri.fsPath;
+        const parentFolder = path.dirname(workspacePath);
+        kelTopFolders.add(path.join(parentFolder, "Tardis", "kel-top"));
+        kelTopFolders.add(path.join(parentFolder, "kel-top"));
+    }
+    kelTopFolders.add(path.join(os.homedir(), "git", "Tardis", "kel-top"));
+    kelTopFolders.add(path.join(os.homedir(), "Tardis", "kel-top"));
+
+    for (const kelTopFolder of kelTopFolders) {
+        const launcherTargetFolder = path.join(kelTopFolder, "tools", "launcher", "target");
+        if (!await exists(launcherTargetFolder) || !await isDirectory(launcherTargetFolder)) {
+            continue;
+        }
+        for (const [fileName, type] of await readDirectory(launcherTargetFolder)) {
+            if (isTypeDirectory(type) || fileName.startsWith("original-")) {
+                continue;
+            }
+            const match = /^kel-launcher-(.+)\.jar$/i.exec(fileName);
+            if (match) {
+                await addClientTools(path.join(launcherTargetFolder, fileName), clientTools, new Version(match[1]));
             }
         }
     }
@@ -235,7 +275,7 @@ async function locateMavenClientTools(clientTools: KELClientTools[]) {
                 const siblingKelPath = path.join(artifactFolder, "KEL.jar");
                 const kelPath = await exists(siblingKelPath) ? siblingKelPath : kelCliPath;
                 logger.debug(`locate-maven-tool: cli=${kelCliPath}, tool=${kelPath}`);
-                clientTools.push(new KELClientTools(kelPath, undefined, undefined, undefined, undefined, version));
+                await addClientTools(kelPath, clientTools, version);
             }
         }
     }
@@ -268,6 +308,7 @@ export async function locateAllClientTools(): Promise<KELClientTools[]> {
         case "Darwin":
             await locateClientToolsInFolder("/opt", clientTools);
             await locateMavenClientTools(clientTools);
+            await locateDevelopmentLauncherClientTools(clientTools);
             break;
         default:
             break;

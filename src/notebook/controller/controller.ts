@@ -7,6 +7,7 @@ import { hashSum } from "@hpcc-js/util";
 import { reporter } from "../../telemetry/index";
 import { sessionManager } from "../../hpccplatform/session";
 import { deleteFile, writeFile } from "../../util/fs";
+import localize from "../../util/localize";
 import { launchConfiguration, LaunchRequestArguments } from "../../hpccplatform/launchConfig";
 import { OJSOutput } from "./serializer-types";
 import { MIME, serializer } from "./serializer";
@@ -142,7 +143,7 @@ export class Controller {
                 } catch (e) { }
             }
         } catch (e: any) {
-            if (e.message.indexOf("0003:  Definition must contain EXPORT or SHARED value") >= 0) {
+            if (`${e?.message ?? e}`.indexOf("0003:  Definition must contain EXPORT or SHARED value") >= 0) {
                 outputItem = vscode.NotebookCellOutputItem.text("...no action...");
             } else {
                 outputItem = vscode.NotebookCellOutputItem.error(e);
@@ -188,16 +189,18 @@ export class Controller {
         const execution = this._controller.createNotebookCellExecution(cell);
         execution.executionOrder = ++this._executionOrder;
         execution.start(Date.now());
+        //  No output item indicates the cell could not be submitted (e.g. no active HPCC Platform session)
+        const outputItems = outputItem ? [outputItem] : [vscode.NotebookCellOutputItem.stderr(localize("No HPCC Platform connection available"))];
         // serializer.node(cell).output = outputItem;
-        await execution.replaceOutput([new vscode.NotebookCellOutput([outputItem])]);
-        execution.end([outputItem].every(op => op.mime.indexOf(".stderr") < 0), Date.now());
+        await execution.replaceOutput([new vscode.NotebookCellOutput(outputItems)]);
+        execution.end(outputItems.every(op => op.mime.indexOf(".stderr") < 0), Date.now());
     }
 
     private async execute(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument): Promise<void> {
         const outputItems = await Promise.all(cells.map(c => this.createOutputItem(c, notebook, [])));
         for (let i = 0; i < cells.length; ++i) {
             reporter.sendTelemetryEvent("controller.execute.cell");
-            this.executeCell(cells[i], outputItems[i], notebook, cells.filter(c => c !== cells[i]));
+            await this.executeCell(cells[i], outputItems[i], notebook, cells.filter(c => c !== cells[i]));
         }
     }
 }

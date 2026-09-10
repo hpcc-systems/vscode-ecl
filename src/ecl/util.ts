@@ -13,10 +13,18 @@ export function byteOffsetAt(document: vscode.TextDocument, position: vscode.Pos
 }
 
 class VSCodeWriter implements Writer {
-    eclOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("ECL");
+    private _eclOutputChannel?: vscode.OutputChannel;
+
+    //  Created on first write - avoids racing channel creation against extension host shutdown
+    private channel(): vscode.OutputChannel {
+        if (!this._eclOutputChannel) {
+            this._eclOutputChannel = vscode.window.createOutputChannel("ECL");
+        }
+        return this._eclOutputChannel;
+    }
 
     write(dateTime: string, level: Level, id: string, msg: string) {
-        this.eclOutputChannel.appendLine(`[${dateTime}] ${Level[level].toUpperCase()} ${id}:  ${msg}`);
+        this.channel().appendLine(`[${dateTime}] ${Level[level].toUpperCase()} ${id}:  ${msg}`);
     }
 }
 

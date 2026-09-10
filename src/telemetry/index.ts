@@ -12,5 +12,5 @@ export function activate(context: vscode.ExtensionContext): void {
 }
 
 export function deactivate(): void {
-    reporter.sendTelemetryEvent("deactivate");
+    //  Telemetry sent during shutdown cannot complete - the sender and its log channel are torn down mid-flight
 }

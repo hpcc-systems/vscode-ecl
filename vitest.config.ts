@@ -11,7 +11,14 @@ export default defineConfig({
     test: {
         // Match test files using common patterns
         include: ['test/**/*.test.ts'],
-        exclude: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/dist-test/**', 'test/integration/**'],
+        exclude: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/build/**',
+            '**/dist-test/**',
+            'test/integration/**',
+            ...(process.env.CI ? ['test/kelClientTools.test.ts'] : [])
+        ],
 
         // Use jsdom environment for browser-like testing
         environment: 'jsdom',

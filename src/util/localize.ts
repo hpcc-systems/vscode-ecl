@@ -10,9 +10,15 @@ let m_options: { locale: string };
 let m_bundle = {} as ILanguagePack;
 
 function init() {
+    let nlsConfig = {};
+    try {
+        nlsConfig = JSON.parse((typeof process !== "undefined" ? process.env?.VSCODE_NLS_CONFIG : undefined) || "{}");
+    } catch (e: any) {
+        console.error(`Failed to parse VSCODE_NLS_CONFIG:  ${e?.message ?? e}`);
+    }
     m_options = {
         ...m_options,
-        ...JSON.parse(process.env.VSCODE_NLS_CONFIG || "{}")
+        ...nlsConfig
     };
 }
 
@@ -23,6 +29,9 @@ async function resolveLanguagePack(): Promise<ILanguagePack> {
     const defaultLanguage = languageFormat.replace("{0}", "");
 
     const rootPath = extensions.getExtension("hpcc-systems.ecl")?.extensionPath;
+    if (!rootPath) {
+        return {};
+    }
 
     const resolvedLanguage = await recurseCandidates(
         rootPath,
@@ -32,17 +41,22 @@ async function resolveLanguagePack(): Promise<ILanguagePack> {
 
     const languageFilePath = resolve(rootPath, resolvedLanguage);
 
-    const defaultLanguageBundle = JSON.parse(
-        resolvedLanguage !== defaultLanguage
-            ? await readFile(resolve(rootPath, defaultLanguage), "utf-8")
-            : "{}"
-    );
+    const defaultLanguageBundle = resolvedLanguage !== defaultLanguage
+        ? await readBundle(resolve(rootPath, defaultLanguage))
+        : {};
 
-    const resolvedLanguageBundle = JSON.parse(
-        await readFile(languageFilePath, "utf-8")
-    );
+    const resolvedLanguageBundle = await readBundle(languageFilePath);
 
     return { ...defaultLanguageBundle, ...resolvedLanguageBundle };
+}
+
+async function readBundle(filePath: string): Promise<ILanguagePack> {
+    try {
+        return JSON.parse(await readFile(filePath, "utf-8"));
+    } catch (e: any) {
+        console.error(`Failed to load language bundle "${filePath}":  ${e?.message ?? e}`);
+        return {};
+    }
 }
 
 async function recurseCandidates(

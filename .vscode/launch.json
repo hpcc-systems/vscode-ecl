@@ -16,9 +16,7 @@
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": [
-                "--disable-extensions",
-                "--enable-extension",
-                "GordonSmith.observable-js",
+                "--extensions-dir=${workspaceFolder}/.vscode-dev-extensions",
                 "--extensionDevelopmentPath=${workspaceRoot}",
                 "${workspaceRoot}/ecl-sample"
             ],
@@ -35,6 +33,20 @@
             "args": [
                 "--extensionDevelopmentPath=${workspaceRoot}",
                 "${workspaceRoot}/ecl-sample"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+        },
+        {
+            "name": "KEL: Launch Extension With Other Extensions",
+            "type": "extensionHost",
+            "request": "launch",
+            "debugWebviews": true,
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceRoot}",
+                "${workspaceRoot}/ecl-sample/public_records"
             ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"

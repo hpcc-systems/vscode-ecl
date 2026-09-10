@@ -11,7 +11,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     CredentialManager.attach(context);
     notebookActivate(context);
     await initialize();
-    checkForUpgrade(context);
+    checkForUpgrade(context).catch(e => console.error(`checkForUpgrade failed:  ${e?.message ?? e}`));
     await Promise.all([
         import("./ecl/main.js").then(({ activate }) => activate(context)),
         import("./kel/main.js").then(({ activate }) => activate(context)),

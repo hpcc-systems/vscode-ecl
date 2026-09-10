@@ -12,6 +12,7 @@
 /types
 tmp*.*
 .vscode-test
+.vscode-dev-extensions
 test-results.xml
 *.vsix
 *.log

@@ -48,10 +48,6 @@ async function bundle(tsconfigRaw, entryPoint, platform, format, plugins = []) {
             copyStaticFiles({
                 src: "./util/docs.vecdb",
                 dest: path.join(outputDirectory, "docs.vecdb"),
-            }),
-            copyStaticFiles({
-                src: "./node_modules/@hpcc-js/dgrid-shim/dist/index.js",
-                dest: path.join(outputDirectory, "dgrid-shim.min.js"),
             })
         ]),
         bundle(tsconfigBrowser, "./src/notebook/renderers/wuRenderer.tsx", "browser", "esm"),

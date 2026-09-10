@@ -12,5 +12,5 @@ export function activate(ctx: vscode.ExtensionContext): void {
     Editor.attach(ctx);
     StatusBar.attach(ctx);
     DocumentSymbolProvider.attach(ctx);
-    locateClientTools();
+    locateClientTools().catch(e => console.error(`KEL locateClientTools failed:  ${e?.message ?? e}`));
 }

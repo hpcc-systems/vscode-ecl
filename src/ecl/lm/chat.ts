@@ -33,6 +33,8 @@ export class ECLChat {
 
     protected constructor(ctx: vscode.ExtensionContext) {
         this.modelPath = checkModelExists(ctx);
+        //  Prevent an unhandled rejection - the error is surfaced when "modelPath" is awaited
+        this.modelPath.catch(e => console.error(`ECL Chat model unavailable:  ${e?.message ?? e}`));
 
         const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, chatCtx: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<IECLChatResult> => {
             let cmdResult: any;
