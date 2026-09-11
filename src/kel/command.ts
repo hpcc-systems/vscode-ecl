@@ -33,10 +33,11 @@ const mavenSettingsTemplate = `<!-- Set the Maven credentials, then retry KEL. -
 </settings>
 `;
 
-function isMavenCredentialFailure(stdout: string, stderr: string): boolean {
+export function isMavenCredentialFailure(stdout: string, stderr: string): boolean {
     const output = `${stdout}\n${stderr}`;
-    return /(?:401\s+unauthorized|unauthorized|authentication|credentials?)/i.test(output)
-        || /K50001\s*[:-].*(?:Unable to find version .* in any of these repositories|Error executing Maven)/i.test(output);
+    const isMavenFailure = /\bMaven\b|\bmvn\b|kel-compiler-repo\d*|\.m2[\\/]|Unable to find version .* in any of these repositories/i.test(output);
+    const isCredentialFailure = /(?:401\s+unauthorized|unauthorized|authentication(?: failed)?|credentials?)/i.test(output);
+    return isMavenFailure && isCredentialFailure;
 }
 
 async function promptForMavenSettings(stdout: string, stderr: string): Promise<void> {
