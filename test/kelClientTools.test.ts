@@ -1,3 +1,4 @@
+import path from "path";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 const fileType = 1;
@@ -51,10 +52,10 @@ describe("KEL client tools discovery", () => {
     });
 
     it("finds a built KEL launcher in a sibling Tardis checkout", async () => {
-        const launcherTargetFolder = "/work/Tardis/kel-top/tools/launcher/target";
-        const launcherJar = `${launcherTargetFolder}/kel-launcher-1.28.0-SNAPSHOT.jar`;
+        const launcherTargetFolder = path.join("/work", "Tardis", "kel-top", "tools", "launcher", "target");
+        const launcherJar = path.join(launcherTargetFolder, "kel-launcher-1.28.0-SNAPSHOT.jar");
         files.add(launcherJar);
-        files.add(`${launcherTargetFolder}/original-kel-launcher-1.28.0-SNAPSHOT.jar`);
+        files.add(path.join(launcherTargetFolder, "original-kel-launcher-1.28.0-SNAPSHOT.jar"));
         directories.set(launcherTargetFolder, [
             ["classes", directoryType],
             ["kel-launcher-1.28.0-SNAPSHOT.jar", fileType],
