@@ -58,6 +58,7 @@ class KelccErrors extends Errors {
 
 interface KelResponse {
     stdout: string;
+    stderr: string;
     errors: KelccErrors;
 }
 
@@ -160,6 +161,7 @@ export class KELClientTools extends ClientTools {
             logger.info(`process-complete: tool=${this.kelPath}, stdout=${response.stdout.length} chars, stderr=${response.stderr.length} chars`);
             return {
                 stdout: response.stdout,
+                stderr: response.stderr,
                 errors: new KelccErrors(response.stderr, checked)
             };
         });

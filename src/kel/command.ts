@@ -1,8 +1,11 @@
 import { scopedLogger } from "@hpcc-js/util";
 import * as vscode from "vscode";
+import * as os from "os";
+import * as path from "path";
 import localize from "../util/localize";
 import { KELClientTools, KelProcessOutputHandler, locateClientTools, selectCTVersion } from "./clientTools";
 import { Diagnostic } from "./diagnostic";
+import { createDirectory, exists, writeFile } from "../util/fs";
 
 const logger = scopedLogger("kel/command.ts");
 
@@ -17,6 +20,65 @@ function mapSeverityToVSCodeSeverity(sev: string) {
 const checking = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("checking")}...`, vscode.DiagnosticSeverity.Information);
 const generating = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("generating")}...`, vscode.DiagnosticSeverity.Information);
 const noClientTools = new vscode.Diagnostic(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0)), `...${localize("unable to locate KEL client tools")}...`, vscode.DiagnosticSeverity.Information);
+
+const mavenSettingsTemplate = `<!-- Set the Maven credentials, then retry KEL. -->
+<settings>
+    <servers>
+        <server>
+            <id>kel-compiler-repo1</id>
+            <username>\${env.KEL_JFROG_USERNAME}</username>
+            <password>\${env.KEL_JFROG_REGISTRY_PASSWORD}</password>
+        </server>
+    </servers>
+</settings>
+`;
+
+function isMavenCredentialFailure(stdout: string, stderr: string): boolean {
+    const output = `${stdout}\n${stderr}`;
+    return /(?:401\s+unauthorized|unauthorized|authentication|credentials?)/i.test(output)
+        || /K50001\s*[:-].*(?:Unable to find version .* in any of these repositories|Error executing Maven)/i.test(output);
+}
+
+async function promptForMavenSettings(stdout: string, stderr: string): Promise<void> {
+    if (!isMavenCredentialFailure(stdout, stderr)) {
+        return;
+    }
+
+    const settingsPath = path.join(os.homedir(), ".m2", "settings.xml");
+    const settingsExists = await exists(settingsPath);
+    const updateAction = settingsExists ? localize("Update settings.xml") : localize("Create settings.xml");
+    const copyAction = localize("Copy Maven settings template");
+    const action = await vscode.window.showErrorMessage(
+        `${localize("KEL could not access its Maven repository. Update or create {0} with your repository credentials.", settingsPath)}\n\n${mavenSettingsTemplate}`,
+        { modal: true },
+        copyAction,
+        updateAction
+    );
+    if (action === copyAction) {
+        await vscode.env.clipboard.writeText(mavenSettingsTemplate);
+        vscode.window.showInformationMessage(localize("Maven settings template copied to the clipboard."));
+        return;
+    }
+    if (action !== updateAction) {
+        return;
+    }
+
+    try {
+        if (!settingsExists) {
+            const mavenFolder = path.dirname(settingsPath);
+            if (!await exists(mavenFolder)) {
+                await createDirectory(mavenFolder);
+            }
+            await writeFile(settingsPath, mavenSettingsTemplate);
+        }
+        const document = await vscode.workspace.openTextDocument(vscode.Uri.file(settingsPath));
+        await vscode.window.showTextDocument(document);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        logger.error(`maven-settings-open-failed: ${message}`);
+        vscode.window.showErrorMessage(localize("Unable to open Maven settings: {0}", message));
+    }
+}
 
 function setReportedDiagnostics(diagnostic: Diagnostic, documentUri: vscode.Uri, errors: Awaited<ReturnType<KELClientTools["generate"]>>["errors"]) {
     const mappedErrors: { [filePath: string]: vscode.Diagnostic[] } = {
@@ -99,6 +161,7 @@ export class Commands {
                     const response = await clientTools.checkSyntax(doc.uri.fsPath, undefined, processStatus.onOutput);
                     logger.debug(`checkSyntax-check-response: stdout=${response.stdout.length} chars, errors=${response.errors.all().length}`);
                     setReportedDiagnostics(this._diagnostic, doc.uri, response.errors);
+                    await promptForMavenSettings(response.stdout, response.stderr);
                     const hasErrors = response.errors.all().some(error => error.severity.toLowerCase() === "error");
                     vscode.window.setStatusBarMessage(`$(${hasErrors ? "error" : "check"}) ${localize("KEL")}: ${localize(hasErrors ? "Failed" : "Completed")}`, 5000);
                     logger.debug("checkSyntax-check-response-end");
@@ -138,6 +201,7 @@ export class Commands {
                     const response = await clientTools.generate(doc.uri, processStatus.onOutput);
                     logger.debug(`generate-complete: stdout=${response.stdout.length} chars, errors=${response.errors.all().length}`);
                     setReportedDiagnostics(this._diagnostic, doc.uri, response.errors);
+                    await promptForMavenSettings(response.stdout, response.stderr);
                     const hasErrors = response.errors.all().some(error => error.severity.toLowerCase() === "error");
                     vscode.window.setStatusBarMessage(`$(${hasErrors ? "error" : "check"}) ${localize("KEL")}: ${localize(hasErrors ? "Failed" : "Completed")}`, 5000);
                 } else {
