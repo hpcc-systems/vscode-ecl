@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.39.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.38.1...ecl-v2.39.0) (2026-09-11)
+
+
+### Features
+
+* add KEL activation and deactivation commands with localization support ([14c2423](https://github.com/hpcc-systems/vscode-ecl/commit/14c2423f9c1a20c2cd77fb19c6d752e2aa07aded))
+
 ## [2.38.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.38.0...ecl-v2.38.1) (2026-09-09)
 
 
