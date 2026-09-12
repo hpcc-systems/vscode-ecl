@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.40.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.40.0...ecl-v2.40.1) (2026-09-12)
+
+
+### Bug Fixes
+
+* update webview-test URLs and improve cell rendering in WUResultStore ([0660f26](https://github.com/hpcc-systems/vscode-ecl/commit/0660f268345bebaa83722e3879a0cc27d7a3025a)), closes [#534](https://github.com/hpcc-systems/vscode-ecl/issues/534)
+
 ## [2.40.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.39.0...ecl-v2.40.0) (2026-09-12)
 
 
