@@ -9,6 +9,21 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.40.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.39.0...ecl-v2.40.0) (2026-09-12)
+
+
+### Features
+
+* add KEL activation and related prompts in multiple languages ([f18476b](https://github.com/hpcc-systems/vscode-ecl/commit/f18476b7b9678eb1514f29d9cc213ef353719478))
+* add Maven settings handling and error prompts in KEL commands ([75edb3c](https://github.com/hpcc-systems/vscode-ecl/commit/75edb3c1f8f826abbef3b498a0936d3fed2f6287))
+* add Maven settings handling and error prompts in KEL commands ([ff1fff1](https://github.com/hpcc-systems/vscode-ecl/commit/ff1fff1984e85feb8b2a27efee3900b0034dff2f))
+* enhance KEL functionality with improved Maven credential detection and expanded language provider capabilities ([2dc02ea](https://github.com/hpcc-systems/vscode-ecl/commit/2dc02ea14b993892c59280f51ac3aa35ea1e884e))
+
+
+### Bug Fixes
+
+* bump versions and modernise result views ([8955967](https://github.com/hpcc-systems/vscode-ecl/commit/89559676158f6981b23a61a8f6ba043dbb3232ae))
+
 ## [2.39.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.38.1...ecl-v2.39.0) (2026-09-11)
 
 
