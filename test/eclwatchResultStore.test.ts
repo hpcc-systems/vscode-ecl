@@ -55,13 +55,18 @@ describe("WUResultStore", () => {
         document.body.replaceChildren();
     });
 
-    it("encodes markup returned by scalar column formatters", () => {
+    it("renders row layout markup without interpreting result markup", () => {
         const result = { Total: 0 } as Result;
         const store = new Store(result, schemaWithLeaf(), false);
         const column = store.columns()[0];
+        const container = document.createElement("div");
 
-        expect(column.formatter?.call(column, "<img src=x onerror=alert(1)>", {} as never))
-            .toBe("&lt;img src=x onerror=alert(1)&gt;");
+        column.renderCell?.call(column, {} as never, "&lt;img src=x onerror=alert(1)&gt;", container);
+        expect(container.querySelector("img")).toBeNull();
+        expect(container.textContent).toBe("<img src=x onerror=alert(1)>");
+
+        column.renderCell?.call(column, {} as never, "first<br><hr class='dgrid-fakeline'>second", container);
+        expect(container.querySelectorAll(".dgrid-fakeline")).toHaveLength(1);
     });
 
     it("renders nested rows as text without creating injected elements", () => {

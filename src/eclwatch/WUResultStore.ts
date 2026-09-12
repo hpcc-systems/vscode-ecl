@@ -69,14 +69,10 @@ export class Store {
                 column.children = children;
             } else {
                 column.width += node.charWidth() * 9;
-                column.formatter = (cell: unknown) => {
-                    switch (typeof cell) {
-                        case "string":
-                            return entitiesEncode(cell).replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;").trim();
-                        case "undefined":
-                            return "";
-                    }
-                    return String(cell);
+                column.renderCell = (_row, cell: unknown, cellElement) => {
+                    cellElement.innerHTML = typeof cell === "string" ?
+                        cell.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;").trim() :
+                        entitiesEncode(cell as string ?? "");
                 };
             }
             return column;
