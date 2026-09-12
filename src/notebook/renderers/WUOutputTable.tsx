@@ -1,23 +1,8 @@
 
 import * as React from "react";
-import { Pivot, PivotItem, IPivotStyles, DetailsList, IColumn, DetailsListLayoutMode, SelectionMode, IStyleFunctionOrObject, IPivotStyleProps } from "@fluentui/react";
+import { DataGrid, DataGridBody, DataGridCell, DataGridHeader, DataGridHeaderCell, DataGridRow, Tab, TabList, createTableColumn, type TableColumnDefinition } from "@fluentui/react-components";
 import { useConst } from "@fluentui/react-hooks";
 import { WUOutput } from "../controller/serializer-types";
-
-const bodyStyles = window.getComputedStyle(document.body);
-
-const pivotStyles: IStyleFunctionOrObject<IPivotStyleProps, IPivotStyles> = {
-    link: {
-        fontSize: bodyStyles.getPropertyValue("--vscode-font-size"),
-        lineHeight: 32,
-        height: 32
-    },
-    linkIsSelected: {
-        fontSize: bodyStyles.getPropertyValue("--vscode-font-size"),
-        lineHeight: 32,
-        height: 32
-    },
-};
 
 export const WUOutputSummary: React.FunctionComponent<WUOutput> = (output: WUOutput) => {
     return <>
@@ -33,22 +18,14 @@ interface WUOutputTableProps {
 export const WUOutputTable: React.FunctionComponent<WUOutputTableProps> = ({
     result
 }) => {
-    const columns = useConst(() => {
+    const columns = useConst((): TableColumnDefinition<object>[] => {
         if (Array.isArray(result) && result.length > 0 && typeof result[0] === "object" && result[0] !== null) {
             return Object.keys(result[0] as object).map(col => {
-                return {
-                    key: col,
-                    name: col,
-                    fieldName: col,
-                    minWidth: 100,
-                    maxWidth: 200,
-                    isResizable: true,
-                    isSorted: false,
-                    isSortedDescending: false,
-                    onColumnClick: (ev: React.MouseEvent<HTMLElement>, column: IColumn) => {
-                        console.log(`clicked ${column.fieldName}`);
-                    }
-                };
+                return createTableColumn<object>({
+                    columnId: col,
+                    renderHeaderCell: () => col,
+                    renderCell: row => String((row as Record<string, unknown>)[col] ?? "")
+                });
             });
         }
         return [];
@@ -58,15 +35,18 @@ export const WUOutputTable: React.FunctionComponent<WUOutputTableProps> = ({
         return <div>{JSON.stringify(result, null, 2)}</div>;
     }
 
-    return <DetailsList
-        compact={true}
-        items={result}
-        columns={columns}
-        selectionMode={SelectionMode.none}
-        setKey="set"
-        styles={{ root: { height: "200px", minHeight: "200px", maxHeight: "640px" } }}
-        layoutMode={DetailsListLayoutMode.justified}
-    />;
+    return <DataGrid items={result} columns={columns} sortable resizableColumns style={{ height: "200px", minHeight: "200px", maxHeight: "640px" }}>
+        <DataGridHeader>
+            <DataGridRow>
+                {({ renderHeaderCell }) => <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>}
+            </DataGridRow>
+        </DataGridHeader>
+        <DataGridBody<object>>
+            {({ item, rowId }) => <DataGridRow<object> key={rowId}>
+                {({ renderCell }) => <DataGridCell>{renderCell(item)}</DataGridCell>}
+            </DataGridRow>}
+        </DataGridBody>
+    </DataGrid>;
 };
 
 export const WUOutputTables: React.FunctionComponent<WUOutput> = (output: WUOutput) => {
@@ -74,11 +54,11 @@ export const WUOutputTables: React.FunctionComponent<WUOutput> = (output: WUOutp
     const keys = Object.keys(output.results);
     const headers = keys.map(key => `${key}: ${Array.isArray(output.results[key]) ? `[${(output.results[key] as any).length} rows]` : output.results[key]}`);
 
-    return <Pivot overflowBehavior="menu" styles={pivotStyles} >
-        {
-            keys.map((key, idx) => <PivotItem key={key} itemKey={key} headerText={`${headers[idx]}`} >
-                <WUOutputTable result={output.results[key]} />
-            </PivotItem>)
-        }
-    </Pivot>;
+    const [selected, setSelected] = React.useState(keys[0] ?? "");
+    return <>
+        <TabList selectedValue={selected} onTabSelect={(_, data) => setSelected(String(data.value))}>
+            {keys.map((key, idx) => <Tab key={key} value={key}>{headers[idx]}</Tab>)}
+        </TabList>
+        {selected ? <WUOutputTable result={output.results[selected]} /> : undefined}
+    </>;
 };

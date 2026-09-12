@@ -1,13 +1,14 @@
 import * as React from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 import { useConst } from "@fluentui/react-hooks";
 import { Result, type XSDXMLNode, type IOptions, type WsWorkunits } from "@hpcc-js/comms";
 import { Common, Table } from "@hpcc-js/dgrid";
 import { hashSum } from "@hpcc-js/util";
-import { Stack, Checkbox, ContextualMenu, ContextualMenuItemType, DefaultButton, Dialog, DialogFooter, DialogType, IContextualMenuItem, PrimaryButton, ProgressIndicator, SpinButton } from "@fluentui/react";
+import { Button, Checkbox, Dialog, DialogActions, DialogBody, DialogContent, DialogOpenChangeData, DialogOpenChangeEvent, DialogSurface, DialogTitle, Field, FluentProvider, Menu, MenuDivider, MenuItem, MenuList, MenuPopover, MenuTrigger, ProgressBar, SpinButton } from "@fluentui/react-components";
 import copy from "copy-to-clipboard";
 import { VisualizationComponent } from "./hpccVizAdapter";
-import { Store } from "./WUResultStore";
+import { initTheme } from "./themeGenerator";
+import { createEmptyStore, Store } from "./WUResultStore";
 
 import "./WUResult.css";
 
@@ -31,25 +32,63 @@ function typeTPL(type: string, isSet: boolean) {
     }
 }
 
-function valueTPL(value: string | number | boolean): string | number | undefined {
+function valueTPL(value: unknown): string | number {
     switch (typeof value) {
         case "string":
-            // trimRight deprecated -> use trimEnd
             return `'${value.split("'").join("\\'").trimEnd()}'`;
         case "number":
             return value;
         case "boolean":
             return value === true ? "TRUE" : "FALSE";
+        case "bigint":
+            return String(value);
+        case "object":
+            if (value === null) {
+                return "''";
+            }
+            if (Array.isArray(value)) {
+                return `[${value.map(valueTPL).join(", ")}]`;
+            }
+            return rowTPL(value as GenericRow);
         default:
-            return undefined;
+            return "''";
     }
 }
 
-type GenericRow = Record<string, any>;
+type GenericRow = Record<string, unknown>;
+
+interface GridRow {
+    data?: GenericRow & {
+        __hpcc_orig?: GenericRow;
+    };
+}
+
+function createReactHost(): { root: Root, dispose: () => void } {
+    const element = document.createElement("div");
+    document.body.appendChild(element);
+    const root = createRoot(element);
+    let disposed = false;
+    return {
+        root,
+        dispose: () => {
+            if (!disposed) {
+                disposed = true;
+                root.unmount();
+                element.remove();
+            }
+        }
+    };
+}
+
+function reportCopyError(error: unknown): void {
+    if (!(error instanceof DOMException && error.name === "AbortError")) {
+        console.error("Failed to copy ECL result", error);
+    }
+}
 
 function rowTPL(row: GenericRow) {
-    return `{${Object.values(row).map((field: any) => {
-        if (field && Array.isArray(field.Item)) {
+    return `{${Object.values(row).map(field => {
+        if (field && typeof field === "object" && "Item" in field && Array.isArray(field.Item)) {
             return `[${field.Item.map(valueTPL).join(", ")}]`;
         }
         return valueTPL(field);
@@ -74,10 +113,10 @@ ${rowsTPL(row)}
 
 function copyColumnTPL(col: number, dedup: boolean, fields: XSDXMLNode[], row: GenericRow[]) {
     const name = fields[col].name;
-    let set: (string | number | undefined)[];
+    let set: (string | number)[];
     if (dedup) {
         const dedupMap: Record<string, true> = {};
-        row.map(r => valueTPL(r[name])).forEach(n => { if (n !== undefined) dedupMap[String(n)] = true; });
+        row.map(r => valueTPL(r[name])).forEach(value => { dedupMap[String(value)] = true; });
         set = Object.keys(dedupMap);
     } else {
         set = row.map(r => valueTPL(r[name]));
@@ -88,25 +127,36 @@ SET OF ${typeTPL(fields[col].type, false)} ${name} := [${set.join(",")}];
 }
 
 interface ContextualMenuBasicExampleProps {
-    target: any;
-    menuItems: IContextualMenuItem[];
+    target: MouseEvent;
+    menuItems: MenuItemDefinition[];
+    onDismiss: () => void;
 }
 
 const ContextMenu: React.FunctionComponent<ContextualMenuBasicExampleProps> = ({
     target,
     menuItems,
+    onDismiss,
 }) => {
-    const [showContextualMenu, setShowContextualMenu] = React.useState(true);
-    const onHideContextualMenu = React.useCallback(() => setShowContextualMenu(false), []);
-
-    return <ContextualMenu
-        items={menuItems}
-        hidden={!showContextualMenu}
-        target={target}
-        onItemClick={onHideContextualMenu}
-        onDismiss={onHideContextualMenu}
-    />;
+    return <Menu open onOpenChange={(_, data) => { if (!data.open) onDismiss(); }}>
+        <MenuTrigger disableButtonEnhancement>
+            <span style={{ position: "fixed", left: target.clientX, top: target.clientY, width: 1, height: 1 }} />
+        </MenuTrigger>
+        <MenuPopover>
+            <MenuList>
+                {menuItems.map(item => item.itemType === "divider" ?
+                    <MenuDivider key={item.key} /> :
+                    <MenuItem key={item.key} onClick={item.onClick}>{item.text}</MenuItem>)}
+            </MenuList>
+        </MenuPopover>
+    </Menu>;
 };
+
+interface MenuItemDefinition {
+    key: string;
+    text?: string;
+    onClick?: () => void;
+    itemType?: "divider";
+}
 
 interface DownloadDialogProps {
     totalRows: number;
@@ -119,20 +169,10 @@ const DownloadDialog: React.FunctionComponent<DownloadDialogProps> = ({
     column = false,
     onClose,
 }) => {
-    const dialogContentProps = {
-        type: DialogType.largeHeader,
-        title: "Download Results",
-        subText: `Confirm total number of rows to download (max ${totalRows} rows).`,
-    };
-    const stackTokens = { childrenGap: 10 };
-
-    const [hideDialog, setHideDialog] = React.useState(false);
     const handleOk = () => {
-        setHideDialog(true);
         onClose(downloadTotal, dedup);
     };
     const handleCancel = () => {
-        setHideDialog(true);
         onClose(0, dedup);
     };
 
@@ -151,33 +191,35 @@ const DownloadDialog: React.FunctionComponent<DownloadDialogProps> = ({
     };
 
     const [dedup, setDedup] = React.useState(true);
-    const onDedup = (ev?: React.FormEvent<HTMLElement>, isChecked?: boolean) => {
+    const onDedup = (_event: React.ChangeEvent<HTMLInputElement>, data: { checked: boolean | "mixed" }) => {
+        setDedup(data.checked === true);
     };
 
-    return <Dialog
-        hidden={hideDialog}
-        onDismiss={handleCancel}
-        dialogContentProps={dialogContentProps}
-    >
-        <Stack tokens={stackTokens}>
-            <SpinButton
-                defaultValue={`${totalRows}`}
-                label={"Download:"}
-                min={0}
-                max={totalRows}
-                step={1}
-                incrementButtonAriaLabel={"Increase value by 1"}
-                decrementButtonAriaLabel={"Decrease value by 1"}
-                onValidate={onDownloadTotalValidate}
-            />
-            {column ?
-                <Checkbox label="De-duplicate" boxSide="end" defaultChecked onChange={onDedup} /> :
-                undefined}
-        </Stack>
-        <DialogFooter>
-            <PrimaryButton onClick={handleOk} text="Ok" />
-            <DefaultButton onClick={handleCancel} text="Cancel" />
-        </DialogFooter>
+    return <Dialog open onOpenChange={(_event: DialogOpenChangeEvent, data: DialogOpenChangeData) => { if (!data.open) handleCancel(); }}>
+        <DialogSurface>
+            <DialogBody>
+                <DialogTitle>Download Results</DialogTitle>
+                <DialogContent>
+                    <p>{`Confirm total number of rows to download (max ${totalRows} rows).`}</p>
+                    <Field label="Download:">
+                        <SpinButton
+                            defaultValue={totalRows}
+                            min={0}
+                            max={totalRows}
+                            step={1}
+                            incrementButton={{ "aria-label": "Increase value by 1" }}
+                            decrementButton={{ "aria-label": "Decrease value by 1" }}
+                            onChange={(_, data) => onDownloadTotalValidate(data.displayValue ?? String(data.value ?? totalRows))}
+                        />
+                    </Field>
+                    {column ? <Checkbox label="De-duplicate" defaultChecked onChange={onDedup} /> : undefined}
+                </DialogContent>
+                <DialogActions>
+                    <Button appearance="primary" onClick={handleOk}>Ok</Button>
+                    <Button onClick={handleCancel}>Cancel</Button>
+                </DialogActions>
+            </DialogBody>
+        </DialogSurface>
     </Dialog>;
 };
 
@@ -191,34 +233,37 @@ export const DownloadProgress: React.FunctionComponent<DownloadProgressProps> = 
     onCancel
 }) => {
 
-    const dialogContentProps = {
-        type: DialogType.normal,
-        title: "Download Results",
-    };
-
-    const [hideDialog, setHideDialog] = React.useState(false);
     const handleCancel = () => {
-        setHideDialog(true);
         onCancel();
     };
 
-    return <Dialog
-        hidden={hideDialog}
-        dialogContentProps={dialogContentProps}
-    >
-        <ProgressIndicator label="Downloading..." description={`${totalRows} rows`} />
-        <DialogFooter>
-            <PrimaryButton onClick={handleCancel} text="Cancel" />
-        </DialogFooter>
+    return <Dialog open onOpenChange={(_event: DialogOpenChangeEvent, data: DialogOpenChangeData) => { if (!data.open) handleCancel(); }}>
+        <DialogSurface>
+            <DialogBody>
+                <DialogTitle>Download Results</DialogTitle>
+                <DialogContent>
+                    <ProgressBar aria-label="Downloading" />
+                    <div>{`${totalRows} rows`}</div>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancel}>Cancel</Button>
+                </DialogActions>
+            </DialogBody>
+        </DialogSurface>
     </Dialog>;
 };
 
 export class WUResultTable extends Common {
     private _result: Result | undefined;
+    private _contextMenuRoot?: Root;
+    private _contextMenuHost?: HTMLElement;
 
     constructor() {
         super();
-        this.renderHtml(false);
+        this.renderHtml(false)
+            .pagination(true)
+            .pageSize(50)
+            ;
     }
 
     calcResult(): Result | null {
@@ -233,76 +278,106 @@ export class WUResultTable extends Common {
     }
 
     fetch(row: number, count: number): Promise<GenericRow[]> {
+        const result = this._result;
+        if (!result) {
+            return Promise.reject(new Error("No result available"));
+        }
         const abortController = new AbortController();
-
-        return new Promise((resolve, reject) => {
-            if (!this._result) {
-                reject(new Error("No result available"));
-            }
-            const element = document.createElement("div");
-            const root = createRoot(element);
-            root.render(<DownloadProgress
-                totalRows={this._result!.Total}
-                onCancel={() => {
-                    abortController.abort();
-                    reject(new Error("Download cancelled"));
-                }}
-            />);
-            this._result!.fetchRows(row, count, false, {}, abortController.signal).then((rows: GenericRow[]) => {
-                root.unmount();
-                resolve(rows);
-            });
-        });
+        const host = createReactHost();
+        host.root.render(<FluentProvider theme={initTheme()}>
+            <DownloadProgress
+                totalRows={result.Total}
+                onCancel={() => abortController.abort()}
+            />
+        </FluentProvider>);
+        return result.fetchRows(row, count, false, {}, abortController.signal)
+            .finally(host.dispose);
     }
 
     confirmDownload(column: boolean = false): Promise<{ downloadTotal: number, dedup: boolean }> {
-        if (!column && this._result && this._result.Total <= 1000) return Promise.resolve({ downloadTotal: this._result.Total, dedup: false });
-        return new Promise((resolve, reject) => {
-            if (!this._result) {
-                reject(new Error("No result available"));
-            }
-            const element = document.createElement("div");
-            const root = createRoot(element);
-            root.render(<DownloadDialog
-                totalRows={this._result!.Total}
-                column={column}
-                onClose={(downloadTotal, dedup) => {
-                    resolve({ downloadTotal, dedup });
-                    root.unmount();
-                }}
-            />);
+        const result = this._result;
+        if (!result) {
+            return Promise.reject(new Error("No result available"));
+        }
+        if (!column && result.Total <= 1000) return Promise.resolve({ downloadTotal: result.Total, dedup: false });
+        const host = createReactHost();
+        return new Promise(resolve => {
+            host.root.render(<FluentProvider theme={initTheme()}>
+                <DownloadDialog
+                    totalRows={result.Total}
+                    column={column}
+                    onClose={(downloadTotal, dedup) => {
+                        resolve({ downloadTotal, dedup });
+                        queueMicrotask(host.dispose);
+                    }}
+                />
+            </FluentProvider>);
         });
     }
 
-    copyRow(row: any) {
-        if (this._result) {
-            this.fetch(row, 1).then(rows => {
-                copy(copyRowsTPL(this._result!.fields(), rows));
-            });
+    copyRow(row: GridRow): void {
+        const originalRow = row.data?.__hpcc_orig;
+        if (this._result && originalRow) {
+            copy(copyRowsTPL(this._result.fields(), [originalRow]));
         }
     }
 
-    async copyColumn(col: any) {
-        if (this._result) {
-            const idx = col.column.idx;
-            const { downloadTotal, dedup } = await this.confirmDownload(true);
-            if (downloadTotal > 0) {
-                this.fetch(0, downloadTotal).then(rows => {
-                    copy(copyColumnTPL(idx, dedup, this._result!.fields(), rows));
-                });
+    async copyColumn(col: { column: { idx: number } }): Promise<void> {
+        try {
+            if (this._result) {
+                const idx = col.column.idx;
+                const { downloadTotal, dedup } = await this.confirmDownload(true);
+                if (downloadTotal > 0) {
+                    const rows = await this.fetch(0, downloadTotal);
+                    copy(copyColumnTPL(idx, dedup, this._result.fields(), rows));
+                }
             }
+        } catch (error) {
+            reportCopyError(error);
         }
     }
 
-    async copyAll() {
-        if (this._result) {
-            const { downloadTotal } = await this.confirmDownload();
-            if (downloadTotal > 0) {
-                this.fetch(0, downloadTotal).then(rows => {
-                    copy(copyRowsTPL(this._result!.fields(), rows));
-                });
+    async copyAll(): Promise<void> {
+        try {
+            if (this._result) {
+                const { downloadTotal } = await this.confirmDownload();
+                if (downloadTotal > 0) {
+                    const rows = await this.fetch(0, downloadTotal);
+                    copy(copyRowsTPL(this._result.fields(), rows));
+                }
             }
+        } catch (error) {
+            reportCopyError(error);
         }
+    }
+
+    private closeContextMenu(expectedRoot = this._contextMenuRoot): void {
+        if (expectedRoot !== this._contextMenuRoot) {
+            return;
+        }
+        const root = this._contextMenuRoot;
+        const host = this._contextMenuHost;
+        this._contextMenuRoot = undefined;
+        this._contextMenuHost = undefined;
+        root?.unmount();
+        host?.remove();
+    }
+
+    private showContextMenu(target: MouseEvent, menuItems: MenuItemDefinition[]): void {
+        this.closeContextMenu();
+        this._contextMenuHost = document.createElement("div");
+        document.body.appendChild(this._contextMenuHost);
+        this._contextMenuRoot = createRoot(this._contextMenuHost);
+        const root = this._contextMenuRoot;
+        root.render(
+            <FluentProvider theme={initTheme()}>
+                <ContextMenu
+                    target={target}
+                    menuItems={menuItems}
+                    onDismiss={() => queueMicrotask(() => this.closeContextMenu(root))}
+                />
+            </FluentProvider>
+        );
     }
 
     protected _prevHash?: string;
@@ -320,87 +395,90 @@ export class WUResultTable extends Common {
         if (this._prevHash !== hash) {
             this._prevHash = hash;
             this._result = this.calcResult();
+            this._dgrid?.set("columns", []);
+            this._dgrid?.set("collection", createEmptyStore());
             if (this._result) {
-                this._result.fetchXMLSchema()
+                const result = this._result;
+                result.fetchXMLSchema()
                     .then((schema: any) => {
-                        const store = new Store(this._result!, schema!, this.renderHtml());
-                        this._dgrid?.set("columns", store.columns());
-                        this._dgrid?.set("collection", store);
-                    }).catch((e: unknown) => {
+                        if (this._result === result) {
+                            const store = new Store(result, schema, this.renderHtml());
+                            this._dgrid?.set("columns", store.columns());
+                            this._dgrid?.set("collection", store);
+                        }
+                    }).catch((error: unknown) => {
                         this._prevHash = undefined;
+                        console.error("Failed to load result schema", error);
                     })
                     ;
             }
         }
         if (this._prevGrid !== this._dgrid) {
             this._prevGrid = this._dgrid;
-            this._dgrid.on(".dgrid-header .dgrid-cell:contextmenu", (e: Event) => {
+            this._dgrid.on(".dgrid-header .dgrid-cell:contextmenu", (e: MouseEvent) => {
                 e.stopPropagation();
                 e.preventDefault();
                 const cell = this._dgrid.cell(e);
-                const pDiv = document.createElement("div");
-                (e.target as HTMLElement).appendChild(pDiv);
-                const root = createRoot(pDiv);
-                root.render(
-                    <ContextMenu target={e} menuItems={
-                        cell.column.isSet ? [
-                            {
-                                key: "copyAllAsECL",
-                                text: "Copy All as ECL",
-                                onClick: () => this.copyAll()
-                            }
-                        ] : [
-                            {
-                                key: "copyColumnAsECL",
-                                text: "Copy Column as ECL SET",
-                                onClick: () => {
-                                    this.copyColumn(cell);
-                                }
-                            },
-                            {
-                                key: "div1",
-                                itemType: ContextualMenuItemType.Divider,
-                            },
-                            {
-                                key: "copyAllAsECL",
-                                text: "Copy All as ECL",
-                                onClick: () => this.copyAll()
-                            }
-                        ]} />
-                );
-            });
-
-            this._dgrid.on(".dgrid-content .dgrid-cell:contextmenu", (e: Event) => {
-                e.stopPropagation();
-                e.preventDefault();
-                const row = this._dgrid.row(e);
-                const pDiv = document.createElement("div");
-                (e.target as HTMLElement).appendChild(pDiv);
-                const root = createRoot(pDiv);
-                root.render(
-                    <ContextMenu target={e} menuItems={[
-                        {
-                            key: "copyRowAsECL",
-                            text: "Copy Row as ECL",
-                            onClick: () => this.copyRow(row)
-                        },
-                        {
-                            key: "div1",
-                            itemType: ContextualMenuItemType.Divider,
-                        },
+                this.showContextMenu(e,
+                    cell.column.isSet ? [
                         {
                             key: "copyAllAsECL",
                             text: "Copy All as ECL",
                             onClick: () => this.copyAll()
                         }
-                    ]} />
+                    ] : [
+                        {
+                            key: "copyColumnAsECL",
+                            text: "Copy Column as ECL SET",
+                            onClick: () => {
+                                void this.copyColumn(cell);
+                            }
+                        },
+                        {
+                            key: "div1",
+                            itemType: "divider",
+                        },
+                        {
+                            key: "copyAllAsECL",
+                            text: "Copy All as ECL",
+                            onClick: () => void this.copyAll()
+                        }
+                    ]
+                );
+            });
+
+            this._dgrid.on(".dgrid-content .dgrid-cell:contextmenu", (e: MouseEvent) => {
+                e.stopPropagation();
+                e.preventDefault();
+                const row = this._dgrid.row(e);
+                this.showContextMenu(e, [
+                    {
+                        key: "copyRowAsECL",
+                        text: "Copy Row as ECL",
+                        onClick: () => this.copyRow(row)
+                    },
+                    {
+                        key: "div1",
+                        itemType: "divider",
+                    },
+                    {
+                        key: "copyAllAsECL",
+                        text: "Copy All as ECL",
+                        onClick: () => void this.copyAll()
+                    }
+                ]
                 );
             });
 
         }
     }
 
-    click(row: any, col: any, sel: any) {
+    exit(domNode: HTMLElement, element: unknown): void {
+        this.closeContextMenu();
+        super.exit(domNode, element);
+    }
+
+    click(_row: unknown, _col: unknown, _sel: unknown, _more: unknown): void {
     }
 }
 WUResultTable.prototype._class += " eclwatch_WUResultTable";

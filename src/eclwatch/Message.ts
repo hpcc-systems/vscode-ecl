@@ -1,47 +1,54 @@
 import React from "react";
 import { useOnEvent, useEventCallback } from "@fluentui/react-hooks";
-import { LoadedMessage, ProxyCancelMessage, ProxySendMessage, State, vscode } from "./messages";
+import { isMessage, LoadedMessage, ProxyCancelMessage, ProxySendMessage, State, vscode } from "./messages";
 import { hookSend } from "@hpcc-js/comms";
 
-interface executor<T> {
+interface Executor<T> {
     resolve: (value: T | PromiseLike<T>) => void;
-    reject: (reason?: any) => void;
+    reject: (reason?: unknown) => void;
+    cleanup: () => void;
 }
 
-const proxyPromises: { [id: number]: executor<any> } = {};
+const proxyPromises = new Map<number, Executor<unknown>>();
 let proxyID = 0;
 
-const isTestPage = document.location.protocol === "file:";
+const isTestPage = document.location.protocol === "file:" && !(window as Window & { __ECL_WEBVIEW_TEST__?: boolean }).__ECL_WEBVIEW_TEST__;
 
 hookSend((opts, action, request, responseType, header) => {
     const id = ++proxyID;
-    let canAbort = false;
-    if (request.abortSignal_) {
-        canAbort = true;
-        request.abortSignal_.onabort = function () {
+    const abortSignal = request?.abortSignal_ as AbortSignal | undefined;
+    const proxyRequest = { ...request };
+    delete proxyRequest.abortSignal_;
+
+    return new Promise((resolve, reject) => {
+        const handleAbort = () => {
             vscode.postMessage<ProxyCancelMessage>({
                 command: "proxyCancel",
                 id
             });
+            proxyPromises.delete(id);
+            reject(new DOMException("The request was aborted", "AbortError"));
         };
-        delete request.abortSignal_;
-    }
-
-    vscode.postMessage<ProxySendMessage>({
-        command: "proxySend",
-        id,
-        canAbort,
-        params: {
-            opts,
-            action,
-            request,
-            responseType,
-            header
+        const cleanup = () => abortSignal?.removeEventListener("abort", handleAbort);
+        proxyPromises.set(id, { resolve, reject, cleanup });
+        if (abortSignal?.aborted) {
+            handleAbort();
+            return;
         }
-    });
+        abortSignal?.addEventListener("abort", handleAbort, { once: true });
 
-    return new Promise((resolve, reject) => {
-        proxyPromises[proxyID] = { resolve, reject };
+        vscode.postMessage<ProxySendMessage>({
+            command: "proxySend",
+            id,
+            canAbort: !!abortSignal,
+            params: {
+                opts,
+                action,
+                request: proxyRequest,
+                responseType,
+                header
+            }
+        });
     });
 });
 
@@ -49,17 +56,27 @@ export function useMessageReceiver() {
     const [state, setState] = React.useState<State>();
 
     const cb = useEventCallback((event: MessageEvent) => {
-        const message = event.data; // The JSON data our extension sent
+        if (!isMessage(event.data)) {
+            return;
+        }
+        const message = event.data;
         switch (message.command) {
             case "navigate":
-                setState(message.data as State);
+                setState(message.data);
                 break;
-            case "proxyResponse":
-                if (proxyPromises[message.id]) {
-                    proxyPromises[message.id].resolve(message.response);
-                    delete proxyPromises[message.id];
+            case "proxyResponse": {
+                const executor = proxyPromises.get(message.id);
+                if (executor) {
+                    executor.cleanup();
+                    proxyPromises.delete(message.id);
+                    if ("error" in message) {
+                        executor.reject(new Error(message.error));
+                    } else {
+                        executor.resolve(message.response);
+                    }
                 }
                 break;
+            }
         }
     });
     useOnEvent(window, "message", cb);

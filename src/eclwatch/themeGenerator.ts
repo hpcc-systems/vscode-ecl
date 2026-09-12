@@ -1,36 +1,28 @@
-import { getColorFromString, IColor, IThemeRules, loadTheme, ThemeGenerator as FluentThemeGenerator, themeRulesStandardCreator } from "@fluentui/react";
+import { webDarkTheme, webLightTheme, type Theme } from "@fluentui/react-components";
 
-class ThemeGenerator {
-    private themeRules: IThemeRules;
-
-    constructor(foreground: string, background: string) {
-        const themeRules = themeRulesStandardCreator();
-        FluentThemeGenerator.insureSlots(this.themeRules, false);
-        FluentThemeGenerator.setSlot(themeRules.backgroundColor, getColorFromString(background), false, true, true);
-        FluentThemeGenerator.setSlot(themeRules.foregroundColor, getColorFromString(foreground), false, true, true);
-        this.themeRules = themeRules;
+function isDark(background: string): boolean {
+    const match = background.match(/^#([0-9a-f]{6})$/i);
+    if (!match) {
+        return false;
     }
-
-    public loadThemeForColor(primary: string): void {
-        const newColor: IColor = getColorFromString(primary);
-
-        const themeRules = this.themeRules;
-        FluentThemeGenerator.setSlot(themeRules.primaryColor, newColor.str, false, true, true);
-        this.themeRules = themeRules;
-        const theme = FluentThemeGenerator.getThemeAsJson(this.themeRules);
-        loadTheme({
-            ...{ palette: theme },
-            isInverted: false,
-        });
-    }
+    const value = parseInt(match[1], 16);
+    const red = (value >> 16) & 0xff;
+    const green = (value >> 8) & 0xff;
+    const blue = value & 0xff;
+    return (red * 299 + green * 587 + blue * 114) / 1000 < 128;
 }
 
-export function initTheme() {
+export function initTheme(): Theme {
     const bodyStyles = window.getComputedStyle(document.body);
 
     const backColor = bodyStyles.getPropertyValue("--vscode-editor-background") || "white";
     const foreColour = bodyStyles.getPropertyValue("--vscode-input-foreground") || "black";
-
-    const themeProvider = new ThemeGenerator(foreColour, backColor);
-    themeProvider.loadThemeForColor(bodyStyles.getPropertyValue("--vscode-progressBar-background") || "navy");
+    const primary = bodyStyles.getPropertyValue("--vscode-progressBar-background") || "navy";
+    return {
+        ...(isDark(backColor) ? webDarkTheme : webLightTheme),
+        colorNeutralBackground1: backColor,
+        colorNeutralForeground1: foreColour,
+        colorBrandBackground: primary,
+        colorBrandForeground1: foreColour
+    };
 }

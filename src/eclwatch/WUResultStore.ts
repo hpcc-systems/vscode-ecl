@@ -1,29 +1,37 @@
 import { Result, XSDSchema, XSDXMLNode } from "@hpcc-js/comms";
 import { ColumnType, Deferred, domConstruct, QueryResults, RowFormatter } from "@hpcc-js/dgrid";
 
-function entitiesEncode(str) {
+type DataRow = Record<string, unknown>;
+type FormattedRow = DataRow & {
+    __hpcc_id: number;
+    __hpcc_orig: DataRow;
+};
+type RangeResponse = { totalLength: number, data: FormattedRow[] };
+
+export function createEmptyStore() {
+    const deferred = new Deferred();
+    const results = new QueryResults(deferred.then(response => response.data), {
+        totalLength: deferred.then(response => response.totalLength)
+    });
+    deferred.resolve({ data: [], totalLength: 0 });
+    return {
+        fetchRange: () => results
+    };
+}
+
+function entitiesEncode(str: string): string {
     return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function safeEncode(item) {
-    switch (Object.prototype.toString.call(item)) {
-        case "[object Undefined]":
-        case "[object Boolean]":
-        case "[object Number]":
-            return item;
-        case "[object String]":
-            return entitiesEncode(item);
-        default:
-            console.log("Unknown cell type:  " + Object.prototype.toString.call(item));
-    }
-    return item;
+function isDataRow(value: unknown): value is DataRow {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 export class Store {
     protected wuResult: Result;
     protected schema: XSDSchema;
-    protected _columns: any[];
-    protected _cache: { [key: string]: Promise<{ totalLength: number, data: any[] }> } = {};
+    protected _columns: ColumnType[];
+    protected _cache: Record<string, Promise<RangeResponse>> = {};
     private rowFormatter: RowFormatter;
 
     constructor(wuResult: Result, schema: XSDSchema, renderHtml: boolean) {
@@ -61,136 +69,117 @@ export class Store {
                 column.children = children;
             } else {
                 column.width += node.charWidth() * 9;
-                column.formatter = (cell, row) => {
+                column.formatter = (cell: unknown) => {
                     switch (typeof cell) {
                         case "string":
-                            return {
-                                html: cell.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;").trim()
-                            };
+                            return entitiesEncode(cell).replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;").trim();
                         case "undefined":
                             return "";
                     }
-                    return cell;
+                    return String(cell);
                 };
             }
             return column;
         });
     }
 
-    isChildDataset(cell) {
-        if (Object.prototype.toString.call(cell) !== "[object Object]") {
+    isChildDataset(cell: unknown): cell is DataRow {
+        if (!isDataRow(cell)) {
             return false;
         }
-        let propCount = 0;
-        let firstPropType = null;
-        for (const key in cell) {
-            if (!firstPropType) {
-                firstPropType = Object.prototype.toString.call(cell[key]);
-            }
-            propCount++;
-        }
-        return propCount === 1 && firstPropType === "[object Array]";
+        const keys = Object.keys(cell);
+        return keys.length === 1 && Array.isArray(cell[keys[0]]);
     }
 
-    rowToTable(cell, __row, node) {
+    rowToTable(cell: unknown, _row: unknown, node: HTMLElement): void {
         if (this.isChildDataset(cell)) {  //  Don't display "Row" as a header  ---
-            for (const key in cell) {
-                this.rowToTable(cell[key], __row, node);
+            for (const value of Object.values(cell)) {
+                this.rowToTable(value, _row, node);
             }
             return;
         }
 
         const table = domConstruct.create("table", { border: 1, cellspacing: 0, width: "100%" }, node);
-        switch (Object.prototype.toString.call(cell)) {
-            case "[object Object]":
-                let tr = domConstruct.create("tr", null, table);
-                for (const key in cell) {
-                    domConstruct.create("th", { innerHTML: safeEncode(key) }, tr);
+        if (isDataRow(cell)) {
+            const entries = Object.entries(cell);
+            const headerRow = domConstruct.create("tr", null, table);
+            for (const [key] of entries) {
+                const header = domConstruct.create("th", null, headerRow);
+                header.textContent = key;
+            }
+            const valueRow = domConstruct.create("tr", null, table);
+            for (const [, value] of entries) {
+                const dataCell = domConstruct.create("td", null, valueRow);
+                if (isDataRow(value) || Array.isArray(value)) {
+                    this.rowToTable(value, _row, dataCell);
+                } else {
+                    dataCell.textContent = value === undefined || value === null ? "" : String(value);
                 }
-                tr = domConstruct.create("tr", null, table);
-                for (const key in cell) {
-                    switch (Object.prototype.toString.call(cell[key])) {
-                        case "[object Object]":
-                        case "[object Array]":
-                            this.rowToTable(cell[key], __row, node);
-                            break;
-                        default:
-                            domConstruct.create("td", { innerHTML: safeEncode(cell[key]) }, tr);
-                            break;
+            }
+        } else if (Array.isArray(cell)) {
+            cell.forEach((item, index) => {
+                if (isDataRow(item)) {
+                    const entries = Object.entries(item);
+                    if (index === 0) {
+                        const headerRow = domConstruct.create("tr", null, table);
+                        for (const [key] of entries) {
+                            const header = domConstruct.create("th", null, headerRow);
+                            header.textContent = key;
+                        }
                     }
-                }
-                break;
-            case "[object Array]":
-                for (let i = 0; i < cell.length; ++i) {
-                    switch (Object.prototype.toString.call(cell[i])) {
-                        case "[object Boolean]":
-                        case "[object Number]":
-                        case "[object String]":
-                            //  Item in Scalar  ---
-                            const tr1 = domConstruct.create("tr", null, table);
-                            domConstruct.create("td", { innerHTML: safeEncode(cell[i]) }, tr1);
-                            break;
-                        default:
-                            //  Child Dataset  ---
-                            if (i === 0) {
-                                const tr2 = domConstruct.create("tr", null, table);
-                                for (const key in cell[i]) {
-                                    domConstruct.create("th", { innerHTML: safeEncode(key) }, tr2);
-                                }
-                            }
-                            domConstruct.create("tr", null, table);
-                            for (const key in cell[i]) {
-                                if (cell[i][key]) {
-                                    if (Object.prototype.toString.call(cell[i][key]) === "[object Object]" || Object.prototype.toString.call(cell[i][key]) === "[object Array]") {
-                                        const td = domConstruct.create("td", null, tr1);
-                                        this.rowToTable(cell[i][key], cell[i], td);
-                                    } else if (key.indexOf("__html", key.length - "__html".length) !== -1) {
-                                        domConstruct.create("td", { innerHTML: cell[i][key] }, tr1);
-                                    } else if (key.indexOf("__javascript", key.length - "__javascript".length) !== -1) {
-                                        /*const td = */ domConstruct.create("td", null, tr1);
-                                        // this.injectJavascript(cell[i][key], cell[i], td);
-                                    } else {
-                                        const val = cell[i][key];
-                                        domConstruct.create("td", { innerHTML: safeEncode(val) }, tr1);
-                                    }
-                                } else {
-                                    domConstruct.create("td", { innerHTML: "" }, tr1);
-                                }
-                            }
+                    const valueRow = domConstruct.create("tr", null, table);
+                    for (const [, value] of entries) {
+                        const dataCell = domConstruct.create("td", null, valueRow);
+                        if (isDataRow(value) || Array.isArray(value)) {
+                            this.rowToTable(value, item, dataCell);
+                        } else {
+                            dataCell.textContent = value === undefined || value === null ? "" : String(value);
+                        }
                     }
+                } else if (Array.isArray(item)) {
+                    const valueRow = domConstruct.create("tr", null, table);
+                    const dataCell = domConstruct.create("td", null, valueRow);
+                    this.rowToTable(item, _row, dataCell);
+                } else {
+                    const valueRow = domConstruct.create("tr", null, table);
+                    const dataCell = domConstruct.create("td", null, valueRow);
+                    dataCell.textContent = item === undefined || item === null ? "" : String(item);
                 }
-                break;
+            });
         }
     }
-    getIdentity(row) {
+
+    getIdentity(row: FormattedRow): number {
         return row.__hpcc_id;
     }
 
-    _request(start, end): Promise<{ totalLength: number, data: any[] }> {
+    _request(start: number, end: number): Promise<RangeResponse> {
         if (!this.wuResult) return Promise.resolve({ totalLength: 0, data: [] });
         const cacheKey = `${start}->${end}`;
         if (this._cache[cacheKey]) return this._cache[cacheKey];
-        const retVal = this.wuResult.fetchRows(start, end - start).then((rows: any[]) => {
+        const request = this.wuResult.fetchRows(start, end - start).then((rows: DataRow[]) => {
             return {
                 totalLength: this.wuResult.Total,
                 data: rows.map((row, idx) => {
-                    const formattedRow: any = this.rowFormatter.format(row);
+                    const formattedRow = this.rowFormatter.format(row) as FormattedRow;
                     formattedRow.__hpcc_id = start + idx;
                     formattedRow.__hpcc_orig = row;
                     return formattedRow;
                 })
             };
+        }).catch((error: unknown) => {
+            delete this._cache[cacheKey];
+            throw error;
         });
-        this._cache[cacheKey] = retVal;
-        return retVal;
+        this._cache[cacheKey] = request;
+        return request;
     }
 
-    fetchRange(options): Promise<any[]> {
+    fetchRange(options: { start: number, end: number }): Promise<FormattedRow[]> {
         const retVal = new Deferred();
         this._request(options.start, options.end)
             .then(response => retVal.resolve(response))
-            .catch(e => retVal.reject(e))
-            ;
+            .catch(error => retVal.reject(error));
         return new QueryResults(retVal.then(response => response.data), {
             totalLength: retVal.then(response => response.totalLength)
         });

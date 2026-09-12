@@ -22,6 +22,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
     private readonly _extensionUri: vscode.Uri;
     private _webviewView?: vscode.WebviewView;
     private _currParams: NavigateParams;
+    private _abortControllers = new Map<number, AbortController>();
 
     private constructor(ctx: vscode.ExtensionContext) {
         this._ctx = ctx;
@@ -60,7 +61,13 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
         if (this._webviewView === undefined) {
 
             const handle = webviewView.onDidDispose(() => {
-                delete this._webviewView;
+                for (const controller of this._abortControllers.values()) {
+                    controller.abort();
+                }
+                this._abortControllers.clear();
+                if (this._webviewView === webviewView) {
+                    delete this._webviewView;
+                }
                 handle.dispose();
             });
 
@@ -74,7 +81,6 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
             ]
         };
 
-        const abortControllers: { [id: number]: AbortController } = {};
         this._webviewView.webview.onDidReceiveMessage(async (message: Messages) => {
             switch (message.command) {
                 case "loaded":
@@ -88,23 +94,32 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                     break;
                 case "proxySend":
                     if (message.canAbort) {
-                        abortControllers[message.id] = new AbortController();
-                        message.params.request.abortSignal_ = abortControllers[message.id].signal;
+                        this._abortControllers.set(message.id, new AbortController());
                     }
                     const cred = await credentialManager.getCredentials(message.params.opts.baseUrl, message.params.opts.userID);
-                    message.params.opts.password = cred?.password;
+                    const controller = this._abortControllers.get(message.id);
+                    const opts = { ...message.params.opts, password: cred?.password };
+                    const request = controller ? { ...message.params.request, abortSignal_: controller.signal } : message.params.request;
 
-                    send(message.params.opts, message.params.action, message.params.request, message.params.responseType, message.params.header).then(response => {
-                        this._webviewView.webview.postMessage({
+                    try {
+                        const response = await send(opts, message.params.action, request, message.params.responseType, message.params.header);
+                        await this._webviewView?.webview.postMessage({
                             command: "proxyResponse",
                             id: message.id,
                             response
                         } as Messages);
-                        delete abortControllers[message.id];
-                    });
+                    } catch (error) {
+                        await this._webviewView?.webview.postMessage({
+                            command: "proxyResponse",
+                            id: message.id,
+                            error: error instanceof Error ? error.message : String(error)
+                        } as Messages);
+                    } finally {
+                        this._abortControllers.delete(message.id);
+                    }
                     break;
                 case "proxyCancel":
-                    abortControllers[message.id]?.abort();
+                    this._abortControllers.get(message.id)?.abort();
                     break;
             }
         });
@@ -136,7 +151,6 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                     data: {
                         baseUrl: this._currParams.protocol + "://" + this._currParams.serverAddress + ":" + this._currParams.port + "/",
                         userID: this._currParams.user,
-                        password: this._currParams.password,
                         rejectUnauthorized: this._currParams.rejectUnauthorized,
                         timeoutSecs: this._currParams.timeoutSecs,
                         wuid: this._currParams.wuid,

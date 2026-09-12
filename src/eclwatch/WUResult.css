@@ -53,3 +53,57 @@
     border: 0px;
     margin: 2px;
 }
+
+.dgrid_Common .dgrid-resize-handle {
+    height: 100%;
+    right: -4px;
+    top: 0;
+    border-left-color: transparent;
+}
+
+.dgrid_Common .dgrid-resize-header-container {
+    height: 100%;
+    position: relative;
+}
+
+.dgrid_Common .dgrid-header .dgrid-cell {
+    overflow: hidden;
+}
+
+.dgrid_Common .dgrid-column-resizer {
+    background-color: var(--vscode-focusBorder);
+}
+
+.dgrid_Common .dgrid-footer {
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-foreground);
+    border-top: 1px solid var(--vscode-panel-border, transparent);
+}
+
+.dgrid_Common .dgrid-status {
+    color: var(--vscode-descriptionForeground);
+}
+
+.dgrid_Common .dgrid-page-size {
+    background-color: var(--vscode-dropdown-background);
+    color: var(--vscode-dropdown-foreground);
+    border: 1px solid var(--vscode-dropdown-border, transparent);
+}
+
+.dgrid_Common .dgrid-page-input {
+    background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    border: 1px solid var(--vscode-input-border, transparent);
+}
+
+.dgrid_Common .dgrid-page-link {
+    color: var(--vscode-foreground);
+}
+
+.dgrid_Common .dgrid-page-link:hover:not(.dgrid-page-disabled) {
+    color: var(--vscode-textLink-activeForeground);
+}
+
+.dgrid_Common .dgrid-page-link.dgrid-page-disabled {
+    color: var(--vscode-disabledForeground);
+}
