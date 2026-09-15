@@ -1,5 +1,8 @@
 .dgrid_Common {
     font-family: var(--vscode-font-family);
+    --eclwatch-grid-border: var(--vscode-panel-border, var(--vscode-editorWidget-border, rgba(128, 128, 128, 0.35)));
+    --eclwatch-grid-selected-background: var(--vscode-list-activeSelectionBackground, var(--vscode-menu-selectionBackground));
+    --eclwatch-grid-selected-foreground: var(--vscode-list-activeSelectionForeground, var(--vscode-menu-selectionForeground));
 }
 
 .dgrid_Common table {
@@ -33,16 +36,22 @@
     border-left-style: hidden;
     border-top-style: hidden;
     border-right-style: hidden;
-    border-bottom-style: hidden;
+    border-bottom: 1px solid var(--eclwatch-grid-border);
+    box-shadow: inset -1px 0 0 var(--eclwatch-grid-border);
 }
 
 .dgrid_Common .dgrid-selected {
-    color: var(--vscode-menu-selectionForeground);
-    background-color: var(--vscode-menu-selectionBackground);
+    color: var(--eclwatch-grid-selected-foreground);
+    background-color: var(--eclwatch-grid-selected-background);
     border-left-style: hidden;
     border-top-style: hidden;
     border-right-style: hidden;
-    border-bottom-style: hidden;
+    border-bottom: 1px solid var(--eclwatch-grid-border);
+}
+
+.dgrid_Common .dgrid-selected .dgrid-cell {
+    color: var(--eclwatch-grid-selected-foreground);
+    background-color: var(--eclwatch-grid-selected-background);
 }
 
 .dgrid_Common .dgrid-focus:focus {
@@ -68,6 +77,7 @@
 
 .dgrid_Common .dgrid-header .dgrid-cell {
     overflow: hidden;
+    border-bottom-color: var(--vscode-contrastBorder, var(--eclwatch-grid-border));
 }
 
 .dgrid_Common .dgrid-column-resizer {

@@ -2,7 +2,7 @@ import * as React from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { useConst } from "@fluentui/react-hooks";
 import { Result, type XSDXMLNode, type IOptions, type WsWorkunits } from "@hpcc-js/comms";
-import { Common, Table } from "@hpcc-js/dgrid";
+import { ColumnFormat, Common, Table } from "@hpcc-js/dgrid";
 import { hashSum } from "@hpcc-js/util";
 import { Button, Checkbox, Dialog, DialogActions, DialogBody, DialogContent, DialogOpenChangeData, DialogOpenChangeEvent, DialogSurface, DialogTitle, Field, FluentProvider, Menu, MenuDivider, MenuItem, MenuList, MenuPopover, MenuTrigger, ProgressBar, SpinButton } from "@fluentui/react-components";
 import copy from "copy-to-clipboard";
@@ -257,6 +257,7 @@ export class WUResultTable extends Common {
     private _result: Result | undefined;
     private _contextMenuRoot?: Root;
     private _contextMenuHost?: HTMLElement;
+    private _selectedResultRowID?: string | number;
 
     constructor() {
         super();
@@ -266,7 +267,7 @@ export class WUResultTable extends Common {
             ;
     }
 
-    calcResult(): Result | null {
+    calcResult(): Result | undefined {
         if (this.wuid() && this.resultName()) {
             return Result.attach(this.opts(), this.wuid(), this.resultName());
         } else if (this.wuid() && this.sequence() !== undefined) {
@@ -274,7 +275,7 @@ export class WUResultTable extends Common {
         } else if (this.logicalFile()) {
             return Result.attachLogicalFile(this.opts(), this.cluster(), this.logicalFile());
         }
-        return null;
+        return undefined;
     }
 
     fetch(row: number, count: number): Promise<GenericRow[]> {
@@ -380,6 +381,14 @@ export class WUResultTable extends Common {
         );
     }
 
+    private selectResultRow(rowID: string | number | undefined): void {
+        this._selectedResultRowID = rowID;
+        this._dgridDiv?.node().querySelectorAll(".dgrid-selected").forEach(element => element.classList.remove("dgrid-selected"));
+        if (rowID !== undefined) {
+            this._dgrid?.row(rowID)?.element?.classList.add("dgrid-selected");
+        }
+    }
+
     protected _prevHash?: string;
     private _prevGrid: any;
     update(domNode: HTMLElement, element: any) {
@@ -394,6 +403,7 @@ export class WUResultTable extends Common {
         });
         if (this._prevHash !== hash) {
             this._prevHash = hash;
+            this._selectedResultRowID = undefined;
             this._result = this.calcResult();
             this._dgrid?.set("columns", []);
             this._dgrid?.set("collection", createEmptyStore());
@@ -447,6 +457,11 @@ export class WUResultTable extends Common {
                 );
             });
 
+            this._dgrid.on(".dgrid-content .dgrid-cell:click", (e: MouseEvent) => {
+                const row = this._dgrid.row(e);
+                this.selectResultRow(row?.id);
+            });
+
             this._dgrid.on(".dgrid-content .dgrid-cell:contextmenu", (e: MouseEvent) => {
                 e.stopPropagation();
                 e.preventDefault();
@@ -470,6 +485,9 @@ export class WUResultTable extends Common {
                 );
             });
 
+        }
+        if (this._selectedResultRowID !== undefined) {
+            this.selectResultRow(this._selectedResultRowID);
         }
     }
 
@@ -542,16 +560,43 @@ interface WUIssues {
     exceptions: WsWorkunits.ECLException[];
 }
 
+const WU_ISSUE_COLUMNS = [
+    { label: "Severity", width: 88 },
+    { label: "Source", width: 120 },
+    { label: "Code", width: 80 },
+    { label: "Message", width: 360 },
+    { label: "Col", width: 64 },
+    { label: "Line", width: 64 },
+    { label: "File Name", width: 260 }
+];
+
+function issueColumnFormats(table: Table): ColumnFormat[] {
+    return WU_ISSUE_COLUMNS.map(column => new ColumnFormat()
+        .owner(table)
+        .column(column.label)
+        .width(column.width)
+    );
+}
+
 export const WUIssues: React.FunctionComponent<WUIssues> = ({
     exceptions
 }) => {
 
-    const table = useConst(() => new Table());
+    const table = useConst(() => {
+        const table = new Table()
+            .columnWidth("none")
+            .pagination(true)
+            .pageSize(50)
+            .sortable(true);
+        table
+            .columns(WU_ISSUE_COLUMNS.map(column => column.label))
+            .columnFormats(issueColumnFormats(table));
+        return table;
+    });
 
     React.useEffect(() => {
 
         table
-            .columns(["Severity", "Source", "Code", "Message", "Col", "Line", "File Name"])
             .data(exceptions.map(e => [e.Severity, e.Source, e.Code, e.Message, e.Column, e.LineNo, e.FileName]))
             ;
     }, [exceptions, table]);
