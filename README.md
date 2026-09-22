@@ -188,32 +188,32 @@ You can safely remove any `"password"` fields from your `launch.json` files if y
 
 ## AI / Chat Integration
 
-The extension contributes experimental Language Model (AI) tools and a chat participant:
+The extension contributes the `ECL` chat participant (`chat.ecl`) and Language Model tools registered in `src/ecl/lm/tools.ts`. The participant can:
 
-- Chat participant `ECL` (`chat.ecl`) – provides ECL language and docs assistance.
-- Tools (declared in `package.json` under `contributes.languageModelTools` and registered in `src/ai/tools.ts`):
-  - `ecl-listWorkunits` – List recent workunits (currently mock data unless connected API integration is completed).
-  - `ecl-submitSnippet` – Submit a small ECL snippet and return a mock WUID.
+- Answer ECL language and standard-library questions using the bundled documentation vector index.
+- Use selected text or the active ECL editor as bounded workspace context.
+- Review ECL for portable correctness and performance risks.
+- Syntax-check concrete ECL with the configured HPCC Client Tools connection.
+- Compile generated functions, macros, and modules with a BWR integration harness.
+- Search logical files and inspect connected HPCC workunits, errors, archived ECL, and metrics.
 
-Runtime registration adds each tool to an in-memory registry (`toolRegistry`) so future prompt engineering and chat flows can surface available tool capabilities without re-reading the manifest. See `src/ai/tools.ts` for the implementation and TODO markers indicating where to integrate with real HPCC Platform session APIs.
+Generated or modified ECL follows a review then syntax-check workflow. Callable constructs also receive an integration compile when a representative harness can be generated. The assistant reports `pass`, `conditional_pass`, `fail`, or `unavailable`; it does not claim that code is verified when client tools or a platform connection are unavailable.
+
+The ECL participant never submits or executes generated code as part of verification. Workspace source and compiler output are provided to the selected language model as request context. Use `ecl.ai.workspaceContextCharacters` to limit how much active-editor source is included.
 
 > NOTE: These features depend on the VS Code Language Model / Chat APIs which are still evolving. Behavior may change in future VS Code versions.
 
 ### Copilot Chat Integration
 
-This extension contributes an ECL specific Chat participant (`chat.ecl`) with commands:
-
-- `@ecl /create` – Scaffold a new ECL file.
-- `@ecl /docs <question>` – Ask a question answered using the HPCC Systems online language & standard library reference.
-- `@ecl /meta <question>` – Provide questions or guidance that should leverage structural metadata from the currently active ECL editor (module names, exports, records, datasets, functions, services, imports, header comment, and basic size stats). The assistant automatically includes this metadata in the prompt enabling context‑aware refactoring suggestions and explanations.
+Ask the ECL participant directly:
 
 Example:
 
 ```
-@ecl /meta Explain what the exported records are used for and suggest a clearer function name for MyFunc.
+@ecl Review the selected JOIN, fix high-severity findings, and verify the result.
 ```
 
-If no ECL editor is active, the `/meta` command will indicate that no metadata is available.
+Syntax and integration checks require an active HPCC configuration with discoverable client tools. Documentation and static review remain available without a platform connection.
 
 ### ECL Commands
 

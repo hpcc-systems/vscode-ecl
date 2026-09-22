@@ -23,24 +23,9 @@ export enum commands {
 }
 
 const GREETINGS = [
-    "Let me think how I can assist you... 🤔",
-    "Just a moment, I'm pondering... 💭",
-    "Give me a second, I'm working on it... ⏳",
-    "Hold on, let me figure this out... 🧐",
-    "One moment, I'm processing your request... ⏲️",
-    "Checking inside Gavins brain... 💭",
-    "Dans the man for this... 🧐",
-    "Working on your request... 🚀",
-    "Lets see what schmoo can do... 🕵️‍♂️",
-    "Let's see what we can do... 🕵️‍♂️",
-    "Let's get this sorted... 🗂️",
-    "Calling Jake for an answer... 💭",
-    "Hang tight, I'm on the case... 🕵️‍♀️",
-    "Analyzing the situation... 📊",
-    "Preparing the solution... 🛠️",
-    "Searching for the answer... 🔍",
-    "Maybe Mark knows... 🤔",
-    "Investigating the problem... 🕵️‍♂️"
+    "Analyzing the ECL request...",
+    "Checking ECL context and documentation...",
+    "Preparing an ECL-specific response..."
 ];
 
 export const getRandomGreeting = () => {

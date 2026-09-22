@@ -7,8 +7,8 @@ Person := $.DeclareData.PersonAccounts;
 CountAccts := COUNT(Person.Accounts);
 
 MyReportFormat := RECORD
-	State 		 := Person.State;
- 	A1 		     := SUM(GROUP,CountAccts);
+	State      := Person.State;
+	A1         := SUM(GROUP,CountAccts);
 	GroupCount := COUNT(GROUP);
 END;
 
@@ -26,12 +26,12 @@ OUTPUT(RepTable);
 	 
 	 
 MyReportFormat2 := RECORD
-	State{cardinality(56)}	:= Person.State;
- 	A1 		:= CountAccts;
-	GroupCount 	:= COUNT(GROUP);
-	MaleCount   := COUNT(GROUP,Person.Gender = 'M');
-	FemaleCount := COUNT(GROUP,Person.Gender = 'F');
- END;
+	State{cardinality(56)} := Person.State;
+	A1                     := CountAccts;
+	GroupCount             := COUNT(GROUP);
+	MaleCount              := COUNT(GROUP,Person.Gender = 'M');
+	FemaleCount            := COUNT(GROUP,Person.Gender = 'F');
+END;
 
 RepTable2 := TABLE(Person,MyReportFormat2,State,CountAccts );
 OUTPUT(RepTable2);
@@ -39,8 +39,8 @@ OUTPUT(RepTable2);
 IsValidType(STRING1 t) := t IN ['O', 'R', 'I'];
 
 IsRevolv := Person.Accounts.AcctType = 'R' OR 
-		        (~IsValidType(Person.Accounts.AcctType) AND 
-		         Person.Accounts.Account[1] IN ['4', '5', '6']);
+             (~IsValidType(Person.Accounts.AcctType) AND 
+              Person.Accounts.Account[1] IN ['4', '5', '6']);
 
 SetBankIndCodes := ['BB', 'ON', 'FS', 'FC'];
 
@@ -55,10 +55,10 @@ AvgHC  := AVE(Person.Accounts(isBankCard),HighCredit);
 R1 := RECORD
   Person.state;
   Person.gender;
-  Number 		      := COUNT(GROUP);
-  AverageBal 	    := AVE(GROUP,AvgBal);
-  AverageTotalBal := AVE(GROUP,TotBal);
-  AverageHC 	  	:= AVE(GROUP,AvgHC);
+  Number            := COUNT(GROUP);
+  AverageBal        := AVE(GROUP,AvgBal);
+  AverageTotalBal   := AVE(GROUP,TotBal);
+  AverageHC         := AVE(GROUP,AvgHC);
 END;
 
 T1 := TABLE(Person, R1,  state, gender);
@@ -72,16 +72,16 @@ analyze( ds ) := MACRO
 
   #uniquename(rec)
   %rec% := RECORD
-    c     := COUNT(GROUP),
-  	sx    := SUM(GROUP, ds.x),
-	  sy    := SUM(GROUP, ds.y),
-	  sxx   := SUM(GROUP, ds.x * ds.x),
-	  sxy   := SUM(GROUP, ds.x * ds.y),
-	  syy   := SUM(GROUP, ds.y * ds.y),
-	  varx  := VARIANCE(GROUP, ds.x);
-  	vary  := VARIANCE(GROUP, ds.y);
-	  varxy := COVARIANCE(GROUP, ds.x, ds.y);
-	  rc    := CORRELATION(GROUP, ds.x, ds.y) ;
+    c    := COUNT(GROUP),
+    sx   := SUM(GROUP, ds.x),
+    sy   := SUM(GROUP, ds.y),
+    sxx  := SUM(GROUP, ds.x * ds.x),
+    sxy  := SUM(GROUP, ds.x * ds.y),
+    syy  := SUM(GROUP, ds.y * ds.y),
+    varx := VARIANCE(GROUP, ds.x),
+    vary := VARIANCE(GROUP, ds.y),
+    varxy:= COVARIANCE(GROUP, ds.x, ds.y),
+    rc   := CORRELATION(GROUP, ds.x, ds.y)
   END;	
 
   #uniquename(stats)
@@ -89,14 +89,13 @@ analyze( ds ) := MACRO
   OUTPUT(%stats%);
 
   OUTPUT(%stats%, { varx - (sxx-sx*sx/c)/c,
-              			vary - (syy-sy*sy/c)/c,
-		  							varxy - (sxy-sx*sy/c)/c,
-			  						rc - (varxy/SQRT(varx*vary)) });
-				
+                   vary - (syy-sy*sy/c)/c,
+                   varxy - (sxy-sx*sy/c)/c,
+                   rc - (varxy/SQRT(varx*vary)) });
   OUTPUT(%stats%, { 'bestFit: y=' + 
-	  								(STRING)((sy-sx*varxy/varx)/c) + 
-		  							' + ' + 
-			  						(STRING)(varxy/varx)+'x' });
+                   (STRING)((sy-sx*varxy/varx)/c) + 
+                   ' + ' + 
+                   (STRING)(varxy/varx)+'x' });
 ENDMACRO;
 
 ds1 := DATASET([{1,1},{2,2},{3,3},{4,4},{5,5},{6,6}], pointRec);

@@ -343,7 +343,7 @@
         ],
         "toolReferenceName": "syntaxCheck",
         "displayName": "Syntax Check",
-        "modelDescription": "Use this tool when the user provides concrete ECL code and wants syntax or compile-style validation, error diagnosis, or a sanity check before submission. This checks the supplied ECL text with the HPCC Platform compiler. Do not use it for general language-reference questions, documentation lookup, or requests that do not include actual ECL code.",
+        "modelDescription": "Use this tool when the user provides concrete ECL code and wants syntax or compile-style validation, error diagnosis, or a sanity check before submission. This checks the supplied ECL text with the HPCC Platform compiler. Always pass filePath when the ECL comes from a workspace file: unmodified files are compiled in place so that '$' and relative IMPORTs resolve against their real folder, otherwise the code is compiled as a detached snippet and cross-file references cannot be resolved. Do not use it for general language-reference questions, documentation lookup, or requests that do not include actual ECL code.",
         "canBeReferencedInPrompt": true,
         "icon": "$(files)",
         "inputSchema": {
@@ -353,6 +353,10 @@
               "type": "string",
               "description": "The exact ECL source text to validate. Pass the user's code, not a summary or paraphrase.",
               "default": ""
+            },
+            "filePath": {
+              "type": "string",
+              "description": "Optional workspace-relative path of the file the ECL came from. When the file is unmodified it is compiled in place so imports resolve."
             }
           },
           "required": [
@@ -385,6 +389,71 @@
           },
           "required": [
             "query"
+          ]
+        }
+      },
+      {
+        "name": "ecl-extension-eclCodeReview",
+        "tags": [
+          "review",
+          "quality",
+          "ecl",
+          "validation",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "eclCodeReview",
+        "displayName": "Review ECL Code",
+        "modelDescription": "Review concrete ECL source for portable correctness, safety, and performance risks before syntax checking. Use this for explicit reviews and before returning any generated or modified ECL. Fix high-severity findings before compiling.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(checklist)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ecl": {
+              "type": "string",
+              "description": "The exact ECL source text to review."
+            }
+          },
+          "required": [
+            "ecl"
+          ]
+        }
+      },
+      {
+        "name": "ecl-extension-integrationCheck",
+        "tags": [
+          "compile",
+          "integration",
+          "function",
+          "macro",
+          "module",
+          "ecl-extension"
+        ],
+        "toolReferenceName": "integrationCheck",
+        "displayName": "Check Callable ECL Integration",
+        "modelDescription": "After syntax checking generated FUNCTION, FUNCTIONMACRO, MACRO, or MODULE code, compile it together with a minimal generated BWR harness. Provide the exact callable source, its export/file name, and a harness that imports and invokes it with representative sample data. The callable is written to <exportName>.ecl and the harness is written beside it in the same folder, so the harness must import it with 'IMPORT $.<exportName>;'. Never use this for runnable ECL that already has terminal OUTPUT, BUILD, or APPLY actions.",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(beaker)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ecl": {
+              "type": "string",
+              "description": "The exact callable ECL source."
+            },
+            "exportName": {
+              "type": "string",
+              "description": "The callable's ECL export name, also used as its temporary filename."
+            },
+            "harness": {
+              "type": "string",
+              "description": "A minimal runnable BWR that imports the callable with 'IMPORT $.<exportName>;', creates representative sample data, invokes it, and outputs the result."
+            }
+          },
+          "required": [
+            "ecl",
+            "exportName",
+            "harness"
           ]
         }
       }
@@ -1726,6 +1795,14 @@
           "scope": "application",
           "default": false,
           "description": "%Debug level logging (requires restart)%"
+        },
+        "ecl.ai.workspaceContextCharacters": {
+          "type": "number",
+          "scope": "window",
+          "default": 12000,
+          "minimum": 1000,
+          "maximum": 50000,
+          "description": "%Maximum active ECL editor characters included in AI chat context%"
         },
         "ecl.launchConfiguration": {
           "type": "string",

@@ -4,6 +4,8 @@ import localize from "../../util/localize";
 import { handleDocsCommand } from "./prompts/docs";
 import { handleIssueManagement } from "./prompts/issues";
 import { checkModelExists } from "./utils/model";
+import { classifyECLTask } from "./orchestration";
+import { collectWorkspaceContext, formatWorkspaceContext } from "./workspaceContext";
 
 const ECL_PARTICIPANT_ID = "chat.ecl";
 
@@ -18,8 +20,13 @@ function handleError(logger: vscode.TelemetryLogger, err: any, stream: vscode.Ch
 
     if (err instanceof vscode.LanguageModelError) {
         console.log(err.message, err.code, err.cause);
-        if (err.cause instanceof Error && err.cause.message.includes("off_topic")) {
+        if (
+            (err.cause instanceof Error && err.cause.message.includes("off_topic")) ||
+            (typeof err.cause === "string" && err.cause.includes("off_topic"))
+        ) {
             stream.markdown(localize("I'm sorry, I can only explain ECL related topics."));
+        } else {
+            stream.markdown(localize("The ECL assistant could not complete the request: {0}", err.message));
         }
     } else {
         throw err;
@@ -44,7 +51,17 @@ export class ECLChat {
                     cmdResult = await handleIssueManagement(request, stream, token);
                     logger.logUsage("request", { kind: commands.ISSUES });
                 } else {
-                    cmdResult = await handleDocsCommand(request, stream, token, this.modelPath, vscode.Uri.joinPath(ctx.extensionUri, "dist", "docs.vecdb"));
+                    const taskKind = classifyECLTask(request.prompt);
+                    const workspaceContext = formatWorkspaceContext(collectWorkspaceContext());
+                    cmdResult = await handleDocsCommand(
+                        request,
+                        stream,
+                        token,
+                        this.modelPath,
+                        vscode.Uri.joinPath(ctx.extensionUri, "dist", "docs.vecdb"),
+                        taskKind,
+                        workspaceContext
+                    );
                 }
             } catch (err) {
                 handleError(logger, err, stream);
@@ -63,7 +80,16 @@ export class ECLChat {
 
         chatParticipant.followupProvider = {
             provideFollowups(result: IECLChatResult, context: vscode.ChatContext, token: vscode.CancellationToken) {
-                return [];
+                return [
+                    {
+                        prompt: localize("Review the ECL in my active editor"),
+                        label: localize("Review active ECL"),
+                    },
+                    {
+                        prompt: localize("Explain the compiler diagnostics and suggest a fix"),
+                        label: localize("Explain diagnostics"),
+                    },
+                ];
             }
         };
 
@@ -95,4 +121,3 @@ export class ECLChat {
 }
 
 export function deactivate() { }
-

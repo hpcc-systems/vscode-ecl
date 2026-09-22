@@ -97,10 +97,8 @@ async function streamCopilotResponse(stream: vscode.ChatResponseStream, issueDet
                 }`
                 : "");
         promptProps.issueDetails = issueDetailsStr;
-        const chatResponse = await getChatResponse(IssuesManagePrompt, promptProps, token,);
-        for await (const fragment of chatResponse.text) {
-            stream.markdown(fragment);
-        }
+        const chatResponse = await getChatResponse(IssuesManagePrompt, promptProps, token);
+        stream.markdown(chatResponse);
     } catch (error) {
         stream.markdown("Some Network issues. Please try again..");
     }
