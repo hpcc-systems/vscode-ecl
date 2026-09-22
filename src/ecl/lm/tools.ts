@@ -6,6 +6,8 @@ import { GetWorkunitMetricsTool } from "./tools/getWorkunitMetrics";
 import { FindLogicalFilesTool } from "./tools/findLogicalFiles";
 import { SyntaxCheckTool } from "./tools/syntaxCheck";
 import { ECLDocsLookupTool } from "./tools/eclDocsLookup";
+import { ECLCodeReviewTool } from "./tools/eclCodeReview";
+import { IntegrationCheckTool } from "./tools/integrationCheck";
 
 let eclLMTools: ECLLMTools;
 
@@ -20,6 +22,8 @@ export class ECLLMTools {
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension-findLogicalFiles", new FindLogicalFilesTool()));
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension-syntaxCheck", new SyntaxCheckTool()));
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension-eclDocsLookup", new ECLDocsLookupTool(ctx)));
+        ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension-eclCodeReview", new ECLCodeReviewTool()));
+        ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension-integrationCheck", new IntegrationCheckTool()));
     }
 
     static attach(ctx: vscode.ExtensionContext): ECLLMTools {

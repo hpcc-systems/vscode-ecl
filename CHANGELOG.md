@@ -9,6 +9,12 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [Unreleased]
+
+### Features
+
+* add orchestrated ECL chat tools, portable code review, compile verification, callable integration checks, and bounded editor context
+
 ## [2.40.2](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.40.1...ecl-v2.40.2) (2026-09-15)
 
 

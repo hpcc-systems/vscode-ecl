@@ -469,7 +469,8 @@ export class LaunchConfig implements LaunchRequestArguments {
     locateClientTools(fileUri?: vscode.Uri, build = ""): Promise<ClientTools> {
         const eclConfig = vscode.workspace.getConfiguration("ecl", fileUri);
         const currentWorkspace = fileUri ? vscode.workspace.getWorkspaceFolder(fileUri) : undefined;
-        const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : "";
+        //  Fall back to the file's own folder:  an empty cwd makes ClientTools default to the (read-only) eclcc bin folder, where eclcc cannot create its log file.
+        const currentWorkspacePath = currentWorkspace ? currentWorkspace.uri.fsPath : (fileUri ? path.dirname(fileUri.fsPath) : "");
         const includeFolders = this.calcIncludeFolders(currentWorkspacePath);
         const args = [...this.eclccArgs];
         if (this.eclccLogFile) {
