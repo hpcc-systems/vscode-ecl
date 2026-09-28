@@ -1,8 +1,42 @@
 import * as vscode from "vscode";
+import * as os from "os";
 import { Llama } from "@hpcc-js/wasm-llama";
 import { Zstd } from "@hpcc-js/wasm-zstd";
 import { Embeddings } from "@langchain/core/embeddings";
 import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
+
+function ensureNavigatorShim(): void {
+    const navigatorValue = globalThis.navigator;
+    if (navigatorValue && typeof navigatorValue === "object") {
+        if (typeof navigatorValue.hardwareConcurrency !== "number") {
+            Object.defineProperty(navigatorValue, "hardwareConcurrency", {
+                value: Math.max(os.cpus().length, 1),
+                configurable: true,
+            });
+        }
+        if (typeof navigatorValue.language !== "string") {
+            Object.defineProperty(navigatorValue, "language", {
+                value: "en-US",
+                configurable: true,
+            });
+        }
+        return;
+    }
+
+    Object.defineProperty(globalThis, "navigator", {
+        value: {
+            hardwareConcurrency: Math.max(os.cpus().length, 1),
+            language: "en-US",
+            userAgent: `Node.js ${process.version}`,
+        },
+        configurable: true,
+    });
+}
+
+async function loadLlama() {
+    ensureNavigatorShim();
+    return Llama.load();
+}
 
 class LlamaEmbeddings extends Embeddings {
 
@@ -17,7 +51,7 @@ class LlamaEmbeddings extends Embeddings {
     }
 
     embedDocuments(documents: string[]): Promise<number[][]> {
-        return Promise.all([Llama.load(), this._modelData]).then(([llama, modelData]) => {
+        return Promise.all([loadLlama(), this._modelData]).then(([llama, modelData]) => {
             const embeddings: number[][] = [];
             for (const text of documents) {
                 const vectors = llama.embedding(text, modelData);
@@ -31,7 +65,7 @@ class LlamaEmbeddings extends Embeddings {
     }
 
     embedQuery(document: string): Promise<number[]> {
-        return Promise.all([Llama.load(), this._modelData]).then(([llama, modelData]) => {
+        return Promise.all([loadLlama(), this._modelData]).then(([llama, modelData]) => {
             const vectors = llama.embedding(document, modelData);
             return vectors[0];
         });
