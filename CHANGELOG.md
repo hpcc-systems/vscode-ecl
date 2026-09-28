@@ -9,6 +9,13 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.40.3](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.40.2...ecl-v2.40.3) (2026-09-28)
+
+
+### Bug Fixes
+
+* [@ecl](https://github.com/ecl) chat regression ([837a9db](https://github.com/hpcc-systems/vscode-ecl/commit/837a9db695ba4dfdb2f3a60bf12429031d60f672))
+
 ## [2.40.2](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.40.1...ecl-v2.40.2) (2026-09-15)
 
 
