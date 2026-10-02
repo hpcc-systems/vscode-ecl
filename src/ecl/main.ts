@@ -18,7 +18,7 @@ const eclConfig = vscode.workspace.getConfiguration("ecl");
 const logger = scopedLogger("ecl/main.ts");
 
 export function activate(ctx: vscode.ExtensionContext): void {
-    initLogger(eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
+    initLogger(ctx, eclConfig.get<boolean>("debugLogging") ? Level.debug : Level.info);
     logger.debug("Activating SessionManager");
     SessionManager.attach(ctx);
     logger.debug("Activating ECLDiagnostic");

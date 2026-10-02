@@ -6,12 +6,14 @@ import { GetWorkunitMetricsTool } from "./tools/getWorkunitMetrics";
 import { FindLogicalFilesTool } from "./tools/findLogicalFiles";
 import { SyntaxCheckTool } from "./tools/syntaxCheck";
 import { ECLDocsLookupTool } from "./tools/eclDocsLookup";
+import { initToolLogger } from "./utils/logger";
 
 let eclLMTools: ECLLMTools;
 
 export class ECLLMTools {
 
     protected constructor(ctx: vscode.ExtensionContext) {
+        initToolLogger(ctx);
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension-findWorkunits", new FindWorkunitsTool()));
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension-getWorkunitErrors", new GetWorkunitErrorsTool()));
         ctx.subscriptions.push(vscode.lm.registerTool("ecl-extension-getWorkunitECL", new GetWorkunitECLTool()));
