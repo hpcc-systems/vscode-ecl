@@ -6,6 +6,7 @@ import { LaunchConfigState, credentialManager, Credentials } from "../util/crede
 import { LaunchMode } from "../debugger/launchRequestArguments";
 import localize from "../util/localize";
 import { eclTempFile } from "../util/fs";
+import { formatECLWatchURL } from "../ecl/util";
 
 const logger = scopedLogger("hpccplatform/session.ts");
 
@@ -62,6 +63,10 @@ class Session {
 
     wuQuery(request: Partial<WsWorkunits.WUQuery>): Promise<Workunit[]> {
         return this._launchConfig.wuQuery(request);
+    }
+
+    fetchBuild(): Promise<string> {
+        return this._launchConfig.fetchBuild();
     }
 
     bestClientTools(): Promise<ClientTools> {
@@ -205,7 +210,9 @@ export class SessionManager {
 
         vscode.commands.registerCommand("hpccPlatform.eclwatch", async () => {
             if (this.session) {
-                vscode.env.openExternal(vscode.Uri.parse(`${this.session.baseUrl()}/esp/files/stub.htm`));
+                const baseUrl = this.session.baseUrl();
+                await this.session.fetchBuild().catch(() => undefined);
+                vscode.env.openExternal(vscode.Uri.parse(formatECLWatchURL(baseUrl)));
             }
         });
 
@@ -431,6 +438,7 @@ export class SessionManager {
         if (this.session) {
             const storedCreds = await this.session.getStoredCredentials();
             if (storedCreds?.password) {
+                this.session.fetchBuild().catch(() => undefined);
                 await this.refreshStatusBar(LaunchConfigState.Ok);
             } else {
                 await this.refreshStatusBar(LaunchConfigState.CredentialsRequired);

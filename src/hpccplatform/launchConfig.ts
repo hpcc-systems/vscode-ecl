@@ -1,18 +1,21 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, WorkunitsService, DFUService, WsDfu, WsCodesign } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, Version, WorkunitsService, DFUService, WsDfu, WsCodesign } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
 import localize from "../util/localize";
 import { readFile } from "../util/fs";
 import { reporter } from "../telemetry";
-import { formatWorkunitURL, formatResultURL } from "../ecl/util";
+import { formatWorkunitURL, formatResultURL, setLegacyStub } from "../ecl/util";
 import { LaunchConfigState, credentialManager, Credentials } from "../util/credentialManager";
 
 export const NO_SELECTION = "no selection";
 const MAX_LOGIN_ATTEMPTS = 3;
+
+//  ECL Watch v5 "stub.htm" was renamed to "stub.html" in this platform version
+const STUB_HTML_VERSION = new Version("3.8.0");
 
 export interface IExecFile {
     code: number;
@@ -551,8 +554,13 @@ export class LaunchConfig implements LaunchRequestArguments {
             this._buildPromise = this.checkCredentials().then(credentials => {
                 const activity = Activity.attach(this.opts(credentials));
                 return activity.refresh().then(activity => {
+                    const version = new Version(activity.Build);
+                    setLegacyStub(this.espUrl, version.exists() && version.compare(STUB_HTML_VERSION) < 0);
                     return activity.Build;
                 });
+            }).catch(e => {
+                this._buildPromise = undefined;
+                throw e;
             });
         }
         return this._buildPromise;

@@ -2,11 +2,15 @@ import * as vscode from "vscode";
 
 let outputChannel: vscode.OutputChannel | undefined;
 
-function channel(): vscode.OutputChannel {
-    if (!outputChannel) {
-        outputChannel = vscode.window.createOutputChannel("ECL LM Tools", { log: true });
-    }
-    return outputChannel;
+export function initToolLogger(ctx: vscode.ExtensionContext): void {
+    if (outputChannel) return;
+    outputChannel = vscode.window.createOutputChannel("ECL LM Tools", { log: true });
+    ctx.subscriptions.push({
+        dispose: () => {
+            outputChannel?.dispose();
+            outputChannel = undefined;
+        }
+    });
 }
 
 export function logToolEvent(tool: string, message: string, details: Record<string, unknown> = {}): void {
@@ -19,5 +23,5 @@ export function logToolEvent(tool: string, message: string, details: Record<stri
             serialized = " {\"error\":\"Unable to serialize details\"}";
         }
     }
-    channel().appendLine(`[${timestamp}] [${tool}] ${message}${serialized}`);
+    outputChannel?.appendLine(`[${timestamp}] [${tool}] ${message}${serialized}`);
 }

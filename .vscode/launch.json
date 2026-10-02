@@ -16,12 +16,17 @@
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": [
-                "--extensions-dir=${workspaceFolder}/.vscode-dev-extensions",
-                "--extensionDevelopmentPath=${workspaceRoot}",
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--disable-extensions",
                 "${workspaceRoot}/ecl-sample"
             ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/resources/app/extensions/**",
+                "**/.vscode/extensions/**"
             ]
         },
         {
@@ -50,6 +55,11 @@
             ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/resources/app/extensions/**",
+                "**/.vscode/extensions/**"
             ]
         },
         {
