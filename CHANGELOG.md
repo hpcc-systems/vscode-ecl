@@ -9,6 +9,18 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.41.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.40.3...ecl-v2.41.0) (2026-10-29)
+
+
+### Features
+
+* add Logical Files tree to HPCC Resources view ([a4f7b11](https://github.com/hpcc-systems/vscode-ecl/commit/a4f7b1159fd019e355019c5ffc18123960586a37))
+
+
+### Bug Fixes
+
+* update dependencies and improve logging ([8013fc9](https://github.com/hpcc-systems/vscode-ecl/commit/8013fc98eb1574d0e9571bf6bbbc1960349a72be))
+
 ## [2.40.3](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.40.2...ecl-v2.40.3) (2026-09-28)
 
 
