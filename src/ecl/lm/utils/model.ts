@@ -2,8 +2,9 @@ import * as vscode from "vscode";
 import * as path from "path";
 import { WebBlob } from "@hpcc-js/wasm-llama";
 
-const MODEL_FILENAME = "bge-base-en-v1.5-q4_k_m.gguf";
-const MODEL_URL = `https://huggingface.co/CompendiumLabs/bge-base-en-v1.5-gguf/resolve/main/${MODEL_FILENAME}`;
+const MODEL_FILENAME = "nomic-embed-text-v1.5.Q4_K_M.gguf";
+const MODEL_URL = `https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/${MODEL_FILENAME}`;
+const modelPromises = new Map<string, Promise<vscode.Uri>>();
 
 async function checkModelFolderExists(ctx: vscode.ExtensionContext) {
     const modelsFolder = vscode.Uri.joinPath(ctx.globalStorageUri, "models");
@@ -19,7 +20,7 @@ async function checkModelFolderExists(ctx: vscode.ExtensionContext) {
     return modelsFolder;
 }
 
-export async function checkModelExists(ctx: vscode.ExtensionContext) {
+async function ensureModelExists(ctx: vscode.ExtensionContext) {
     const modelsFolder = await checkModelFolderExists(ctx);
     const modelPath = path.join(modelsFolder.fsPath, MODEL_FILENAME);
     try {
@@ -33,4 +34,25 @@ export async function checkModelExists(ctx: vscode.ExtensionContext) {
         }
     }
     return vscode.Uri.file(modelPath);
+}
+
+export function checkModelExists(ctx: vscode.ExtensionContext): Promise<vscode.Uri> {
+    const storageKey = ctx.globalStorageUri.toString();
+    const existingPromise = modelPromises.get(storageKey);
+    if (existingPromise) {
+        return existingPromise;
+    }
+
+    const modelPromise = ensureModelExists(ctx).then(
+        modelPath => {
+            modelPromises.delete(storageKey);
+            return modelPath;
+        },
+        error => {
+            modelPromises.delete(storageKey);
+            throw error;
+        }
+    );
+    modelPromises.set(storageKey, modelPromise);
+    return modelPromise;
 }

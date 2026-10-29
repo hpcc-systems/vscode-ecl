@@ -17,6 +17,8 @@ async function convertDocBookToMarkdown(inputFile: string): Promise<string> {
             errorOutput += data.toString();
         });
 
+        pandoc.on("error", reject);
+
         pandoc.on("close", (code) => {
             if (code === 0) {
                 resolve(output);
@@ -91,6 +93,6 @@ export async function* findXmlFiles(dir: string, urlPrefix: string) {
             }
         }
     } catch (e) {
-        console.error("Error reading directory:", e);
+        throw e;
     }
 }
