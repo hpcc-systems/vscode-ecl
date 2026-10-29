@@ -9,6 +9,18 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.42.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.41.0...ecl-v2.42.0) (2026-10-29)
+
+
+### Features
+
+* refresh docs vector db ([5871ece](https://github.com/hpcc-systems/vscode-ecl/commit/5871ece30c2cb2d61be35b278faed5d25c5b1b58))
+
+
+### Bug Fixes
+
+* restore logical file review improvements ([50ea70e](https://github.com/hpcc-systems/vscode-ecl/commit/50ea70e2ac120d34b5b30485ce3b900315ce0fd4))
+
 ## [2.41.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.40.3...ecl-v2.41.0) (2026-10-29)
 
 
