@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { eclString, logicalFileChildren, logicalFileECL } from "../src/ecl/logicalFiles";
+import { eclString, logicalFileChildren, logicalFileECL } from "../ecl/logicalFiles";
 
 const ACCOUNTS_ECL = "RECORD\n  unsigned3 personid;\n  string20 account;\n END;\n";
 const KEY_ECL = "RECORD\n  unsigned3 personid\n  =>\n  string20 account;\n  unsigned8 recpos;\n END;\n";

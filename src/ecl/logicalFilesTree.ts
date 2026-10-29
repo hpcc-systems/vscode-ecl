@@ -164,10 +164,7 @@ class LogicalFileItem extends Item<LogicalFilesTree> {
         const session = sessionManager.session;
         if (!session) return;
         try {
-            const content = await vscode.window.withProgress({
-                location: { viewId: "hpccResources.logicalFiles" },
-                title: localize("Fetching record definition")
-            }, async () => logicalFileECL(this.file.Name, await session.fetchLogicalFileDetail(this.file.Name)));
+            const content = logicalFileECL(this.file.Name, await this.fetchDetail(session));
             const document = await vscode.workspace.openTextDocument({ language: "ecl", content });
             await vscode.window.showTextDocument(document);
         } catch (e) {
@@ -189,10 +186,7 @@ class LogicalFileItem extends Item<LogicalFilesTree> {
             if (!session) {
                 throw new Error(localize("Select an HPCC Platform launch configuration to browse logical files"));
             }
-            const detail = await vscode.window.withProgress({
-                location: { viewId: "hpccResources.logicalFiles" },
-                title: localize("Fetching record definition")
-            }, async () => session.fetchLogicalFileDetail(this.file.Name));
+            const detail = await this.fetchDetail(session);
             if (!detail.Ecl?.trim()) {
                 throw new Error(localize("Record definition is not available for this logical file"));
             }
@@ -200,6 +194,13 @@ class LogicalFileItem extends Item<LogicalFilesTree> {
         } catch (e) {
             vscode.window.showErrorMessage(e instanceof Error ? e.message : String(e));
         }
+    }
+
+    private fetchDetail(session: NonNullable<typeof sessionManager.session>) {
+        return vscode.window.withProgress({
+            location: { viewId: "hpccResources.logicalFiles" },
+            title: localize("Fetching record definition")
+        }, async () => session.fetchLogicalFileDetail(this.file.Name));
     }
 }
 

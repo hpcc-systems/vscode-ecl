@@ -1,21 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ExtensionContext, WebviewView } from "vscode";
-import type { LaunchRequestArguments } from "../src/debugger/launchRequestArguments";
-import type { Messages, State } from "../src/eclwatch/messages";
-import type { ECLWatchPanelView } from "../src/ecl/eclWatchPanelView";
+import type { LaunchRequestArguments } from "../debugger/launchRequestArguments";
+import type { Messages, State } from "../eclwatch/messages";
+import type { ECLWatchPanelView } from "../ecl/eclWatchPanelView";
+import { join } from "@hpcc-js/util";
 
 vi.mock("vscode", () => ({
     window: { registerWebviewViewProvider: vi.fn() },
     commands: { registerCommand: vi.fn(), executeCommand: vi.fn() },
     Uri: { joinPath: vi.fn(() => "resource") }
 }));
-vi.mock("../src/hpccplatform/session", () => ({
+vi.mock("../hpccplatform/session", () => ({
     sessionManager: { onDidChangeSession: vi.fn() }
 }));
-vi.mock("../src/util/credentialManager", () => ({
+vi.mock("../util/credentialManager", () => ({
     credentialManager: { getCredentials: vi.fn() }
 }));
-vi.mock("../src/hpccplatform/launchConfig", () => ({
+vi.mock("../hpccplatform/launchConfig", () => ({
+    espUrl: ({ protocol, serverAddress, port, path }) => join(`${protocol}://${serverAddress}:${port}/`, path),
     logicalFileUrl: vi.fn(),
     wuDetailsUrl: vi.fn(),
     wuResultUrl: vi.fn()
@@ -38,7 +40,7 @@ describe("ECL Watch navigation", () => {
     });
 
     async function setup(beforeLoaded?: (provider: ECLWatchPanelView) => void) {
-        const { ECLWatchPanelView } = await import("../src/ecl/eclWatchPanelView");
+        const { ECLWatchPanelView } = await import("../ecl/eclWatchPanelView");
         const provider = ECLWatchPanelView.attach({
             extensionUri: "extension",
             subscriptions: []
@@ -120,5 +122,14 @@ describe("ECL Watch navigation", () => {
             resultName: "Result 1",
             logicalFile: undefined
         });
+    });
+
+    it("preserves the configured server path for logical-file and workunit previews", async () => {
+        const preview = await setup();
+        const config = { ...launch, path: "/hpcc/proxy/" };
+        preview.provider.navigateToLogicalFile(config, "test::second", "thor");
+        expect(preview.state()?.baseUrl).toBe("http://localhost:8010/hpcc/proxy");
+        preview.provider.navigateTo(config, "W20261029-123456", "Result 1");
+        expect(preview.state()?.baseUrl).toBe("http://localhost:8010/hpcc/proxy");
     });
 });

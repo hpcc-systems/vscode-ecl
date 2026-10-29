@@ -328,6 +328,8 @@ npm run test-integration
 
 Configuration lives in `vitest.config.ts` (jsdom environment). Avoid importing heavy VS Code APIs directly—wrap them so they can be mocked for unit tests.
 
+Place new unit tests in `src/__tests__/` using `*.test.ts` or `*.spec.ts`. Vitest discovers these alongside the existing unit tests in `test/`; Extension Host tests in `test/integration/` remain separate.
+
 ### Manifest Assertions
 
 `test/manifest.test.ts` validates that required activation events and core commands are present in `package.json` without launching VS Code.

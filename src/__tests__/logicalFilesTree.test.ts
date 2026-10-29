@@ -1,11 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ExtensionContext } from "vscode";
-import type { Item } from "../src/ecl/tree";
+import type { Item } from "../ecl/tree";
+
+type CommandHandler = (item: Item) => Promise<void>;
 
 const mocks = vi.hoisted(() => ({
-    commands: new Map<string, (item: Item) => Promise<void>>(),
+    commands: new Map<string, CommandHandler>(),
     clipboard: vi.fn(),
     showErrorMessage: vi.fn(),
+    openTextDocument: vi.fn(),
+    showTextDocument: vi.fn(),
     session: {
         name: "test",
         launchRequestArgs: { serverAddress: "localhost" },
@@ -19,7 +23,8 @@ vi.mock("vscode", () => ({
     window: {
         createTreeView: vi.fn(() => ({})),
         withProgress: vi.fn((_options, task) => task()),
-        showErrorMessage: mocks.showErrorMessage
+        showErrorMessage: mocks.showErrorMessage,
+        showTextDocument: mocks.showTextDocument
     },
     commands: {
         registerCommand: vi.fn((id, handler) => {
@@ -27,15 +32,16 @@ vi.mock("vscode", () => ({
             return { dispose: vi.fn() };
         })
     },
-    env: { clipboard: { writeText: mocks.clipboard } }
+    env: { clipboard: { writeText: mocks.clipboard } },
+    workspace: { openTextDocument: mocks.openTextDocument }
 }));
-vi.mock("../src/hpccplatform/session", () => ({
+vi.mock("../hpccplatform/session", () => ({
     sessionManager: { session: mocks.session, onDidChangeSession: vi.fn() }
 }));
-vi.mock("../src/util/localize", () => ({ default: (key: string) => key }));
-vi.mock("../src/ecl/eclWatchPanelView", () => ({ eclWatchPanelView: {} }));
+vi.mock("../util/localize", () => ({ default: (key: string) => key }));
+vi.mock("../ecl/eclWatchPanelView", () => ({ eclWatchPanelView: {} }));
 
-import { LogicalFilesTree } from "../src/ecl/logicalFilesTree";
+import { LogicalFilesTree } from "../ecl/logicalFilesTree";
 
 describe("logical-file copy commands", () => {
     let file: Item;
@@ -59,6 +65,20 @@ describe("logical-file copy commands", () => {
         await mocks.commands.get("hpccResources.logicalFiles.copyRecord")!(file);
         expect(mocks.session.fetchLogicalFileDetail).toHaveBeenCalledWith("scope::people");
         expect(mocks.clipboard).toHaveBeenCalledWith(record);
+    });
+
+    it("opens generated ECL using the same record-fetching operation", async () => {
+        const record = "RECORD\n  STRING name;\nEND;\n";
+        const document = { languageId: "ecl" };
+        mocks.session.fetchLogicalFileDetail.mockResolvedValue({ Ecl: record });
+        mocks.openTextDocument.mockResolvedValue(document);
+        await mocks.commands.get("hpccResources.logicalFiles.openECL")!(file);
+        expect(mocks.session.fetchLogicalFileDetail).toHaveBeenCalledWith("scope::people");
+        expect(mocks.openTextDocument).toHaveBeenCalledWith({
+            language: "ecl",
+            content: expect.stringContaining(`Layout := ${record.trim()}`)
+        });
+        expect(mocks.showTextDocument).toHaveBeenCalledWith(document);
     });
 
     it.each([undefined, "", " \n "])("reports an unavailable record (%s) without changing the clipboard", async Ecl => {

@@ -10,7 +10,7 @@ export default defineConfig({
     },
     test: {
         // Match test files using common patterns
-        include: ['test/**/*.test.ts'],
+        include: ['test/**/*.test.ts', 'src/__tests__/**/*.{test,spec}.ts'],
         exclude: [
             '**/node_modules/**',
             '**/dist/**',
@@ -43,6 +43,7 @@ export default defineConfig({
                 'lib*/',
                 'types/',
                 'test/',
+                'src/__tests__/',
                 '**/*.d.ts',
                 'esbuild.mjs',
                 '**/*.config.{js,ts,mjs}',

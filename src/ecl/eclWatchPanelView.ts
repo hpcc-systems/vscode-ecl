@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { send } from "@hpcc-js/comms";
 import { hashSum } from "@hpcc-js/util";
 import { LaunchRequestArguments } from "../debugger/launchRequestArguments";
-import { logicalFileUrl, wuDetailsUrl, wuResultUrl } from "../hpccplatform/launchConfig";
+import { espUrl, logicalFileUrl, wuDetailsUrl, wuResultUrl } from "../hpccplatform/launchConfig";
 import { sessionManager } from "../hpccplatform/session";
 import type { Messages } from "../eclwatch/messages";
 import { credentialManager } from "../util/credentialManager";
@@ -169,7 +169,7 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
                 this._webviewView.webview.postMessage({
                     command: "navigate",
                     data: {
-                        baseUrl: this._currParams.protocol + "://" + this._currParams.serverAddress + ":" + this._currParams.port + "/",
+                        baseUrl: espUrl(this._currParams),
                         userID: this._currParams.user,
                         rejectUnauthorized: this._currParams.rejectUnauthorized,
                         timeoutSecs: this._currParams.timeoutSecs,

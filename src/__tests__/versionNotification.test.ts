@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as vscode from "vscode";
 
+vi.mock("vscode", async importOriginal => ({
+    ...await importOriginal<typeof import("vscode")>(),
+    window: { showInformationMessage: vi.fn() }
+}));
+
 // Mock the localize function
 vi.mock("../util/localize", () => ({
     default: (key: string) => key
@@ -15,7 +20,11 @@ describe("versionNotification", () => {
         mockContext = {
             extension: {
                 packageJSON: {
-                    version: "2.33.0"
+                    version: "2.33.0",
+                    releaseNotes: [{
+                        previousVersion: "2.32.0",
+                        message: "Test release note"
+                    }]
                 }
             },
             extensionUri: vscode.Uri.file("/mock/path"),
