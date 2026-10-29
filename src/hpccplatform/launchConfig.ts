@@ -8,7 +8,7 @@ import { showEclStatus } from "../ecl/clientTools";
 import localize from "../util/localize";
 import { readFile } from "../util/fs";
 import { reporter } from "../telemetry";
-import { formatWorkunitURL, formatResultURL, setLegacyStub } from "../ecl/util";
+import { formatWorkunitURL, formatResultURL, formatLogicalFileURL, setLegacyStub } from "../ecl/util";
 import { LaunchConfigState, credentialManager, Credentials } from "../util/credentialManager";
 
 export const NO_SELECTION = "no selection";
@@ -116,6 +116,10 @@ export function wuDetailsUrl(launchRequestArgs: { protocol: LaunchProtocol, serv
 
 export function wuResultUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }, wuid: string, name: string) {
     return formatResultURL(espUrl(launchRequestArgs), wuid, name);
+}
+
+export function logicalFileUrl(launchRequestArgs: { protocol: LaunchProtocol, serverAddress: string, port: number, path: string }, name: string, nodeGroup?: string) {
+    return formatLogicalFileURL(espUrl(launchRequestArgs), name, nodeGroup);
 }
 
 function action(mode: LaunchMode) {
@@ -633,6 +637,18 @@ export class LaunchConfig implements LaunchRequestArguments {
             const file = LogicalFile.attach(this.opts(credentials), "", lf);
             return file.fetchInfo().then(info => info.Ecl);
         });
+    }
+
+    async fetchLogicalFileScope(scope: string): Promise<WsDfu.DFULogicalFile[]> {
+        const credentials = await this.checkCredentials();
+        const service = new DFUService(this.opts(credentials));
+        const response = await service.DFUFileView({ Scope: scope, IncludeSuperOwner: true });
+        return response?.DFULogicalFiles?.DFULogicalFile ?? [];
+    }
+
+    async fetchLogicalFileDetail(lf: string): Promise<WsDfu.FileDetail> {
+        const credentials = await this.checkCredentials();
+        return LogicalFile.attach(this.opts(credentials), "", lf).fetchInfo();
     }
 
     digitalKeys() {

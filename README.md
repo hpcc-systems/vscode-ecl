@@ -12,6 +12,12 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
+### Unreleased
+
+- Added a "Logical Files" tree to the HPCC Resources view (above Bundles). It browses DFU scopes lazily for the current launch configuration. Each file can:
+  - View Content - display the first rows in the "HPCC" panel.
+  - Open ECL - open a new ECL document with the record definition and `OUTPUT(CHOOSEN(ds, 50))`.
+
 ### v2.38.x
 
 - Improved KEL client-tool discovery, including installations found in HPCC Systems locations and the local Maven repository.

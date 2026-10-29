@@ -3,6 +3,8 @@ import type { IOptions, ResponseType } from "@hpcc-js/comms";
 export interface State extends IOptions {
     wuid: string;
     resultName?: string;
+    logicalFile?: string;
+    nodeGroup?: string;
 }
 
 export interface VSCodeAPI {
@@ -72,7 +74,7 @@ export function isMessage(value: unknown): value is Messages {
             return true;
         case "navigate": {
             const data = message.data as Record<string, unknown> | undefined;
-            return !!data && typeof data.baseUrl === "string" && typeof data.wuid === "string";
+            return !!data && typeof data.baseUrl === "string" && (typeof data.wuid === "string" || typeof data.logicalFile === "string");
         }
         case "proxyCancel":
             return typeof message.id === "number";

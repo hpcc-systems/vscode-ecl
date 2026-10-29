@@ -556,6 +556,36 @@ export const WUResult: React.FunctionComponent<WUResultProps> = ({
     </VisualizationComponent>;
 };
 
+interface LogicalFileResultProps {
+    opts: IOptions;
+    logicalFile: string;
+    nodeGroup?: string;
+}
+
+export const LogicalFileResult: React.FunctionComponent<LogicalFileResultProps> = ({
+    opts,
+    logicalFile,
+    nodeGroup
+}) => {
+
+    const table = useConst(() => new WUResultTable());
+
+    React.useEffect(() => {
+        if (table) {
+            table
+                .opts(opts)
+                .wuid("")
+                .resultName("")
+                .cluster(nodeGroup ?? "")
+                .logicalFile(logicalFile)
+                ;
+        }
+    }, [table, opts, logicalFile, nodeGroup]);
+
+    return <VisualizationComponent widget={table} debounce={true}>
+    </VisualizationComponent>;
+};
+
 interface WUIssues {
     exceptions: WsWorkunits.ECLException[];
 }

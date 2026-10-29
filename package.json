@@ -60,27 +60,27 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "@fluentui/react-components": "9.74.9",
-    "@fluentui/react-hooks": "8.10.3",
+    "@fluentui/react-components": "9.75.0",
+    "@fluentui/react-hooks": "8.10.4",
     "@fluentui/react-icons": "2.0.344",
-    "@hpcc-js/api": "3.7.3",
-    "@hpcc-js/common": "3.12.1",
-    "@hpcc-js/comms": "3.22.1",
-    "@hpcc-js/dgrid": "3.11.5",
-    "@hpcc-js/esbuild-plugins": "1.13.1",
+    "@hpcc-js/api": "3.7.5",
+    "@hpcc-js/common": "3.12.3",
+    "@hpcc-js/comms": "3.23.1",
+    "@hpcc-js/dgrid": "3.11.7",
+    "@hpcc-js/esbuild-plugins": "1.13.2",
     "@hpcc-js/observable-shim": "3.1.0",
-    "@hpcc-js/observablehq-compiler": "3.12.2",
-    "@hpcc-js/util": "3.8.1",
-    "@hpcc-js/wasm-expat": "1.16.2",
-    "@hpcc-js/wasm-llama": "1.6.2",
-    "@hpcc-js/wasm-zstd": "1.16.2",
-    "@langchain/classic": "1.0.52",
+    "@hpcc-js/observablehq-compiler": "3.12.4",
+    "@hpcc-js/util": "3.8.2",
+    "@hpcc-js/wasm-expat": "1.17.0",
+    "@hpcc-js/wasm-llama": "1.7.0",
+    "@hpcc-js/wasm-zstd": "1.17.0",
+    "@langchain/classic": "1.0.57",
     "@langchain/community": "1.1.29",
-    "@langchain/core": "1.2.17",
+    "@langchain/core": "1.3.1",
     "@langchain/ollama": "1.3.0",
     "@observablehq/inspector": "5.0.1",
     "@observablehq/parser": "6.1.0",
-    "@observablehq/runtime": "6.0.1",
+    "@observablehq/runtime": "6.1.0",
     "@observablehq/stdlib": "5.8.8",
     "@octokit/rest": "22.0.1",
     "@types/node": "26.6.5",
@@ -90,14 +90,14 @@
     "@types/vscode": "1.105.0",
     "@types/vscode-notebook-renderer": "1.72.4",
     "@typescript/native": "npm:typescript@7.0.2",
-    "@vitest/browser-playwright": "5.0.3",
-    "@vitest/coverage-v8": "5.0.3",
-    "@vitest/ui": "5.0.3",
+    "@vitest/browser-playwright": "5.0.5",
+    "@vitest/coverage-v8": "5.0.5",
+    "@vitest/ui": "5.0.5",
     "@vscode/debugadapter": "1.68.0",
     "@vscode/debugprotocol": "1.68.0",
     "@vscode/extension-telemetry": "1.5.2",
     "@vscode/test-electron": "3.1.0",
-    "@vscode/vsce": "4.0.0",
+    "@vscode/vsce": "4.1.0",
     "adm-zip": "0.6.1",
     "antlr4": "4.13.2",
     "assert": "2.1.0",
@@ -108,30 +108,32 @@
     "esbuild-copy-static-files": "0.1.0",
     "esbuild-plugin-text-replace": "1.3.0",
     "esbuild-plugin-umd-wrapper": "3.0.0",
-    "eslint": "10.12.0",
+    "eslint": "10.13.0",
     "eslint-plugin-react-hooks": "7.1.1",
-    "glob": "13.0.6",
-    "jsdom": "30.1.2",
-    "langchain": "1.5.16",
+    "glob": "14.0.3",
+    "jsdom": "30.1.3",
+    "langchain": "1.6.0",
     "npm-run-all": "4.1.5",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "rimraf": "6.1.3",
     "run-script-os": "1.1.6",
     "tslib": "2.8.1",
     "typescript": "npm:@typescript/typescript6@6.0.2",
-    "typescript-eslint": "8.71.1",
+    "typescript-eslint": "8.72.1",
     "use-resize-observer": "10.0.0",
-    "vitest": "5.0.3",
+    "vitest": "5.0.5",
     "yargs": "18.2.0",
-    "@xmldom/xmldom": "0.9.12",
-    "braces": "3.0.3",
-    "uuid": "14.0.3"
+    "@azure/msal-node": "7.1.2",
+    "deepmerge": "4.1.2",
+    "uuid": "14.0.3",
+    "zod": "4.6.7"
   },
   "overrides": {
-    "@xmldom/xmldom": "0.9.12",
-    "braces": "3.0.3",
-    "uuid": "14.0.3"
+    "@azure/msal-node": "7.1.2",
+    "deepmerge": "4.1.2",
+    "uuid": "14.0.3",
+    "zod": "4.6.7"
   },
   "author": {
     "name": "HPCC Systems®"
@@ -880,6 +882,42 @@
         "enablement": "ecl.connected"
       },
       {
+        "command": "hpccResources.logicalFiles.refresh",
+        "category": "ECL",
+        "title": "%Refresh%",
+        "description": "%Refresh Tree%",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "hpccResources.logicalFiles.view",
+        "category": "ECL",
+        "title": "%View Content%",
+        "icon": {
+          "light": "resources/light/eye.svg",
+          "dark": "resources/dark/eye.svg"
+        }
+      },
+      {
+        "command": "hpccResources.logicalFiles.openECL",
+        "category": "ECL",
+        "title": "%Open ECL%",
+        "description": "%Open ECL with record definition%",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "hpccResources.logicalFiles.copyName",
+        "category": "ECL",
+        "title": "%Copy Logical Filename%"
+      },
+      {
+        "command": "hpccResources.logicalFiles.copyRecord",
+        "category": "ECL",
+        "title": "%Copy ECL Record%"
+      },
+      {
         "command": "hpccResources.bundles.refresh",
         "category": "ECL",
         "title": "%Refresh%",
@@ -1329,6 +1367,11 @@
           "group": "navigation@65"
         },
         {
+          "command": "hpccResources.logicalFiles.refresh",
+          "when": "view == hpccResources.logicalFiles",
+          "group": "navigation@20"
+        },
+        {
           "command": "hpccResources.bundles.homepage",
           "when": "view == hpccResources.bundles",
           "group": "navigation@10"
@@ -1439,6 +1482,41 @@
           "when": "view == hpccPlatform && viewItem =~ /ECLWUNode/",
           "command": "hpccPlatform.userRefresh",
           "group": "6action@900"
+        },
+        {
+          "command": "hpccResources.logicalFiles.view",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
+          "group": "inline@10"
+        },
+        {
+          "command": "hpccResources.logicalFiles.openECL",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
+          "group": "inline@20"
+        },
+        {
+          "command": "hpccResources.logicalFiles.view",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
+          "group": "1logicalFile@10"
+        },
+        {
+          "command": "hpccResources.logicalFiles.openECL",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
+          "group": "1logicalFile@20"
+        },
+        {
+          "command": "hpccResources.logicalFiles.copyName",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
+          "group": "2copy@10"
+        },
+        {
+          "command": "hpccResources.logicalFiles.copyRecord",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
+          "group": "2copy@20"
+        },
+        {
+          "command": "hpccResources.logicalFiles.refresh",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFileScope",
+          "group": "1logicalFile@30"
         },
         {
           "command": "hpccResources.bundles.homepage",
@@ -1592,6 +1670,11 @@
     ],
     "views": {
       "hpccResources": [
+        {
+          "id": "hpccResources.logicalFiles",
+          "name": "%Logical Files%",
+          "icon": "resources/hpcc-icon-bw.svg"
+        },
         {
           "id": "hpccResources.bundles",
           "name": "%Bundles%",

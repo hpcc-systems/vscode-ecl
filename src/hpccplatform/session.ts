@@ -93,6 +93,14 @@ class Session {
         return this._launchConfig.fetchRecordDef(lf);
     }
 
+    fetchLogicalFileScope(scope: string) {
+        return this._launchConfig.fetchLogicalFileScope(scope);
+    }
+
+    fetchLogicalFileDetail(lf: string) {
+        return this._launchConfig.fetchLogicalFileDetail(lf);
+    }
+
     digitalKeys() {
         return this._launchConfig.digitalKeys();
     }

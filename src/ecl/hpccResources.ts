@@ -7,12 +7,14 @@ import localize from "../util/localize";
 import { onDidClientToolsChange, switchClientTools } from "./clientTools";
 import { Circle } from "./eclWatchTree";
 import { eclTerminal } from "./terminal";
+import { LogicalFilesTree } from "./logicalFilesTree";
 import { Tree, Item } from "./tree";
 
 let hpccResources: HPCCResources;
 
 export class HPCCResources {
     protected constructor(ctx: vscode.ExtensionContext) {
+        LogicalFilesTree.attach(ctx);
         Bundles.attach(ctx);
         ClientToolsTree.attach(ctx);
         KELTree.attach(ctx);

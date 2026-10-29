@@ -96,3 +96,12 @@ export function formatResultURL(baseUrl: string, wuid: string, name: string): st
         return `${baseUrl}esp/files/index.html#/workunits/${wuid}/outputs/${name}`;
     }
 }
+
+export function formatLogicalFileURL(baseUrl: string, name: string, nodeGroup?: string): string {
+    const eclConfig = vscode.workspace.getConfiguration("ecl", null);
+    if (eclConfig.get("preferredECLWatch") === "v5") {
+        return `${baseUrl}esp/files/${stubPage(baseUrl)}?Widget=LFDetailsWidget&Name=${encodeURIComponent(name)}${nodeGroup ? `&NodeGroup=${encodeURIComponent(nodeGroup)}` : ""}#/stub/Summary`;
+    } else {
+        return `${baseUrl}esp/files/index.html#/files/${nodeGroup ? `${encodeURI(nodeGroup)}/` : ""}${encodeURI(name)}`;
+    }
+}

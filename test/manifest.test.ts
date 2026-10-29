@@ -26,4 +26,15 @@ describe('Extension Manifest (package.json)', () => {
             expect(commands).toContain(cmd);
         }
     });
+
+    it('contributes logical-file copy actions to the file context menu', () => {
+        for (const action of ['copyName', 'copyRecord']) {
+            const command = `hpccResources.logicalFiles.${action}`;
+            expect(pkg.contributes.commands).toContainEqual(expect.objectContaining({ command }));
+            expect(pkg.contributes.menus['view/item/context']).toContainEqual(expect.objectContaining({
+                command,
+                when: 'view == hpccResources.logicalFiles && viewItem == LogicalFile'
+            }));
+        }
+    });
 });
