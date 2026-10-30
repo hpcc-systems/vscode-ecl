@@ -12,16 +12,26 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 ## Recent Highlights
 
-### Unreleased
+### v2.42.1
+
+- Fixed ECL Watch v5 URL selection: HPCC Platform versions older than 10.8.0 use `stub.htm`; 10.8.0 and newer use `stub.html`.
+- Added expandable field names and types beneath logical files in the HPCC Resources view, including nested fields.
+
+### v2.42.0
+
+- Refreshed the documentation vector database used by the ECL assistant.
+- Fixed logical-file and workunit previews to preserve configured server paths.
+
+### v2.41.0
 
 - Added a "Logical Files" tree to the HPCC Resources view (above Bundles). It browses DFU scopes lazily for the current launch configuration. Each file can:
   - View Content - display the first rows in the "HPCC" panel.
-  - Open ECL - open a new ECL document with the record definition and `OUTPUT(CHOOSEN(ds, 50))`.
+  - Open ECL - open a new ECL document with the record definition and a preview query for up to 50 records (using `DATASET` or `INDEX` as appropriate).
 
 ### v2.38.x
 
 - Improved KEL client-tool discovery, including installations found in HPCC Systems locations and the local Maven repository.
-- Added the `kel.kelPath` setting to select a preferred KEL installation instead of using automatic detection.
+- Improved preferred KEL installation selection using the existing `kel.kelPath` setting.
 - Added clearer progress, completion, failure, and diagnostic feedback for KEL syntax checking and ECL generation.
 
 ### v2.30.x
@@ -43,11 +53,11 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 
 - Added `ecl.saveOnSyntaxCheck` and `ecl.saveOnSubmit` option to ECL Settings (defaulting to off to match ECL IDE behaviour).
 
-### v2.15.x
+### v2.16.x
 
 - Add `path` option to launch configuration (to assist with proxy servers).
 
-### v2.14.x
+### v2.15.x
 
 - Add `Copy WUID` context menu.
 
@@ -58,7 +68,7 @@ This extension adds rich language support for [HPCC Systems](https://hpccsystems
 ### v2.12.x
 
 - Added extra support for Trustwave CA authority.
-- Fixed issue with `rejectAuthorized: false` being ignored.
+- Fixed issue with `rejectUnauthorized: false` being ignored.
 - Updated translations, added FR locale.
 - Added "Copy as ECL ID" command to explorer and editor tab context menus.
 
