@@ -1,4 +1,4 @@
-import type { WsDfu } from "@hpcc-js/comms";
+import type { WsDfu, XSDXMLNode } from "@hpcc-js/comms";
 import * as vscode from "vscode";
 import { sessionManager } from "../hpccplatform/session";
 import localize from "../util/localize";
@@ -124,6 +124,30 @@ class LogicalFileItem extends Item<LogicalFilesTree> {
         return this.file.RecordCount ? `${this.file.RecordCount}` : undefined;
     }
 
+    hasChildren() {
+        return true;
+    }
+
+    async getChildren(): Promise<Item[]> {
+        try {
+            const session = sessionManager.session;
+            if (!session) {
+                throw new Error(localize("Select an HPCC Platform launch configuration to browse logical files"));
+            }
+            const schema = await vscode.window.withProgress({
+                location: { viewId: "hpccResources.logicalFiles" },
+                title: localize("Fetching file fields")
+            }, async () => session.fetchLogicalFileSchema(this.file.Name, this.file.NodeGroup));
+            const fields = schema?.fields();
+            if (!fields?.length) {
+                throw new Error(localize("Fields are not available for this logical file"));
+            }
+            return fields.map(field => new LogicalFileFieldItem(this._tree, field));
+        } catch (e) {
+            return [new LogicalFileErrorItem(this._tree, e instanceof Error ? e.message : String(e))];
+        }
+    }
+
     getTooltip() {
         return [
             this.file.Name,
@@ -201,6 +225,42 @@ class LogicalFileItem extends Item<LogicalFilesTree> {
             location: { viewId: "hpccResources.logicalFiles" },
             title: localize("Fetching record definition")
         }, async () => session.fetchLogicalFileDetail(this.file.Name));
+    }
+}
+
+class LogicalFileFieldItem extends Item<LogicalFilesTree> {
+
+    constructor(tree: LogicalFilesTree, private _field: XSDXMLNode) {
+        super(tree);
+    }
+
+    getLabel() {
+        return this._field.name;
+    }
+
+    getDescription() {
+        const type = this._field.type || (this.hasChildren() ? "RECORD" : localize("Unknown"));
+        return this._field.isSet ? `SET OF ${type}` : type;
+    }
+
+    getTooltip() {
+        return `${this.getLabel()}: ${this.getDescription()}`;
+    }
+
+    hasChildren() {
+        return this._field.children().length > 0;
+    }
+
+    getChildren() {
+        return this._field.children().map(field => new LogicalFileFieldItem(this._tree, field));
+    }
+
+    iconPath() {
+        return new vscode.ThemeIcon("symbol-field");
+    }
+
+    contextValue() {
+        return "LogicalFileField";
     }
 }
 

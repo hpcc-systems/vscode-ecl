@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
-import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, Version, WorkunitsService, DFUService, WsDfu, WsCodesign } from "@hpcc-js/comms";
+import { AccountService, Activity, CodesignService, Workunit, WsWorkunits, WUUpdate, WsTopology, Topology, EclccErrors, IOptions, LogicalFile, Result, attachWorkspace, IECLErrorWarning, locateClientTools, ClientTools, Version, WorkunitsService, DFUService, WsDfu, WsCodesign } from "@hpcc-js/comms";
 import { join, scopedLogger } from "@hpcc-js/util";
 import { LaunchMode, LaunchProtocol, LaunchRequestArguments } from "../debugger/launchRequestArguments";
 import { showEclStatus } from "../ecl/clientTools";
@@ -15,7 +15,7 @@ export const NO_SELECTION = "no selection";
 const MAX_LOGIN_ATTEMPTS = 3;
 
 //  ECL Watch v5 "stub.htm" was renamed to "stub.html" in this platform version
-const STUB_HTML_VERSION = new Version("3.8.0");
+const STUB_HTML_VERSION = new Version("10.8.0");
 
 export interface IExecFile {
     code: number;
@@ -649,6 +649,11 @@ export class LaunchConfig implements LaunchRequestArguments {
     async fetchLogicalFileDetail(lf: string): Promise<WsDfu.FileDetail> {
         const credentials = await this.checkCredentials();
         return LogicalFile.attach(this.opts(credentials), "", lf).fetchInfo();
+    }
+
+    async fetchLogicalFileSchema(lf: string, cluster: string) {
+        const credentials = await this.checkCredentials();
+        return Result.attachLogicalFile(this.opts(credentials), cluster, lf).fetchXMLSchema(true);
     }
 
     digitalKeys() {

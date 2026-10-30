@@ -101,6 +101,10 @@ class Session {
         return this._launchConfig.fetchLogicalFileDetail(lf);
     }
 
+    fetchLogicalFileSchema(lf: string, cluster: string) {
+        return this._launchConfig.fetchLogicalFileSchema(lf, cluster);
+    }
+
     digitalKeys() {
         return this._launchConfig.digitalKeys();
     }
