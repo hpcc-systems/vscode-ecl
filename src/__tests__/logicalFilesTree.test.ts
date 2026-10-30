@@ -7,11 +7,15 @@ type CommandHandler = (item: Item) => Promise<void>;
 const mocks = vi.hoisted(() => ({
     commands: new Map<string, CommandHandler>(),
     clipboard: vi.fn(),
+    openExternal: vi.fn(),
+    preference: { value: "v9" },
     showErrorMessage: vi.fn(),
     openTextDocument: vi.fn(),
     showTextDocument: vi.fn(),
     session: {
         name: "test",
+        baseUrl: () => "http://localhost:8010/",
+        fetchBuild: vi.fn(),
         launchRequestArgs: { serverAddress: "localhost" },
         fetchLogicalFileScope: vi.fn(),
         fetchLogicalFileDetail: vi.fn()
@@ -32,8 +36,12 @@ vi.mock("vscode", () => ({
             return { dispose: vi.fn() };
         })
     },
-    env: { clipboard: { writeText: mocks.clipboard } },
-    workspace: { openTextDocument: mocks.openTextDocument }
+    env: { clipboard: { writeText: mocks.clipboard }, openExternal: mocks.openExternal },
+    Uri: { parse: (url: string) => url },
+    workspace: {
+        openTextDocument: mocks.openTextDocument,
+        getConfiguration: () => ({ get: () => mocks.preference.value })
+    }
 }));
 vi.mock("../hpccplatform/session", () => ({
     sessionManager: { session: mocks.session, onDidChangeSession: vi.fn() }
@@ -56,6 +64,22 @@ describe("logical-file copy commands", () => {
     it("copies the fully qualified logical filename without fetching a record", async () => {
         await mocks.commands.get("hpccResources.logicalFiles.copyName")!(file);
         expect(mocks.clipboard).toHaveBeenCalledWith("scope::people");
+        expect(mocks.session.fetchLogicalFileDetail).not.toHaveBeenCalled();
+    });
+
+    it.each([
+        ["v5", "http://localhost:8010/esp/files/stub.htm?Widget=LFDetailsWidget&Name=progguide%3A%3Aexampledata%3A%3Apeople&NodeGroup=mythor#/stub/Summary"],
+        ["v9", "http://localhost:8010/esp/files/index.html#/files/mythor/progguide::exampledata::people"]
+    ])("opens logical-file details in %s ECL Watch", async (preference, expectedUrl) => {
+        mocks.preference.value = preference;
+        mocks.session.fetchBuild.mockResolvedValue("community_10.6.0-1");
+        mocks.session.fetchLogicalFileScope.mockResolvedValue([
+            { Name: "progguide::exampledata::people", NodeGroup: "mythor" }
+        ]);
+        const tree = LogicalFilesTree.attach({ subscriptions: [] } as unknown as ExtensionContext);
+        const [logicalFile] = await tree.scopeChildren("progguide::exampledata");
+        await mocks.commands.get("hpccResources.logicalFiles.browse")!(logicalFile);
+        expect(mocks.openExternal).toHaveBeenCalledWith(expectedUrl);
         expect(mocks.session.fetchLogicalFileDetail).not.toHaveBeenCalled();
     });
 

@@ -43,11 +43,11 @@ export class ECLWatchPanelView implements vscode.WebviewViewProvider {
         vscode.commands.registerCommand("ecl.watch.lite.openECLWatchExternal", async () => {
             if (this._currParams) {
                 if (this._currParams.logicalFile) {
-                    vscode.env.openExternal(vscode.Uri.parse(logicalFileUrl(this._currParams, this._currParams.logicalFile, this._currParams.nodeGroup)));
+                    vscode.env.openExternal(vscode.Uri.parse(await logicalFileUrl(this._currParams, this._currParams.logicalFile, this._currParams.nodeGroup)));
                 } else if (this._currParams.resultName === undefined) {
-                    vscode.env.openExternal(vscode.Uri.parse(wuDetailsUrl(this._currParams, this._currParams.wuid)));
+                    vscode.env.openExternal(vscode.Uri.parse(await wuDetailsUrl(this._currParams, this._currParams.wuid)));
                 } else {
-                    vscode.env.openExternal(vscode.Uri.parse(wuResultUrl(this._currParams, this._currParams.wuid, this._currParams.resultName)));
+                    vscode.env.openExternal(vscode.Uri.parse(await wuResultUrl(this._currParams, this._currParams.wuid, this._currParams.resultName)));
                 }
             }
         });

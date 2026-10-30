@@ -73,7 +73,7 @@ export class GetWorkunitMetricsTool implements vscode.LanguageModelTool<IGetWork
             const parts: vscode.LanguageModelTextPart[] = [];
 
             // Add workunit summary information
-            const detailsUrl = session.wuDetailsUrl(wu.Wuid);
+            const detailsUrl = await session.wuDetailsUrl(wu.Wuid);
             parts.push(new vscode.LanguageModelTextPart(localize("Workunit Metrics for {0}:", wuid)));
 
             const wuSummary = {

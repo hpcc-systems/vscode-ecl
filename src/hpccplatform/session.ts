@@ -223,8 +223,7 @@ export class SessionManager {
         vscode.commands.registerCommand("hpccPlatform.eclwatch", async () => {
             if (this.session) {
                 const baseUrl = this.session.baseUrl();
-                await this.session.fetchBuild().catch(() => undefined);
-                vscode.env.openExternal(vscode.Uri.parse(formatECLWatchURL(baseUrl)));
+                vscode.env.openExternal(vscode.Uri.parse(await formatECLWatchURL(baseUrl)));
             }
         });
 
@@ -563,6 +562,7 @@ export class SessionManager {
 
         try {
             await this.session.checkCredentials();
+            this.session.fetchBuild().catch(() => undefined);
             vscode.window.showInformationMessage(localize("Successfully logged in to HPCC Platform"));
             vscode.commands.executeCommand("hpccPlatform.userRefresh");
             await this.refreshStatusBar(LaunchConfigState.Ok);

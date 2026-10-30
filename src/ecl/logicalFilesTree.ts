@@ -5,6 +5,7 @@ import localize from "../util/localize";
 import { eclWatchPanelView } from "./eclWatchPanelView";
 import { logicalFileChildren, logicalFileECL, type LogicalFileEntry, type LogicalFileScope } from "./logicalFiles";
 import { Item, Tree } from "./tree";
+import { formatLogicalFileURL } from "./util";
 
 let logicalFilesTree: LogicalFilesTree;
 export class LogicalFilesTree extends Tree {
@@ -20,6 +21,11 @@ export class LogicalFilesTree extends Tree {
             vscode.commands.registerCommand("hpccResources.logicalFiles.view", (item?: Item) => {
                 if (item instanceof LogicalFileItem) {
                     item.view();
+                }
+            }),
+            vscode.commands.registerCommand("hpccResources.logicalFiles.browse", async (item?: Item) => {
+                if (item instanceof LogicalFileItem) {
+                    await item.browse();
                 }
             }),
             vscode.commands.registerCommand("hpccResources.logicalFiles.openECL", async (item?: Item) => {
@@ -191,6 +197,17 @@ class LogicalFileItem extends Item<LogicalFilesTree> {
             const content = logicalFileECL(this.file.Name, await this.fetchDetail(session));
             const document = await vscode.workspace.openTextDocument({ language: "ecl", content });
             await vscode.window.showTextDocument(document);
+        } catch (e) {
+            vscode.window.showErrorMessage(e instanceof Error ? e.message : String(e));
+        }
+    }
+
+    async browse() {
+        const session = sessionManager.session;
+        if (!session) return;
+        try {
+            const url = await formatLogicalFileURL(session.baseUrl(), this.file.Name, this.file.NodeGroup);
+            await vscode.env.openExternal(vscode.Uri.parse(url));
         } catch (e) {
             vscode.window.showErrorMessage(e instanceof Error ? e.message : String(e));
         }

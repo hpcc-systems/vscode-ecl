@@ -902,6 +902,16 @@
         }
       },
       {
+        "command": "hpccResources.logicalFiles.browse",
+        "category": "ECL",
+        "title": "%Open ECL Watch%",
+        "description": "%Open ECL Watch in external browser%",
+        "icon": {
+          "light": "resources/light/globe.svg",
+          "dark": "resources/dark/globe.svg"
+        }
+      },
+      {
         "command": "hpccResources.logicalFiles.openECL",
         "category": "ECL",
         "title": "%Open ECL%",
@@ -1495,6 +1505,11 @@
           "group": "inline@20"
         },
         {
+          "command": "hpccResources.logicalFiles.browse",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
+          "group": "inline@30"
+        },
+        {
           "command": "hpccResources.logicalFiles.view",
           "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
           "group": "1logicalFile@10"
@@ -1503,6 +1518,11 @@
           "command": "hpccResources.logicalFiles.openECL",
           "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
           "group": "1logicalFile@20"
+        },
+        {
+          "command": "hpccResources.logicalFiles.browse",
+          "when": "view == hpccResources.logicalFiles && viewItem == LogicalFile",
+          "group": "1logicalFile@30"
         },
         {
           "command": "hpccResources.logicalFiles.copyName",

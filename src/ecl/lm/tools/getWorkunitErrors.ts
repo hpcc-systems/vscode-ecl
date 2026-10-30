@@ -90,7 +90,7 @@ export class GetWorkunitErrorsTool implements vscode.LanguageModelTool<IGetWorku
 
             const parts: vscode.LanguageModelTextPart[] = [];
 
-            const detailsUrl = session.wuDetailsUrl(wu.Wuid);
+            const detailsUrl = await session.wuDetailsUrl(wu.Wuid);
             parts.push(new vscode.LanguageModelTextPart(localize("Errors/Warnings for Workunit {0}:", wuid)));
 
             const summary = localize(

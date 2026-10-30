@@ -118,8 +118,8 @@ export class ECLCommands {
         eclWatchPanelView.navigateTo(launchRequestArgs, wuid, resultName);
     }
 
-    openECLWatchExternal(source: ECLWUNode | ECLResultNode) {
-        vscode.env.openExternal(vscode.Uri.parse(source.url));
+    async openECLWatchExternal(source: ECLWUNode | ECLResultNode) {
+        vscode.env.openExternal(vscode.Uri.parse(await source.url));
     }
 
     saveResultAs(source: ECLResultNode) {
@@ -131,8 +131,8 @@ export class ECLCommands {
         eclWatchPanelView.navigateTo(sessionManager.session.launchRequestArgs, source.getWU().Wuid, source.getResult().Name);
     }
 
-    browseResult(source: ECLResultNode) {
-        vscode.env.openExternal(vscode.Uri.parse(source.url));
+    async browseResult(source: ECLResultNode) {
+        vscode.env.openExternal(vscode.Uri.parse(await source.url));
     }
 
     async insertRecordDef() {

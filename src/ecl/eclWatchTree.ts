@@ -25,7 +25,7 @@ export class ECLWatchTree extends Tree {
             this.refresh();
         });
 
-        sessionManager.onDidCreateWorkunit(evt => {
+        sessionManager.onDidCreateWorkunit(async evt => {
             vscode.commands.executeCommand("workbench.files.action.focusFilesExplorer");
             vscode.commands.executeCommand("hpccPlatform.focus");
             if (this._rendered) {
@@ -36,7 +36,7 @@ export class ECLWatchTree extends Tree {
                     case "disabled":
                         break;
                     case "external":
-                        vscode.env.openExternal(vscode.Uri.parse(formatWorkunitURL(evt.workunit.BaseUrl, evt.workunit.Wuid)));
+                        vscode.env.openExternal(vscode.Uri.parse(await formatWorkunitURL(evt.workunit.BaseUrl, evt.workunit.Wuid)));
                         break;
                     case "internal":
                     default:
@@ -323,13 +323,15 @@ class ECLErrorNode extends Item<ECLWatchTree> {
 
 export class ECLResultNode extends Item<ECLWatchTree> {
 
-    readonly url: string;
     readonly wu: Workunit;
 
     constructor(wu: Workunit, tree: ECLWatchTree, private _result: Result) {
         super(tree);
-        this.url = formatResultURL(this._result.BaseUrl, this._result.Wuid, this._result.Name);
         this.wu = wu;
+    }
+
+    get url(): Promise<string> {
+        return formatResultURL(this._result.BaseUrl, this._result.Wuid, this._result.Name);
     }
 
     getWU(): Workunit {
@@ -391,16 +393,21 @@ class ECLOutputsNode extends Item<ECLWatchTree> {
 export class ECLWUNode extends Item<ECLWatchTree> {
     private _wu: Workunit;
 
-    readonly url: string;
-    readonly resultsUrl: string;
-    readonly metricsUrl: string;
+    get url(): Promise<string> {
+        return formatWorkunitURL(this._wu.BaseUrl, this._wu.Wuid);
+    }
+
+    get resultsUrl(): Promise<string> {
+        return formatResultsURL(this._wu.BaseUrl, this._wu.Wuid);
+    }
+
+    get metricsUrl(): Promise<string> {
+        return formatMetricsURL(this._wu.BaseUrl, this._wu.Wuid);
+    }
 
     constructor(tree: ECLWatchTree, wu: Workunit) {
         super(tree);
         this._wu = wu;
-        this.url = formatWorkunitURL(wu.BaseUrl, wu.Wuid);
-        this.resultsUrl = formatResultsURL(wu.BaseUrl, wu.Wuid);
-        this.metricsUrl = formatMetricsURL(wu.BaseUrl, wu.Wuid);
         if (!this._wu.isComplete()) {
             this._wu.watchUntilComplete(changes => {
                 tree.refresh(this);
@@ -460,16 +467,16 @@ export class ECLWUNode extends Item<ECLWatchTree> {
         eclWatchPanelView.navigateTo(sessionManager.session.launchRequestArgs, this._wu.Wuid);
     }
 
-    browseResults() {
-        vscode.env.openExternal(vscode.Uri.parse(this.resultsUrl));
+    async browseResults() {
+        vscode.env.openExternal(vscode.Uri.parse(await this.resultsUrl));
     }
 
-    browseMetrics() {
-        vscode.env.openExternal(vscode.Uri.parse(this.metricsUrl));
+    async browseMetrics() {
+        vscode.env.openExternal(vscode.Uri.parse(await this.metricsUrl));
     }
 
-    browseWUDetails() {
-        vscode.env.openExternal(vscode.Uri.parse(this.url));
+    async browseWUDetails() {
+        vscode.env.openExternal(vscode.Uri.parse(await this.url));
     }
 
     openECL() {

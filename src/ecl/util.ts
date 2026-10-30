@@ -1,5 +1,7 @@
 import { Level, logger, Writer } from "@hpcc-js/util";
 import * as vscode from "vscode";
+import { Version } from "@hpcc-js/comms";
+import { sessionManager } from "../hpccplatform/session";
 
 export function byteOffsetAt(document: vscode.TextDocument, position: vscode.Position): number {
     const offset = document.offsetAt(position);
@@ -37,70 +39,63 @@ export function initLogger(ctx: vscode.ExtensionContext, level: Level) {
     logger.level(level);
 }
 
-const legacyStubPlatforms = new Map<string, boolean>();
+const STUB_HTML_VERSION = new Version("10.8.0");
 
-function normalizeBaseUrl(baseUrl: string): string {
-    return baseUrl.replace(/\/+$/, "").toLowerCase();
+export async function stubPage(): Promise<string> {
+    const build = await sessionManager.session?.fetchBuild().catch(() => undefined);
+    const version = new Version(build ?? "");
+    return version.exists() && version.compare(STUB_HTML_VERSION) < 0 ? "stub.htm" : "stub.html";
 }
 
-export function setLegacyStub(baseUrl: string, legacy: boolean) {
-    legacyStubPlatforms.set(normalizeBaseUrl(baseUrl), legacy);
-}
-
-//  Defaults to "stub.html" when the platform version is unknown
-export function stubPage(baseUrl: string): string {
-    return legacyStubPlatforms.get(normalizeBaseUrl(baseUrl)) ? "stub.htm" : "stub.html";
-}
-
-export function formatECLWatchURL(baseUrl: string): string {
+export async function formatECLWatchURL(baseUrl: string): Promise<string> {
     const eclConfig = vscode.workspace.getConfiguration("ecl", null);
     if (eclConfig.get("preferredECLWatch") === "v5") {
-        return `${baseUrl}esp/files/${stubPage(baseUrl)}`;
+        return `${baseUrl}esp/files/${await stubPage()}?Widget=HPCCPlatformWidget`;
     } else {
-        return `${baseUrl}esp/files/index.html`;
+        return `${baseUrl}esp/files/index.html#/activities`;
     }
 }
 
-export function formatWorkunitURL(baseUrl: string, wuid: string): string {
+export async function formatWorkunitURL(baseUrl: string, wuid: string): Promise<string> {
     const eclConfig = vscode.workspace.getConfiguration("ecl", null);
     if (eclConfig.get("preferredECLWatch") === "v5") {
-        return `${baseUrl}esp/files/${stubPage(baseUrl)}?Wuid=${wuid}&Widget=WUDetailsWidget#/stub/Summary`;
+        return `${baseUrl}esp/files/${await stubPage()}?Wuid=${wuid}&Widget=WUDetailsWidget#/stub/Summary`;
     } else {
         return `${baseUrl}esp/files/index.html#/workunits/${wuid}`;
     }
 }
 
-export function formatResultsURL(baseUrl: string, wuid: string): string {
+export async function formatResultsURL(baseUrl: string, wuid: string): Promise<string> {
     const eclConfig = vscode.workspace.getConfiguration("ecl", null);
     if (eclConfig.get("preferredECLWatch") === "v5") {
-        return `${baseUrl}esp/files/${stubPage(baseUrl)}?Wuid=${wuid}&Widget=ResultsWidget#/stub/Grid`;
+        return `${baseUrl}esp/files/${await stubPage()}?Wuid=${wuid}&Widget=ResultsWidget#/stub/Grid`;
     } else {
         return `${baseUrl}esp/files/index.html#/workunits/${wuid}/outputs`;
     }
 }
 
-export function formatMetricsURL(baseUrl: string, wuid: string): string {
+export async function formatMetricsURL(baseUrl: string, wuid: string): Promise<string> {
     const eclConfig = vscode.workspace.getConfiguration("ecl", null);
     if (eclConfig.get("preferredECLWatch") === "v5") {
-        return `${baseUrl}esp/files/${stubPage(baseUrl)}?Wuid=${wuid}&Widget=GraphsWUWidget#/stub/Grid`;
+        return `${baseUrl}esp/files/${await stubPage()}?Wuid=${wuid}&Widget=GraphsWUWidget#/stub/Grid`;
     } else {
         return `${baseUrl}esp/files/index.html#/workunits/${wuid}/metrics`;
     }
 }
 
-export function formatResultURL(baseUrl: string, wuid: string, name: string): string {
+export async function formatResultURL(baseUrl: string, wuid: string, name: string): Promise<string> {
     const eclConfig = vscode.workspace.getConfiguration("ecl", null);
     if (eclConfig.get("preferredECLWatch") === "v5") {
-        return `${baseUrl}esp/files/${stubPage(baseUrl)}?Wuid=${wuid}&Name=${name}&Widget=ResultWidget`;
+        return `${baseUrl}esp/files/${await stubPage()}?Wuid=${wuid}&Name=${name}&Widget=ResultWidget`;
     } else {
         return `${baseUrl}esp/files/index.html#/workunits/${wuid}/outputs/${name}`;
     }
 }
 
-export function formatLogicalFileURL(baseUrl: string, name: string, nodeGroup?: string): string {
+export async function formatLogicalFileURL(baseUrl: string, name: string, nodeGroup?: string): Promise<string> {
     const eclConfig = vscode.workspace.getConfiguration("ecl", null);
     if (eclConfig.get("preferredECLWatch") === "v5") {
-        return `${baseUrl}esp/files/${stubPage(baseUrl)}?Widget=LFDetailsWidget&Name=${encodeURIComponent(name)}${nodeGroup ? `&NodeGroup=${encodeURIComponent(nodeGroup)}` : ""}#/stub/Summary`;
+        return `${baseUrl}esp/files/${await stubPage()}?Widget=LFDetailsWidget&Name=${encodeURIComponent(name)}${nodeGroup ? `&NodeGroup=${encodeURIComponent(nodeGroup)}` : ""}#/stub/Summary`;
     } else {
         return `${baseUrl}esp/files/index.html#/files/${nodeGroup ? `${encodeURI(nodeGroup)}/` : ""}${encodeURI(name)}`;
     }

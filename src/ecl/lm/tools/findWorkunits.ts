@@ -160,7 +160,7 @@ export class FindWorkunitsTool implements vscode.LanguageModelTool<IFindWorkunit
                 parts.push(new vscode.LanguageModelTextPart(list));
 
                 for (const wu of workunits) {
-                    const detailsUrl = session.wuDetailsUrl(wu.Wuid);
+                    const detailsUrl = await session.wuDetailsUrl(wu.Wuid);
                     const wuInfo = {
                         Wuid: wu.Wuid,
                         Owner: wu.Owner,
