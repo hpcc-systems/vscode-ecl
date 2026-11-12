@@ -27,6 +27,16 @@ describe('Extension Manifest (package.json)', () => {
         }
     });
 
+    it('uses Language Model tools instead of a deprecated chat participant', () => {
+        expect(pkg.contributes?.chatParticipants).toBeUndefined();
+        const tools = pkg.contributes?.languageModelTools || [];
+        expect(tools).toContainEqual(expect.objectContaining({ name: 'ecl-extension-eclDocsLookup' }));
+        const events: string[] = pkg.activationEvents || [];
+        for (const tool of tools) {
+            expect(events).toContain(`onLanguageModelTool:${tool.name}`);
+        }
+    });
+
     it('contributes logical-file copy actions to the file context menu', () => {
         for (const action of ['copyName', 'copyRecord']) {
             const command = `hpccResources.logicalFiles.${action}`;

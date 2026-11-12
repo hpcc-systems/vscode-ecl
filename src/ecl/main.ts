@@ -10,7 +10,6 @@ import { initLogger, Level } from "./util";
 import { ECLWatchTree } from "./eclWatchTree";
 import { ECLWatchPanelView } from "./eclWatchPanelView";
 import { HPCCResources } from "./hpccResources";
-import { ECLChat } from "./lm/chat";
 import { ECLLMTools } from "./lm/tools";
 import { SessionManager } from "../hpccplatform/session";
 
@@ -39,8 +38,6 @@ export function activate(ctx: vscode.ExtensionContext): void {
     ECLTerminal.attach(ctx);
     logger.debug("Activating HPCCResources");
     HPCCResources.attach(ctx);
-    logger.debug("Activating Chat");
-    ECLChat.attach(ctx);
     logger.debug("Activating LM Tools");
     ECLLMTools.attach(ctx);
 }

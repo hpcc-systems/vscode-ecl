@@ -46,7 +46,7 @@ Typical dev loop:
 - Commands & menus are heavily context-driven (see `package.json` for enablement). Do not hardcode strings—reuse existing command IDs.
 - Notebooks: id `ecl-notebook`; renderers `wuRenderer` (Workunit JSON) and `ojsRenderer` (ObservableJS cells).
 - Debugger type: `ecl` (program `dist/debugger.js`) with launch schema documented in README.
-- Chat participant: `chat.ecl` —prefer expanding these via contributes if adding capabilities.
+- Copilot integration uses extension-contributed Language Model tools declared in `package.json` and registered under `src/ecl/lm/`.
 
 ## 4. Source Layout & Patterns
 

@@ -204,32 +204,16 @@ You can safely remove any `"password"` fields from your `launch.json` files if y
 
 ## AI / Chat Integration
 
-The extension contributes experimental Language Model (AI) tools and a chat participant:
+The extension contributes Language Model tools for use in VS Code Copilot Chat. Chat participants are deprecated, so there is no longer an `@ecl` prefix; ask ECL questions directly and Copilot can use the tools provided by this extension.
 
-- Chat participant `ECL` (`chat.ecl`) – provides ECL language and docs assistance.
-- Tools (declared in `package.json` under `contributes.languageModelTools` and registered in `src/ai/tools.ts`):
-  - `ecl-listWorkunits` – List recent workunits (currently mock data unless connected API integration is completed).
-  - `ecl-submitSnippet` – Submit a small ECL snippet and return a mock WUID.
+Available tools include:
 
-Runtime registration adds each tool to an in-memory registry (`toolRegistry`) so future prompt engineering and chat flows can surface available tool capabilities without re-reading the manifest. See `src/ai/tools.ts` for the implementation and TODO markers indicating where to integrate with real HPCC Platform session APIs.
+- `eclDocsLookup` – Search the HPCC Systems ECL language and standard library documentation.
+- `syntaxCheck` – Check supplied ECL source using the HPCC Platform compiler.
+- `findLogicalFiles` – Search logical files on the connected platform.
+- `findWorkunits`, `getWorkunitErrors`, `getWorkunitECL`, and `getWorkunitMetrics` – Find workunits and inspect their source, errors, and metrics.
 
-> NOTE: These features depend on the VS Code Language Model / Chat APIs which are still evolving. Behavior may change in future VS Code versions.
-
-### Copilot Chat Integration
-
-This extension contributes an ECL specific Chat participant (`chat.ecl`) with commands:
-
-- `@ecl /create` – Scaffold a new ECL file.
-- `@ecl /docs <question>` – Ask a question answered using the HPCC Systems online language & standard library reference.
-- `@ecl /meta <question>` – Provide questions or guidance that should leverage structural metadata from the currently active ECL editor (module names, exports, records, datasets, functions, services, imports, header comment, and basic size stats). The assistant automatically includes this metadata in the prompt enabling context‑aware refactoring suggestions and explanations.
-
-Example:
-
-```
-@ecl /meta Explain what the exported records are used for and suggest a clearer function name for MyFunc.
-```
-
-If no ECL editor is active, the `/meta` command will indicate that no metadata is available.
+The tools are declared under `contributes.languageModelTools` in `package.json` and registered in `src/ecl/lm/tools.ts`. Reference an individual tool in chat when you want to invoke it explicitly.
 
 ### ECL Commands
 
