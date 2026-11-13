@@ -9,6 +9,14 @@ Previously generated content (from standard-version) has been retained.
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.43.1](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.43.0...ecl-v2.43.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* remove [@ecl](https://github.com/ecl) agent (deprecated) ([c992df7](https://github.com/hpcc-systems/vscode-ecl/commit/c992df791c7c5c3cc94593c1b82bd5ac302ec19d))
+* update translations from HPCC Platform 10.8.10 ([#545](https://github.com/hpcc-systems/vscode-ecl/issues/545)) ([40e0244](https://github.com/hpcc-systems/vscode-ecl/commit/40e0244c526dbc1c3339cdf0d4421ed25ffca2f9))
+
 ## [2.43.0](https://github.com/hpcc-systems/vscode-ecl/compare/ecl-v2.42.1...ecl-v2.43.0) (2026-10-30)
 
 
